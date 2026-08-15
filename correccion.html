@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Corrección de Nombres</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+    </div>
+
+    <div id="main-content">
+        <h1>🏆 Ranking Maratón Michi DM</h1>
+
+        <div class="tabs">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
+            <a href="correccion.html" class="tab-btn active admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2>✏️ Corrección de Nombres y Unificación</h2>
+        
+        <div class="card">
+            <div class="grid-2">
+                <div>
+                    <label>Historial Antiguo (Nombre como se registró):</label>
+                    <input type="text" id="historial-antiguo" placeholder="Ej: B. Rommel">
+                </div>
+                <div>
+                    <label>Nick en Captura (Nombre corregido / Oficial):</label>
+                    <input type="text" id="nick-oficial" placeholder="Ej: [cLm] bLiTzKrIeG*RoMMeL">
+                </div>
+            </div>
+            <button class="btn-action" onclick="guardarEquivalencia()">🔗 Guardar Equivalencia</button>
+        </div>
+
+        <div class="card">
+            <h3>📋 Lista Completa de Equivalencias Registradas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">ID</th>
+                        <th style="width: 45%;">Historial Antiguo</th>
+                        <th style="width: 45%;">Nick en Captura</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-equivalencias">
+                    <!-- Se llena automáticamente con js/equivalencias.js -->
+                </tbody>
+            </table>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px; align-items: flex-end; max-width: 400px;">
+                <div style="flex: 1;">
+                    <label>ID de equivalencia a borrar:</label>
+                    <input type="number" id="id-borrar" placeholder="Ej: 1">
+                </div>
+                <button class="btn-action btn-delete" onclick="eliminarEquivalencia()">❌ Eliminar Equivalencia</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🔎 Jugadores Detectados en Partidas</h3>
+            <div class="info-box">No hay jugadores registrados en las partidas todavía.</div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/equivalencias.js"></script>
+</body>
+</html>
