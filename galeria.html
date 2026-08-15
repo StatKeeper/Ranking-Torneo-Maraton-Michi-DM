@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Galería y Registro Masivo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+    </div>
+
+    <div id="main-content">
+        <h1>🏆 Ranking Maratón Michi DM</h1>
+
+        <div class="tabs">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
+            <a href="galeria.html" class="tab-btn active admin-only">🖼️ Galería y Registro Masivo</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2>🖼️ Galería y Registro Masivo de Partidas</h2>
+
+        <div class="card">
+            <h3>📤 Cargar Nueva Captura / Partida</h3>
+            <div class="grid-2">
+                <div>
+                    <label>Seleccionar Imagen de Partida:</label>
+                    <input type="file" id="captura-file" accept="image/*">
+                </div>
+                <div>
+                    <label>Notas de la Fecha / Encuentro:</label>
+                    <input type="text" id="nota-partida" placeholder="Ej: Fecha 2 - Partida 1">
+                </div>
+            </div>
+            <button class="btn-action" style="margin-top: 15px;">🚀 Procesar y Registrar</button>
+        </div>
+
+        <div class="card">
+            <h3>🖼️ Capturas de Partidas Registradas</h3>
+            <div class="info-box">Aún no se han subido capturas en la galería.</div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
