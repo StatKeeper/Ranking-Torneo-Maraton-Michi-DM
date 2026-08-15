@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Candidatos al Jugador de la Fecha</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+    </div>
+
+    <div id="main-content">
+        <h1>🏆 Ranking Maratón Michi DM</h1>
+
+        <div class="tabs">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn active">⭐ Candidatos al Jugador de la Fecha</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2>⭐ Candidatos al Jugador de la Fecha</h2>
+
+        <div class="card">
+            <h3>Tabla de Evaluación de Candidatos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Partidas Ganadas</th>
+                        <th>Tiempo de Victoria</th>
+                        <th>Victoria vs Top 5</th>
+                        <th>Mérito / Consistencia</th>
+                        <th>Puntaje Candidato</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-candidatos">
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Sin registros para la fecha actual.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
