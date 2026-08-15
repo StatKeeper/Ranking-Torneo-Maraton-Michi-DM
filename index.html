@@ -12,9 +12,15 @@
         .tabs { display: flex; gap: 10px; border-bottom: 2px solid #ddd; margin-bottom: 20px; }
         .tab-btn { padding: 10px 15px; border: none; background: none; cursor: pointer; font-weight: bold; color: #555; }
         .tab-btn.active { border-bottom: 3px solid #ff4b4b; color: #ff4b4b; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .status-badge { background: #d4edda; color: #155724; padding: 8px; border-radius: 5px; font-size: 0.9em; margin-top: 10px; }
-        select, input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        select, input, button { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-submit { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
         .info-box { background: #e8f4f8; color: #1d6f8a; padding: 15px; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
@@ -23,35 +29,88 @@
         <h3>🔐 Panel de Control</h3>
         <label>Contraseña de Admin:</label>
         <input type="password" id="admin-pass" value="michi2026">
-        <div class="status-badge">Modo Administrador Activo</div>
+        <div class="status-badge" id="status-mode">Modo Administrador Activo</div>
     </div>
 
     <div id="main-content">
         <h1>🏆 Ranking Maratón Michi DM</h1>
 
         <div class="tabs">
-            <button class="tab-btn active">📊 Clasificación general</button>
-            <button class="tab-btn">📈 Estadísticas y Tiempos</button>
-            <button class="tab-btn">⭐ Candidatos al Jugador de la Fecha</button>
-            <button class="tab-btn">🖼️ Galería y Registro Masivo</button>
-            <button class="tab-btn">📝 Corrección de Nombres</button>
+            <button class="tab-btn active" onclick="openTab(event, 'tab-ranking')">📊 Clasificación general</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-stats')">📈 Estadísticas y Tiempos</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-candidatos')">⭐ Candidatos al Jugador de la Fecha</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-galeria')">🖼️ Galería y Registro Masivo</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-correccion')">📝 Corrección de Nombres</button>
         </div>
 
-        <h2>Tabla de Posiciones Oficial</h2>
-
-        <div class="card">
-            <label>📅 Seleccionar Período / Mes:</label>
-            <select>
-                <option>Agosto 2026</option>
-            </select>
+        <!-- Pestaña 1: Clasificación General -->
+        <div id="tab-ranking" class="tab-content active">
+            <h2>Tabla de Posiciones Oficial</h2>
+            <div class="card">
+                <label>📅 Seleccionar Período / Mes:</label>
+                <select>
+                    <option>Agosto 2026</option>
+                </select>
+            </div>
+            <div class="card">
+                <div class="info-box">
+                    No hay partidas registradas para este período.
+                </div>
+            </div>
         </div>
 
-        <div class="card">
-            <div class="info-box">
-                No hay partidas registradas para este período.
+        <!-- Pestaña 2: Estadísticas -->
+        <div id="tab-stats" class="tab-content">
+            <h2>Estadísticas y Tiempos de Partida</h2>
+            <div class="card">
+                <p>⏱️ Registro y duración promedio de enfrentamientos.</p>
+            </div>
+        </div>
+
+        <!-- Pestaña 3: Candidatos -->
+        <div id="tab-candidatos" class="tab-content">
+            <h2>Candidatos al Jugador de la Fecha</h2>
+            <div class="card">
+                <p>⭐ Registro de jugadores destacados de la jornada.</p>
+            </div>
+        </div>
+
+        <!-- Pestaña 4: Registro Masivo -->
+        <div id="tab-galeria" class="tab-content">
+            <h2>Galería y Registro Masivo de Partidas</h2>
+            <div class="card">
+                <label>Fecha de la Partida:</label>
+                <input type="date">
+                <label>Jugador Ganador:</label>
+                <input type="text" placeholder="Ej: Renjifo">
+                <button class="btn-submit">Registrar Partida</button>
+            </div>
+        </div>
+
+        <!-- Pestaña 5: Corrección de Nombres -->
+        <div id="tab-correccion" class="tab-content">
+            <h2>Corrección de Nombres / Nicknames</h2>
+            <div class="card">
+                <p>📝 Configuración de nombres del torneo.</p>
             </div>
         </div>
     </div>
+
+    <script>
+        function openTab(evt, tabId) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabId).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
 
 </body>
 </html>
