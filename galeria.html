@@ -26,26 +26,98 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2>🖼️ Galería y Registro Masivo de Partidas</h2>
+        <h2>⚡ Registro Masivo por Texto Plano</h2>
 
         <div class="card">
-            <h3>📤 Cargar Nueva Captura / Partida</h3>
-            <div class="grid-2">
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
                 <div>
-                    <label>Seleccionar Imagen de Partida:</label>
-                    <input type="file" id="captura-file" accept="image/*">
+                    <label>Mes / Período:</label>
+                    <input type="text" id="mes-periodo" value="Agosto 2026">
                 </div>
                 <div>
-                    <label>Notas de la Fecha / Encuentro:</label>
-                    <input type="text" id="nota-partida" placeholder="Ej: Fecha 2 - Partida 1">
+                    <label>Jornada:</label>
+                    <select id="jornada-select">
+                        <option value="Fecha 01">Fecha 01</option>
+                        <option value="Fecha 02">Fecha 02</option>
+                        <option value="Fecha 03">Fecha 03</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Partida:</label>
+                    <select id="partida-select">
+                        <option value="Partida 1">Partida 1</option>
+                        <option value="Partida 2">Partida 2</option>
+                        <option value="Partida 3">Partida 3</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Duración Partida (HH:MM:SS):</label>
+                    <input type="text" id="duracion-partida" placeholder="01:07:08">
                 </div>
             </div>
-            <button class="btn-action" style="margin-top: 15px;">🚀 Procesar y Registrar</button>
+
+            <div style="margin-top: 15px;">
+                <label>Bloque de datos (JUGADOR | Pts_ignorado | Vic | Der | E | R | M | O | S | Rch | MG | RLP | [Equipo] | [Civilizacion]):</label>
+                <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+            </div>
+
+            <button class="btn-action" style="margin-top: 15px;">🚀 Procesar y Registrar Todo</button>
         </div>
 
+        <h2>🗑️ Gestión y Eliminación de Registros Guardados</h2>
+
         <div class="card">
-            <h3>🖼️ Capturas de Partidas Registradas</h3>
-            <div class="info-box">Aún no se han subido capturas en la galería.</div>
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div>
+                    <label>Período:</label>
+                    <select id="filtro-periodo">
+                        <option value="Sin Fecha">Sin Fecha</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Jornada:</label>
+                    <select id="filtro-jornada">
+                        <option value="Fecha 01">Fecha 01</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Partida:</label>
+                    <select id="filtro-partida">
+                        <option value="Partida 1">Partida 1</option>
+                    </select>
+                </div>
+            </div>
+
+            <table style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Jugador</th>
+                        <th>Pts</th>
+                        <th>PG</th>
+                        <th>PP</th>
+                        <th>Equipo</th>
+                        <th>Civ</th>
+                        <th>Duración</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-registros">
+                    <tr><td>0</td><td>cLm] KFICHO</td><td>140</td><td>1</td><td>0</td><td>Equipo 1</td><td>Gurjaras</td><td>01:07:08</td></tr>
+                    <tr><td>1</td><td>GJ Euphory</td><td>141</td><td>1</td><td>0</td><td>Equipo 1</td><td>Mayas</td><td>01:07:08</td></tr>
+                    <tr><td>2</td><td>Papita Huayro</td><td>142</td><td>1</td><td>0</td><td>Equipo 1</td><td>Turcos</td><td>01:07:08</td></tr>
+                    <tr><td>3</td><td>GGINDU</td><td>143</td><td>0</td><td>1</td><td>Equipo 2</td><td>Gurjaras</td><td>01:07:08</td></tr>
+                    <tr><td>4</td><td>P@K()</td><td>144</td><td>0</td><td>1</td><td>Equipo 2</td><td>Mayas</td><td>01:07:08</td></tr>
+                    <tr><td>5</td><td>Little duck</td><td>145</td><td>0</td><td>1</td><td>Equipo 2</td><td>Turcos</td><td>01:07:08</td></tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <button class="btn-action btn-delete">🚨 Eliminar toda esta Partida</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <label>ID individual a borrar:</label>
+                    <input type="number" style="width: 80px;" placeholder="1">
+                </div>
+            </div>
         </div>
     </div>
 
