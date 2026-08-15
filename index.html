@@ -14,13 +14,17 @@
         .tab-btn.active { border-bottom: 3px solid #ff4b4b; color: #ff4b4b; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .status-badge { background: #d4edda; color: #155724; padding: 8px; border-radius: 5px; font-size: 0.9em; margin-top: 10px; }
+        
+        /* Ocultar pestañas de admin por defecto */
+        .admin-only { display: none; }
+        
+        .status-badge { padding: 8px; border-radius: 5px; font-size: 0.9em; margin-top: 10px; font-weight: bold; text-align: center; }
+        .status-espectador { background: #e2e3e5; color: #383d41; }
+        .status-admin { background: #d4edda; color: #155724; }
+        
         select, input, button { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         .btn-submit { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
         .info-box { background: #e8f4f8; color: #1d6f8a; padding: 15px; border-radius: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
@@ -28,19 +32,22 @@
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
         <label>Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" value="michi2026">
-        <div class="status-badge" id="status-mode">Modo Administrador Activo</div>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña" oninput="validarAdmin()">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
     </div>
 
     <div id="main-content">
         <h1>🏆 Ranking Maratón Michi DM</h1>
 
         <div class="tabs">
+            <!-- Visibles para todos -->
             <button class="tab-btn active" onclick="openTab(event, 'tab-ranking')">📊 Clasificación general</button>
             <button class="tab-btn" onclick="openTab(event, 'tab-stats')">📈 Estadísticas y Tiempos</button>
             <button class="tab-btn" onclick="openTab(event, 'tab-candidatos')">⭐ Candidatos al Jugador de la Fecha</button>
-            <button class="tab-btn" onclick="openTab(event, 'tab-galeria')">🖼️ Galería y Registro Masivo</button>
-            <button class="tab-btn" onclick="openTab(event, 'tab-correccion')">📝 Corrección de Nombres</button>
+            
+            <!-- Visibles solo para el Admin -->
+            <button class="tab-btn admin-only" id="btn-galeria" onclick="openTab(event, 'tab-galeria')">🖼️ Galería y Registro Masivo</button>
+            <button class="tab-btn admin-only" id="btn-correccion" onclick="openTab(event, 'tab-correccion')">📝 Corrección de Nombres</button>
         </div>
 
         <!-- Pestaña 1: Clasificación General -->
@@ -75,7 +82,7 @@
             </div>
         </div>
 
-        <!-- Pestaña 4: Registro Masivo -->
+        <!-- Pestaña 4: Registro Masivo (ADMIN) -->
         <div id="tab-galeria" class="tab-content">
             <h2>Galería y Registro Masivo de Partidas</h2>
             <div class="card">
@@ -87,7 +94,7 @@
             </div>
         </div>
 
-        <!-- Pestaña 5: Corrección de Nombres -->
+        <!-- Pestaña 5: Corrección de Nombres (ADMIN) -->
         <div id="tab-correccion" class="tab-content">
             <h2>Corrección de Nombres / Nicknames</h2>
             <div class="card">
@@ -109,6 +116,32 @@
             }
             document.getElementById(tabId).classList.add("active");
             evt.currentTarget.classList.add("active");
+        }
+
+        function validarAdmin() {
+            var inputPass = document.getElementById("admin-pass").value;
+            var badge = document.getElementById("status-mode");
+            var btnGaleria = document.getElementById("btn-galeria");
+            var btnCorreccion = document.getElementById("btn-correccion");
+
+            // Clave configurada
+            if (inputPass === "michi2026") {
+                badge.innerText = "Modo Administrador Activo";
+                badge.className = "status-badge status-admin";
+                btnGaleria.style.display = "inline-block";
+                btnCorreccion.style.display = "inline-block";
+            } else {
+                badge.innerText = "Modo Espectador";
+                badge.className = "status-badge status-espectador";
+                btnGaleria.style.display = "none";
+                btnCorreccion.style.display = "none";
+                
+                // Si estaba en una pestaña de admin y borra la clave, vuelve a la general
+                if (document.getElementById("tab-galeria").classList.contains("active") || 
+                    document.getElementById("tab-correccion").classList.contains("active")) {
+                    openTab({ currentTarget: document.getElementsByClassName("tab-btn")[0] }, 'tab-ranking');
+                }
+            }
         }
     </script>
 
