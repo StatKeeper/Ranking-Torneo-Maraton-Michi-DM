@@ -14,17 +14,20 @@
         .tab-btn.active { border-bottom: 3px solid #ff4b4b; color: #ff4b4b; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
-        /* Ocultar pestañas de admin por defecto */
         .admin-only { display: none; }
-        
         .status-badge { padding: 8px; border-radius: 5px; font-size: 0.9em; margin-top: 10px; font-weight: bold; text-align: center; }
         .status-espectador { background: #e2e3e5; color: #383d41; }
         .status-admin { background: #d4edda; color: #155724; }
-        
         select, input, button { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .btn-submit { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        .info-box { background: #e8f4f8; color: #1d6f8a; padding: 15px; border-radius: 5px; }
+        .btn-action { background: #f8f9fa; border: 1px solid #ccc; padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: 10px; display: inline-block; width: auto; }
+        .btn-action:hover { background: #e2e6ea; }
+        .btn-delete { background: #fff; color: #dc3545; border: 1px solid #dc3545; }
+        .btn-delete:hover { background: #dc3545; color: white; }
+        .info-box { background: #e8f4f8; color: #1d6f8a; padding: 15px; border-radius: 5px; margin-top: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #e9ecef; padding: 10px; text-align: left; }
+        th { background-color: #f8f9fa; font-size: 0.9em; color: #495057; }
     </style>
 </head>
 <body>
@@ -40,12 +43,9 @@
         <h1>🏆 Ranking Maratón Michi DM</h1>
 
         <div class="tabs">
-            <!-- Visibles para todos -->
             <button class="tab-btn active" onclick="openTab(event, 'tab-ranking')">📊 Clasificación general</button>
             <button class="tab-btn" onclick="openTab(event, 'tab-stats')">📈 Estadísticas y Tiempos</button>
             <button class="tab-btn" onclick="openTab(event, 'tab-candidatos')">⭐ Candidatos al Jugador de la Fecha</button>
-            
-            <!-- Visibles solo para el Admin -->
             <button class="tab-btn admin-only" id="btn-galeria" onclick="openTab(event, 'tab-galeria')">🖼️ Galería y Registro Masivo</button>
             <button class="tab-btn admin-only" id="btn-correccion" onclick="openTab(event, 'tab-correccion')">📝 Corrección de Nombres</button>
         </div>
@@ -55,55 +55,149 @@
             <h2>Tabla de Posiciones Oficial</h2>
             <div class="card">
                 <label>📅 Seleccionar Período / Mes:</label>
-                <select>
-                    <option>Agosto 2026</option>
-                </select>
+                <select><option>Agosto 2026</option></select>
             </div>
             <div class="card">
-                <div class="info-box">
-                    No hay partidas registradas para este período.
-                </div>
+                <div class="info-box">No hay partidas registradas para este período.</div>
             </div>
         </div>
 
         <!-- Pestaña 2: Estadísticas -->
         <div id="tab-stats" class="tab-content">
             <h2>Estadísticas y Tiempos de Partida</h2>
-            <div class="card">
-                <p>⏱️ Registro y duración promedio de enfrentamientos.</p>
-            </div>
+            <div class="card"><p>⏱️ Registro y duración promedio de enfrentamientos.</p></div>
         </div>
 
         <!-- Pestaña 3: Candidatos -->
         <div id="tab-candidatos" class="tab-content">
             <h2>Candidatos al Jugador de la Fecha</h2>
-            <div class="card">
-                <p>⭐ Registro de jugadores destacados de la jornada.</p>
-            </div>
+            <div class="card"><p>⭐ Registro de jugadores destacados de la jornada.</p></div>
         </div>
 
-        <!-- Pestaña 4: Registro Masivo (ADMIN) -->
+        <!-- Pestaña 4: Registro Masivo -->
         <div id="tab-galeria" class="tab-content">
             <h2>Galería y Registro Masivo de Partidas</h2>
-            <div class="card">
-                <label>Fecha de la Partida:</label>
-                <input type="date">
-                <label>Jugador Ganador:</label>
-                <input type="text" placeholder="Ej: Renjifo">
-                <button class="btn-submit">Registrar Partida</button>
-            </div>
+            <div class="card"><p>🖼️ Registro masivo de capturas y partidas.</p></div>
         </div>
 
-        <!-- Pestaña 5: Corrección de Nombres (ADMIN) -->
+        <!-- Pestaña 5: Corrección de Nombres y Unificación -->
         <div id="tab-correccion" class="tab-content">
-            <h2>Corrección de Nombres / Nicknames</h2>
+            <h2>✏️ Corrección de Nombres y Unificación</h2>
+            
             <div class="card">
-                <p>📝 Configuración de nombres del torneo.</p>
+                <div class="grid-2">
+                    <div>
+                        <label>Historial Antiguo (Nombre como se registró):</label>
+                        <input type="text" id="historial-antiguo" placeholder="Ej: B. Rommel">
+                    </div>
+                    <div>
+                        <label>Nick en Captura (Nombre corregido / Oficial):</label>
+                        <input type="text" id="nick-oficial" placeholder="Ej: [cLm] bLiTzKrIeG*RoMMeL">
+                    </div>
+                </div>
+                <button class="btn-action" onclick="guardarEquivalencia()">🔗 Guardar Equivalencia</button>
+            </div>
+
+            <div class="card">
+                <h3>📋 Lista Completa de Equivalencias Registradas</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">ID</th>
+                            <th style="width: 45%;">Historial Antiguo</th>
+                            <th style="width: 45%;">Nick en Captura</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-equivalencias">
+                        <!-- Se llena dinámicamente con JS -->
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px; display: flex; gap: 10px; align-items: flex-end; max-width: 400px;">
+                    <div style="flex: 1;">
+                        <label>ID de equivalencia a borrar:</label>
+                        <input type="number" id="id-borrar" placeholder="Ej: 1">
+                    </div>
+                    <button class="btn-action btn-delete" onclick="eliminarEquivalencia()">❌ Eliminar Equivalencia</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔎 Jugadores Detectados en Partidas</h3>
+                <div class="info-box">No hay jugadores registrados en las partidas todavía.</div>
             </div>
         </div>
     </div>
 
     <script>
+        // Datos base de equivalencias iniciales
+        let equivalencias = [
+            { id: 1, antiguo: "123 Dabs", oficial: "123 Dabs" },
+            { id: 2, antiguo: "12Kills", oficial: "12Kills" },
+            { id: 3, antiguo: "AAAwesomeGuy", oficial: "AAAwesomeGuy" },
+            { id: 4, antiguo: "Anciano", oficial: "Anciano" },
+            { id: 5, antiguo: "AntiBuddy", oficial: "AntiBuddy" },
+            { id: 6, antiguo: "B AZAR360", oficial: "B AZAR360" },
+            { id: 7, antiguo: "B. Rommel", oficial: "[cLm] bLiTzKrIeG*RoMMeL" },
+            { id: 8, antiguo: "Benums", oficial: "Benums" },
+            { id: 9, antiguo: "Bio Tine", oficial: "Bio Tine" },
+            { id: 10, antiguo: "BlackHorse", oficial: "BlackHorse" },
+            { id: 13, antiguo: "BullRunner", oficial: "BullRunner" },
+            { id: 14, antiguo: "carlinhos", oficial: "carlinhos" },
+            { id: 15, antiguo: "cumplear", oficial: "cumplear" },
+            { id: 16, antiguo: "Dia Dia 02", oficial: "Dia Dia 02" },
+            { id: 17, antiguo: "Diego Leal", oficial: "[cLm] Diego Leal" },
+            { id: 18, antiguo: "Donald Trump", oficial: "Donald Trump" },
+            { id: 19, antiguo: "Ecbert", oficial: "Ecbert" },
+            { id: 20, antiguo: "Elraf", oficial: "Elraf" },
+            { id: 21, antiguo: "Erik Barbaro", oficial: "Erik Tha Barbaro" },
+            { id: 22, antiguo: "Euphory", oficial: "GJ Euphory" },
+            { id: 23, antiguo: "Falco Lombardi", oficial: "Falco Lombardi" }
+        ];
+
+        function renderTabla() {
+            const tbody = document.getElementById("tabla-equivalencias");
+            tbody.innerHTML = "";
+            equivalencias.forEach(eq => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${eq.id}</strong></td>
+                    <td>${eq.antiguo}</td>
+                    <td>${eq.oficial}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function guardarEquivalencia() {
+            const antiguo = document.getElementById("historial-antiguo").value.trim();
+            const oficial = document.getElementById("nick-oficial").value.trim();
+            
+            if (!antiguo || !oficial) {
+                alert("Por favor completa ambos campos.");
+                return;
+            }
+
+            const nuevoId = equivalencias.length > 0 ? Math.max(...equivalencias.map(e => e.id)) + 1 : 1;
+            equivalencias.push({ id: nuevoId, antiguo: antiguo, oficial: oficial });
+            
+            document.getElementById("historial-antiguo").value = "";
+            document.getElementById("nick-oficial").value = "";
+            renderTabla();
+        }
+
+        function eliminarEquivalencia() {
+            const id = parseInt(document.getElementById("id-borrar").value);
+            if (isNaN(id)) {
+                alert("Ingresa un ID válido.");
+                return;
+            }
+            
+            equivalencias = equivalencias.filter(e => e.id !== id);
+            document.getElementById("id-borrar").value = "";
+            renderTabla();
+        }
+
         function openTab(evt, tabId) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
@@ -124,7 +218,6 @@
             var btnGaleria = document.getElementById("btn-galeria");
             var btnCorreccion = document.getElementById("btn-correccion");
 
-            // Clave configurada
             if (inputPass === "michi2026") {
                 badge.innerText = "Modo Administrador Activo";
                 badge.className = "status-badge status-admin";
@@ -135,14 +228,15 @@
                 badge.className = "status-badge status-espectador";
                 btnGaleria.style.display = "none";
                 btnCorreccion.style.display = "none";
-                
-                // Si estaba en una pestaña de admin y borra la clave, vuelve a la general
                 if (document.getElementById("tab-galeria").classList.contains("active") || 
                     document.getElementById("tab-correccion").classList.contains("active")) {
                     openTab({ currentTarget: document.getElementsByClassName("tab-btn")[0] }, 'tab-ranking');
                 }
             }
         }
+
+        // Cargar tabla al iniciar
+        renderTabla();
     </script>
 
 </body>
