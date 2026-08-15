@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Estadísticas y Tiempos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+    </div>
+
+    <div id="main-content">
+        <h1>🏆 Ranking Maratón Michi DM</h1>
+
+        <!-- Pestañas Principales -->
+        <div class="tabs">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2>📈 Estadísticas Generales del Torneo</h2>
+
+        <!-- Subpestañas Secundarias -->
+        <div class="subtabs">
+            <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')">⏱️ Tiempos de partida</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')">🏛️ Civilizaciones y Win Rate</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')">🤝 Sinergia y Enfrentamientos</button>
+        </div>
+
+        <!-- Vista 1: Tiempos de partida -->
+        <div id="sec-tiempos" class="card subtab-content">
+            <h3>⏱️ Tiempos de Partida</h3>
+            <div class="info-box">Aquí se mostrarán los registros de duración de partidas y promedios por jugador.</div>
+        </div>
+
+        <!-- Vista 2: Civilizaciones y Win Rate -->
+        <div id="sec-civilizaciones" class="card subtab-content" style="display: none;">
+            <h3>🏛️ Civilizaciones y Win Rate</h3>
+            <div class="info-box">Aquí se desplegará el porcentaje de victorias por civilización y elecciones más frecuentes.</div>
+        </div>
+
+        <!-- Vista 3: Sinergia y Enfrentamientos -->
+        <div id="sec-enfrentamientos" class="card subtab-content" style="display: none;">
+            <h3>🤝 Sinergia y Enfrentamientos Directos</h3>
+            <div class="info-box">Aquí podrás revisar el historial cara a cara (Head to Head) entre jugadores.</div>
+        </div>
+
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function cambiarSubtab(seccion) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
+            // Quitar clase activa a los botones
+            document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Mostrar la sección seleccionada
+            document.getElementById('sec-' + seccion).style.display = 'block';
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
