@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const adminPassInput = document.getElementById("admin-pass");
     
-    // Verificar si la sesión guardada ya tiene acceso admin
+    // Verificar si existe una sesión activa guardada
     if (sessionStorage.getItem("adminSession") === "active") {
         if (adminPassInput) adminPassInput.value = "michi2026";
         aplicarModoAdmin(true);
@@ -38,11 +38,5 @@ function aplicarModoAdmin(esAdmin) {
             badge.className = "status-badge status-espectador";
         }
         elementosAdmin.forEach(el => el.style.display = "none");
-        
-        // Si no es admin y está en una página privada, lo redirige a inicio
-        const paginaActual = window.location.pathname;
-        if (paginaActual.includes("galeria.html") || paginaActual.includes("correccion.html")) {
-            window.location.href = "index.html";
-        }
     }
 }
