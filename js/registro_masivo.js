@@ -1,4 +1,4 @@
-// Poblado dinámico de Años (2026-2035), Meses y Jornadas (Fecha 01 a 30)
+// Poblado dinámico de Años (2026-2035), Meses, Jornadas (1-31) y Partidas (1-10)
 function cargarSelectoresFechaDinamicos() {
     const anioInicio = 2026;
     const anioFin = 2035;
@@ -7,7 +7,7 @@ function cargarSelectoresFechaDinamicos() {
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
-    // Llenar selectores de Año (Sección Registro y Sección Gestión)
+    // 1. Llenar selectores de Año (Sección Registro y Sección Gestión)
     const selectsAnio = document.querySelectorAll("#select-anio, #gestion-anio");
     selectsAnio.forEach(sel => {
         if (!sel) return;
@@ -20,7 +20,7 @@ function cargarSelectoresFechaDinamicos() {
         }
     });
 
-    // Llenar selectores de Mes
+    // 2. Llenar selectores de Mes
     const selectsMes = document.querySelectorAll("#select-mes, #gestion-mes");
     selectsMes.forEach(sel => {
         if (!sel) return;
@@ -34,16 +34,29 @@ function cargarSelectoresFechaDinamicos() {
         });
     });
 
-    // Llenar selectores de Jornada (Fecha 01 a Fecha 30)
+    // 3. Llenar selectores de Jornada (Fecha 01 a Fecha 31)
     const selectsJornada = document.querySelectorAll("#jornada-select, #gestion-jornada");
     selectsJornada.forEach(sel => {
         if (!sel) return;
         sel.innerHTML = "";
-        for (let i = 1; i <= 30; i++) {
+        for (let i = 1; i <= 31; i++) {
             const num = i < 10 ? `0${i}` : i;
             const opt = document.createElement("option");
             opt.value = `Fecha ${num}`;
             opt.textContent = `Fecha ${num}`;
+            sel.appendChild(opt);
+        }
+    });
+
+    // 4. Llenar selectores de Partida (Partida 1 a Partida 10)
+    const selectsPartida = document.querySelectorAll("#partida-select, #gestion-partida");
+    selectsPartida.forEach(sel => {
+        if (!sel) return;
+        sel.innerHTML = "";
+        for (let p = 1; p <= 10; p++) {
+            const opt = document.createElement("option");
+            opt.value = `Partida ${p}`;
+            opt.textContent = `Partida ${p}`;
             sel.appendChild(opt);
         }
     });
