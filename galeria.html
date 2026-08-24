@@ -61,7 +61,7 @@
                 <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
             </div>
 
-            <button class="btn-action" style="margin-top: 15px;">🚀 Procesar y Registrar Todo</button>
+            <button class="btn-action" style="margin-top: 15px;" onclick="procesarRegistroMasivo()">🚀 Procesar y Registrar Todo</button>
         </div>
 
         <h2>🗑️ Gestión y Eliminación de Registros Guardados</h2>
@@ -70,20 +70,26 @@
             <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr;">
                 <div>
                     <label>Período:</label>
-                    <select id="filtro-periodo">
+
+                    <select id="gestion-periodo" onchange="renderTablaGestionRegistros()">
+                        <option value="Agosto 2026">Agosto 2026</option>
                         <option value="Sin Fecha">Sin Fecha</option>
                     </select>
                 </div>
                 <div>
                     <label>Jornada:</label>
-                    <select id="filtro-jornada">
+                    <select id="gestion-jornada" onchange="renderTablaGestionRegistros()">
                         <option value="Fecha 01">Fecha 01</option>
+                        <option value="Fecha 02">Fecha 02</option>
+                        <option value="Fecha 03">Fecha 03</option>
                     </select>
                 </div>
                 <div>
                     <label>Partida:</label>
-                    <select id="filtro-partida">
+                    <select id="gestion-partida" onchange="renderTablaGestionRegistros()">
                         <option value="Partida 1">Partida 1</option>
+                        <option value="Partida 2">Partida 2</option>
+                        <option value="Partida 3">Partida 3</option>
                     </select>
                 </div>
             </div>
@@ -101,7 +107,7 @@
                         <th>Duración</th>
                     </tr>
                 </thead>
-                <tbody id="tabla-registros">
+                <tbody id="tabla-registros-guardados">
                     <tr>
                         <td colspan="8" style="text-align: center; color: #777;">No hay registros cargados aún para esta fecha/partida.</td>
                     </tr>
@@ -109,15 +115,17 @@
             </table>
 
             <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
-                <button class="btn-action btn-delete">🚨 Eliminar toda esta Partida</button>
+                <button class="btn-action btn-delete" onclick="eliminarPartidaCompleta()">🚨 Eliminar toda esta Partida</button>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <label>ID individual a borrar:</label>
-                    <input type="number" style="width: 80px;" placeholder="1">
+                    <input type="number" id="id-borrar-registro" style="width: 80px;" placeholder="1">
                 </div>
             </div>
         </div>
     </div>
 
     <script src="js/auth.js"></script>
+    <script src="js/equivalencias.js"></script>
+    <script src="js/registro_masivo.js"></script>
 </body>
 </html>
