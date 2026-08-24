@@ -7,7 +7,7 @@ function cargarSelectoresFechaDinamicos() {
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
-    // 1. Llenar selectores de Año (Sección Registro y Sección Gestión)
+    // 1. Llenar selectores de Año
     const selectsAnio = document.querySelectorAll("#select-anio, #gestion-anio");
     selectsAnio.forEach(sel => {
         if (!sel) return;
@@ -29,12 +29,12 @@ function cargarSelectoresFechaDinamicos() {
             const opt = document.createElement("option");
             opt.value = m;
             opt.textContent = m;
-            if (m === "Agosto") opt.selected = true; // Por defecto
+            if (m === "Agosto") opt.selected = true;
             sel.appendChild(opt);
         });
     });
 
-    // 3. Llenar selectores de Jornada (Fecha 01 a Fecha 31)
+    // 3. Llenar selectores de Jornada
     const selectsJornada = document.querySelectorAll("#jornada-select, #gestion-jornada");
     selectsJornada.forEach(sel => {
         if (!sel) return;
@@ -48,7 +48,7 @@ function cargarSelectoresFechaDinamicos() {
         }
     });
 
-    // 4. Llenar selectores de Partida (Partida 1 a Partida 10)
+    // 4. Llenar selectores de Partida
     const selectsPartida = document.querySelectorAll("#partida-select, #gestion-partida");
     selectsPartida.forEach(sel => {
         if (!sel) return;
@@ -74,7 +74,6 @@ function obtenerNickOficialLocal(nombreIngresado) {
 }
 
 function procesarRegistroMasivo() {
-    // 1. Obtener Periodo uniendo Mes y Año
     const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
     const mes = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "Agosto";
     const periodo = `${mes} ${anio}`;
@@ -91,7 +90,7 @@ function procesarRegistroMasivo() {
     const lineas = textoBloque.split("\n");
     let duracionExtraida = "";
 
-    // Extraer automáticamente la duración de la primera línea (ej. "Partida 1 01:07:08")
+    // Extraer duración del encabezado (ej. "Partida 1 01:07:08")
     for (let i = 0; i < lineas.length; i++) {
         const lineaLimpia = lineas[i].trim();
         if (lineaLimpia.toLowerCase().startsWith("partida")) {
@@ -112,42 +111,42 @@ function procesarRegistroMasivo() {
     const registrosProcesados = [];
     let contadorId = 1;
 
-    // Procesar jugadores
     lineas.forEach((linea) => {
         if (!linea.includes("|")) return;
 
         const partes = linea.split("|").map(p => p.trim());
-        // Acepta desde 10 partes en adelante para procesar correctamente las líneas
-        if (partes.length < 10) return;
+        if (partes.length < 12) return;
 
         const nombreBruto = partes[0];
         if (nombreBruto.toLowerCase().startsWith("partida") || nombreBruto.toLowerCase().startsWith("bloque")) return;
 
         const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
 
-        // Mapeo adaptado al bloque enviado:
+        // Estructura de columnas exacta de tu bloque:
         // partes[0]: Jugador
-        // partes[1]: Puntos o Victoria según la columna
-        // partes[2]: Vic/Der o Bono E
-        const ptsDirectos = parseInt(partes[1]) || 0;
-        const vic = parseInt(partes[2]) || (ptsDirectos > 0 ? 1 : 0);
+        // partes[1]: Puntos base por Victoria (3 o 0)
+        // partes[2] a partes[9]: Bonos (E, R, M, O, S, Rch, MG, RLP)
+        // partes[10]: Equipo
+        // partes[11]: Civilización
+
+        const ptsVictoria = parseInt(partes[1]) || 0;
+        const vic = ptsVictoria > 0 ? 1 : 0;
         const der = vic === 1 ? 0 : 1;
 
-        // Lectura de bonos de las siguientes columnas
-        const e = parseInt(partes[3]) || 0;
-        const r = parseInt(partes[4]) || 0;
-        const m = parseInt(partes[5]) || 0;
-        const o = parseInt(partes[6]) || 0;
-        const s = parseInt(partes[7]) || 0;
-        const rch = parseInt(partes[8]) || 0;
-        const mg = parseInt(partes[9]) || 0;
-        const rlp = parseInt(partes[10]) || 0;
+        const e = parseInt(partes[2]) || 0;
+        const r = parseInt(partes[3]) || 0;
+        const m = parseInt(partes[4]) || 0;
+        const o = parseInt(partes[5]) || 0;
+        const s = parseInt(partes[6]) || 0;
+        const rch = parseInt(partes[7]) || 0;
+        const mg = parseInt(partes[8]) || 0;
+        const rlp = parseInt(partes[9]) || 0;
         
-        // Equipo y Civ (ajustando posición según cantidad de barras)
-        const equipo = partes.length >= 11 ? partes[partes.length - 2] : "";
-        const civ = partes.length >= 12 ? partes[partes.length - 1] : "";
+        const equipo = partes[10] || "";
+        const civ = partes[11] || "";
 
-        const totalPuntosPartida = ptsDirectos > 0 ? ptsDirectos : (vic + e + r + m + o + s + rch + mg + rlp);
+        // Total = 3 pts de victoria + la suma de todos sus bonos de esa partida
+        const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
 
         let sucesos = [];
         if (vic === 1) sucesos.push("Victoria");
@@ -182,14 +181,12 @@ function procesarRegistroMasivo() {
         return;
     }
 
-    // 2. Guardar en Base de Datos Local por Partida
+    // Guardar en la base de datos local
     const claveBD = `registros_${periodo}_${jornada}_${partidaSelect}`;
     localStorage.setItem(claveBD, JSON.stringify(registrosProcesados));
 
-    // 3. Alimentar el Ranking Acumulado General
     actualizarAcumuladosRanking();
 
-    // 4. Sincronizar automáticamente los filtros inferiores de gestión con lo que se acaba de procesar
     if (document.getElementById("gestion-anio")) document.getElementById("gestion-anio").value = anio;
     if (document.getElementById("gestion-mes")) document.getElementById("gestion-mes").value = mes;
     if (document.getElementById("gestion-jornada")) document.getElementById("gestion-jornada").value = jornada;
@@ -199,7 +196,6 @@ function procesarRegistroMasivo() {
     renderTablaGestionRegistros();
 }
 
-// Suma todos los datos guardados para alimentar la pestaña Clasificación General
 function actualizarAcumuladosRanking() {
     let acumuladoGlobal = {};
 
@@ -297,7 +293,6 @@ function eliminarPartidaCompleta() {
     }
 }
 
-// Inicializar selectores dinámicos y renderizar datos al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
     cargarSelectoresFechaDinamicos();
     renderTablaGestionRegistros();
