@@ -103,7 +103,19 @@ let equivalencias = [
     { id: 102, antiguo: "Your true papa", oficial: "Your true papa" }
 ];
 
+// Función para recuperar lista guardada o la base
+function obtenerEquivalencias() {
+    const guardadas = localStorage.getItem("equivalencias_michi_dm");
+    if (guardadas) {
+        return JSON.parse(guardadas);
+    } else {
+        localStorage.setItem("equivalencias_michi_dm", JSON.stringify(equivalencias));
+        return equivalencias;
+    }
+}
+
 function renderTabla() {
+    const listaActual = obtenerEquivalencias();
     const tbodyEq = document.getElementById("tabla-equivalencias");
     const tbodyDet = document.getElementById("tabla-detectados");
     
@@ -112,8 +124,8 @@ function renderTabla() {
 
     let contadorDetectados = 0;
 
-    equivalencias.forEach(eq => {
-        // 1. TABLA SUPERIOR: Muestra a TODOS los jugadores de la lista
+    listaActual.forEach(eq => {
+        // 1. TABLA SUPERIOR: Lista completa
         if (tbodyEq) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -124,7 +136,7 @@ function renderTabla() {
             tbodyEq.appendChild(tr);
         }
 
-        // 2. TABLA INFERIOR: Solo muestra si ha sido corregido o es un jugador nuevo
+        // 2. TABLA INFERIOR: Solo corregidos o nuevos
         const esCorregido = eq.antiguo !== eq.oficial;
         const esNuevoRegistrado = eq.esNuevo;
 
@@ -165,7 +177,9 @@ function guardarEquivalencia() {
         return;
     }
 
+    let listaActual = obtenerEquivalencias();
     let esJugadorNuevo = false;
+
     if (!antiguo) {
         antiguo = oficial;
         esJugadorNuevo = true;
@@ -173,13 +187,13 @@ function guardarEquivalencia() {
         oficial = antiguo;
     }
 
-    const existente = equivalencias.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
+    const existente = listaActual.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
     
     if (existente) {
         existente.oficial = oficial;
     } else {
-        const nuevoId = equivalencias.length > 0 ? Math.max(...equivalencias.map(e => e.id)) + 1 : 1;
-        equivalencias.push({ 
+        const nuevoId = listaActual.length > 0 ? Math.max(...listaActual.map(e => e.id)) + 1 : 1;
+        listaActual.push({ 
             id: nuevoId, 
             antiguo: antiguo, 
             oficial: oficial,
@@ -187,6 +201,9 @@ function guardarEquivalencia() {
         });
     }
     
+    // Guardar cambios en el navegador
+    localStorage.setItem("equivalencias_michi_dm", JSON.stringify(listaActual));
+
     document.getElementById("historial-antiguo").value = "";
     document.getElementById("nick-oficial").value = "";
     renderTabla();
@@ -199,7 +216,12 @@ function eliminarEquivalencia() {
         return;
     }
     
-    equivalencias = equivalencias.filter(e => e.id !== id);
+    let listaActual = obtenerEquivalencias();
+    listaActual = listaActual.filter(e => e.id !== id);
+    
+    // Guardar cambios en el navegador
+    localStorage.setItem("equivalencias_michi_dm", JSON.stringify(listaActual));
+
     document.getElementById("id-borrar").value = "";
     renderTabla();
 }
