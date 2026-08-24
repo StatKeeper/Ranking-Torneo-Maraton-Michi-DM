@@ -117,25 +117,29 @@ function procesarRegistroMasivo() {
         if (!linea.includes("|")) return;
 
         const partes = linea.split("|").map(p => p.trim());
-        if (partes.length < 12) return;
+        if (partes.length < 10) return;
 
         const nombreBruto = partes[0];
         if (nombreBruto.toLowerCase().startsWith("partida") || nombreBruto.toLowerCase().startsWith("bloque")) return;
 
         const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
 
-        const vic = parseInt(partes[2]) || 0;
-        const der = parseInt(partes[3]) || 0;
-        const e = parseInt(partes[4]) || 0;
-        const r = parseInt(partes[5]) || 0;
-        const m = parseInt(partes[6]) || 0;
-        const o = parseInt(partes[7]) || 0;
-        const s = parseInt(partes[8]) || 0;
-        const rch = parseInt(partes[9]) || 0;
-        const mg = parseInt(partes[10]) || 0;
-        const rlp = parseInt(partes[11]) || 0;
-        const equipo = partes[12] || "";
-        const civ = partes[13] || "";
+        // Ajuste según estructura real: V/D está en partes[1]
+        const vic = parseInt(partes[1]) || 0;
+        const der = vic === 1 ? 0 : 1;
+
+        // Bonos mapeados correctamente desde partes[2] a partes[9]
+        const e = parseInt(partes[2]) || 0;
+        const r = parseInt(partes[3]) || 0;
+        const m = parseInt(partes[4]) || 0;
+        const o = parseInt(partes[5]) || 0;
+        const s = parseInt(partes[6]) || 0;
+        const rch = parseInt(partes[7]) || 0;
+        const mg = parseInt(partes[8]) || 0;
+        const rlp = parseInt(partes[9]) || 0;
+        
+        const equipo = partes[10] || "";
+        const civ = partes[11] || "";
 
         const totalPuntosPartida = vic + e + r + m + o + s + rch + mg + rlp;
 
