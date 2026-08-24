@@ -91,12 +91,12 @@ function procesarRegistroMasivo() {
     const lineas = textoBloque.split("\n");
     let duracionExtraida = "";
 
-    // Extraer automáticamente la duración de la primera línea (ej. "Partida 1 1:07:08")
+    // Extraer automáticamente la duración de la primera línea (ej. "Partida 1 01:07:08")
     for (let i = 0; i < lineas.length; i++) {
         const lineaLimpia = lineas[i].trim();
         if (lineaLimpia.toLowerCase().startsWith("partida")) {
             const partesHeader = lineaLimpia.split(" ");
-            if (partesHeader.length >= 3) {
+            if (partesHeader.length >= 2) {
                 duracionExtraida = partesHeader[partesHeader.length - 1];
                 const inputDuracion = document.getElementById("duracion-partida");
                 if (inputDuracion) inputDuracion.value = duracionExtraida;
@@ -117,6 +117,7 @@ function procesarRegistroMasivo() {
         if (!linea.includes("|")) return;
 
         const partes = linea.split("|").map(p => p.trim());
+        // Acepta desde 10 partes en adelante para procesar correctamente las líneas
         if (partes.length < 10) return;
 
         const nombreBruto = partes[0];
@@ -124,24 +125,29 @@ function procesarRegistroMasivo() {
 
         const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
 
-        // Ajuste según estructura real: V/D está en partes[1]
-        const vic = parseInt(partes[1]) || 0;
+        // Mapeo adaptado al bloque enviado:
+        // partes[0]: Jugador
+        // partes[1]: Puntos o Victoria según la columna
+        // partes[2]: Vic/Der o Bono E
+        const ptsDirectos = parseInt(partes[1]) || 0;
+        const vic = parseInt(partes[2]) || (ptsDirectos > 0 ? 1 : 0);
         const der = vic === 1 ? 0 : 1;
 
-        // Bonos mapeados correctamente desde partes[2] a partes[9]
-        const e = parseInt(partes[2]) || 0;
-        const r = parseInt(partes[3]) || 0;
-        const m = parseInt(partes[4]) || 0;
-        const o = parseInt(partes[5]) || 0;
-        const s = parseInt(partes[6]) || 0;
-        const rch = parseInt(partes[7]) || 0;
-        const mg = parseInt(partes[8]) || 0;
-        const rlp = parseInt(partes[9]) || 0;
+        // Lectura de bonos de las siguientes columnas
+        const e = parseInt(partes[3]) || 0;
+        const r = parseInt(partes[4]) || 0;
+        const m = parseInt(partes[5]) || 0;
+        const o = parseInt(partes[6]) || 0;
+        const s = parseInt(partes[7]) || 0;
+        const rch = parseInt(partes[8]) || 0;
+        const mg = parseInt(partes[9]) || 0;
+        const rlp = parseInt(partes[10]) || 0;
         
-        const equipo = partes[10] || "";
-        const civ = partes[11] || "";
+        // Equipo y Civ (ajustando posición según cantidad de barras)
+        const equipo = partes.length >= 11 ? partes[partes.length - 2] : "";
+        const civ = partes.length >= 12 ? partes[partes.length - 1] : "";
 
-        const totalPuntosPartida = vic + e + r + m + o + s + rch + mg + rlp;
+        const totalPuntosPartida = ptsDirectos > 0 ? ptsDirectos : (vic + e + r + m + o + s + rch + mg + rlp);
 
         let sucesos = [];
         if (vic === 1) sucesos.push("Victoria");
