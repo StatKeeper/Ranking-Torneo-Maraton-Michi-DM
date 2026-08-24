@@ -125,7 +125,7 @@ function renderTabla() {
     let contadorDetectados = 0;
 
     listaActual.forEach(eq => {
-        // 1. TABLA SUPERIOR: Lista completa
+        // 1. TABLA SUPERIOR: Muestra a todos
         if (tbodyEq) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -136,22 +136,30 @@ function renderTabla() {
             tbodyEq.appendChild(tr);
         }
 
-        // 2. TABLA INFERIOR: Solo corregidos o nuevos
+        // 2. TABLA INFERIOR: Muestra si ha sido corregido, es nuevo o fue revisado
         const esCorregido = eq.antiguo !== eq.oficial;
         const esNuevoRegistrado = eq.esNuevo;
+        const esRevisado = eq.revisado;
 
-        if (tbodyDet && (esCorregido || esNuevoRegistrado)) {
+        if (tbodyDet && (esCorregido || esNuevoRegistrado || esRevisado)) {
             contadorDetectados++;
+            
+            // Determinar estilo según el estado
+            let etiqueta = '';
+            if (esCorregido) {
+                etiqueta = `<span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; background: #d1e7dd; color: #0f5132;">✏️ Corregido</span>`;
+            } else if (esNuevoRegistrado) {
+                etiqueta = `<span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; background: #cff4fc; color: #055160;">✨ Nuevo Jugador</span>`;
+            } else {
+                etiqueta = `<span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; background: #e2e3e5; color: #41464b;">✔️ Revisado</span>`;
+            }
+
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td><strong>${eq.id}</strong></td>
                 <td>${eq.antiguo}</td>
                 <td><strong>${eq.oficial}</strong></td>
-                <td>
-                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; background: ${esCorregido ? '#d1e7dd' : '#cff4fc'}; color: ${esCorregido ? '#0f5132' : '#055160'};">
-                        ${esCorregido ? '✏️ Corregido' : '✨ Nuevo Jugador'}
-                    </span>
-                </td>
+                <td>${etiqueta}</td>
             `;
             tbodyDet.appendChild(tr);
         }
@@ -161,7 +169,7 @@ function renderTabla() {
         tbodyDet.innerHTML = `
             <tr>
                 <td colspan="4" style="text-align: center; color: #6c757d; padding: 15px;">
-                    No hay jugadores con corrección de nombre registrada todavía.
+                    No hay jugadores con corrección o revisión registrada todavía.
                 </td>
             </tr>
         `;
@@ -191,17 +199,19 @@ function guardarEquivalencia() {
     
     if (existente) {
         existente.oficial = oficial;
+        existente.revisado = true;
     } else {
         const nuevoId = listaActual.length > 0 ? Math.max(...listaActual.map(e => e.id)) + 1 : 1;
         listaActual.push({ 
             id: nuevoId, 
             antiguo: antiguo, 
             oficial: oficial,
-            esNuevo: esJugadorNuevo || (antiguo === oficial)
+            esNuevo: esJugadorNuevo || (antiguo === oficial),
+            revisado: true
         });
     }
     
-    // Guardar cambios en el navegador
+    // Guardar permanentemente en memoria local
     localStorage.setItem("equivalencias_michi_dm", JSON.stringify(listaActual));
 
     document.getElementById("historial-antiguo").value = "";
