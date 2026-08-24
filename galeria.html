@@ -29,18 +29,18 @@
         <h2>⚡ Registro Masivo por Texto Plano</h2>
 
         <div class="card">
-            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr;">
                 <div>
-                    <label>Mes / Período:</label>
-                    <input type="text" id="mes-periodo" value="Agosto 2026">
+                    <label>Año:</label>
+                    <select id="select-anio"></select>
+                </div>
+                <div>
+                    <label>Mes:</label>
+                    <select id="select-mes"></select>
                 </div>
                 <div>
                     <label>Jornada:</label>
-                    <select id="jornada-select">
-                        <option value="Fecha 01">Fecha 01</option>
-                        <option value="Fecha 02">Fecha 02</option>
-                        <option value="Fecha 03">Fecha 03</option>
-                    </select>
+                    <select id="jornada-select"></select>
                 </div>
                 <div>
                     <label>Partida:</label>
@@ -51,7 +51,7 @@
                     </select>
                 </div>
                 <div>
-                    <label>Duración Partida (HH:MM:SS):</label>
+                    <label>Duración (HH:MM:SS):</label>
                     <input type="text" id="duracion-partida" placeholder="01:07:08">
                 </div>
             </div>
@@ -67,22 +67,18 @@
         <h2>🗑️ Gestión y Eliminación de Registros Guardados</h2>
 
         <div class="card">
-            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
                 <div>
-                    <label>Período:</label>
-
-                    <select id="gestion-periodo" onchange="renderTablaGestionRegistros()">
-                        <option value="Agosto 2026">Agosto 2026</option>
-                        <option value="Sin Fecha">Sin Fecha</option>
-                    </select>
+                    <label>Año:</label>
+                    <select id="gestion-anio" onchange="renderTablaGestionRegistros()"></select>
+                </div>
+                <div>
+                    <label>Mes:</label>
+                    <select id="gestion-mes" onchange="renderTablaGestionRegistros()"></select>
                 </div>
                 <div>
                     <label>Jornada:</label>
-                    <select id="gestion-jornada" onchange="renderTablaGestionRegistros()">
-                        <option value="Fecha 01">Fecha 01</option>
-                        <option value="Fecha 02">Fecha 02</option>
-                        <option value="Fecha 03">Fecha 03</option>
-                    </select>
+                    <select id="gestion-jornada" onchange="renderTablaGestionRegistros()"></select>
                 </div>
                 <div>
                     <label>Partida:</label>
