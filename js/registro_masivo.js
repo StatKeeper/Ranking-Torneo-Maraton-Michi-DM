@@ -73,6 +73,13 @@ function obtenerNickOficialLocal(nombreIngresado) {
     return nombreIngresado.trim();
 }
 
+// Limpia el texto de una celda y lo convierte a entero de forma segura
+function parsearNumeroSeguro(texto) {
+    if (!texto) return 0;
+    const limpio = texto.toString().replace(/[^0-9]/g, '');
+    return limpio ? parseInt(limpio, 10) : 0;
+}
+
 function procesarRegistroMasivo() {
     const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
     const mes = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "Agosto";
@@ -115,37 +122,36 @@ function procesarRegistroMasivo() {
         if (!linea.includes("|")) return;
 
         const partes = linea.split("|").map(p => p.trim());
-        if (partes.length < 12) return;
+        if (partes.length < 10) return;
 
         const nombreBruto = partes[0];
         if (nombreBruto.toLowerCase().startsWith("partida") || nombreBruto.toLowerCase().startsWith("bloque")) return;
 
         const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
 
-        // Estructura de columnas exacta de tu bloque:
-        // partes[0]: Jugador
-        // partes[1]: Puntos base por Victoria (3 o 0)
-        // partes[2] a partes[9]: Bonos (E, R, M, O, S, Rch, MG, RLP)
-        // partes[10]: Equipo
-        // partes[11]: Civilización
-
-        const ptsVictoria = parseInt(partes[1]) || 0;
+        // Mapeo seguro utilizando parsearNumeroSeguro
+        // partes[1] es la columna V/D o Puntos Base (3 para victoria, 0 para derrota)
+        const valVictoriaCol = parsearNumeroSeguro(partes[1]);
+        
+        // Si la celda contiene 3 (o cualquier valor > 0), le otorga 3 puntos de victoria y marca PG=1
+        const ptsVictoria = valVictoriaCol > 0 ? 3 : 0;
         const vic = ptsVictoria > 0 ? 1 : 0;
         const der = vic === 1 ? 0 : 1;
 
-        const e = parseInt(partes[2]) || 0;
-        const r = parseInt(partes[3]) || 0;
-        const m = parseInt(partes[4]) || 0;
-        const o = parseInt(partes[5]) || 0;
-        const s = parseInt(partes[6]) || 0;
-        const rch = parseInt(partes[7]) || 0;
-        const mg = parseInt(partes[8]) || 0;
-        const rlp = parseInt(partes[9]) || 0;
+        // Lectura de los 8 bonos
+        const e = parsearNumeroSeguro(partes[2]);
+        const r = parsearNumeroSeguro(partes[3]);
+        const m = parsearNumeroSeguro(partes[4]);
+        const o = parsearNumeroSeguro(partes[5]);
+        const s = parsearNumeroSeguro(partes[6]);
+        const rch = parsearNumeroSeguro(partes[7]);
+        const mg = parsearNumeroSeguro(partes[8]);
+        const rlp = parsearNumeroSeguro(partes[9]);
         
-        const equipo = partes[10] || "";
-        const civ = partes[11] || "";
+        const equipo = partes.length >= 11 ? partes[10] : "";
+        const civ = partes.length >= 12 ? partes[11] : "";
 
-        // Total = 3 pts de victoria + la suma de todos sus bonos de esa partida
+        // Puntuación Total = 3 Puntos de Victoria (si ganó) + Bonos acumulados
         const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
 
         let sucesos = [];
@@ -181,8 +187,9 @@ function procesarRegistroMasivo() {
         return;
     }
 
-    // Guardar en la base de datos local
+    // Limpiar BD local previa para esta partida específica antes de guardar la nueva
     const claveBD = `registros_${periodo}_${jornada}_${partidaSelect}`;
+    localStorage.removeItem(claveBD);
     localStorage.setItem(claveBD, JSON.stringify(registrosProcesados));
 
     actualizarAcumuladosRanking();
@@ -192,7 +199,7 @@ function procesarRegistroMasivo() {
     if (document.getElementById("gestion-jornada")) document.getElementById("gestion-jornada").value = jornada;
     if (document.getElementById("gestion-partida")) document.getElementById("gestion-partida").value = partidaSelect;
 
-    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores para ${periodo} - ${jornada} - ${partidaSelect}!`);
+    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores correctamente!`);
     renderTablaGestionRegistros();
 }
 
