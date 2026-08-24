@@ -1,3 +1,54 @@
+// Poblado dinámico de Años (2026-2035), Meses y Jornadas (Fecha 01 a 30)
+function cargarSelectoresFechaDinamicos() {
+    const anioInicio = 2026;
+    const anioFin = 2035;
+    const meses = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
+    // Llenar selectores de Año (Sección Registro y Sección Gestión)
+    const selectsAnio = document.querySelectorAll("#select-anio, #gestion-anio");
+    selectsAnio.forEach(sel => {
+        if (!sel) return;
+        sel.innerHTML = "";
+        for (let a = anioInicio; a <= anioFin; a++) {
+            const opt = document.createElement("option");
+            opt.value = a;
+            opt.textContent = a;
+            sel.appendChild(opt);
+        }
+    });
+
+    // Llenar selectores de Mes
+    const selectsMes = document.querySelectorAll("#select-mes, #gestion-mes");
+    selectsMes.forEach(sel => {
+        if (!sel) return;
+        sel.innerHTML = "";
+        meses.forEach(m => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.textContent = m;
+            if (m === "Agosto") opt.selected = true; // Por defecto
+            sel.appendChild(opt);
+        });
+    });
+
+    // Llenar selectores de Jornada (Fecha 01 a Fecha 30)
+    const selectsJornada = document.querySelectorAll("#jornada-select, #gestion-jornada");
+    selectsJornada.forEach(sel => {
+        if (!sel) return;
+        sel.innerHTML = "";
+        for (let i = 1; i <= 30; i++) {
+            const num = i < 10 ? `0${i}` : i;
+            const opt = document.createElement("option");
+            opt.value = `Fecha ${num}`;
+            opt.textContent = `Fecha ${num}`;
+            sel.appendChild(opt);
+        }
+    });
+}
+
 // Obtener el nick oficial mediante la lista de equivalencias.js
 function obtenerNickOficialLocal(nombreIngresado) {
     if (typeof equivalencias !== 'undefined') {
@@ -10,11 +61,13 @@ function obtenerNickOficialLocal(nombreIngresado) {
 }
 
 function procesarRegistroMasivo() {
-    const periodo = document.getElementById("mes-periodo") ? document.getElementById("mes-periodo").value : "Agosto 2026";
+    // 1. Obtener Periodo uniendo Mes y Año
+    const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
+    const mes = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "Agosto";
+    const periodo = `${mes} ${anio}`;
+    
     const jornada = document.getElementById("jornada-select") ? document.getElementById("jornada-select").value : "Fecha 01";
     const partidaSelect = document.getElementById("partida-select") ? document.getElementById("partida-select").value : "Partida 1";
-    
-    // Corregido: lee 'bloque-datos' que es el ID de tu HTML
     const textoBloque = document.getElementById("bloque-datos") ? document.getElementById("bloque-datos").value : "";
 
     if (!textoBloque.trim()) {
@@ -25,13 +78,13 @@ function procesarRegistroMasivo() {
     const lineas = textoBloque.split("\n");
     let duracionExtraida = "";
 
-    // 1. Extraer automáticamente la duración de la primera línea (ej. "Partida 1 1:07:08")
+    // Extraer automáticamente la duración de la primera línea (ej. "Partida 1 1:07:08")
     for (let i = 0; i < lineas.length; i++) {
         const lineaLimpia = lineas[i].trim();
         if (lineaLimpia.toLowerCase().startsWith("partida")) {
             const partesHeader = lineaLimpia.split(" ");
             if (partesHeader.length >= 3) {
-                duracionExtraida = partesHeader[partesHeader.length - 1]; // Extrae "1:07:08"
+                duracionExtraida = partesHeader[partesHeader.length - 1];
                 const inputDuracion = document.getElementById("duracion-partida");
                 if (inputDuracion) inputDuracion.value = duracionExtraida;
             }
@@ -46,7 +99,7 @@ function procesarRegistroMasivo() {
     const registrosProcesados = [];
     let contadorId = 1;
 
-    // 2. Procesar jugadores
+    // Procesar jugadores
     lineas.forEach((linea) => {
         if (!linea.includes("|")) return;
 
@@ -71,10 +124,8 @@ function procesarRegistroMasivo() {
         const equipo = partes[12] || "";
         const civ = partes[13] || "";
 
-        // Sumatoria total de puntos
         const totalPuntosPartida = vic + e + r + m + o + s + rch + mg + rlp;
 
-        // Construir la nota del último suceso
         let sucesos = [];
         if (vic === 1) sucesos.push("Victoria");
         if (e === 1) sucesos.push("E");
@@ -108,14 +159,20 @@ function procesarRegistroMasivo() {
         return;
     }
 
-    // 3. Guardar en Base de Datos Local por Partida
+    // 2. Guardar en Base de Datos Local por Partida
     const claveBD = `registros_${periodo}_${jornada}_${partidaSelect}`;
     localStorage.setItem(claveBD, JSON.stringify(registrosProcesados));
 
-    // 4. Alimentar el Ranking Acumulado General
+    // 3. Alimentar el Ranking Acumulado General
     actualizarAcumuladosRanking();
 
-    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores correctamente!`);
+    // 4. Sincronizar automáticamente los filtros inferiores de gestión con lo que se acaba de procesar
+    if (document.getElementById("gestion-anio")) document.getElementById("gestion-anio").value = anio;
+    if (document.getElementById("gestion-mes")) document.getElementById("gestion-mes").value = mes;
+    if (document.getElementById("gestion-jornada")) document.getElementById("gestion-jornada").value = jornada;
+    if (document.getElementById("gestion-partida")) document.getElementById("gestion-partida").value = partidaSelect;
+
+    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores para ${periodo} - ${jornada} - ${partidaSelect}!`);
     renderTablaGestionRegistros();
 }
 
@@ -159,7 +216,9 @@ function actualizarAcumuladosRanking() {
 }
 
 function renderTablaGestionRegistros() {
-    const periodo = document.getElementById("gestion-periodo") ? document.getElementById("gestion-periodo").value : "Agosto 2026";
+    const anio = document.getElementById("gestion-anio") ? document.getElementById("gestion-anio").value : "2026";
+    const mes = document.getElementById("gestion-mes") ? document.getElementById("gestion-mes").value : "Agosto";
+    const periodo = `${mes} ${anio}`;
     const jornada = document.getElementById("gestion-jornada") ? document.getElementById("gestion-jornada").value : "Fecha 01";
     const partida = document.getElementById("gestion-partida") ? document.getElementById("gestion-partida").value : "Partida 1";
 
@@ -201,21 +260,22 @@ function renderTablaGestionRegistros() {
 }
 
 function eliminarPartidaCompleta() {
-    const periodo = document.getElementById("gestion-periodo").value;
+    const anio = document.getElementById("gestion-anio").value;
+    const mes = document.getElementById("gestion-mes").value;
+    const periodo = `${mes} ${anio}`;
     const jornada = document.getElementById("gestion-jornada").value;
     const partida = document.getElementById("gestion-partida").value;
 
     const claveBD = `registros_${periodo}_${jornada}_${partida}`;
-    if (confirm(`¿Deseas eliminar todos los registros de ${jornada} - ${partida}?`)) {
+    if (confirm(`¿Deseas eliminar todos los registros de ${periodo} - ${jornada} - ${partida}?`)) {
         localStorage.removeItem(claveBD);
         actualizarAcumuladosRanking();
         renderTablaGestionRegistros();
     }
 }
 
-// Carga inicial al refrescar con F5
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderTablaGestionRegistros);
-} else {
+// Inicializar selectores dinámicos y renderizar datos al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+    cargarSelectoresFechaDinamicos();
     renderTablaGestionRegistros();
-}
+});
