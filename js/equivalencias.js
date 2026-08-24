@@ -42,7 +42,7 @@ let equivalencias = [
     { id: 41, antiguo: "Jkaarem", oficial: "Jkaarem" },
     { id: 42, antiguo: "Juliano", oficial: "Juliano" },
     { id: 43, antiguo: "Kartoos", oficial: "Kartoos" },
-    { id: 44, antiguo: "Kficho", oficial: "Kficho" },
+    { id: 44, antiguo: "Kficho", oficial: "[cLm] KFICHO" },
     { id: 45, antiguo: "kimchi", oficial: "kimchi" },
     { id: 46, antiguo: "king vitt", oficial: "king vitt" },
     { id: 47, antiguo: "Komodo3000", oficial: "Komodo3000" },
