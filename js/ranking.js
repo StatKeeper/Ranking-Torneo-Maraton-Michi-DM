@@ -15,47 +15,48 @@ function obtenerNombreOficial(nombreOriginal) {
     return mapaCorrecciones[nombreOriginal] || nombreOriginal;
 }
 
-// Función auxiliar para parsear y contabilizar la cantidad de bonos por unidad (+1)
+// Función auxiliar para parsear y contabilizar bonos por unidad (+1)
 function procesarBonosPorUnidad(textoSuceso, objetoJugador) {
     if (!textoSuceso || typeof textoSuceso !== "string") return;
 
-    // Normalizar texto para comparación
     const texto = textoSuceso.toUpperCase();
 
-    // Bonos principales
     if (/\bE\b/.test(texto) || texto.includes("EXCELENCIA")) objetoJugador.bonoE += 1;
     if (/\bR\b/.test(texto) || texto.includes("RESISTENCIA")) objetoJugador.bonoR += 1;
     if (/\bM\b/.test(texto) || texto.includes("MILITAR")) objetoJugador.bonoM += 1;
     if (/\bO\b/.test(texto) || texto.includes("ORO")) objetoJugador.bonoO += 1;
     if (/\bS\b/.test(texto) || texto.includes("SOCIEDAD")) objetoJugador.bonoS += 1;
 
-    // Bonos especiales
     if (texto.includes("RCH") || texto.includes("RACHA")) objetoJugador.bonoRch += 1;
     if (texto.includes("MG") || texto.includes("MATAGIGANTES")) objetoJugador.bonoMG += 1;
     if (texto.includes("RLP") || texto.includes("RELAMPAGO") || texto.includes("RELÁMPAGO")) objetoJugador.bonoRLP += 1;
 }
 
-// Renderiza el Ranking Acumulado General en Clasificación General (index.html)
+// Renderiza el Ranking Acumulado General filtrado por período
 function renderTablaRankingGeneral() {
     const tbody = document.getElementById("tabla-clasificacion");
     const elFechaAct = document.getElementById("fecha-actualizacion");
     const elLabelFecha = document.getElementById("label-fecha");
     const elLabelPartida = document.getElementById("label-partida");
+    const elTotalPartidasMes = document.getElementById("total-partidas-mes");
+    const selectMesAno = document.getElementById("select-mes-ano");
     const tableElement = tbody ? tbody.closest("table") : null;
 
     if (!tbody) return;
 
-    let acumuladoMap = {};
-    let ultimaJornada = "Fecha 01";
-    let ultimaPartida = "Partida 1";
-    let ultimaFechaHora = "";
+    const periodoSeleccionado = selectMesAno ? selectMesAno.value : "2026-08";
 
-    // 1. Leer dinámicamente registros masivos de localStorage
+    let acumuladoMap = {};
+    let ultimaJornada = "01";
+    let ultimaPartida = "1";
+    let ultimaFechaHora = "";
+    let totalPartidasJugadasMes = 0;
+
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         if (clave && clave.startsWith("registros_")) {
             const partesClave = clave.split("_");
-            if (partesClave.length >= 2) {
+            if (partesClave.length >= 3) {
                 ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
                 ultimaPartida = partesClave[partesClave.length - 1] || ultimaPartida;
             }
@@ -64,14 +65,15 @@ function renderTablaRankingGeneral() {
                 const registros = JSON.parse(localStorage.getItem(clave));
                 if (Array.isArray(registros)) {
                     registros.forEach(reg => {
+                        // Filtrar por mes/año del registro si contiene fecha
+                        if (reg.fechaHora) {
+                            ultimaFechaHora = reg.fechaHora;
+                        }
+
                         const nombreRaw = reg.jugador || reg.Jugador;
                         if (!nombreRaw) return;
 
                         const nombre = obtenerNombreOficial(nombreRaw);
-
-                        if (reg.fechaHora) {
-                            ultimaFechaHora = reg.fechaHora;
-                        }
 
                         if (!acumuladoMap[nombre]) {
                             acumuladoMap[nombre] = {
@@ -103,14 +105,12 @@ function renderTablaRankingGeneral() {
                         acumuladoMap[nombre].pp += perdidos;
                         acumuladoMap[nombre].ultimoSuceso = sucesoActual || acumuladoMap[nombre].ultimoSuceso;
 
-                        // Determinar V/D (1 si hubo victoria en esta partida, 0 si hubo derrota)
                         if (ganados > 0) {
                             acumuladoMap[nombre].vd = 1;
                         } else if (perdidos > 0) {
                             acumuladoMap[nombre].vd = 0;
                         }
 
-                        // Contabilizar bonos por unidad (+1)
                         procesarBonosPorUnidad(sucesoActual, acumuladoMap[nombre]);
                     });
                 }
@@ -120,49 +120,43 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // 2. Encabezados y Subencabezados dinámicos
-    if (!ultimaFechaHora) {
-        const ahora = new Date();
-        ultimaFechaHora = ahora.toLocaleString('es-PE', { 
-            day: '2-digit', month: '2-digit', year: 'numeric', 
-            hour: '2-digit', minute: '2-digit', second: '2-digit' 
-        });
-    }
+    // Calcular el total de partidas jugadas en el periodo (Suma de victorias de todos los jugadores)
+    Object.values(acumuladoMap).forEach(jug => {
+        totalPartidasJugadasMes += jug.pg;
+    });
 
-    if (elFechaAct) elFechaAct.textContent = ultimaFechaHora;
-    if (elLabelFecha) elLabelFecha.textContent = ultimaJornada.includes("Fecha") ? ultimaJornada : `Fecha ${ultimaJornada}`;
-    if (elLabelPartida) elLabelPartida.textContent = ultimaPartida.includes("Partida") ? ultimaPartida : `Partida ${ultimaPartida}`;
+    const numFecha = ultimaJornada.replace(/\D/g, "") || ultimaJornada;
+    const numPartida = ultimaPartida.replace(/\D/g, "") || ultimaPartida;
 
-    // 3. Si no hay registros guardados
+    if (elFechaAct && ultimaFechaHora) elFechaAct.textContent = ultimaFechaHora;
+    if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
+    if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
+    if (elTotalPartidasMes) elTotalPartidasMes.textContent = totalPartidasJugadasMes;
+
     let jugadores = Object.values(acumuladoMap);
     if (jugadores.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="16" style="text-align: center; color: #6c757d; padding: 20px;">
-                    No hay partidas registradas aún en el ranking acumulado.
+                    No hay partidas registradas para el período seleccionado.
                 </td>
             </tr>
         `;
         return;
     }
 
-    // 4. Ordenar por Puntos descendente
     jugadores.sort((a, b) => b.pts - a.pts);
 
-    // Totales globales para la fila inferior
     let totalPts = 0, totalE = 0, totalR = 0, totalM = 0, totalO = 0, totalS = 0, totalRch = 0, totalMG = 0, totalRLP = 0, totalTB = 0;
 
-    // 5. Dibujar las filas de la tabla
     tbody.innerHTML = "";
     jugadores.forEach((jug, index) => {
         const pos = index + 1;
         const pj = jug.pg + jug.pp;
         const vPjStr = `${jug.pg}/${pj}`;
 
-        // Cálculo del Total de Bonos (TB)
         const tbJugador = jug.bonoE + jug.bonoR + jug.bonoM + jug.bonoO + jug.bonoS + jug.bonoRch + jug.bonoMG + jug.bonoRLP;
 
-        // Acumular totales globales
         totalPts += jug.pts;
         totalE += jug.bonoE;
         totalR += jug.bonoR;
@@ -174,7 +168,6 @@ function renderTablaRankingGeneral() {
         totalRLP += jug.bonoRLP;
         totalTB += tbJugador;
 
-        // Indicadores visuales por zona (1-5 Verde, 6-10 Amarillo, 11-15 Naranja, 16+ Gris)
         let colorCirculo = "#6c757d";
         if (pos <= 5) colorCirculo = "#198754";
         else if (pos <= 10) colorCirculo = "#ffc107";
@@ -183,7 +176,6 @@ function renderTablaRankingGeneral() {
         const variacion = jug.var !== undefined ? jug.var : 0;
         const varTexto = variacion > 0 ? `+${variacion}` : `${variacion}`;
 
-        // Helper para resaltar en negrilla y rojo si el jugador tiene bonos ganados
         const fmtBono = (val) => val > 0 ? `<strong style="color: #dc3545;">${val}</strong>` : `<span style="color: #6c757d;">0</span>`;
 
         const tr = document.createElement("tr");
@@ -211,7 +203,6 @@ function renderTablaRankingGeneral() {
         tbody.appendChild(tr);
     });
 
-    // 6. Fila de sumatoria acumulada en la parte inferior
     if (tableElement) {
         let tfoot = tableElement.querySelector("tfoot");
         if (!tfoot) {
@@ -239,7 +230,6 @@ function renderTablaRankingGeneral() {
     }
 }
 
-// Forzar ejecución al cargar la página
 if (document.readyState === "complete" || document.readyState === "interactive") {
     renderTablaRankingGeneral();
 } else {
