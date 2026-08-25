@@ -1,3 +1,22 @@
+// Obtener el nombre oficial corregido desde localStorage
+function obtenerNombreOficial(nombreOriginal) {
+    if (!nombreOriginal) return "";
+    let mapaCorrecciones = {};
+    
+    // Intentar leer el diccionario de correcciones guardado en la pestaña correccion.html
+    const correccionesGuardadas = localStorage.getItem("mapa_correccion_nombres") || localStorage.getItem("correcciones_nombres");
+    if (correccionesGuardadas) {
+        try {
+            mapaCorrecciones = JSON.parse(correccionesGuardadas);
+        } catch (e) {
+            console.error("Error parseando mapa de corrección de nombres:", e);
+        }
+    }
+    
+    // Si existe una equivalencia registrada, devuelve el nombre oficial; de lo contrario, el original
+    return mapaCorrecciones[nombreOriginal] || nombreOriginal;
+}
+
 // Renderiza el Ranking Acumulado General en Clasificación General (index.html)
 function renderTablaRankingGeneral() {
     const tbody = document.getElementById("tabla-clasificacion");
@@ -24,7 +43,6 @@ function renderTablaRankingGeneral() {
         const clave = localStorage.key(i);
         if (clave && clave.startsWith("registros_")) {
             const partesClave = clave.split("_");
-            // Obtener dinámica la jornada y partida sin importar cuántas partes tenga el prefijo
             if (partesClave.length >= 2) {
                 ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
                 ultimaPartida = partesClave[partesClave.length - 1] || ultimaPartida;
@@ -36,8 +54,11 @@ function renderTablaRankingGeneral() {
                     const registros = JSON.parse(localStorage.getItem(clave));
                     if (Array.isArray(registros)) {
                         registros.forEach(reg => {
-                            const nombre = reg.jugador || reg.Jugador;
-                            if (!nombre) return;
+                            const nombreRaw = reg.jugador || reg.Jugador;
+                            if (!nombreRaw) return;
+
+                            // HOMOLOGACIÓN DE NOMBRE: Se obtiene el nombre oficial corregido
+                            const nombre = obtenerNombreOficial(nombreRaw);
 
                             if (!acumuladoMap[nombre]) {
                                 acumuladoMap[nombre] = {
@@ -101,11 +122,11 @@ function renderTablaRankingGeneral() {
         const pj = jug.pg + jug.pp;
         const pctVictoria = pj > 0 ? ((jug.pg / pj) * 100).toFixed(1) + "%" : "0.0%";
 
-        // Indicadores visuales por zona
-        let colorCirculo = "#6c757d"; // Gris
-        if (pos <= 5) colorCirculo = "#198754"; // Verde
-        else if (pos <= 10) colorCirculo = "#ffc107"; // Amarillo
-        else if (pos <= 15) colorCirculo = "#fd7e14"; // Naranja
+        // Indicadores visuales por zona (1-5 Verde, 6-10 Amarillo, 11-15 Naranja, 16+ Gris)
+        let colorCirculo = "#6c757d";
+        if (pos <= 5) colorCirculo = "#198754";
+        else if (pos <= 10) colorCirculo = "#ffc107";
+        else if (pos <= 15) colorCirculo = "#fd7e14";
 
         const variacion = jug.var !== undefined ? jug.var : 0;
         const varTexto = variacion > 0 ? `+${variacion}` : `${variacion}`;
