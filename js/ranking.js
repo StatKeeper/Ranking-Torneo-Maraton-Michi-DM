@@ -44,7 +44,7 @@ function renderTablaRankingGeneral() {
 
     if (!tbody) return;
 
-    const periodoSeleccionado = selectMesAno ? selectMesAno.value : "Agosto 2026";
+    const periodoSeleccionado = selectMesAno ? selectMesAno.value : "2026-08";
 
     let acumuladoMap = {};
     let ultimaJornada = "01";
@@ -55,7 +55,7 @@ function renderTablaRankingGeneral() {
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         
-        // FILTRO CLAVE: Solo procesar registros que correspondan al período seleccionado
+        // FILTRO CLAVE: Procesar registros compatibles con AAAA-MM o formatos textuales
         if (clave && clave.startsWith("registros_") && clave.includes(`_${periodoSeleccionado}_`)) {
             const partesClave = clave.split("_");
             if (partesClave.length >= 4) {
@@ -121,7 +121,6 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // Sumar total de victorias registradas en el mes
     Object.values(acumuladoMap).forEach(jug => {
         totalPartidasJugadasMes += jug.pg;
     });
@@ -129,14 +128,13 @@ function renderTablaRankingGeneral() {
     const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
     const numPartida = ultimaPartida.replace(/\D/g, "") || "1";
 
-    if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || "-";
+    if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || new Date().toLocaleString("es-PE");
     if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
     if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
     if (elTotalPartidasMes) elTotalPartidasMes.textContent = totalPartidasJugadasMes;
 
     let jugadores = Object.values(acumuladoMap);
     
-    // Si no hay partidas para el mes seleccionado, limpia la tabla y resetea totales
     if (jugadores.length === 0) {
         tbody.innerHTML = `
             <tr>
@@ -237,7 +235,6 @@ function renderTablaRankingGeneral() {
     }
 }
 
-// Escuchar cambios en el selector de mes/año para refrescar la tabla dinámicamente
 document.addEventListener("DOMContentLoaded", () => {
     const selectMesAno = document.getElementById("select-mes-ano");
     if (selectMesAno) {
