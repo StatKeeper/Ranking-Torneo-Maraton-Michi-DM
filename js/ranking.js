@@ -32,7 +32,7 @@ function procesarBonosPorUnidad(textoSuceso, objetoJugador) {
     if (texto.includes("RLP") || texto.includes("RELAMPAGO") || texto.includes("RELÁMPAGO")) objetoJugador.bonoRLP += 1;
 }
 
-// Renderiza el Ranking Acumulado General filtrado por período
+// Renderiza el Ranking Acumulado General filtrado correctamente por período
 function renderTablaRankingGeneral() {
     const tbody = document.getElementById("tabla-clasificacion");
     const elFechaAct = document.getElementById("fecha-actualizacion");
@@ -44,7 +44,7 @@ function renderTablaRankingGeneral() {
 
     if (!tbody) return;
 
-    const periodoSeleccionado = selectMesAno ? selectMesAno.value : "2026-08";
+    const periodoSeleccionado = selectMesAno ? selectMesAno.value : "Agosto 2026";
 
     let acumuladoMap = {};
     let ultimaJornada = "01";
@@ -54,9 +54,11 @@ function renderTablaRankingGeneral() {
 
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
-        if (clave && clave.startsWith("registros_")) {
+        
+        // FILTRO CLAVE: Solo procesar registros que correspondan al período seleccionado
+        if (clave && clave.startsWith("registros_") && clave.includes(`_${periodoSeleccionado}_`)) {
             const partesClave = clave.split("_");
-            if (partesClave.length >= 3) {
+            if (partesClave.length >= 4) {
                 ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
                 ultimaPartida = partesClave[partesClave.length - 1] || ultimaPartida;
             }
@@ -65,7 +67,6 @@ function renderTablaRankingGeneral() {
                 const registros = JSON.parse(localStorage.getItem(clave));
                 if (Array.isArray(registros)) {
                     registros.forEach(reg => {
-                        // Filtrar por mes/año del registro si contiene fecha
                         if (reg.fechaHora) {
                             ultimaFechaHora = reg.fechaHora;
                         }
@@ -120,20 +121,22 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // Calcular el total de partidas jugadas en el periodo (Suma de victorias de todos los jugadores)
+    // Sumar total de victorias registradas en el mes
     Object.values(acumuladoMap).forEach(jug => {
         totalPartidasJugadasMes += jug.pg;
     });
 
-    const numFecha = ultimaJornada.replace(/\D/g, "") || ultimaJornada;
-    const numPartida = ultimaPartida.replace(/\D/g, "") || ultimaPartida;
+    const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
+    const numPartida = ultimaPartida.replace(/\D/g, "") || "1";
 
-    if (elFechaAct && ultimaFechaHora) elFechaAct.textContent = ultimaFechaHora;
+    if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || "-";
     if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
     if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
     if (elTotalPartidasMes) elTotalPartidasMes.textContent = totalPartidasJugadasMes;
 
     let jugadores = Object.values(acumuladoMap);
+    
+    // Si no hay partidas para el mes seleccionado, limpia la tabla y resetea totales
     if (jugadores.length === 0) {
         tbody.innerHTML = `
             <tr>
@@ -142,6 +145,10 @@ function renderTablaRankingGeneral() {
                 </td>
             </tr>
         `;
+        if (tableElement) {
+            let tfoot = tableElement.querySelector("tfoot");
+            if (tfoot) tfoot.innerHTML = "";
+        }
         return;
     }
 
@@ -230,8 +237,11 @@ function renderTablaRankingGeneral() {
     }
 }
 
-if (document.readyState === "complete" || document.readyState === "interactive") {
+// Escuchar cambios en el selector de mes/año para refrescar la tabla dinámicamente
+document.addEventListener("DOMContentLoaded", () => {
+    const selectMesAno = document.getElementById("select-mes-ano");
+    if (selectMesAno) {
+        selectMesAno.addEventListener("change", renderTablaRankingGeneral);
+    }
     renderTablaRankingGeneral();
-} else {
-    document.addEventListener("DOMContentLoaded", renderTablaRankingGeneral);
-}
+});
