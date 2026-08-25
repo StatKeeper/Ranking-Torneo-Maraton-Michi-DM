@@ -168,7 +168,12 @@ function procesarRegistroMasivo() {
         const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
 
         let sucesos = [];
-        if (vic === 1) sucesos.push("Victoria");
+        if (vic === 1) {
+            sucesos.push("Victoria");
+        } else if (der === 1) {
+            sucesos.push("Derrota");
+        }
+        
         if (e === 1) sucesos.push("E");
         if (r === 1) sucesos.push("R");
         if (m === 1) sucesos.push("M");
