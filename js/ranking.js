@@ -32,12 +32,15 @@ function procesarBonosPorUnidad(textoSuceso, objetoJugador) {
     // Bonos especiales
     if (texto.includes("RCH") || texto.includes("RACHA")) objetoJugador.bonoRch += 1;
     if (texto.includes("MG") || texto.includes("MATAGIGANTES")) objetoJugador.bonoMG += 1;
+    if (texto.includes("RLP") || texto.includes("RELAMPAGO") || texto.includes("RELÁMPAGO")) objetoJugador.bonoRLP += 1;
 }
 
 // Renderiza el Ranking Acumulado General en Clasificación General (index.html)
 function renderTablaRankingGeneral() {
     const tbody = document.getElementById("tabla-clasificacion");
-    const tituloHeader = document.querySelector("#main-content h1");
+    const elFechaAct = document.getElementById("fecha-actualizacion");
+    const elLabelFecha = document.getElementById("label-fecha");
+    const elLabelPartida = document.getElementById("label-partida");
     const tableElement = tbody ? tbody.closest("table") : null;
 
     if (!tbody) return;
@@ -45,6 +48,7 @@ function renderTablaRankingGeneral() {
     let acumuladoMap = {};
     let ultimaJornada = "Fecha 01";
     let ultimaPartida = "Partida 1";
+    let ultimaFechaHora = "";
 
     // 1. Leer dinámicamente registros masivos de localStorage
     for (let i = 0; i < localStorage.length; i++) {
@@ -65,6 +69,10 @@ function renderTablaRankingGeneral() {
 
                         const nombre = obtenerNombreOficial(nombreRaw);
 
+                        if (reg.fechaHora) {
+                            ultimaFechaHora = reg.fechaHora;
+                        }
+
                         if (!acumuladoMap[nombre]) {
                             acumuladoMap[nombre] = {
                                 jugador: nombre,
@@ -72,6 +80,7 @@ function renderTablaRankingGeneral() {
                                 pg: 0,
                                 pp: 0,
                                 var: 0,
+                                vd: 0,
                                 bonoE: 0,
                                 bonoR: 0,
                                 bonoM: 0,
@@ -79,6 +88,7 @@ function renderTablaRankingGeneral() {
                                 bonoS: 0,
                                 bonoRch: 0,
                                 bonoMG: 0,
+                                bonoRLP: 0,
                                 ultimoSuceso: reg.sucesoNota || reg.suceso || reg.ultimoSuceso || 'Victoria'
                             };
                         }
@@ -93,6 +103,13 @@ function renderTablaRankingGeneral() {
                         acumuladoMap[nombre].pp += perdidos;
                         acumuladoMap[nombre].ultimoSuceso = sucesoActual || acumuladoMap[nombre].ultimoSuceso;
 
+                        // Determinar V/D (1 si hubo victoria en esta partida, 0 si hubo derrota)
+                        if (ganados > 0) {
+                            acumuladoMap[nombre].vd = 1;
+                        } else if (perdidos > 0) {
+                            acumuladoMap[nombre].vd = 0;
+                        }
+
                         // Contabilizar bonos por unidad (+1)
                         procesarBonosPorUnidad(sucesoActual, acumuladoMap[nombre]);
                     });
@@ -103,16 +120,18 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // 2. Título dinámico en el encabezado
-    const ahora = new Date();
-    const fechaHoraStr = ahora.toLocaleString('es-PE', { 
-        day: '2-digit', month: '2-digit', year: 'numeric', 
-        hour: '2-digit', minute: '2-digit', second: '2-digit' 
-    });
-
-    if (tituloHeader) {
-        tituloHeader.textContent = `Ranking Michi DM Dinámico ${ultimaJornada} ${ultimaPartida} ${fechaHoraStr}`;
+    // 2. Encabezados y Subencabezados dinámicos
+    if (!ultimaFechaHora) {
+        const ahora = new Date();
+        ultimaFechaHora = ahora.toLocaleString('es-PE', { 
+            day: '2-digit', month: '2-digit', year: 'numeric', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+        });
     }
+
+    if (elFechaAct) elFechaAct.textContent = ultimaFechaHora;
+    if (elLabelFecha) elLabelFecha.textContent = ultimaJornada.includes("Fecha") ? ultimaJornada : `Fecha ${ultimaJornada}`;
+    if (elLabelPartida) elLabelPartida.textContent = ultimaPartida.includes("Partida") ? ultimaPartida : `Partida ${ultimaPartida}`;
 
     // 3. Si no hay registros guardados
     let jugadores = Object.values(acumuladoMap);
@@ -131,21 +150,20 @@ function renderTablaRankingGeneral() {
     jugadores.sort((a, b) => b.pts - a.pts);
 
     // Totales globales para la fila inferior
-    let totalPts = 0, totalPJ = 0, totalPG = 0, totalPP = 0;
-    let totalE = 0, totalR = 0, totalM = 0, totalO = 0, totalS = 0, totalRch = 0, totalMG = 0;
+    let totalPts = 0, totalE = 0, totalR = 0, totalM = 0, totalO = 0, totalS = 0, totalRch = 0, totalMG = 0, totalRLP = 0, totalTB = 0;
 
     // 5. Dibujar las filas de la tabla
     tbody.innerHTML = "";
     jugadores.forEach((jug, index) => {
         const pos = index + 1;
         const pj = jug.pg + jug.pp;
-        const pctVictoria = pj > 0 ? ((jug.pg / pj) * 100).toFixed(1) + "%" : "0.0%";
+        const vPjStr = `${jug.pg}/${pj}`;
 
-        // Acumular totales de bonos y partidos
+        // Cálculo del Total de Bonos (TB)
+        const tbJugador = jug.bonoE + jug.bonoR + jug.bonoM + jug.bonoO + jug.bonoS + jug.bonoRch + jug.bonoMG + jug.bonoRLP;
+
+        // Acumular totales globales
         totalPts += jug.pts;
-        totalPJ += pj;
-        totalPG += jug.pg;
-        totalPP += jug.pp;
         totalE += jug.bonoE;
         totalR += jug.bonoR;
         totalM += jug.bonoM;
@@ -153,6 +171,8 @@ function renderTablaRankingGeneral() {
         totalS += jug.bonoS;
         totalRch += jug.bonoRch;
         totalMG += jug.bonoMG;
+        totalRLP += jug.bonoRLP;
+        totalTB += tbJugador;
 
         // Indicadores visuales por zona (1-5 Verde, 6-10 Amarillo, 11-15 Naranja, 16+ Gris)
         let colorCirculo = "#6c757d";
@@ -175,10 +195,9 @@ function renderTablaRankingGeneral() {
             <td>${varTexto}</td>
             <td><strong>${jug.jugador}</strong></td>
             <td><span style="color: #0d6efd; font-weight: bold;">${jug.pts}</span></td>
-            <td>${pj}</td>
-            <td>${jug.pg}</td>
-            <td>${jug.pp}</td>
-            <td>${pctVictoria}</td>
+            <td><strong>${vPjStr}</strong></td>
+            <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
+            <td><strong>${jug.vd}</strong></td>
             <td>${fmtBono(jug.bonoE)}</td>
             <td>${fmtBono(jug.bonoR)}</td>
             <td>${fmtBono(jug.bonoM)}</td>
@@ -186,7 +205,8 @@ function renderTablaRankingGeneral() {
             <td>${fmtBono(jug.bonoS)}</td>
             <td>${fmtBono(jug.bonoRch)}</td>
             <td>${fmtBono(jug.bonoMG)}</td>
-            <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
+            <td>${fmtBono(jug.bonoRLP)}</td>
+            <td><strong style="color: #198754;">${tbJugador}</strong></td>
         `;
         tbody.appendChild(tr);
     });
@@ -200,11 +220,10 @@ function renderTablaRankingGeneral() {
         }
         tfoot.innerHTML = `
             <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
-                <td colspan="3" style="text-align: right; padding: 10px;">Sumatoria Total de Bonos:</td>
+                <td colspan="3" style="text-align: right; padding: 10px;">Sumatoria Total:</td>
                 <td style="color: #0d6efd;">${totalPts}</td>
-                <td>${totalPJ}</td>
-                <td>${totalPG}</td>
-                <td>${totalPP}</td>
+                <td>-</td>
+                <td>-</td>
                 <td>-</td>
                 <td style="color: #dc3545;">${totalE}</td>
                 <td style="color: #dc3545;">${totalR}</td>
@@ -213,7 +232,8 @@ function renderTablaRankingGeneral() {
                 <td style="color: #dc3545;">${totalS}</td>
                 <td style="color: #dc3545;">${totalRch}</td>
                 <td style="color: #dc3545;">${totalMG}</td>
-                <td>-</td>
+                <td style="color: #dc3545;">${totalRLP}</td>
+                <td style="color: #198754;">${totalTB}</td>
             </tr>
         `;
     }
