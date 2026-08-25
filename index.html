@@ -23,7 +23,7 @@
             font-weight: bold;
             color: #333;
         }
-        /* Subencabezado con filtro de mes y contador de partidas */
+        /* Subencabezado con filtro de año/mes y contador de partidas */
         .bar-jornada-filtro {
             display: flex;
             justify-content: space-between;
@@ -96,7 +96,7 @@
 
         <h2>📊 Clasificación General</h2>
         
-        <!-- Barra de Jornada e Histórico Mensual -->
+        <!-- Barra de Jornada y Filtros Independientes de Año / Mes -->
         <div class="bar-jornada-filtro">
             <div class="info-jornada">
                 <span id="label-fecha">Fecha --</span>
@@ -104,12 +104,26 @@
             </div>
             
             <div class="filtro-historico">
-                <label for="select-mes-ano">Periodo:</label>
-                <select id="select-mes-ano" onchange="renderTablaRankingGeneral()">
-                    <option value="2026-08" selected>Agosto 2026</option>
-                    <option value="2026-07">Julio 2026</option>
-                    <option value="2026-06">Junio 2026</option>
-                    <option value="2026-05">Mayo 2026</option>
+                <label for="select-anio-filtro">Año:</label>
+                <select id="select-anio-filtro" onchange="renderTablaRankingGeneral()">
+                    <!-- Se llenará dinámicamente o por defecto -->
+                    <option value="2026" selected>2026</option>
+                </select>
+
+                <label for="select-mes-filtro" style="margin-left: 10px;">Mes:</label>
+                <select id="select-mes-filtro" onchange="renderTablaRankingGeneral()">
+                    <option value="01">Enero</option>
+                    <option value="02">Febrero</option>
+                    <option value="03">Marzo</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Mayo</option>
+                    <option value="06">Junio</option>
+                    <option value="07">Julio</option>
+                    <option value="08" selected>Agosto</option>
+                    <option value="09">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
                 </select>
             </div>
         </div>
