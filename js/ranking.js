@@ -103,7 +103,7 @@ function renderTablaRankingGeneral() {
                                 pg: 0,
                                 pp: 0,
                                 var: 0,
-                                vd: 0,
+                                vd: null, // Inicializado en null para manejar la persistencia histórica de la última participación
                                 bonoE: 0,
                                 bonoR: 0,
                                 bonoM: 0,
@@ -126,6 +126,7 @@ function renderTablaRankingGeneral() {
                         acumuladoMap[nombre].pp += perdidos;
                         acumuladoMap[nombre].ultimoSuceso = sucesoActual || acumuladoMap[nombre].ultimoSuceso;
 
+                        // Lógica para asignar 1 si gana o 0 si pierde
                         if (ganados > 0) {
                             acumuladoMap[nombre].vd = 1;
                         } else if (perdidos > 0) {
@@ -199,6 +200,9 @@ function renderTablaRankingGeneral() {
 
         const fmtBono = (val) => val > 0 ? `<strong style="color: #dc3545;">${val}</strong>` : `<span style="color: #6c757d;">0</span>`;
 
+        // Si el jugador no tuvo participación en esta tanda, arrastra el último estado (0 o 1)
+        const vdTexto = jug.vd !== null ? jug.vd : 0;
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>
@@ -210,7 +214,7 @@ function renderTablaRankingGeneral() {
             <td><span style="color: #0d6efd; font-weight: bold;">${jug.pts}</span></td>
             <td><strong>${vPjStr}</strong></td>
             <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
-            <td><strong>${jug.vd}</strong></td>
+            <td><strong>${vdTexto}</strong></td>
             <td>${fmtBono(jug.bonoE)}</td>
             <td>${fmtBono(jug.bonoR)}</td>
             <td>${fmtBono(jug.bonoM)}</td>
