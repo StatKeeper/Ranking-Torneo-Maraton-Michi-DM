@@ -1,60 +1,67 @@
 // Renderiza el Ranking Acumulado General en la Clasificación General
 function renderTablaRankingGeneral() {
+    console.log("Iniciando renderizado de Ranking General...");
     const tbody = document.getElementById("tabla-clasificacion");
     const tituloHeader = document.querySelector("#main-content h1");
 
-    // 1. Intentar obtener el acumulado general guardado
-    let datosGuardados = localStorage.getItem("ranking_acumulado_general");
-    let acumuladoMap = datosGuardados ? JSON.parse(datosGuardados) : null;
+    if (!tbody) {
+        console.warn("No se encontró el elemento #tabla-clasificacion en el DOM.");
+        return;
+    }
 
-    // Identificar la última fecha y partida procesadas desde el localStorage
+    let acumuladoMap = {};
     let ultimaJornada = "Fecha 01";
     let ultimaPartida = "Partida 1";
-    let fallbackAcumulado = {};
 
+    // 1. Intentar leer acumulado directo
+    const datosGuardados = localStorage.getItem("ranking_acumulado_general");
+    if (datosGuardados) {
+        try {
+            acumuladoMap = JSON.parse(datosGuardados);
+        } catch (e) {
+            console.error("Error parseando ranking_acumulado_general:", e);
+        }
+    }
+
+    // 2. Recorrer claves de registros para extraer la última fecha/partida y como fallback
+    let hayRegistros = false;
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
-        if (clave.startsWith("registros_")) {
+        if (clave && clave.startsWith("registros_")) {
+            hayRegistros = true;
             const partesClave = clave.split("_");
             if (partesClave.length >= 4) {
                 ultimaJornada = partesClave[2];
                 ultimaPartida = partesClave[3];
             }
 
-            // Si por alguna razón no existe ranking_acumulado_general, lo reconstruimos al vuelo
-            if (!acumuladoMap) {
+            // Fallback si acumuladoMap estaba vacío
+            if (Object.keys(acumuladoMap).length === 0) {
                 try {
                     const registros = JSON.parse(localStorage.getItem(clave));
                     if (Array.isArray(registros)) {
                         registros.forEach(reg => {
-                            if (!fallbackAcumulado[reg.jugador]) {
-                                fallbackAcumulado[reg.jugador] = {
+                            if (!acumuladoMap[reg.jugador]) {
+                                acumuladoMap[reg.jugador] = {
                                     jugador: reg.jugador,
-                                    pts: 0,
-                                    pg: 0,
-                                    pp: 0,
+                                    pts: 0, pg: 0, pp: 0,
                                     ultimoSuceso: reg.sucesoNota
                                 };
                             }
-                            fallbackAcumulado[reg.jugador].pts += (reg.pts || 0);
-                            fallbackAcumulado[reg.jugador].pg += (reg.pg || 0);
-                            fallbackAcumulado[reg.jugador].pp += (reg.pp || 0);
-                            fallbackAcumulado[reg.jugador].ultimoSuceso = reg.sucesoNota;
+                            acumuladoMap[reg.jugador].pts += (reg.pts || 0);
+                            acumuladoMap[reg.jugador].pg += (reg.pg || 0);
+                            acumuladoMap[reg.jugador].pp += (reg.pp || 0);
+                            acumuladoMap[reg.jugador].ultimoSuceso = reg.sucesoNota;
                         });
                     }
                 } catch (e) {
-                    console.error("Error leyendo registros", e);
+                    console.error("Error procesando registro individual:", e);
                 }
             }
         }
     }
 
-    // Si tuvimos que reconstruir el acumulado al vuelo, lo asignamos
-    if (!acumuladoMap && Object.keys(fallbackAcumulado).length > 0) {
-        acumuladoMap = fallbackAcumulado;
-    }
-
-    // Formato del título dinámico según reglas
+    // 3. Formato de título dinámico
     const ahora = new Date();
     const fechaHoraStr = ahora.toLocaleString('es-PE', { 
         day: '2-digit', month: '2-digit', year: 'numeric', 
@@ -65,44 +72,39 @@ function renderTablaRankingGeneral() {
         tituloHeader.textContent = `Ranking Michi DM Dinámico ${ultimaJornada} ${ultimaPartida} ${fechaHoraStr}`;
     }
 
-    if (!acumuladoMap || Object.keys(acumuladoMap).length === 0) {
-        if (tbody) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="9" style="text-align: center; color: #6c757d; padding: 15px;">
-                        No hay partidas registradas aún en el ranking acumulado.
-                    </td>
-                </tr>
-            `;
-        }
+    // 4. Si no hay datos cargados en la BD local
+    let jugadores = Object.values(acumuladoMap);
+    if (jugadores.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align: center; color: #6c757d; padding: 20px;">
+                    <strong>No hay partidas registradas aún en el sistema.</strong><br>
+                    Ve a la pestaña <em>Galería y Registro Masivo</em> e ingresa una partida.
+                </td>
+            </tr>
+        `;
         return;
     }
 
-    let jugadores = Object.values(acumuladoMap);
-
-    // Priorizar ordenamiento por Puntos (pts) de mayor a menor
+    // 5. Ordenar por Puntos descendente
     jugadores.sort((a, b) => b.pts - a.pts);
 
-    if (!tbody) return;
+    // 6. Generar HTML de la tabla
     tbody.innerHTML = "";
-
     jugadores.forEach((jug, index) => {
         const pos = index + 1;
         const pj = jug.pg + jug.pp;
         const pctVictoria = pj > 0 ? ((jug.pg / pj) * 100).toFixed(1) + "%" : "0.0%";
 
-        // Círculos de color según ranking (1-5 Verde, 6-10 Amarillo, 11-15 Naranja, 16+ Gris)
         let colorCirculo = "#6c757d"; // Gris
         if (pos <= 5) colorCirculo = "#198754"; // Verde
         else if (pos <= 10) colorCirculo = "#ffc107"; // Amarillo
         else if (pos <= 15) colorCirculo = "#fd7e14"; // Naranja
 
-        // Columna Variación (0 para debuts o sin cambios)
         const variacion = jug.var !== undefined ? jug.var : 0;
         const varTexto = variacion > 0 ? `+${variacion}` : `${variacion}`;
 
         const tr = document.createElement("tr");
-
         tr.innerHTML = `
             <td>
                 <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorCirculo}; margin-right:5px;"></span>
@@ -117,11 +119,16 @@ function renderTablaRankingGeneral() {
             <td>${pctVictoria}</td>
             <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
         `;
-
         tbody.appendChild(tr);
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Hacer la función accesible globalmente
+window.renderTablaRankingGeneral = renderTablaRankingGeneral;
+
+// Ejecutar inmediatamente al cargar el script o según el estado del documento
+if (document.readyState === "complete" || document.readyState === "interactive") {
     renderTablaRankingGeneral();
-});
+} else {
+    document.addEventListener("DOMContentLoaded", renderTablaRankingGeneral);
+}
