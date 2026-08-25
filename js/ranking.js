@@ -9,7 +9,7 @@ function renderTablaRankingGeneral() {
     let ultimaJornada = "Fecha 01";
     let ultimaPartida = "Partida 1";
 
-    // 1. Intentar leer acumulado global directo
+    // 1. Leer directamente si existe el acumulado global consolidado
     const datosGuardados = localStorage.getItem("ranking_acumulado_general");
     if (datosGuardados) {
         try {
@@ -19,33 +19,45 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // 2. Recorrer claves para obtener la última fecha y procesar datos si acumuladoMap está vacío
+    // 2. Si acumuladoMap está vacío, recorrer todas las claves de registros masivos
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         if (clave && clave.startsWith("registros_")) {
             const partesClave = clave.split("_");
-            if (partesClave.length >= 4) {
-                ultimaJornada = partesClave[2];
-                ultimaPartida = partesClave[3];
+            // Obtener dinámica la jornada y partida sin importar cuántas partes tenga el prefijo
+            if (partesClave.length >= 2) {
+                ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
+                ultimaPartida = partesClave[partesClave.length - 1] || ultimaPartida;
             }
 
-            // Fallback: Si no había acumulado global, lo sumamos al vuelo
+            // Consolidar al vuelo si no existía el acumulado general
             if (Object.keys(acumuladoMap).length === 0) {
                 try {
                     const registros = JSON.parse(localStorage.getItem(clave));
                     if (Array.isArray(registros)) {
                         registros.forEach(reg => {
-                            if (!acumuladoMap[reg.jugador]) {
-                                acumuladoMap[reg.jugador] = {
-                                    jugador: reg.jugador,
-                                    pts: 0, pg: 0, pp: 0,
-                                    ultimoSuceso: reg.sucesoNota
+                            const nombre = reg.jugador || reg.Jugador;
+                            if (!nombre) return;
+
+                            if (!acumuladoMap[nombre]) {
+                                acumuladoMap[nombre] = {
+                                    jugador: nombre,
+                                    pts: 0,
+                                    pg: 0,
+                                    pp: 0,
+                                    var: 0,
+                                    ultimoSuceso: reg.sucesoNota || reg.suceso || reg.ultimoSuceso || 'Victoria'
                                 };
                             }
-                            acumuladoMap[reg.jugador].pts += (reg.pts || 0);
-                            acumuladoMap[reg.jugador].pg += (reg.pg || 0);
-                            acumuladoMap[reg.jugador].pp += (reg.pp || 0);
-                            acumuladoMap[reg.jugador].ultimoSuceso = reg.sucesoNota;
+
+                            const puntos = parseInt(reg.pts || reg.Pts || 0);
+                            const ganados = parseInt(reg.pg || reg.PG || 0);
+                            const perdidos = parseInt(reg.pp || reg.PP || 0);
+
+                            acumuladoMap[nombre].pts += puntos;
+                            acumuladoMap[nombre].pg += ganados;
+                            acumuladoMap[nombre].pp += perdidos;
+                            acumuladoMap[nombre].ultimoSuceso = reg.sucesoNota || reg.suceso || acumuladoMap[nombre].ultimoSuceso;
                         });
                     }
                 } catch (e) {
@@ -55,7 +67,7 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // 3. Título dinámico
+    // 3. Título dinámico en el encabezado
     const ahora = new Date();
     const fechaHoraStr = ahora.toLocaleString('es-PE', { 
         day: '2-digit', month: '2-digit', year: 'numeric', 
@@ -66,7 +78,7 @@ function renderTablaRankingGeneral() {
         tituloHeader.textContent = `Ranking Michi DM Dinámico ${ultimaJornada} ${ultimaPartida} ${fechaHoraStr}`;
     }
 
-    // 4. Si no hay datos registrados
+    // 4. Si no hay registros guardados en la base de datos local
     let jugadores = Object.values(acumuladoMap);
     if (jugadores.length === 0) {
         tbody.innerHTML = `
@@ -82,13 +94,14 @@ function renderTablaRankingGeneral() {
     // 5. Ordenar por Puntos descendente
     jugadores.sort((a, b) => b.pts - a.pts);
 
-    // 6. Dibujar la tabla
+    // 6. Dibujar las filas de la tabla
     tbody.innerHTML = "";
     jugadores.forEach((jug, index) => {
         const pos = index + 1;
         const pj = jug.pg + jug.pp;
         const pctVictoria = pj > 0 ? ((jug.pg / pj) * 100).toFixed(1) + "%" : "0.0%";
 
+        // Indicadores visuales por zona
         let colorCirculo = "#6c757d"; // Gris
         if (pos <= 5) colorCirculo = "#198754"; // Verde
         else if (pos <= 10) colorCirculo = "#ffc107"; // Amarillo
@@ -116,7 +129,7 @@ function renderTablaRankingGeneral() {
     });
 }
 
-// Forzar la ejecución cuando el documento esté listo
+// Forzar ejecución al cargar la página
 if (document.readyState === "complete" || document.readyState === "interactive") {
     renderTablaRankingGeneral();
 } else {
