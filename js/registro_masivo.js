@@ -25,9 +25,10 @@ function cargarSelectoresFechaDinamicos() {
     selectsMes.forEach(sel => {
         if (!sel) return;
         sel.innerHTML = "";
-        meses.forEach(m => {
+        meses.forEach((m, idx) => {
             const opt = document.createElement("option");
-            opt.value = m;
+            const numMes = (idx + 1).toString().padStart(2, '0');
+            opt.value = numMes; // Formato numérico de dos dígitos (01-12)
             opt.textContent = m;
             if (m === "Agosto") opt.selected = true;
             sel.appendChild(opt);
@@ -82,8 +83,11 @@ function parsearNumeroSeguro(texto) {
 
 function procesarRegistroMasivo() {
     const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
-    const mes = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "Agosto";
-    const periodo = `${mes} ${anio}`;
+    const mesVal = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "08";
+    
+    // Normalizar mes a 2 dígitos
+    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
+    const periodo = `${anio}-${mesFormatted}`; // Formato ISO AAAA-MM (Ej. 2026-08)
     
     const jornada = document.getElementById("jornada-select") ? document.getElementById("jornada-select").value : "Fecha 01";
     const partidaSelect = document.getElementById("partida-select") ? document.getElementById("partida-select").value : "Partida 1";
@@ -115,10 +119,20 @@ function procesarRegistroMasivo() {
         duracionExtraida = document.getElementById("duracion-partida") ? document.getElementById("duracion-partida").value : "00:00:00";
     }
 
+    const fechaHoraActual = new Date().toLocaleString("es-PE", {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
+
     const registrosProcesados = [];
     let contadorId = 1;
 
-    // Control de Bonos Desactivados (Rcha y MG desactivados hasta nuevo aviso)
+    // Control de Bonos Desactivados
     const BONO_RACHA_ACTIVO = false;
     const BONO_MG_ACTIVO = false;
 
@@ -133,23 +147,17 @@ function procesarRegistroMasivo() {
 
         const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
 
-        // Mapeo seguro utilizando parsearNumeroSeguro
-        // partes[1] es la columna V/D (1 para victoria, 0 para derrota)
         const valVictoriaCol = parsearNumeroSeguro(partes[1]);
-        
         const ptsVictoria = valVictoriaCol > 0 ? 3 : 0;
         const vic = ptsVictoria > 0 ? 1 : 0;
         const der = vic === 1 ? 0 : 1;
 
-        // Lectura de los 8 bonos en orden estándar:
-        // 1. Excelencia (E), 2. Resistencia (R), 3. Militar (M), 4. Oro (O), 5. Sociedad (S)
         const e = parsearNumeroSeguro(partes[2]);
         const r = parsearNumeroSeguro(partes[3]);
         const m = parsearNumeroSeguro(partes[4]);
         const o = parsearNumeroSeguro(partes[5]);
         const s = parsearNumeroSeguro(partes[6]);
         
-        // Racha y Matagigantes solo si están activos por reglamento
         const rch = BONO_RACHA_ACTIVO ? parsearNumeroSeguro(partes[7]) : 0;
         const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
         const rlp = parsearNumeroSeguro(partes[9]);
@@ -157,10 +165,8 @@ function procesarRegistroMasivo() {
         const equipo = partes.length >= 11 ? partes[10] : "";
         const civ = partes.length >= 12 ? partes[11] : "";
 
-        // Puntuación Total = Puntos de Victoria (3) + Suma de Bonos
         const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
 
-        // Diminutivos estandarizados para notas de último suceso
         let sucesos = [];
         if (vic === 1) sucesos.push("Victoria");
         if (e === 1) sucesos.push("E");
@@ -185,7 +191,8 @@ function procesarRegistroMasivo() {
             equipo: equipo,
             civ: civ,
             bonos: { e, r, m, o, s, rch, mg, rlp },
-            sucesoNota: sucesos.length > 0 ? sucesos.join(" + ") : "Sin participación"
+            sucesoNota: sucesos.length > 0 ? sucesos.join(" + ") : "Sin participación",
+            fechaHora: fechaHoraActual
         });
     });
 
@@ -194,7 +201,6 @@ function procesarRegistroMasivo() {
         return;
     }
 
-    // Limpiar BD local previa para esta partida específica antes de guardar la nueva
     const claveBD = `registros_${periodo}_${jornada}_${partidaSelect}`;
     localStorage.removeItem(claveBD);
     localStorage.setItem(claveBD, JSON.stringify(registrosProcesados));
@@ -202,7 +208,7 @@ function procesarRegistroMasivo() {
     actualizarAcumuladosRanking();
 
     if (document.getElementById("gestion-anio")) document.getElementById("gestion-anio").value = anio;
-    if (document.getElementById("gestion-mes")) document.getElementById("gestion-mes").value = mes;
+    if (document.getElementById("gestion-mes")) document.getElementById("gestion-mes").value = mesFormatted;
     if (document.getElementById("gestion-jornada")) document.getElementById("gestion-jornada").value = jornada;
     if (document.getElementById("gestion-partida")) document.getElementById("gestion-partida").value = partidaSelect;
 
@@ -229,7 +235,6 @@ function actualizarAcumuladosRanking() {
                     };
                 }
                 
-                // Sumatoria directa de todos los registros enviados
                 acumuladoGlobal[reg.jugador].pts += reg.pts;
                 acumuladoGlobal[reg.jugador].pg += reg.pg;
                 acumuladoGlobal[reg.jugador].pp += reg.pp;
@@ -251,8 +256,10 @@ function actualizarAcumuladosRanking() {
 
 function renderTablaGestionRegistros() {
     const anio = document.getElementById("gestion-anio") ? document.getElementById("gestion-anio").value : "2026";
-    const mes = document.getElementById("gestion-mes") ? document.getElementById("gestion-mes").value : "Agosto";
-    const periodo = `${mes} ${anio}`;
+    const mesVal = document.getElementById("gestion-mes") ? document.getElementById("gestion-mes").value : "08";
+    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
+    const periodo = `${anio}-${mesFormatted}`;
+    
     const jornada = document.getElementById("gestion-jornada") ? document.getElementById("gestion-jornada").value : "Fecha 01";
     const partida = document.getElementById("gestion-partida") ? document.getElementById("gestion-partida").value : "Partida 1";
 
@@ -295,8 +302,10 @@ function renderTablaGestionRegistros() {
 
 function eliminarPartidaCompleta() {
     const anio = document.getElementById("gestion-anio").value;
-    const mes = document.getElementById("gestion-mes").value;
-    const periodo = `${mes} ${anio}`;
+    const mesVal = document.getElementById("gestion-mes").value;
+    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
+    const periodo = `${anio}-${mesFormatted}`;
+    
     const jornada = document.getElementById("gestion-jornada").value;
     const partida = document.getElementById("gestion-partida").value;
 
