@@ -1,19 +1,15 @@
-// Renderiza el Ranking Acumulado General en la Clasificación General
+// Renderiza el Ranking Acumulado General en Clasificación General (index.html)
 function renderTablaRankingGeneral() {
-    console.log("Iniciando renderizado de Ranking General...");
     const tbody = document.getElementById("tabla-clasificacion");
     const tituloHeader = document.querySelector("#main-content h1");
 
-    if (!tbody) {
-        console.warn("No se encontró el elemento #tabla-clasificacion en el DOM.");
-        return;
-    }
+    if (!tbody) return;
 
     let acumuladoMap = {};
     let ultimaJornada = "Fecha 01";
     let ultimaPartida = "Partida 1";
 
-    // 1. Intentar leer acumulado directo
+    // 1. Intentar leer acumulado global directo
     const datosGuardados = localStorage.getItem("ranking_acumulado_general");
     if (datosGuardados) {
         try {
@@ -23,19 +19,17 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // 2. Recorrer claves de registros para extraer la última fecha/partida y como fallback
-    let hayRegistros = false;
+    // 2. Recorrer claves para obtener la última fecha y procesar datos si acumuladoMap está vacío
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         if (clave && clave.startsWith("registros_")) {
-            hayRegistros = true;
             const partesClave = clave.split("_");
             if (partesClave.length >= 4) {
                 ultimaJornada = partesClave[2];
                 ultimaPartida = partesClave[3];
             }
 
-            // Fallback si acumuladoMap estaba vacío
+            // Fallback: Si no había acumulado global, lo sumamos al vuelo
             if (Object.keys(acumuladoMap).length === 0) {
                 try {
                     const registros = JSON.parse(localStorage.getItem(clave));
@@ -55,13 +49,13 @@ function renderTablaRankingGeneral() {
                         });
                     }
                 } catch (e) {
-                    console.error("Error procesando registro individual:", e);
+                    console.error("Error procesando registro:", e);
                 }
             }
         }
     }
 
-    // 3. Formato de título dinámico
+    // 3. Título dinámico
     const ahora = new Date();
     const fechaHoraStr = ahora.toLocaleString('es-PE', { 
         day: '2-digit', month: '2-digit', year: 'numeric', 
@@ -72,14 +66,13 @@ function renderTablaRankingGeneral() {
         tituloHeader.textContent = `Ranking Michi DM Dinámico ${ultimaJornada} ${ultimaPartida} ${fechaHoraStr}`;
     }
 
-    // 4. Si no hay datos cargados en la BD local
+    // 4. Si no hay datos registrados
     let jugadores = Object.values(acumuladoMap);
     if (jugadores.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="9" style="text-align: center; color: #6c757d; padding: 20px;">
-                    <strong>No hay partidas registradas aún en el sistema.</strong><br>
-                    Ve a la pestaña <em>Galería y Registro Masivo</em> e ingresa una partida.
+                    No hay partidas registradas aún en el ranking acumulado.
                 </td>
             </tr>
         `;
@@ -89,7 +82,7 @@ function renderTablaRankingGeneral() {
     // 5. Ordenar por Puntos descendente
     jugadores.sort((a, b) => b.pts - a.pts);
 
-    // 6. Generar HTML de la tabla
+    // 6. Dibujar la tabla
     tbody.innerHTML = "";
     jugadores.forEach((jug, index) => {
         const pos = index + 1;
@@ -123,10 +116,7 @@ function renderTablaRankingGeneral() {
     });
 }
 
-// Hacer la función accesible globalmente
-window.renderTablaRankingGeneral = renderTablaRankingGeneral;
-
-// Ejecutar inmediatamente al cargar el script o según el estado del documento
+// Forzar la ejecución cuando el documento esté listo
 if (document.readyState === "complete" || document.readyState === "interactive") {
     renderTablaRankingGeneral();
 } else {
