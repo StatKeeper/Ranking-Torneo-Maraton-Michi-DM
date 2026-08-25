@@ -229,7 +229,7 @@ function actualizarAcumuladosRanking() {
                     };
                 }
                 
-                // Sumatoria directa de todos los registros enviados (sin límites ni filtros de cantidad)
+                // Sumatoria directa de todos los registros enviados
                 acumuladoGlobal[reg.jugador].pts += reg.pts;
                 acumuladoGlobal[reg.jugador].pg += reg.pg;
                 acumuladoGlobal[reg.jugador].pp += reg.pp;
@@ -312,3 +312,120 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarSelectoresFechaDinamicos();
     renderTablaGestionRegistros();
 });
+Paso 2: Reemplazar el contenido de js/ranking.js
+Copia y reemplaza por completo el código de js/ranking.js:
+
+JavaScript
+function renderTablaRankingGeneral() {
+    const tbody = document.getElementById("tabla-clasificacion");
+    const tituloHeader = document.querySelector("#main-content h1");
+
+    // Recalcular el acumulado global de todas las partidas guardadas en localStorage
+    let acumuladoGlobal = {};
+    let ultimaJornada = "Fecha 01";
+    let ultimaPartida = "Partida 1";
+
+    for (let i = 0; i < localStorage.length; i++) {
+        const clave = localStorage.key(i);
+        if (clave.startsWith("registros_")) {
+            const partesClave = clave.split("_");
+            if (partesClave.length >= 4) {
+                ultimaJornada = partesClave[2];
+                ultimaPartida = partesClave[3];
+            }
+
+            try {
+                const registros = JSON.parse(localStorage.getItem(clave));
+                if (Array.isArray(registros)) {
+                    registros.forEach(reg => {
+                        if (!acumuladoGlobal[reg.jugador]) {
+                            acumuladoGlobal[reg.jugador] = {
+                                jugador: reg.jugador,
+                                pts: 0,
+                                pg: 0,
+                                pp: 0,
+                                ultimoSuceso: reg.sucesoNota
+                            };
+                        }
+                        acumuladoGlobal[reg.jugador].pts += (reg.pts || 0);
+                        acumuladoGlobal[reg.jugador].pg += (reg.pg || 0);
+                        acumuladoGlobal[reg.jugador].pp += (reg.pp || 0);
+                        acumuladoGlobal[reg.jugador].ultimoSuceso = reg.sucesoNota;
+                    });
+                }
+            } catch (e) {
+                console.error("Error al leer registro", e);
+            }
+        }
+    }
+
+    // Título dinámico: Ranking Michi DM Dinámico [Jornada] [Partida] [Fecha y Hora]
+    const ahora = new Date();
+    const fechaHoraStr = ahora.toLocaleString('es-PE', { 
+        day: '2-digit', month: '2-digit', year: 'numeric', 
+        hour: '2-digit', minute: '2-digit', second: '2-digit' 
+    });
+
+    if (tituloHeader) {
+        tituloHeader.textContent = `Ranking Michi DM Dinámico ${ultimaJornada} ${ultimaPartida} ${fechaHoraStr}`;
+    }
+
+    let jugadores = Object.values(acumuladoGlobal);
+
+    if (jugadores.length === 0) {
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" style="text-align: center; color: #6c757d; padding: 15px;">
+                        No hay partidas registradas aún en el ranking acumulado.
+                    </td>
+                </tr>
+            `;
+        }
+        return;
+    }
+
+    // Ordenar de mayor a menor puntaje acumulado
+    jugadores.sort((a, b) => b.pts - a.pts);
+
+    if (!tbody) return;
+    tbody.innerHTML = "";
+
+    jugadores.forEach((jug, index) => {
+        const pos = index + 1;
+        const pj = jug.pg + jug.pp;
+        const pctVictoria = pj > 0 ? ((jug.pg / pj) * 100).toFixed(1) + "%" : "0.0%";
+
+        // Colores por zona (1-5 Verde, 6-10 Amarillo, 11-15 Naranja, 16+ Gris)
+        let colorCirculo = "#6c757d";
+        if (pos <= 5) colorCirculo = "#198754";
+        else if (pos <= 10) colorCirculo = "#ffc107";
+        else if (pos <= 15) colorCirculo = "#fd7e14";
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorCirculo}; margin-right:5px;"></span>
+                <strong>${pos}</strong>
+            </td>
+            <td>0</td>
+            <td><strong>${jug.jugador}</strong></td>
+            <td><span style="color: #0d6efd; font-weight: bold;">${jug.pts}</span></td>
+            <td>${pj}</td>
+            <td>${jug.pg}</td>
+            <td>${jug.pp}</td>
+            <td>${pctVictoria}</td>
+            <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+// Ejecutar automáticamente al cargar la página o cambiar de pestaña
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderTablaRankingGeneral);
+} else {
+    renderTablaRankingGeneral();
+}
