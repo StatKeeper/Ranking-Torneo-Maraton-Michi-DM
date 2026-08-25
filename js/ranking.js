@@ -3,11 +3,14 @@ function renderTablaRankingGeneral() {
     const tbody = document.getElementById("tabla-clasificacion");
     const tituloHeader = document.querySelector("#main-content h1");
 
-    const datosGuardados = localStorage.getItem("ranking_acumulado_general");
+    // 1. Intentar obtener el acumulado general guardado
+    let datosGuardados = localStorage.getItem("ranking_acumulado_general");
+    let acumuladoMap = datosGuardados ? JSON.parse(datosGuardados) : null;
 
     // Identificar la última fecha y partida procesadas desde el localStorage
     let ultimaJornada = "Fecha 01";
     let ultimaPartida = "Partida 1";
+    let fallbackAcumulado = {};
 
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
@@ -17,7 +20,38 @@ function renderTablaRankingGeneral() {
                 ultimaJornada = partesClave[2];
                 ultimaPartida = partesClave[3];
             }
+
+            // Si por alguna razón no existe ranking_acumulado_general, lo reconstruimos al vuelo
+            if (!acumuladoMap) {
+                try {
+                    const registros = JSON.parse(localStorage.getItem(clave));
+                    if (Array.isArray(registros)) {
+                        registros.forEach(reg => {
+                            if (!fallbackAcumulado[reg.jugador]) {
+                                fallbackAcumulado[reg.jugador] = {
+                                    jugador: reg.jugador,
+                                    pts: 0,
+                                    pg: 0,
+                                    pp: 0,
+                                    ultimoSuceso: reg.sucesoNota
+                                };
+                            }
+                            fallbackAcumulado[reg.jugador].pts += (reg.pts || 0);
+                            fallbackAcumulado[reg.jugador].pg += (reg.pg || 0);
+                            fallbackAcumulado[reg.jugador].pp += (reg.pp || 0);
+                            fallbackAcumulado[reg.jugador].ultimoSuceso = reg.sucesoNota;
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error leyendo registros", e);
+                }
+            }
         }
+    }
+
+    // Si tuvimos que reconstruir el acumulado al vuelo, lo asignamos
+    if (!acumuladoMap && Object.keys(fallbackAcumulado).length > 0) {
+        acumuladoMap = fallbackAcumulado;
     }
 
     // Formato del título dinámico según reglas
@@ -31,7 +65,7 @@ function renderTablaRankingGeneral() {
         tituloHeader.textContent = `Ranking Michi DM Dinámico ${ultimaJornada} ${ultimaPartida} ${fechaHoraStr}`;
     }
 
-    if (!datosGuardados) {
+    if (!acumuladoMap || Object.keys(acumuladoMap).length === 0) {
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
@@ -44,7 +78,6 @@ function renderTablaRankingGeneral() {
         return;
     }
 
-    const acumuladoMap = JSON.parse(datosGuardados);
     let jugadores = Object.values(acumuladoMap);
 
     // Priorizar ordenamiento por Puntos (pts) de mayor a menor
@@ -92,66 +125,3 @@ function renderTablaRankingGeneral() {
 document.addEventListener("DOMContentLoaded", () => {
     renderTablaRankingGeneral();
 });
-Paso 2: Actualizar index.html
-Reemplaza todo el contenido de tu archivo index.html para vincular el script js/ranking.js:
-
-HTML
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking Maratón Michi DM - Clasificación General</title>
-    <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-
-    <div id="sidebar">
-        <h3>🔐 Panel de Control</h3>
-        <label>Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
-    </div>
-
-    <div id="main-content">
-        <h1>🏆 Ranking Maratón Michi DM</h1>
-
-        <div class="tabs">
-            <a href="index.html" class="tab-btn active">📊 Clasificación general</a>
-            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
-            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
-            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
-            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
-        </div>
-
-        <h2>📊 Clasificación General</h2>
-        
-        <div class="card">
-            <h3>Tabla de Posiciones</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Var</th>
-                        <th>Jugador</th>
-                        <th>Pts</th>
-                        <th>PJ</th>
-                        <th>PG</th>
-                        <th>PP</th>
-                        <th>% Victoria</th>
-                        <th>Último Suceso</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-clasificacion">
-                    <tr>
-                        <td colspan="9" style="text-align: center;">Cargando datos del torneo...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <script src="js/auth.js"></script>
-    <script src="js/ranking.js"></script>
-</body>
-</html>
