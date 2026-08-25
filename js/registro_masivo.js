@@ -118,6 +118,10 @@ function procesarRegistroMasivo() {
     const registrosProcesados = [];
     let contadorId = 1;
 
+    // Control de Bonos Desactivados (Rcha y MG desactivados hasta nuevo aviso)
+    const BONO_RACHA_ACTIVO = false;
+    const BONO_MG_ACTIVO = false;
+
     lineas.forEach((linea) => {
         if (!linea.includes("|")) return;
 
@@ -130,30 +134,33 @@ function procesarRegistroMasivo() {
         const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
 
         // Mapeo seguro utilizando parsearNumeroSeguro
-        // partes[1] es la columna V/D o Puntos Base (3 para victoria, 0 para derrota)
+        // partes[1] es la columna V/D (1 para victoria, 0 para derrota)
         const valVictoriaCol = parsearNumeroSeguro(partes[1]);
         
-        // Si la celda contiene 3 (o cualquier valor > 0), le otorga 3 puntos de victoria y marca PG=1
         const ptsVictoria = valVictoriaCol > 0 ? 3 : 0;
         const vic = ptsVictoria > 0 ? 1 : 0;
         const der = vic === 1 ? 0 : 1;
 
-        // Lectura de los 8 bonos
+        // Lectura de los 8 bonos en orden estándar:
+        // 1. Excelencia (E), 2. Resistencia (R), 3. Militar (M), 4. Oro (O), 5. Sociedad (S)
         const e = parsearNumeroSeguro(partes[2]);
         const r = parsearNumeroSeguro(partes[3]);
         const m = parsearNumeroSeguro(partes[4]);
         const o = parsearNumeroSeguro(partes[5]);
         const s = parsearNumeroSeguro(partes[6]);
-        const rch = parsearNumeroSeguro(partes[7]);
-        const mg = parsearNumeroSeguro(partes[8]);
+        
+        // Racha y Matagigantes solo si están activos por reglamento
+        const rch = BONO_RACHA_ACTIVO ? parsearNumeroSeguro(partes[7]) : 0;
+        const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
         const rlp = parsearNumeroSeguro(partes[9]);
         
         const equipo = partes.length >= 11 ? partes[10] : "";
         const civ = partes.length >= 12 ? partes[11] : "";
 
-        // Puntuación Total = 3 Puntos de Victoria (si ganó) + Bonos acumulados
+        // Puntuación Total = Puntos de Victoria (3) + Suma de Bonos
         const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
 
+        // Diminutivos estandarizados para notas de último suceso
         let sucesos = [];
         if (vic === 1) sucesos.push("Victoria");
         if (e === 1) sucesos.push("E");
@@ -222,6 +229,7 @@ function actualizarAcumuladosRanking() {
                     };
                 }
                 
+                // Sumatoria directa de todos los registros enviados (sin límites ni filtros de cantidad)
                 acumuladoGlobal[reg.jugador].pts += reg.pts;
                 acumuladoGlobal[reg.jugador].pg += reg.pg;
                 acumuladoGlobal[reg.jugador].pp += reg.pp;
