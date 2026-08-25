@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Maratón Michi DM - Clasificación General</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        /* Estilos para alinear el título con la fecha/hora en los extremos */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .header-top .fecha-actualizacion {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+        /* Estilos para separar Fecha y Partida en la barra inferior */
+        .info-jornada {
+            display: flex;
+            gap: 60px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #222;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,7 +45,11 @@
     </div>
 
     <div id="main-content">
-        <h1>🏆 Ranking Maratón Michi DM</h1>
+        <!-- Encabezado superior con título y fecha/hora separada en la esquina -->
+        <div class="header-top">
+            <h1>Ranking Maratón Michi DM</h1>
+            <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
+        </div>
 
         <div class="tabs">
             <a href="index.html" class="tab-btn active">📊 Clasificación general</a>
@@ -28,6 +61,12 @@
 
         <h2>📊 Clasificación General</h2>
         
+        <!-- Indicador de Fecha X y Partida Y con mayor separación -->
+        <div class="info-jornada">
+            <span id="label-fecha">Fecha --</span>
+            <span id="label-partida">Partida --</span>
+        </div>
+        
         <div class="card">
             <h3>Tabla de Posiciones</h3>
             <table>
@@ -37,10 +76,9 @@
                         <th>Var</th>
                         <th>Jugador</th>
                         <th>Pts</th>
-                        <th>PJ</th>
-                        <th>PG</th>
-                        <th>PP</th>
-                        <th>% Victoria</th>
+                        <th>V/PJ</th>
+                        <th>Ultimo Suceso</th>
+                        <th>V/D</th>
                         <th>E</th>
                         <th>R</th>
                         <th>M</th>
@@ -48,7 +86,8 @@
                         <th>S</th>
                         <th>Rch</th>
                         <th>MG</th>
-                        <th>Último Suceso</th>
+                        <th>RLP</th>
+                        <th>TB</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-clasificacion">
