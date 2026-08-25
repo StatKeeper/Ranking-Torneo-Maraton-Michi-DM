@@ -32,31 +32,51 @@ function procesarBonosPorUnidad(textoSuceso, objetoJugador) {
     if (texto.includes("RLP") || texto.includes("RELAMPAGO") || texto.includes("RELÁMPAGO")) objetoJugador.bonoRLP += 1;
 }
 
-// Renderiza el Ranking Acumulado General filtrado correctamente por período
+// Inicializar selectores de año de forma dinámica al cargar
+function inicializarSelectoresAnioFiltro() {
+    const selectAnio = document.getElementById("select-anio-filtro");
+    if (!selectAnio) return;
+    selectAnio.innerHTML = "";
+    for (let a = 2026; a <= 2035; a++) {
+        const opt = document.createElement("option");
+        opt.value = a;
+        opt.textContent = a;
+        if (a === 2026) opt.selected = true;
+        selectAnio.appendChild(opt);
+    }
+}
+
+// Renderiza el Ranking Acumulado General filtrado correctamente por Año y Mes
 function renderTablaRankingGeneral() {
     const tbody = document.getElementById("tabla-clasificacion");
     const elFechaAct = document.getElementById("fecha-actualizacion");
     const elLabelFecha = document.getElementById("label-fecha");
     const elLabelPartida = document.getElementById("label-partida");
     const elTotalPartidasMes = document.getElementById("total-partidas-mes");
-    const selectMesAno = document.getElementById("select-mes-ano");
+    
+    const selectAnioFiltro = document.getElementById("select-anio-filtro");
+    const selectMesFiltro = document.getElementById("select-mes-filtro");
     const tableElement = tbody ? tbody.closest("table") : null;
 
     if (!tbody) return;
 
-    const periodoSeleccionado = selectMesAno ? selectMesAno.value : "2026-08";
+    const anioSel = selectAnioFiltro ? selectAnioFiltro.value : "2026";
+    const mesSel = selectMesFiltro ? selectMesFiltro.value : "08";
+    const periodoSeleccionado = `${anioSel}-${mesSel}`; // Formato: 2026-08
 
     let acumuladoMap = {};
     let ultimaJornada = "01";
     let ultimaPartida = "1";
     let ultimaFechaHora = "";
-    let totalPartidasJugadasMes = 0;
+    let clavesPartidasUnicas = new Set(); // Conjunto para contar únicamente las partidas registradas sin duplicar por jugador
 
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         
-        // FILTRO CLAVE: Procesar registros compatibles con AAAA-MM o formatos textuales
+        // FILTRO CLAVE: Procesar registros que coincidan con el Año-Mes seleccionado
         if (clave && clave.startsWith("registros_") && clave.includes(`_${periodoSeleccionado}_`)) {
+            clavesPartidasUnicas.add(clave); // Registra esta clave de partida como única
+
             const partesClave = clave.split("_");
             if (partesClave.length >= 4) {
                 ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
@@ -121,17 +141,13 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    Object.values(acumuladoMap).forEach(jug => {
-        totalPartidasJugadasMes += jug.pg;
-    });
-
     const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
     const numPartida = ultimaPartida.replace(/\D/g, "") || "1";
 
     if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || new Date().toLocaleString("es-PE");
     if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
     if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
-    if (elTotalPartidasMes) elTotalPartidasMes.textContent = totalPartidasJugadasMes;
+    if (elTotalPartidasMes) elTotalPartidasMes.textContent = clavesPartidasUnicas.size; // Muestra la cantidad real de partidas únicas
 
     let jugadores = Object.values(acumuladoMap);
     
@@ -236,9 +252,14 @@ function renderTablaRankingGeneral() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const selectMesAno = document.getElementById("select-mes-ano");
-    if (selectMesAno) {
-        selectMesAno.addEventListener("change", renderTablaRankingGeneral);
-    }
+    inicializarSelectoresAnioFiltro();
+    
+    // Conectar eventos change a ambos selectores (Año y Mes)
+    const selectAnio = document.getElementById("select-anio-filtro");
+    const selectMes = document.getElementById("select-mes-filtro");
+
+    if (selectAnio) selectAnio.addEventListener("change", renderTablaRankingGeneral);
+    if (selectMes) selectMes.addEventListener("change", renderTablaRankingGeneral);
+
     renderTablaRankingGeneral();
 });
