@@ -163,7 +163,7 @@ function procesarRegistroMasivo() {
         const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
         const rlp = parsearNumeroSeguro(partes[9]);
         
-        // Orden correcto de los datos en el texto plano:
+        // CORRECCIÓN EXACTA DE LOS ÍNDICES:
         // [10] -> Unidades Asesinadas
         // [11] -> Edificios Arrasados
         // [12] -> Equipo
