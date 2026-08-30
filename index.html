@@ -1,337 +1,171 @@
-// Poblado dinámico de Años (2026-2035), Meses, Jornadas (1-31) y Partidas (1-10)
-function cargarSelectoresFechaDinamicos() {
-    const anioInicio = 2026;
-    const anioFin = 2035;
-    const meses = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-
-    // 1. Llenar selectores de Año
-    const selectsAnio = document.querySelectorAll("#select-anio, #gestion-anio");
-    selectsAnio.forEach(sel => {
-        if (!sel) return;
-        sel.innerHTML = "";
-        for (let a = anioInicio; a <= anioFin; a++) {
-            const opt = document.createElement("option");
-            opt.value = a;
-            opt.textContent = a;
-            sel.appendChild(opt);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Clasificación General</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
         }
-    });
-
-    // 2. Llenar selectores de Mes
-    const selectsMes = document.querySelectorAll("#select-mes, #gestion-mes");
-    selectsMes.forEach(sel => {
-        if (!sel) return;
-        sel.innerHTML = "";
-        meses.forEach((m, idx) => {
-            const opt = document.createElement("option");
-            const numMes = (idx + 1).toString().padStart(2, '0');
-            opt.value = numMes; // Formato numérico de dos dígitos (01-12)
-            opt.textContent = m;
-            if (m === "Agosto") opt.selected = true;
-            sel.appendChild(opt);
-        });
-    });
-
-    // 3. Llenar selectores de Jornada
-    const selectsJornada = document.querySelectorAll("#jornada-select, #gestion-jornada");
-    selectsJornada.forEach(sel => {
-        if (!sel) return;
-        sel.innerHTML = "";
-        for (let i = 1; i <= 31; i++) {
-            const num = i < 10 ? `0${i}` : i;
-            const opt = document.createElement("option");
-            opt.value = `Fecha ${num}`;
-            opt.textContent = `Fecha ${num}`;
-            sel.appendChild(opt);
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.8rem;
         }
-    });
-
-    // 4. Llenar selectores de Partida
-    const selectsPartida = document.querySelectorAll("#partida-select, #gestion-partida");
-    selectsPartida.forEach(sel => {
-        if (!sel) return;
-        sel.innerHTML = "";
-        for (let p = 1; p <= 10; p++) {
-            const opt = document.createElement("option");
-            opt.value = `Partida ${p}`;
-            opt.textContent = `Partida ${p}`;
-            sel.appendChild(opt);
+        .header-top .fecha-actualizacion {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
         }
-    });
-}
-
-// Obtener el nick oficial mediante la lista de equivalencias.js
-function obtenerNickOficialLocal(nombreIngresado) {
-    if (typeof equivalencias !== 'undefined') {
-        const guardadas = localStorage.getItem("equivalencias_michi_dm");
-        const lista = guardadas ? JSON.parse(guardadas) : equivalencias;
-        const buscado = lista.find(e => e.antiguo.toLowerCase() === nombreIngresado.toLowerCase().trim());
-        if (buscado) return buscado.oficial;
-    }
-    return nombreIngresado.trim();
-}
-
-// Limpia el texto de una celda y lo convierte a entero de forma segura
-function parsearNumeroSeguro(texto) {
-    if (!texto) return 0;
-    const limpio = texto.toString().replace(/[^0-9]/g, '');
-    return limpio ? parseInt(limpio, 10) : 0;
-}
-
-function procesarRegistroMasivo() {
-    const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
-    const mesVal = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "08";
-    
-    // Normalizar mes a 2 dígitos
-    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
-    const periodo = `${anio}-${mesFormatted}`; // Formato ISO AAAA-MM (Ej. 2026-08)
-    
-    const jornada = document.getElementById("jornada-select") ? document.getElementById("jornada-select").value : "Fecha 01";
-    const partidaSelect = document.getElementById("partida-select") ? document.getElementById("partida-select").value : "Partida 1";
-    const textoBloque = document.getElementById("bloque-datos") ? document.getElementById("bloque-datos").value : "";
-
-    if (!textoBloque.trim()) {
-        alert("Por favor ingresa el bloque de texto plano.");
-        return;
-    }
-
-    const lineas = textoBloque.split("\n");
-    let duracionExtraida = "";
-
-    // Extraer duración del encabezado (ej. "Partida 1 01:07:08")
-    for (let i = 0; i < lineas.length; i++) {
-        const lineaLimpia = lineas[i].trim();
-        if (lineaLimpia.toLowerCase().startsWith("partida")) {
-            const partesHeader = lineaLimpia.split(" ");
-            if (partesHeader.length >= 2) {
-                duracionExtraida = partesHeader[partesHeader.length - 1];
-                const inputDuracion = document.getElementById("duracion-partida");
-                if (inputDuracion) inputDuracion.value = duracionExtraida;
-            }
-            break;
+        /* Subencabezado con filtro de año/mes y contador de partidas */
+        .bar-jornada-filtro {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-    }
+        .info-jornada {
+            display: flex;
+            gap: 40px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #222;
+        }
+        .filtro-historico {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .filtro-historico select {
+            padding: 6px 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        /* Recuadro de Total de Partidas Jugadas */
+        .box-resumen-partidas {
+            background-color: #e7f1ff;
+            border: 1px solid #b6d4fe;
+            color: #084298;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 1rem;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .box-resumen-partidas span {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
 
-    if (!duracionExtraida) {
-        duracionExtraida = document.getElementById("duracion-partida") ? document.getElementById("duracion-partida").value : "00:00:00";
-    }
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+    </div>
 
-    const fechaHoraActual = new Date().toLocaleString("es-PE", {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-    });
+    <div id="main-content">
+        <!-- Encabezado superior con título y fecha/hora -->
+        <div class="header-top">
+            <h1>Ranking Maratón Michi DM</h1>
+            <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
+        </div>
 
-    const registrosProcesados = [];
-    let contadorId = 1;
+        <div class="tabs">
+            <a href="index.html" class="tab-btn active">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
 
-    // Control de Bonos Desactivados
-    const BONO_RACHA_ACTIVO = false;
-    const BONO_MG_ACTIVO = false;
-
-    lineas.forEach((linea) => {
-        if (!linea.includes("|")) return;
-
-        const partes = linea.split("|").map(p => p.trim());
-        if (partes.length < 10) return;
-
-        const nombreBruto = partes[0];
-        if (nombreBruto.toLowerCase().startsWith("partida") || nombreBruto.toLowerCase().startsWith("bloque")) return;
-
-        const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
-
-        const valVictoriaCol = parsearNumeroSeguro(partes[1]);
-        const ptsVictoria = valVictoriaCol > 0 ? 3 : 0;
-        const vic = ptsVictoria > 0 ? 1 : 0;
-        const der = vic === 1 ? 0 : 1;
-
-        const e = parsearNumeroSeguro(partes[2]);
-        const r = parsearNumeroSeguro(partes[3]);
-        const m = parsearNumeroSeguro(partes[4]);
-        const o = parsearNumeroSeguro(partes[5]);
-        const s = parsearNumeroSeguro(partes[6]);
+        <h2>📊 Clasificación General</h2>
         
-        const rch = BONO_RACHA_ACTIVO ? parsearNumeroSeguro(partes[7]) : 0;
-        const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
-        const rlp = parsearNumeroSeguro(partes[9]);
+        <!-- Barra de Jornada y Filtros Independientes de Año / Mes -->
+        <div class="bar-jornada-filtro">
+            <div class="info-jornada">
+                <span id="label-fecha">Fecha --</span>
+                <span id="label-partida">Partida --</span>
+            </div>
+            
+            <div class="filtro-historico">
+                <label for="select-anio-filtro">Año:</label>
+                <select id="select-anio-filtro" onchange="renderTablaRankingGeneral()">
+                    <!-- Se llenará dinámicamente o por defecto -->
+                    <option value="2026" selected>2026</option>
+                </select>
+
+                <label for="select-mes-filtro" style="margin-left: 10px;">Mes:</label>
+                <select id="select-mes-filtro" onchange="renderTablaRankingGeneral()">
+                    <option value="01">Enero</option>
+                    <option value="02">Febrero</option>
+                    <option value="03">Marzo</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Mayo</option>
+                    <option value="06">Junio</option>
+                    <option value="07">Julio</option>
+                    <option value="08" selected>Agosto</option>
+                    <option value="09">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Recuadro informativo del Total de Partidas Jugadas -->
+        <div class="box-resumen-partidas">
+            🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">0</span>
+        </div>
         
-        // Captura correcta de unidades asesinadas y edificios arrasados
-        const unidadesAsesinadas = partes.length >= 11 ? parsearNumeroSeguro(partes[10]) : 0;
-        const edificiosArrasados = partes.length >= 12 ? parsearNumeroSeguro(partes[11]) : 0;
+        <div class="card">
+            <h3>Tabla de Posiciones</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Var</th>
+                        <th>Jugador</th>
+                        <th>Pts</th>
+                        <th>V/PJ</th>
+                        <th>Ultimo Suceso</th>
+                        <th>V/D</th>
+                        <th>E</th>
+                        <th>R</th>
+                        <th>M</th>
+                        <th>O</th>
+                        <th>S</th>
+                        <th>Rch</th>
+                        <th>MG</th>
+                        <th>RLP</th>
+                        <th>TB</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-clasificacion">
+                    <tr>
+                        <td colspan="16" style="text-align: center;">Cargando datos del torneo...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        // Equipo y Civilización desplazados a las posiciones 12 y 13 respectivamente
-        const equipo = partes.length >= 13 ? partes[12] : "";
-        const civ = partes.length >= 14 ? partes[13] : "";
-
-        const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
-
-        let sucesos = [];
-        if (vic === 1) {
-            sucesos.push("Victoria");
-        } else if (der === 1) {
-            sucesos.push("Derrota");
-        }
-        
-        if (e === 1) sucesos.push("E");
-        if (r === 1) sucesos.push("R");
-        if (m === 1) sucesos.push("M");
-        if (o === 1) sucesos.push("O");
-        if (s === 1) sucesos.push("S");
-        if (rch === 1) sucesos.push("Rch");
-        if (mg === 1) sucesos.push("MG");
-        if (rlp === 1) sucesos.push("RLP");
-
-        registrosProcesados.push({
-            id: contadorId++,
-            periodo: periodo,
-            jornada: jornada,
-            partida: partidaSelect,
-            duracion: duracionExtraida,
-            jugador: jugadorOficial,
-            pts: totalPuntosPartida,
-            pg: vic,
-            pp: der,
-            equipo: equipo,
-            civ: civ,
-            unidadesAsesinadas: unidadesAsesinadas,
-            edificiosArrasados: edificiosArrasados,
-            bonos: { e, r, m, o, s, rch, mg, rlp },
-            sucesoNota: sucesos.length > 0 ? sucesos.join(" + ") : "Sin participación",
-            fechaHora: fechaHoraActual
-        });
-    });
-
-    if (registrosProcesados.length === 0) {
-        alert("No se pudieron extraer datos válidos del texto plano.");
-        return;
-    }
-
-    const claveBD = `registros_${periodo}_${jornada}_${partidaSelect}`;
-    localStorage.removeItem(claveBD);
-    localStorage.setItem(claveBD, JSON.stringify(registrosProcesados));
-
-    actualizarAcumuladosRanking();
-
-    if (document.getElementById("gestion-anio")) document.getElementById("gestion-anio").value = anio;
-    if (document.getElementById("gestion-mes")) document.getElementById("gestion-mes").value = mesFormatted;
-    if (document.getElementById("gestion-jornada")) document.getElementById("gestion-jornada").value = jornada;
-    if (document.getElementById("gestion-partida")) document.getElementById("gestion-partida").value = partidaSelect;
-
-    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores correctamente!`);
-    renderTablaGestionRegistros();
-}
-
-function actualizarAcumuladosRanking() {
-    let acumuladoGlobal = {};
-
-    for (let i = 0; i < localStorage.length; i++) {
-        const clave = localStorage.key(i);
-        if (clave.startsWith("registros_")) {
-            const partidaDatos = JSON.parse(localStorage.getItem(clave));
-            partidaDatos.forEach(reg => {
-                if (!acumuladoGlobal[reg.jugador]) {
-                    acumuladoGlobal[reg.jugador] = {
-                        jugador: reg.jugador,
-                        pts: 0,
-                        pg: 0,
-                        pp: 0,
-                        e: 0, r: 0, m: 0, o: 0, s: 0, rch: 0, mg: 0, rlp: 0,
-                        ultimoSuceso: reg.sucesoNota
-                    };
-                }
-                
-                acumuladoGlobal[reg.jugador].pts += reg.pts;
-                acumuladoGlobal[reg.jugador].pg += reg.pg;
-                acumuladoGlobal[reg.jugador].pp += reg.pp;
-                acumuladoGlobal[reg.jugador].e += reg.bonos.e;
-                acumuladoGlobal[reg.jugador].r += reg.bonos.r;
-                acumuladoGlobal[reg.jugador].m += reg.bonos.m;
-                acumuladoGlobal[reg.jugador].o += reg.bonos.o;
-                acumuladoGlobal[reg.jugador].s += reg.bonos.s;
-                acumuladoGlobal[reg.jugador].rch += reg.bonos.rch;
-                acumuladoGlobal[reg.jugador].mg += reg.bonos.mg;
-                acumuladoGlobal[reg.jugador].rlp += reg.bonos.rlp;
-                acumuladoGlobal[reg.jugador].ultimoSuceso = reg.sucesoNota;
-            });
-        }
-    }
-
-    localStorage.setItem("ranking_acumulado_general", JSON.stringify(acumuladoGlobal));
-}
-
-function renderTablaGestionRegistros() {
-    const anio = document.getElementById("gestion-anio") ? document.getElementById("gestion-anio").value : "2026";
-    const mesVal = document.getElementById("gestion-mes") ? document.getElementById("gestion-mes").value : "08";
-    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
-    const periodo = `${anio}-${mesFormatted}`;
-    
-    const jornada = document.getElementById("gestion-jornada") ? document.getElementById("gestion-jornada").value : "Fecha 01";
-    const partida = document.getElementById("gestion-partida") ? document.getElementById("gestion-partida").value : "Partida 1";
-
-    const claveBD = `registros_${periodo}_${jornada}_${partida}`;
-    const datosGuardados = localStorage.getItem(claveBD);
-    const tbody = document.getElementById("tabla-registros-guardados");
-
-    if (!tbody) return;
-
-    tbody.innerHTML = "";
-
-    if (!datosGuardados) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="10" style="text-align: center; color: #6c757d; padding: 15px;">
-                    No hay registros cargados aún para esta fecha/partida.
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    const registros = JSON.parse(datosGuardados);
-
-    registros.forEach(reg => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td><strong>${reg.id}</strong></td>
-            <td><strong>${reg.jugador}</strong></td>
-            <td><span style="color: #0d6efd; font-weight: bold;">${reg.pts}</span></td>
-            <td>${reg.pg}</td>
-            <td>${reg.pp}</td>
-            <td>${reg.equipo || ''}</td>
-            <td>${reg.civ || ''}</td>
-            <td><span style="color: #6f42c1; font-weight: bold;">${reg.unidadesAsesinadas || 0}</span></td>
-            <td><span style="color: #d63384; font-weight: bold;">${reg.edificiosArrasados || 0}</span></td>
-            <td>${reg.duracion}</td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-function eliminarPartidaCompleta() {
-    const anio = document.getElementById("gestion-anio").value;
-    const mesVal = document.getElementById("gestion-mes").value;
-    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
-    const periodo = `${anio}-${mesFormatted}`;
-    
-    const jornada = document.getElementById("gestion-jornada").value;
-    const partida = document.getElementById("gestion-partida").value;
-
-    const claveBD = `registros_${periodo}_${jornada}_${partida}`;
-    if (confirm(`¿Deseas eliminar todos los registros de ${periodo} - ${jornada} - ${partida}?`)) {
-        localStorage.removeItem(claveBD);
-        actualizarAcumuladosRanking();
-        renderTablaGestionRegistros();
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    cargarSelectoresFechaDinamicos();
-    renderTablaGestionRegistros();
-});
+    <script src="js/auth.js"></script>
+    <script src="js/ranking.js"></script>
+</body>
+</html>
