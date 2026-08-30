@@ -11,6 +11,7 @@ function cargarSelectoresFechaDinamicos() {
     const selectsAnio = document.querySelectorAll("#select-anio, #gestion-anio");
     selectsAnio.forEach(sel => {
         if (!sel) return;
+        const valorActual = sel.value;
         sel.innerHTML = "";
         for (let a = anioInicio; a <= anioFin; a++) {
             const opt = document.createElement("option");
@@ -18,27 +19,34 @@ function cargarSelectoresFechaDinamicos() {
             opt.textContent = a;
             sel.appendChild(opt);
         }
+        if (valorActual) sel.value = valorActual;
     });
 
     // 2. Llenar selectores de Mes
     const selectsMes = document.querySelectorAll("#select-mes, #gestion-mes");
     selectsMes.forEach(sel => {
         if (!sel) return;
+        const valorActual = sel.value;
         sel.innerHTML = "";
         meses.forEach((m, idx) => {
             const opt = document.createElement("option");
             const numMes = (idx + 1).toString().padStart(2, '0');
             opt.value = numMes; 
             opt.textContent = m;
-            if (m === "Agosto") opt.selected = true;
             sel.appendChild(opt);
         });
+        if (valorActual) {
+            sel.value = valorActual;
+        } else {
+            sel.value = "08"; // Por defecto Agosto
+        }
     });
 
     // 3. Llenar selectores de Jornada
     const selectsJornada = document.querySelectorAll("#jornada-select, #gestion-jornada");
     selectsJornada.forEach(sel => {
         if (!sel) return;
+        const valorActual = sel.value;
         sel.innerHTML = "";
         for (let i = 1; i <= 31; i++) {
             const num = i < 10 ? `0${i}` : i;
@@ -47,12 +55,14 @@ function cargarSelectoresFechaDinamicos() {
             opt.textContent = `Fecha ${num}`;
             sel.appendChild(opt);
         }
+        if (valorActual) sel.value = valorActual;
     });
 
     // 4. Llenar selectores de Partida
     const selectsPartida = document.querySelectorAll("#partida-select, #gestion-partida");
     selectsPartida.forEach(sel => {
         if (!sel) return;
+        const valorActual = sel.value;
         sel.innerHTML = "";
         for (let p = 1; p <= 10; p++) {
             const opt = document.createElement("option");
@@ -60,6 +70,7 @@ function cargarSelectoresFechaDinamicos() {
             opt.textContent = `Partida ${p}`;
             sel.appendChild(opt);
         }
+        if (valorActual) sel.value = valorActual;
     });
 }
 
@@ -152,7 +163,11 @@ function procesarRegistroMasivo() {
         const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
         const rlp = parsearNumeroSeguro(partes[9]);
         
-        // CORRECCIÓN: Extracción en el orden correcto
+        // Orden correcto de los datos en el texto plano:
+        // [10] -> Unidades Asesinadas
+        // [11] -> Edificios Arrasados
+        // [12] -> Equipo
+        // [13] -> Civilización
         const unidadesAsesinadas = partes.length >= 11 ? parsearNumeroSeguro(partes[10]) : 0;
         const edificiosArrasados = partes.length >= 12 ? parsearNumeroSeguro(partes[11]) : 0;
         const equipo = partes.length >= 13 ? partes[12] : "-";
@@ -280,7 +295,6 @@ function renderTablaGestionRegistros() {
 
     registros.forEach(reg => {
         const tr = document.createElement("tr");
-        // CORRECCIÓN: Nuevo orden visual
         tr.innerHTML = `
             <td><strong>${reg.id}</strong></td>
             <td><strong>${reg.jugador}</strong></td>
@@ -318,10 +332,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarSelectoresFechaDinamicos();
     renderTablaGestionRegistros();
 });
-Paso 2: Reemplaza tu archivo galeria.html
-Aquí hemos actualizado la etiqueta del textarea (para que sepas en qué orden poner los datos si decides usar equipo y civ) y los encabezados de la tabla con los nombres en diminutivo y en el orden que indicaste.
-
-Copia este código y reemplaza todo el contenido de galeria.html:
+Paso 2: Reemplaza el archivo galeria.html
+Asegúrate de que tu archivo galeria.html tenga los encabezados limpios con los diminutivos (U. Ases. y E. Arr.) y un colspan="10" correcto:
 
 HTML
 <!DOCTYPE html>
