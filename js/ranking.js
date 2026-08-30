@@ -1,342 +1,674 @@
-<!DOCTYPE html>
+// Obtener el nombre oficial corregido desde localStorage
 
-<html lang="es">
+function obtenerNombreOficial(nombreOriginal) {
 
-<head>
+    if (!nombreOriginal) return "";
 
-    <meta charset="UTF-8">
+    let mapaCorrecciones = {};
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
 
-    <title>Ranking Maratón Michi DM - Clasificación General</title>
+    const correccionesGuardadas = localStorage.getItem("mapa_correccion_nombres") || localStorage.getItem("correcciones_nombres");
 
-    <link rel="stylesheet" href="css/estilos.css">
+    if (correccionesGuardadas) {
 
-    <style>
+        try {
 
-        .header-top {
+            mapaCorrecciones = JSON.parse(correccionesGuardadas);
 
-            display: flex;
+        } catch (e) {
 
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 15px;
-
-            padding-bottom: 5px;
-
-            border-bottom: 1px solid #ddd;
+            console.error("Error parseando mapa de corrección de nombres:", e);
 
         }
 
-        .header-top h1 {
+    }
 
-            margin: 0;
+    
 
-            font-size: 1.8rem;
+    return mapaCorrecciones[nombreOriginal] || nombreOriginal;
+
+}
+
+
+
+// Función auxiliar para parsear y contabilizar bonos por unidad (+1)
+
+function procesarBonosPorUnidad(textoSuceso, objetoJugador) {
+
+    if (!textoSuceso || typeof textoSuceso !== "string") return;
+
+
+
+    const texto = textoSuceso.toUpperCase();
+
+
+
+    if (/\bE\b/.test(texto) || texto.includes("EXCELENCIA")) objetoJugador.bonoE += 1;
+
+    if (/\bR\b/.test(texto) || texto.includes("RESISTENCIA")) objetoJugador.bonoR += 1;
+
+    if (/\bM\b/.test(texto) || texto.includes("MILITAR")) objetoJugador.bonoM += 1;
+
+    if (/\bO\b/.test(texto) || texto.includes("ORO")) objetoJugador.bonoO += 1;
+
+    if (/\bS\b/.test(texto) || texto.includes("SOCIEDAD")) objetoJugador.bonoS += 1;
+
+
+
+    if (texto.includes("RCH") || texto.includes("RACHA")) objetoJugador.bonoRch += 1;
+
+    if (texto.includes("MG") || texto.includes("MATAGIGANTES")) objetoJugador.bonoMG += 1;
+
+    if (texto.includes("RLP") || texto.includes("RELAMPAGO") || texto.includes("RELÁMPAGO")) objetoJugador.bonoRLP += 1;
+
+}
+
+
+
+// Inicializar selectores de año de forma dinámica al cargar
+
+function inicializarSelectoresAnioFiltro() {
+
+    const selectAnio = document.getElementById("select-anio-filtro");
+
+    if (!selectAnio) return;
+
+    selectAnio.innerHTML = "";
+
+    for (let a = 2026; a <= 2035; a++) {
+
+        const opt = document.createElement("option");
+
+        opt.value = a;
+
+        opt.textContent = a;
+
+        if (a === 2026) opt.selected = true;
+
+        selectAnio.appendChild(opt);
+
+    }
+
+}
+
+
+
+// Renderiza el Ranking Acumulado General filtrado correctamente por Año y Mes
+
+function renderTablaRankingGeneral() {
+
+    const tbody = document.getElementById("tabla-clasificacion");
+
+    const elFechaAct = document.getElementById("fecha-actualizacion");
+
+    const elLabelFecha = document.getElementById("label-fecha");
+
+    const elLabelPartida = document.getElementById("label-partida");
+
+    const elTotalPartidasMes = document.getElementById("total-partidas-mes");
+
+    
+
+    const selectAnioFiltro = document.getElementById("select-anio-filtro");
+
+    const selectMesFiltro = document.getElementById("select-mes-filtro");
+
+    const tableElement = tbody ? tbody.closest("table") : null;
+
+
+
+    if (!tbody) return;
+
+
+
+    const anioSel = selectAnioFiltro ? selectAnioFiltro.value : "2026";
+
+    const mesSel = selectMesFiltro ? selectMesFiltro.value : "08";
+
+    const periodoSeleccionado = `${anioSel}-${mesSel}`; // Formato: 2026-08
+
+
+
+    let clavesPartidasMes = [];
+
+    let ultimaJornada = "01";
+
+    let ultimaPartida = "1";
+
+    let ultimaFechaHora = "";
+
+
+
+    // 1. Recopilar y ordenar cronológicamente todas las claves de partidas del mes/año seleccionado
+
+    for (let i = 0; i < localStorage.length; i++) {
+
+        const clave = localStorage.key(i);
+
+        if (clave && clave.startsWith("registros_") && clave.includes(`_${periodoSeleccionado}_`)) {
+
+            clavesPartidasMes.push(clave);
 
         }
 
-        .header-top .fecha-actualizacion {
+    }
 
-            font-size: 1.1rem;
 
-            font-weight: bold;
 
-            color: #333;
+    // Ordenar las claves cronológicamente (asumiendo formato tipo registros_..._FechaX_PartidaY o orden alfabético/numérico de fecha-partida)
 
-        }
+    clavesPartidasMes.sort((a, b) => {
 
-        /* Subencabezado con filtro de año/mes y contador de partidas */
+        // Extraer números de jornada y partida para un orden correcto
 
-        .bar-jornada-filtro {
+        const matchA = a.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || a.match(/(\d+)_(\d+)$/);
 
-            display: flex;
+        const matchB = b.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || b.match(/(\d+)_(\d+)$/);
 
-            justify-content: space-between;
+        if (matchA && matchB) {
 
-            align-items: center;
+            const jA = parseInt(matchA[1], 10);
 
-            margin: 15px 0 20px 0;
+            const jB = parseInt(matchB[1], 10);
 
-            flex-wrap: wrap;
+            if (jA !== jB) return jA - jB;
 
-            gap: 15px;
+            return parseInt(matchA[2], 10) - parseInt(matchB[2], 10);
 
         }
 
-        .info-jornada {
+        return a.localeCompare(b);
 
-            display: flex;
+    });
 
-            gap: 40px;
 
-            font-size: 1.15rem;
 
-            font-weight: bold;
+    let clavesPartidasUnicas = new Set(clavesPartidasMes);
 
-            color: #222;
+
+
+    // 2. Calcular el estado ANTERIOR (acumulado hasta antes de la última partida del conjunto)
+
+    let posicionesAnterioresMap = {};
+
+    let totalJugadoresAnteriores = 0;
+
+
+
+    if (clavesPartidasMes.length > 0) {
+
+        // Tomamos todas las partidas EXCEPTO la última para calcular el ranking previo
+
+        const clavesAnteriores = clavesPartidasMes.slice(0, clavesPartidasMes.length - 1);
+
+        let acumuladoAnteriorMap = {};
+
+
+
+        clavesAnteriores.forEach(clave => {
+
+            try {
+
+                const registros = JSON.parse(localStorage.getItem(clave));
+
+                if (Array.isArray(registros)) {
+
+                    registros.forEach(reg => {
+
+                        const nombreRaw = reg.jugador || reg.Jugador;
+
+                        if (!nombreRaw) return;
+
+                        const nombre = obtenerNombreOficial(nombreRaw);
+
+
+
+                        if (!acumuladoAnteriorMap[nombre]) {
+
+                            acumuladoAnteriorMap[nombre] = { jugador: nombre, pts: 0 };
+
+                        }
+
+                        acumuladoAnteriorMap[nombre].pts += parseInt(reg.pts || reg.Pts || 0);
+
+                    });
+
+                }
+
+            } catch (e) {
+
+                console.error("Error procesando registro anterior:", e);
+
+            }
+
+        });
+
+
+
+        let listaAnterior = Object.values(acumuladoAnteriorMap);
+
+        listaAnterior.sort((a, b) => b.pts - a.pts);
+
+        totalJugadoresAnteriores = listaAnterior.length;
+
+
+
+        listaAnterior.forEach((jug, idx) => {
+
+            posicionesAnterioresMap[jug.jugador] = idx + 1; // Posición 1-indexed
+
+        });
+
+    }
+
+
+
+    // 3. Calcular el estado ACTUAL (acumulado total del período seleccionado)
+
+    let acumuladoMap = {};
+
+
+
+    clavesPartidasMes.forEach(clave => {
+
+        const partesClave = clave.split("_");
+
+        if (partesClave.length >= 4) {
+
+            ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
+
+            ultimaPartida = partesClave[partesClave.length - 1] || ultimaPartida;
 
         }
 
-        .filtro-historico {
 
-            display: flex;
 
-            align-items: center;
+        try {
 
-            gap: 10px;
+            const registros = JSON.parse(localStorage.getItem(clave));
 
-            font-weight: bold;
+            if (Array.isArray(registros)) {
+
+                registros.forEach(reg => {
+
+                    if (reg.fechaHora) {
+
+                        ultimaFechaHora = reg.fechaHora;
+
+                    }
+
+
+
+                    const nombreRaw = reg.jugador || reg.Jugador;
+
+                    if (!nombreRaw) return;
+
+
+
+                    const nombre = obtenerNombreOficial(nombreRaw);
+
+
+
+                    if (!acumuladoMap[nombre]) {
+
+                        acumuladoMap[nombre] = {
+
+                            jugador: nombre,
+
+                            pts: 0,
+
+                            pg: 0,
+
+                            pp: 0,
+
+                            vd: null,
+
+                            bonoE: 0,
+
+                            bonoR: 0,
+
+                            bonoM: 0,
+
+                            bonoO: 0,
+
+                            bonoS: 0,
+
+                            bonoRch: 0,
+
+                            bonoMG: 0,
+
+                            bonoRLP: 0,
+
+                            ultimoSuceso: reg.sucesoNota || reg.suceso || reg.ultimoSuceso || 'Victoria'
+
+                        };
+
+                    }
+
+
+
+                    const puntos = parseInt(reg.pts || reg.Pts || 0);
+
+                    const ganados = parseInt(reg.pg || reg.PG || 0);
+
+                    const perdidos = parseInt(reg.pp || reg.PP || 0);
+
+                    const sucesoActual = reg.sucesoNota || reg.suceso || reg.ultimoSuceso || '';
+
+
+
+                    acumuladoMap[nombre].pts += puntos;
+
+                    acumuladoMap[nombre].pg += ganados;
+
+                    acumuladoMap[nombre].pp += perdidos;
+
+                    acumuladoMap[nombre].ultimoSuceso = sucesoActual || acumuladoMap[nombre].ultimoSuceso;
+
+
+
+                    if (ganados > 0) {
+
+                        acumuladoMap[nombre].vd = 1;
+
+                    } else if (perdidos > 0) {
+
+                        acumuladoMap[nombre].vd = 0;
+
+                    }
+
+
+
+                    procesarBonosPorUnidad(sucesoActual, acumuladoMap[nombre]);
+
+                });
+
+            }
+
+        } catch (e) {
+
+            console.error("Error procesando registro:", e);
 
         }
 
-        .filtro-historico select {
+    });
 
-            padding: 6px 12px;
 
-            font-size: 1rem;
 
-            border-radius: 6px;
+    const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
 
-            border: 1px solid #ccc;
+    const numPartida = ultimaPartida.replace(/\D/g, "") || "1";
 
-            background-color: #fff;
 
-            cursor: pointer;
+
+    if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || new Date().toLocaleString("es-PE");
+
+    if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
+
+    if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
+
+    if (elTotalPartidasMes) elTotalPartidasMes.textContent = clavesPartidasUnicas.size;
+
+
+
+    let jugadores = Object.values(acumuladoMap);
+
+    
+
+    if (jugadores.length === 0) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td colspan="16" style="text-align: center; color: #6c757d; padding: 20px;">
+
+                    No hay partidas registradas para el período seleccionado.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        if (tableElement) {
+
+            let tfoot = tableElement.querySelector("tfoot");
+
+            if (tfoot) tfoot.innerHTML = "";
 
         }
 
-        /* Recuadro de Total de Partidas Jugadas */
+        return;
 
-        .box-resumen-partidas {
-
-            background-color: #e7f1ff;
-
-            border: 1px solid #b6d4fe;
-
-            color: #084298;
-
-            padding: 10px 18px;
-
-            border-radius: 8px;
-
-            font-size: 1rem;
-
-            display: inline-block;
-
-            margin-bottom: 15px;
-
-        }
-
-        .box-resumen-partidas span {
-
-            font-weight: bold;
-
-            font-size: 1.2rem;
-
-        }
-
-    </style>
-
-</head>
-
-<body>
+    }
 
 
 
-    <div id="sidebar">
+    // Ordenar jugadores por puntos actuales (mayor a menor)
 
-        <h3>🔐 Panel de Control</h3>
-
-        <label>Contraseña de Admin:</label>
-
-        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
-
-        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
-
-    </div>
+    jugadores.sort((a, b) => b.pts - a.pts);
 
 
 
-    <div id="main-content">
-
-        <!-- Encabezado superior con título y fecha/hora -->
-
-        <div class="header-top">
-
-            <h1>Ranking Maratón Michi DM</h1>
-
-            <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
-
-        </div>
+    let totalPts = 0, totalE = 0, totalR = 0, totalM = 0, totalO = 0, totalS = 0, totalRch = 0, totalMG = 0, totalRLP = 0, totalTB = 0;
 
 
 
-        <div class="tabs">
+    tbody.innerHTML = "";
 
-            <a href="index.html" class="tab-btn active">📊 Clasificación general</a>
+    jugadores.forEach((jug, index) => {
 
-            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
-
-            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
-
-            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
-
-            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
-
-        </div>
-
-
-
-        <h2>📊 Clasificación General</h2>
+        const posActual = index + 1;
 
         
 
-        <!-- Barra de Jornada y Filtros Independientes de Año / Mes -->
+        // 4. Cálculo dinámico de la Variación (Var)
 
-        <div class="bar-jornada-filtro">
+        let variacion = 0;
 
-            <div class="info-jornada">
+        if (clavesPartidasMes.length <= 1) {
 
-                <span id="label-fecha">Fecha --</span>
+            // Si es la primera partida registrada del mes/período, la variación es 0
 
-                <span id="label-partida">Partida --</span>
+            variacion = 0;
 
-            </div>
+        } else if (posicionesAnterioresMap[jug.jugador] !== undefined) {
 
-            
+            // Si ya participó antes, la variación es Posición Anterior - Posición Actual
 
-            <div class="filtro-historico">
+            const posAnterior = posicionesAnterioresMap[jug.jugador];
 
-                <label for="select-anio-filtro">Año:</label>
+            variacion = posAnterior - posActual;
 
-                <select id="select-anio-filtro" onchange="renderTablaRankingGeneral()">
+        } else {
 
-                    <!-- Se llenará dinámicamente o por defecto -->
+            // Si es un jugador nuevo (debutante en esta partida), se asume posición previa = totalJugadoresAnteriores + 1
 
-                    <option value="2026" selected>2026</option>
+            const posAnteriorVirtual = totalJugadoresAnteriores + 1;
 
-                </select>
+            variacion = posAnteriorVirtual - posActual;
 
+        }
 
 
-                <label for="select-mes-filtro" style="margin-left: 10px;">Mes:</label>
 
-                <select id="select-mes-filtro" onchange="renderTablaRankingGeneral()">
+        const varTexto = variacion > 0 ? `+${variacion}` : `${variacion}`;
 
-                    <option value="01">Enero</option>
 
-                    <option value="02">Febrero</option>
 
-                    <option value="03">Marzo</option>
+        const pj = jug.pg + jug.pp;
 
-                    <option value="04">Abril</option>
+        const vPjStr = `${jug.pg}/${pj}`;
 
-                    <option value="05">Mayo</option>
 
-                    <option value="06">Junio</option>
 
-                    <option value="07">Julio</option>
+        const tbJugador = jug.bonoE + jug.bonoR + jug.bonoM + jug.bonoO + jug.bonoS + jug.bonoRch + jug.bonoMG + jug.bonoRLP;
 
-                    <option value="08" selected>Agosto</option>
 
-                    <option value="09">Septiembre</option>
 
-                    <option value="10">Octubre</option>
+        totalPts += jug.pts;
 
-                    <option value="11">Noviembre</option>
+        totalE += jug.bonoE;
 
-                    <option value="12">Diciembre</option>
+        totalR += jug.bonoR;
 
-                </select>
+        totalM += jug.bonoM;
 
-            </div>
+        totalO += jug.bonoO;
 
-        </div>
+        totalS += jug.bonoS;
 
+        totalRch += jug.bonoRch;
 
+        totalMG += jug.bonoMG;
 
-        <!-- Recuadro informativo del Total de Partidas Jugadas -->
+        totalRLP += jug.bonoRLP;
 
-        <div class="box-resumen-partidas">
+        totalTB += tbJugador;
 
-            🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">0</span>
 
-        </div>
 
-        
+        let colorCirculo = "#6c757d";
 
-        <div class="card">
+        if (posActual <= 5) colorCirculo = "#198754";
 
-            <h3>Tabla de Posiciones</h3>
+        else if (posActual <= 10) colorCirculo = "#ffc107";
 
-            <table>
+        else if (posActual <= 15) colorCirculo = "#fd7e14";
 
-                <thead>
 
-                    <tr>
 
-                        <th>Pos</th>
+        const fmtBono = (val) => val > 0 ? `<strong style="color: #dc3545;">${val}</strong>` : `<span style="color: #6c757d;">0</span>`;
 
-                        <th>Var</th>
+        const vdTexto = jug.vd !== null ? jug.vd : 0;
 
-                        <th>Jugador</th>
 
-                        <th>Pts</th>
 
-                        <th>V/PJ</th>
+        const tr = document.createElement("tr");
 
-                        <th>Ultimo Suceso</th>
+        tr.innerHTML = `
 
-                        <th>V/D</th>
+            <td>
 
-                        <th>E</th>
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorCirculo}; margin-right:5px;"></span>
 
-                        <th>R</th>
+                <strong>${posActual}</strong>
 
-                        <th>M</th>
+            </td>
 
-                        <th>O</th>
+            <td>${varTexto}</td>
 
-                        <th>S</th>
+            <td><strong>${jug.jugador}</strong></td>
 
-                        <th>Rch</th>
+            <td><span style="color: #0d6efd; font-weight: bold;">${jug.pts}</span></td>
 
-                        <th>MG</th>
+            <td><strong>${vPjStr}</strong></td>
 
-                        <th>RLP</th>
+            <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
 
-                        <th>TB</th>
+            <td><strong>${vdTexto}</strong></td>
 
-                    </tr>
+            <td>${fmtBono(jug.bonoE)}</td>
 
-                </thead>
+            <td>${fmtBono(jug.bonoR)}</td>
 
-                <tbody id="tabla-clasificacion">
+            <td>${fmtBono(jug.bonoM)}</td>
 
-                    <tr>
+            <td>${fmtBono(jug.bonoO)}</td>
 
-                        <td colspan="16" style="text-align: center;">Cargando datos del torneo...</td>
+            <td>${fmtBono(jug.bonoS)}</td>
 
-                    </tr>
+            <td>${fmtBono(jug.bonoRch)}</td>
 
-                </tbody>
+            <td>${fmtBono(jug.bonoMG)}</td>
 
-            </table>
+            <td>${fmtBono(jug.bonoRLP)}</td>
 
-        </div>
+            <td><strong style="color: #198754;">${tbJugador}</strong></td>
 
-    </div>
+        `;
 
+        tbody.appendChild(tr);
 
+    });
 
-    <script src="js/auth.js"></script>
 
-    <script src="js/ranking.js"></script>
 
-</body>
+    if (tableElement) {
 
-</html> 
+        let tfoot = tableElement.querySelector("tfoot");
+
+        if (!tfoot) {
+
+            tfoot = document.createElement("tfoot");
+
+            tableElement.appendChild(tfoot);
+
+        }
+
+        tfoot.innerHTML = `
+
+            <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
+
+                <td colspan="3" style="text-align: right; padding: 10px;">Sumatoria Total:</td>
+
+                <td style="color: #0d6efd;">${totalPts}</td>
+
+                <td>-</td>
+
+                <td>-</td>
+
+                <td>-</td>
+
+                <td style="color: #dc3545;">${totalE}</td>
+
+                <td style="color: #dc3545;">${totalR}</td>
+
+                <td style="color: #dc3545;">${totalM}</td>
+
+                <td style="color: #dc3545;">${totalO}</td>
+
+                <td style="color: #dc3545;">${totalS}</td>
+
+                <td style="color: #dc3545;">${totalRch}</td>
+
+                <td style="color: #dc3545;">${totalMG}</td>
+
+                <td style="color: #dc3545;">${totalRLP}</td>
+
+                <td style="color: #198754;">${totalTB}</td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    inicializarSelectoresAnioFiltro();
+
+    
+
+    const selectAnio = document.getElementById("select-anio-filtro");
+
+    const selectMes = document.getElementById("select-mes-filtro");
+
+
+
+    if (selectAnio) selectAnio.addEventListener("change", renderTablaRankingGeneral);
+
+    if (selectMes) selectMes.addEventListener("change", renderTablaRankingGeneral);
+
+
+
+    renderTablaRankingGeneral();
+
+}); 
 
