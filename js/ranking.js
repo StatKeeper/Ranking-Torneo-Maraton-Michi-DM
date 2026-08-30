@@ -65,8 +65,8 @@ function renderTablaRankingGeneral() {
     const periodoSeleccionado = `${anioSel}-${mesSel}`; // Formato: 2026-08
 
     let clavesPartidasMes = [];
-    let ultimaJornada = "01";
-    let ultimaPartida = "1";
+    let ultimaJornada = "Fecha 01";
+    let ultimaPartida = "Partida 1";
     let ultimaFechaHora = "";
 
     // 1. Recopilar y ordenar cronológicamente todas las claves de partidas del mes/año seleccionado
@@ -77,9 +77,8 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // Ordenar las claves cronológicamente (asumiendo formato tipo registros_..._FechaX_PartidaY o orden alfabético/numérico de fecha-partida)
+    // Ordenar las claves cronológicamente por jornada y partida
     clavesPartidasMes.sort((a, b) => {
-        // Extraer números de jornada y partida para un orden correcto
         const matchA = a.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || a.match(/(\d+)_(\d+)$/);
         const matchB = b.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || b.match(/(\d+)_(\d+)$/);
         if (matchA && matchB) {
@@ -98,7 +97,6 @@ function renderTablaRankingGeneral() {
     let totalJugadoresAnteriores = 0;
 
     if (clavesPartidasMes.length > 0) {
-        // Tomamos todas las partidas EXCEPTO la última para calcular el ranking previo
         const clavesAnteriores = clavesPartidasMes.slice(0, clavesPartidasMes.length - 1);
         let acumuladoAnteriorMap = {};
 
@@ -127,7 +125,7 @@ function renderTablaRankingGeneral() {
         totalJugadoresAnteriores = listaAnterior.length;
 
         listaAnterior.forEach((jug, idx) => {
-            posicionesAnterioresMap[jug.jugador] = idx + 1; // Posición 1-indexed
+            posicionesAnterioresMap[jug.jugador] = idx + 1;
         });
     }
 
@@ -135,6 +133,7 @@ function renderTablaRankingGeneral() {
     let acumuladoMap = {};
 
     clavesPartidasMes.forEach(clave => {
+        // Extraer jornada y partida de la clave actual (ej: registros_2026-08_Fecha 01_Partida 1)
         const partesClave = clave.split("_");
         if (partesClave.length >= 4) {
             ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
@@ -197,12 +196,9 @@ function renderTablaRankingGeneral() {
         }
     });
 
-    const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
-    const numPartida = ultimaPartida.replace(/\D/g, "") || "1";
-
     if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || new Date().toLocaleString("es-PE");
-    if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
-    if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
+    if (elLabelFecha) elLabelFecha.textContent = ultimaJornada;
+    if (elLabelPartida) elLabelPartida.textContent = ultimaPartida;
     if (elTotalPartidasMes) elTotalPartidasMes.textContent = clavesPartidasUnicas.size;
 
     let jugadores = Object.values(acumuladoMap);
@@ -234,14 +230,11 @@ function renderTablaRankingGeneral() {
         // 4. Cálculo dinámico de la Variación (Var)
         let variacion = 0;
         if (clavesPartidasMes.length <= 1) {
-            // Si es la primera partida registrada del mes/período, la variación es 0
             variacion = 0;
         } else if (posicionesAnterioresMap[jug.jugador] !== undefined) {
-            // Si ya participó antes, la variación es Posición Anterior - Posición Actual
             const posAnterior = posicionesAnterioresMap[jug.jugador];
             variacion = posAnterior - posActual;
         } else {
-            // Si es un jugador nuevo (debutante en esta partida), se asume posición previa = totalJugadoresAnteriores + 1
             const posAnteriorVirtual = totalJugadoresAnteriores + 1;
             variacion = posAnteriorVirtual - posActual;
         }
