@@ -162,12 +162,8 @@ function procesarRegistroMasivo() {
         const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
         const rlp = parsearNumeroSeguro(partes[9]);
         
-        // Nuevas estadísticas aisladas (no afectan puntos ni clasificación general)
-        const unidadesAsesinadas = partes.length >= 11 ? parsearNumeroSeguro(partes[10]) : 0;
-        const edificiosArrasados = partes.length >= 12 ? parsearNumeroSeguro(partes[11]) : 0;
-
-        const equipo = partes.length >= 13 ? partes[12] : (partes.length >= 11 ? partes[10] : "");
-        const civ = partes.length >= 14 ? partes[13] : (partes.length >= 12 ? partes[11] : "");
+        const equipo = partes.length >= 11 ? partes[10] : "";
+        const civ = partes.length >= 12 ? partes[11] : "";
 
         const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
 
@@ -199,8 +195,6 @@ function procesarRegistroMasivo() {
             pp: der,
             equipo: equipo,
             civ: civ,
-            unidadesAsesinadas: unidadesAsesinadas,
-            edificiosArrasados: edificiosArrasados,
             bonos: { e, r, m, o, s, rch, mg, rlp },
             sucesoNota: sucesos.length > 0 ? sucesos.join(" + ") : "Sin participación",
             fechaHora: fechaHoraActual
