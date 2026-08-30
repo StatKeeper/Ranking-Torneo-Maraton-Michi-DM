@@ -195,6 +195,8 @@ function procesarRegistroMasivo() {
             pp: der,
             equipo: equipo,
             civ: civ,
+            unidadesAsesinadas: equipo, // Guardado para compatibilidad con estadísticas
+            edificiosArrasados: civ,    // Guardado para compatibilidad con estadísticas
             bonos: { e, r, m, o, s, rch, mg, rlp },
             sucesoNota: sucesos.length > 0 ? sucesos.join(" + ") : "Sin participación",
             fechaHora: fechaHoraActual
@@ -279,7 +281,7 @@ function renderTablaGestionRegistros() {
     if (!datosGuardados) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="8" style="text-align: center; color: #6c757d; padding: 15px;">
+                <td colspan="10" style="text-align: center; color: #6c757d; padding: 15px;">
                     No hay registros cargados aún para esta fecha/partida.
                 </td>
             </tr>
@@ -297,8 +299,10 @@ function renderTablaGestionRegistros() {
             <td><span style="color: #0d6efd; font-weight: bold;">${reg.pts}</span></td>
             <td>${reg.pg}</td>
             <td>${reg.pp}</td>
-            <td>${reg.equipo}</td>
-            <td>${reg.civ}</td>
+            <td>${reg.equipo || "-"}</td>
+            <td>${reg.civ || "-"}</td>
+            <td>${reg.unidadesAsesinadas || 0}</td>
+            <td>${reg.edificiosArrasados || 0}</td>
             <td>${reg.duracion}</td>
         `;
         tbody.appendChild(tr);
