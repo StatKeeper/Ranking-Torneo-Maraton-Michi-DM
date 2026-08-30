@@ -28,7 +28,7 @@ function cargarSelectoresFechaDinamicos() {
         meses.forEach((m, idx) => {
             const opt = document.createElement("option");
             const numMes = (idx + 1).toString().padStart(2, '0');
-            opt.value = numMes; // Formato numérico de dos dígitos (01-12)
+            opt.value = numMes; 
             opt.textContent = m;
             if (m === "Agosto") opt.selected = true;
             sel.appendChild(opt);
@@ -63,7 +63,6 @@ function cargarSelectoresFechaDinamicos() {
     });
 }
 
-// Obtener el nick oficial mediante la lista de equivalencias.js
 function obtenerNickOficialLocal(nombreIngresado) {
     if (typeof equivalencias !== 'undefined') {
         const guardadas = localStorage.getItem("equivalencias_michi_dm");
@@ -74,7 +73,6 @@ function obtenerNickOficialLocal(nombreIngresado) {
     return nombreIngresado.trim();
 }
 
-// Limpia el texto de una celda y lo convierte a entero de forma segura
 function parsearNumeroSeguro(texto) {
     if (!texto) return 0;
     const limpio = texto.toString().replace(/[^0-9]/g, '');
@@ -85,9 +83,8 @@ function procesarRegistroMasivo() {
     const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
     const mesVal = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "08";
     
-    // Normalizar mes a 2 dígitos
     const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
-    const periodo = `${anio}-${mesFormatted}`; // Formato ISO AAAA-MM (Ej. 2026-08)
+    const periodo = `${anio}-${mesFormatted}`;
     
     const jornada = document.getElementById("jornada-select") ? document.getElementById("jornada-select").value : "Fecha 01";
     const partidaSelect = document.getElementById("partida-select") ? document.getElementById("partida-select").value : "Partida 1";
@@ -101,7 +98,6 @@ function procesarRegistroMasivo() {
     const lineas = textoBloque.split("\n");
     let duracionExtraida = "";
 
-    // Extraer duración del encabezado (ej. "Partida 1 01:07:08")
     for (let i = 0; i < lineas.length; i++) {
         const lineaLimpia = lineas[i].trim();
         if (lineaLimpia.toLowerCase().startsWith("partida")) {
@@ -120,19 +116,13 @@ function procesarRegistroMasivo() {
     }
 
     const fechaHoraActual = new Date().toLocaleString("es-PE", {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
     });
 
     const registrosProcesados = [];
     let contadorId = 1;
 
-    // Control de Bonos Desactivados
     const BONO_RACHA_ACTIVO = false;
     const BONO_MG_ACTIVO = false;
 
@@ -162,17 +152,17 @@ function procesarRegistroMasivo() {
         const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
         const rlp = parsearNumeroSeguro(partes[9]);
         
-        const equipo = partes.length >= 11 ? partes[10] : "";
-        const civ = partes.length >= 12 ? partes[11] : "";
+        // CORRECCIÓN: Extracción en el orden correcto
+        const unidadesAsesinadas = partes.length >= 11 ? parsearNumeroSeguro(partes[10]) : 0;
+        const edificiosArrasados = partes.length >= 12 ? parsearNumeroSeguro(partes[11]) : 0;
+        const equipo = partes.length >= 13 ? partes[12] : "-";
+        const civ = partes.length >= 14 ? partes[13] : "-";
 
         const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
 
         let sucesos = [];
-        if (vic === 1) {
-            sucesos.push("Victoria");
-        } else if (der === 1) {
-            sucesos.push("Derrota");
-        }
+        if (vic === 1) sucesos.push("Victoria");
+        else if (der === 1) sucesos.push("Derrota");
         
         if (e === 1) sucesos.push("E");
         if (r === 1) sucesos.push("R");
@@ -193,10 +183,10 @@ function procesarRegistroMasivo() {
             pts: totalPuntosPartida,
             pg: vic,
             pp: der,
+            unidadesAsesinadas: unidadesAsesinadas, 
+            edificiosArrasados: edificiosArrasados,
             equipo: equipo,
             civ: civ,
-            unidadesAsesinadas: equipo, // Guardado para compatibilidad con estadísticas
-            edificiosArrasados: civ,    // Guardado para compatibilidad con estadísticas
             bonos: { e, r, m, o, s, rch, mg, rlp },
             sucesoNota: sucesos.length > 0 ? sucesos.join(" + ") : "Sin participación",
             fechaHora: fechaHoraActual
@@ -234,9 +224,7 @@ function actualizarAcumuladosRanking() {
                 if (!acumuladoGlobal[reg.jugador]) {
                     acumuladoGlobal[reg.jugador] = {
                         jugador: reg.jugador,
-                        pts: 0,
-                        pg: 0,
-                        pp: 0,
+                        pts: 0, pg: 0, pp: 0,
                         e: 0, r: 0, m: 0, o: 0, s: 0, rch: 0, mg: 0, rlp: 0,
                         ultimoSuceso: reg.sucesoNota
                     };
@@ -275,7 +263,6 @@ function renderTablaGestionRegistros() {
     const tbody = document.getElementById("tabla-registros-guardados");
 
     if (!tbody) return;
-
     tbody.innerHTML = "";
 
     if (!datosGuardados) {
@@ -293,16 +280,17 @@ function renderTablaGestionRegistros() {
 
     registros.forEach(reg => {
         const tr = document.createElement("tr");
+        // CORRECCIÓN: Nuevo orden visual
         tr.innerHTML = `
             <td><strong>${reg.id}</strong></td>
             <td><strong>${reg.jugador}</strong></td>
             <td><span style="color: #0d6efd; font-weight: bold;">${reg.pts}</span></td>
             <td>${reg.pg}</td>
             <td>${reg.pp}</td>
-            <td>${reg.equipo || "-"}</td>
-            <td>${reg.civ || "-"}</td>
             <td>${reg.unidadesAsesinadas || 0}</td>
             <td>${reg.edificiosArrasados || 0}</td>
+            <td>${reg.equipo || "-"}</td>
+            <td>${reg.civ || "-"}</td>
             <td>${reg.duracion}</td>
         `;
         tbody.appendChild(tr);
@@ -330,3 +318,130 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarSelectoresFechaDinamicos();
     renderTablaGestionRegistros();
 });
+Paso 2: Reemplaza tu archivo galeria.html
+Aquí hemos actualizado la etiqueta del textarea (para que sepas en qué orden poner los datos si decides usar equipo y civ) y los encabezados de la tabla con los nombres en diminutivo y en el orden que indicaste.
+
+Copia este código y reemplaza todo el contenido de galeria.html:
+
+HTML
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Galería y Registro Masivo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+    </div>
+
+    <div id="main-content">
+        <h1>🏆 Ranking Maratón Michi DM</h1>
+
+        <div class="tabs">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
+            <a href="galeria.html" class="tab-btn active admin-only">🖼️ Galería y Registro Masivo</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2>⚡ Registro Masivo por Texto Plano</h2>
+
+        <div class="card">
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr;">
+                <div>
+                    <label>Año:</label>
+                    <select id="select-anio"></select>
+                </div>
+                <div>
+                    <label>Mes:</label>
+                    <select id="select-mes"></select>
+                </div>
+                <div>
+                    <label>Jornada:</label>
+                    <select id="jornada-select"></select>
+                </div>
+                <div>
+                    <label>Partida:</label>
+                    <select id="partida-select"></select>
+                </div>
+                <div>
+                    <label>Duración (HH:MM:SS):</label>
+                    <input type="text" id="duracion-partida" placeholder="01:07:08">
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label>Bloque de datos (JUGADOR | V/D | E | R | M | O | S | Rch | MG | RLP | [U. Ases.] | [E. Arr.] | [Equipo] | [Civ]):</label>
+                <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+            </div>
+
+            <button class="btn-action" style="margin-top: 15px;" onclick="procesarRegistroMasivo()">🚀 Procesar y Registrar Todo</button>
+        </div>
+
+        <h2>🗑️ Gestión y Eliminación de Registros Guardados</h2>
+
+        <div class="card">
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                <div>
+                    <label>Año:</label>
+                    <select id="gestion-anio" onchange="renderTablaGestionRegistros()"></select>
+                </div>
+                <div>
+                    <label>Mes:</label>
+                    <select id="gestion-mes" onchange="renderTablaGestionRegistros()"></select>
+                </div>
+                <div>
+                    <label>Jornada:</label>
+                    <select id="gestion-jornada" onchange="renderTablaGestionRegistros()"></select>
+                </div>
+                <div>
+                    <label>Partida:</label>
+                    <select id="gestion-partida" onchange="renderTablaGestionRegistros()"></select>
+                </div>
+            </div>
+
+            <table style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Jugador</th>
+                        <th>Pts</th>
+                        <th>PG</th>
+                        <th>PP</th>
+                        <th title="Unidades Asesinadas">U. Ases.</th>
+                        <th title="Edificios Arrasados">E. Arr.</th>
+                        <th>Equipo</th>
+                        <th>Civ</th>
+                        <th>Duración</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-registros-guardados">
+                    <tr>
+                        <td colspan="10" style="text-align: center; color: #777;">No hay registros cargados aún para esta fecha/partida.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <button class="btn-action btn-delete" onclick="eliminarPartidaCompleta()">🚨 Eliminar toda esta Partida</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <label>ID individual a borrar:</label>
+                    <input type="number" id="id-borrar-registro" style="width: 80px;" placeholder="1">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/equivalencias.js"></script>
+    <script src="js/registro_masivo.js"></script>
+</body>
+</html>
