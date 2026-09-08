@@ -27,7 +27,24 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2>📈 Estadísticas Generales del Torneo</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; margin-bottom: 10px;">
+            <h2 style="margin: 0;">📈 Estadísticas Generales del Torneo</h2>
+            <!-- Selectores de Año y Mes idénticos a los de index.html para que el filtrado funcione perfecto -->
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="select-anio" style="font-weight: bold;">Año:</label>
+                <select id="select-anio" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
+                    <option value="2026" selected>2026</option>
+                </select>
+                <label for="select-mes" style="font-weight: bold; margin-left: 10px;">Mes:</label>
+                <select id="select-mes" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
+                    <option value="Agosto" selected>Agosto</option>
+                    <option value="Septiembre">Septiembre</option>
+                    <option value="Octubre">Octubre</option>
+                    <option value="Noviembre">Noviembre</option>
+                    <option value="Diciembre">Diciembre</option>
+                </select>
+            </div>
+        </div>
 
         <!-- Subpestañas Secundarias -->
         <div class="subtabs">
