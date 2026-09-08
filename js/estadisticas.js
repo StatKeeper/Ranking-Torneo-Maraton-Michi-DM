@@ -51,8 +51,10 @@ function renderizarEstadisticasTiempos() {
     let estadisticasJugadores = {};
     let estadisticasCivilizaciones = {};
     let estadisticasEquipos = {};
-    let duplasPartidas = {};
     let listaGlobalJugadores = new Set();
+    
+    // Almacenaremos las partidas como una lista de objetos que contienen los jugadores y sus estados
+    let partidasDetalleGlobal = [];
 
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
@@ -68,11 +70,10 @@ function renderizarEstadisticasTiempos() {
                         const nombre = obtenerNickOficialEstadisticas(nombreRaw);
                         listaGlobalJugadores.add(nombre);
 
-                        jugadoresEnPartida.push({
-                            nombre: nombre,
-                            pg: (reg.pg === 1 || reg.PG === 1) ? 1 : 0,
-                            pp: (reg.pp === 1 || reg.PP === 1) ? 1 : 0
-                        });
+                        const pg = (reg.pg === 1 || reg.PG === 1) ? 1 : 0;
+                        const pp = (reg.pp === 1 || reg.PP === 1) ? 1 : 0;
+
+                        jugadoresEnPartida.push({ nombre, pg, pp });
 
                         // 1. Estadísticas Individuales
                         if (!estadisticasJugadores[nombre]) {
@@ -89,9 +90,8 @@ function renderizarEstadisticasTiempos() {
 
                         const stats = estadisticasJugadores[nombre];
                         stats.totalPartidas++;
-                        
-                        if (reg.pg === 1 || reg.PG === 1) stats.victorias++;
-                        if (reg.pp === 1 || reg.PP === 1) stats.derrotas++;
+                        if (pg === 1) stats.victorias++;
+                        if (pp === 1) stats.derrotas++;
 
                         stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || 0, 10);
                         stats.edificiosTotales += parseInt(reg.edificiosArrasados || 0, 10);
@@ -104,8 +104,8 @@ function renderizarEstadisticasTiempos() {
                                 estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
                             }
                             estadisticasCivilizaciones[civ].jugadas++;
-                            if (reg.pg === 1 || reg.PG === 1) estadisticasCivilizaciones[civ].victorias++;
-                            if (reg.pp === 1 || reg.PP === 1) estadisticasCivilizaciones[civ].derrotas++;
+                            if (pg === 1) estadisticasCivilizaciones[civ].victorias++;
+                            if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
                         }
 
                         // 3. Estadísticas por Equipo
@@ -122,29 +122,14 @@ function renderizarEstadisticasTiempos() {
                                 };
                             }
                             estadisticasEquipos[claveEquipo].miembros.add(nombre);
-                            if (reg.pg === 1 || reg.PG === 1) estadisticasEquipos[claveEquipo].victorias = 1;
-                            if (reg.pp === 1 || reg.PP === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
+                            if (pg === 1) estadisticasEquipos[claveEquipo].victorias = 1;
+                            if (pp === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
                         }
                     });
 
-                    // Generar combinaciones de duplas por partida
-                    for (let a = 0; a < jugadoresEnPartida.length; a++) {
-                        for (let b = a + 1; b < jugadoresEnPartida.length; b++) {
-                            let p1 = jugadoresEnPartida[a].nombre;
-                            let p2 = jugadoresEnPartida[b].nombre;
-                            if (p1 === p2) continue;
-                            let keyDupla = [p1, p2].sort().join(" & ");
-
-                            if (!duplasPartidas[keyDupla]) {
-                                duplasPartidas[keyDupla] = { jugador1: [p1, p2].sort()[0], jugador2: [p1, p2].sort()[1], juntas: 0, victorias: 0, derrotas: 0 };
-                            }
-                            duplasPartidas[keyDupla].juntas++;
-                            if (jugadoresEnPartida[a].pg === 1 && jugadoresEnPartida[b].pg === 1) {
-                                duplasPartidas[keyDupla].victorias++;
-                            } else if (jugadoresEnPartida[a].pp === 1 || jugadoresEnPartida[b].pp === 1) {
-                                duplasPartidas[keyDupla].derrotas++;
-                            }
-                        }
+                    // Guardar los jugadores de esta partida para la consulta combinada (2, 3 o 4 jugadores)
+                    if (jugadoresEnPartida.length > 0) {
+                        partidasDetalleGlobal.push(jugadoresEnPartida);
                     }
                 }
             } catch (e) {
@@ -176,13 +161,13 @@ function renderizarEstadisticasTiempos() {
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
                         <th style="padding: 12px;">Jugador</th>
-                        <th style="padding: 12px;" title="Partidas Registradas">Part.</th>
-                        <th style="padding: 12px;" title="Duración Total Acumulada">Dur. Acum.</th>
-                        <th style="padding: 12px;" title="Promedio de Duración por Partida">Prom. Dur.</th>
-                        <th style="padding: 12px;" title="Total de Unidades Asesinadas">Tot. Unid.</th>
-                        <th style="padding: 12px;" title="Promedio de Unidades Asesinadas por Partida">Prom. Unid.</th>
-                        <th style="padding: 12px;" title="Total de Edificios Arrasados">Tot. Edif.</th>
-                        <th style="padding: 12px;" title="Promedio de Edificios Arrasados por Partida">Prom. Edif.</th>
+                        <th style="padding: 12px;">Part.</th>
+                        <th style="padding: 12px;">Dur. Acum.</th>
+                        <th style="padding: 12px;">Prom. Dur.</th>
+                        <th style="padding: 12px;">Tot. Unid.</th>
+                        <th style="padding: 12px;">Prom. Unid.</th>
+                        <th style="padding: 12px;">Tot. Edif.</th>
+                        <th style="padding: 12px;">Prom. Edif.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -257,7 +242,7 @@ function renderizarEstadisticasTiempos() {
 
 
     // ==========================================
-    // RENDERIZAR VISTA 3: EQUIPOS Y BUSCADOR DE DUPLAS
+    // RENDERIZAR VISTA 3: EQUIPOS Y BUSCADOR MÚLTIPLE (2 a 4 JUGADORES)
     // ==========================================
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
@@ -302,18 +287,26 @@ function renderizarEstadisticasTiempos() {
             </table>
         </div>
 
-        <h3>🔍 Consulta Interactiva de Sinergia de Duplas</h3>
-        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Selecciona o escribe el nombre de dos jugadores para consultar sus estadísticas conjuntas en equipo.</p>
+        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
+        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Ingresa de 2 a 4 jugadores (puedes dejar campos vacíos si solo deseas consultar duplas o tríos) para conocer sus estadísticas conjuntas.</p>
         
         <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 1:</label>
-                    <input type="text" id="input-dupla-1" list="lista-jugadores-sug" placeholder="Escribe o selecciona..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 2:</label>
-                    <input type="text" id="input-dupla-2" list="lista-jugadores-sug" placeholder="Escribe o selecciona..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 3 (Opcional):</label>
+                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 4 (Opcional):</label>
+                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
                 </div>
             </div>
             
@@ -321,67 +314,99 @@ function renderizarEstadisticasTiempos() {
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
 
-            <button id="btn-consultar-dupla" style="background: #0d6efd; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer;">Consultar Sinergia</button>
+            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer;">Consultar Sinergia Grupal</button>
         </div>
 
-        <div id="resultado-dupla-container" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
+        <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
             <!-- El resultado se inyectará aquí -->
         </div>
     `;
 
     secEnfrentamientos.innerHTML = htmlEnfrentamientos;
 
-    // Lógica del buscador interactivo de duplas
-    const btnConsultar = document.getElementById("btn-consultar-dupla");
-    if (btnConsultar) {
-        btnConsultar.addEventListener("click", () => {
-            const j1Val = document.getElementById("input-dupla-1").value.trim();
-            const j2Val = document.getElementById("input-dupla-2").value.trim();
-            const contenedorResultado = document.getElementById("resultado-dupla-container");
+    // Lógica del buscador flexible (2 a 4 jugadores)
+    const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
+    if (btnConsultarSinergia) {
+        btnConsultarSinergia.addEventListener("click", () => {
+            const j1 = document.getElementById("input-sinergia-1").value.trim();
+            const j2 = document.getElementById("input-sinergia-2").value.trim();
+            const j3 = document.getElementById("input-sinergia-3").value.trim();
+            const j4 = document.getElementById("input-sinergia-4").value.trim();
+            const contenedorResultado = document.getElementById("resultado-sinergia-container");
 
-            if (!j1Val || !j2Val) {
-                alert("Por favor selecciona o escribe el nombre de ambos jugadores.");
+            // Recopilar solo los nombres ingresados y eliminar duplicados en la selección
+            let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
+            seleccionados = [...new Set(seleccionados.map(j => obtenerNickOficialEstadisticas(j)))];
+
+            if (seleccionados.length < 2) {
+                alert("Debes ingresar al menos 2 jugadores diferentes para calcular la sinergia.");
                 return;
             }
 
-            if (j1Val.toLowerCase() === j2Val.toLowerCase()) {
-                alert("Debes seleccionar dos jugadores distintos.");
-                return;
-            }
+            let partidasJuntos = 0;
+            let victoriasJuntos = 0;
+            let derrotasJuntos = 0;
 
-            const claveDuplaBusqueda = [j1Val, j2Val].sort().join(" & ");
-            const datosDupla = duplasPartidas[claveDuplaBusqueda];
+            // Analizar cada partida registrada
+            partidasDetalleGlobal.forEach(jugadoresPartida => {
+                const nombresEnPartida = jugadoresPartida.map(jp => jp.nombre);
+                
+                // Verificar si TODOS los jugadores seleccionados participaron en esta partida
+                const todosPresentes = seleccionados.every(sel => nombresEnPartida.includes(sel));
+
+                if (todosPresentes) {
+                    partidasJuntos++;
+                    
+                    // Comprobar si todos ganaron o si alguno perdió en conjunto
+                    let todosGanaron = true;
+                    let algunoPerdio = false;
+
+                    seleccionados.forEach(sel => {
+                        const datosJugador = jugadoresPartida.find(jp => jp.nombre === sel);
+                        if (datosJugador) {
+                            if (datosJugador.pg !== 1) todosGanaron = false;
+                            if (datosJugador.pp === 1) algunoPerdio = true;
+                        }
+                    });
+
+                    if (todosGanaron) {
+                        victoriasJuntos++;
+                    } else if (algunoPerdio) {
+                        derrotasJuntos++;
+                    }
+                }
+            });
 
             contenedorResultado.style.display = "block";
 
-            if (!datosDupla || datosDupla.juntas === 0) {
+            if (partidasJuntos === 0) {
                 contenedorResultado.innerHTML = `
-                    <h4 style="color: #6c757d; margin-bottom: 10px;">📊 Resultado para: ${j1Val} & ${j2Val}</h4>
-                    <p style="color: #dc3545; margin: 0;">⚠️ Estos jugadores aún no han registrado partidas juntos en el torneo.</p>
+                    <h4 style="color: #343a40; margin-bottom: 10px;">📊 Sinergia para: ${seleccionados.join(" & ")}</h4>
+                    <p style="color: #dc3545; margin: 0;">⚠️ Estos jugadores no han registrado ninguna partida juntos en el torneo.</p>
                 `;
             } else {
-                const efDupla = ((datosDupla.victorias / datosDupla.juntas) * 100).toFixed(0);
-                let badgeEstado = `<span style="color: #0d6efd; font-weight: bold;">${efDupla}% Efectividad</span>`;
-                if (datosDupla.victorias > 0 && datosDupla.derrotas === 0) {
-                    badgeEstado = `<span style="color: #198754; font-weight: bold;">🔥 ¡Dupla Invicta!</span>`;
-                } else if (datosDupla.derrotas > 0 && datosDupla.victorias === 0) {
+                const efSinergia = ((victoriasJuntos / partidasJuntos) * 100).toFixed(0);
+                let badgeEstado = `<span style="color: #0d6efd; font-weight: bold;">${efSinergia}% Efectividad</span>`;
+                if (victoriasJuntos > 0 && derrotasJuntos === 0) {
+                    badgeEstado = `<span style="color: #198754; font-weight: bold;">🔥 ¡Grupo Invicto!</span>`;
+                } else if (derrotasJuntos > 0 && victoriasJuntos === 0) {
                     badgeEstado = `<span style="color: #dc3545; font-weight: bold;">⚠️ Sin victorias conjuntas</span>`;
                 }
 
                 contenedorResultado.innerHTML = `
-                    <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta: ${datosDupla.jugador1} y ${datosDupla.jugador2}</h4>
+                    <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta: ${seleccionados.join(" , ")}</h4>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center;">
                         <div style="background: #f8f9fa; padding: 10px; border-radius: 6px;">
                             <div style="font-size: 0.85em; color: #6c757d;">Partidas Juntos</div>
-                            <div style="font-size: 1.4em; font-weight: bold; color: #343a40;">${datosDupla.juntas}</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #343a40;">${partidasJuntos}</div>
                         </div>
                         <div style="background: #e8f5e9; padding: 10px; border-radius: 6px;">
                             <div style="font-size: 0.85em; color: #198754;">Victorias</div>
-                            <div style="font-size: 1.4em; font-weight: bold; color: #198754;">${datosDupla.victorias}</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #198754;">${victoriasJuntos}</div>
                         </div>
                         <div style="background: #ffebee; padding: 10px; border-radius: 6px;">
                             <div style="font-size: 0.85em; color: #dc3545;">Derrotas</div>
-                            <div style="font-size: 1.4em; font-weight: bold; color: #dc3545;">${datosDupla.derrotas}</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #dc3545;">${derrotasJuntos}</div>
                         </div>
                         <div style="background: #e7f1ff; padding: 10px; border-radius: 6px;">
                             <div style="font-size: 0.85em; color: #0d6efd;">Estado Sinergia</div>
