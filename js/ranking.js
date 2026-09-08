@@ -73,7 +73,17 @@ function renderTablaRankingGeneral() {
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         if (clave && clave.startsWith("registros_") && clave.includes(`_${periodoSeleccionado}_`)) {
-            clavesPartidasMes.push(clave);
+            const claveLower = clave.toLowerCase();
+            // Descartar explícitamente registros auxiliares como galardones, candidatos o imágenes
+            if (
+                !claveLower.includes("galardon") &&
+                !claveLower.includes("candidato") &&
+                !claveLower.includes("imagen")
+            ) {
+                if (claveLower.includes("partida") || /\d+_\d+$/.test(claveLower)) {
+                    clavesPartidasMes.push(clave);
+                }
+            }
         }
     }
 
