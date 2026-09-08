@@ -6,23 +6,85 @@
     <title>Ranking Maratón Michi DM - Clasificación General</title>
     <link rel="stylesheet" href="css/estilos.css">
     <style>
+        body {
+            box-sizing: border-box;
+        }
         .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 15px;
-            padding-bottom: 5px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
+            position: relative;
+            gap: 10px;
         }
         .header-top h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 1.4rem; /* Reducido para mejor ajuste en móviles */
+            line-height: 1.2;
+            max-width: 65%;
+        }
+        .header-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
         }
         .header-top .fecha-actualizacion {
-            font-size: 1.1rem;
+            font-size: 0.85rem;
             font-weight: bold;
-            color: #333;
+            color: #444;
+            text-align: right;
         }
+
+        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #f4f1ea;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: #fff;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #ccc;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover {
+            background: #fdf8ed;
+            color: #b8860b;
+            border-color: #b8860b;
+        }
+        .tab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+
         /* Subencabezado con filtro de año/mes y contador de partidas */
         .bar-jornada-filtro {
             display: flex;
@@ -34,25 +96,28 @@
         }
         .info-jornada {
             display: flex;
-            gap: 40px;
-            font-size: 1.15rem;
+            gap: 20px;
+            font-size: 1.05rem;
             font-weight: bold;
             color: #222;
         }
         .filtro-historico {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: bold;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
         }
         .filtro-historico select {
-            padding: 6px 12px;
-            font-size: 1rem;
+            padding: 6px 10px;
+            font-size: 0.9rem;
             border-radius: 6px;
             border: 1px solid #ccc;
             background-color: #fff;
             cursor: pointer;
         }
+
         /* Recuadro de Total de Partidas Jugadas */
         .box-resumen-partidas {
             background-color: #e7f1ff;
@@ -60,35 +125,17 @@
             color: #084298;
             padding: 10px 18px;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             display: inline-block;
             margin-bottom: 15px;
         }
         .box-resumen-partidas span {
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         /* --- ESTILOS PARA PANEL MÓVIL Y MODAL (LIGHTBOX) --- */
-        .admin-toggle-btn {
-            display: none;
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            background: #b8860b;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 1000;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
         @media (max-width: 768px) {
-            .admin-toggle-btn {
-                display: block;
-            }
             #sidebar {
                 position: fixed;
                 top: 0;
@@ -134,9 +181,6 @@
 </head>
 <body>
 
-    <!-- Botón flotante para panel de control en móviles -->
-    <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
         <label>Contraseña de Admin:</label>
@@ -148,22 +192,25 @@
         <!-- Encabezado superior con título y fecha/hora -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
-            <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
+            <div class="header-info-container">
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
+                <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
+            </div>
         </div>
 
         <div class="tabs">
             <a href="index.html" class="tab-btn active">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
-            <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
-            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
-            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
 
         <!-- Botones de Acceso Rápido a Últimas Imágenes -->
         <div class="card" style="background: #fdfcf7; border-left: 5px solid #b8860b; padding: 12px 15px; margin: 15px 0; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-            <span style="font-weight: bold; color: #333; font-size: 0.95rem;">🖼️ Accesos Rápidos (Última Fecha):</span>
-            <button type="button" style="background-color: #b8860b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem;" onclick="verUltimaImagen('galardon')">👑 Ver Último Galardón</button>
-            <button type="button" style="background-color: #4682b4; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem;" onclick="verUltimaImagen('candidatos')">📊 Ver Última Evaluación</button>
+            <span style="font-weight: bold; color: #333; font-size: 0.9rem;">🖼️ Accesos Rápidos:</span>
+            <button type="button" style="background-color: #b8860b; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem;" onclick="verUltimaImagen('galardon')">👑 Ver Galardón</button>
+            <button type="button" style="background-color: #4682b4; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem;" onclick="verUltimaImagen('candidatos')">📊 Ver Evaluación</button>
         </div>
 
         <h2>📊 Clasificación General</h2>
@@ -181,7 +228,7 @@
                     <option value="2026" selected>2026</option>
                 </select>
 
-                <label for="select-mes-filtro" style="margin-left: 10px;">Mes:</label>
+                <label for="select-mes-filtro" style="margin-left: 5px;">Mes:</label>
                 <select id="select-mes-filtro" onchange="renderTablaRankingGeneral()">
                     <option value="01">Enero</option>
                     <option value="02">Febrero</option>
@@ -251,7 +298,29 @@
             sidebar.classList.toggle('open');
         }
 
-        // Función para buscar y mostrar automáticamente la última imagen guardada
+        // Corrección para el contador de partidas mes y lectura correcta de datos
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (typeof actualizarContadorPartidasMes === 'function') {
+                    actualizarContadorPartidasMes();
+                } else {
+                    // Verificación manual segura si ranking.js maneja otra función
+                    let mesSel = document.getElementById('select-mes-filtro').value;
+                    let anioSel = document.getElementById('select-anio-filtro').value;
+                    let count = 0;
+                    for (let i = 0; i < localStorage.length; i++) {
+                        let key = localStorage.key(i);
+                        if (key && key.includes(`_${anioSel}_${mesSel}`)) {
+                            count++;
+                        }
+                    }
+                    if(count > 0) {
+                        document.getElementById('total-partidas-mes').textContent = count;
+                    }
+                }
+            }, 300);
+        });
+
         function verUltimaImagen(tipo) {
             let keys = Object.keys(localStorage);
             let filtradas = keys.filter(k => k.startsWith('img_') && k.endsWith(`_${tipo}`));
@@ -279,7 +348,6 @@
             document.getElementById('modal-imagen').style.display = 'none';
         }
 
-        // Habilitar zoom en cualquier imagen de la página si la hubiera
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('img').forEach(img => {
                 img.style.cursor = 'zoom-in';
