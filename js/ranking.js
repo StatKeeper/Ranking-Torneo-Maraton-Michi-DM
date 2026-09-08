@@ -72,17 +72,22 @@ function renderTablaRankingGeneral() {
     // 1. Recopilar y ordenar cronológicamente todas las claves de partidas del mes/año seleccionado
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
-        // Filtro estricto: Debe comenzar con "registros_", NUNCA con "img_" y pertenecer al período seleccionado
-        if (clave && clave.startsWith("registros_") && !clave.startsWith("img_") && clave.includes(`_${periodoSeleccionado}_`)) {
+        if (clave && clave.includes(`_${periodoSeleccionado}_`)) {
             const claveLower = clave.toLowerCase();
-            // Descartar explícitamente registros auxiliares como galardones, candidatos, imágenes o elementos gráficos
-            if (
-                !claveLower.includes("galardon") &&
-                !claveLower.includes("candidato") &&
-                !claveLower.includes("imagen") &&
-                !claveLower.includes("img")
-            ) {
-                if (claveLower.includes("partida") || /\d+_\d+$/.test(claveLower)) {
+            
+            // Filtro radical y estricto: Descartar inmediatamente cualquier clave que sea de imágenes, galardones o candidatos
+            const esAuxiliar = 
+                claveLower.includes("galardon") ||
+                claveLower.includes("galardón") ||
+                claveLower.includes("candidato") ||
+                claveLower.includes("imagen") ||
+                claveLower.includes("img") ||
+                claveLower.includes("evaluacion") ||
+                claveLower.includes("evaluación");
+
+            if (!esAuxiliar) {
+                // Asegurarnos de que pertenezca a un registro de partida válido
+                if (claveLower.includes("registros_") && (claveLower.includes("partida") || /\d+_\d+$/.test(claveLower))) {
                     clavesPartidasMes.push(clave);
                 }
             }
