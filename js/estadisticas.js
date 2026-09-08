@@ -52,8 +52,6 @@ function renderizarEstadisticasTiempos() {
     let estadisticasCivilizaciones = {};
     let estadisticasEquipos = {};
     let listaGlobalJugadores = new Set();
-    
-    // Almacenaremos las partidas como una lista de objetos que contienen los jugadores y sus estados
     let partidasDetalleGlobal = [];
 
     for (let i = 0; i < localStorage.length; i++) {
@@ -127,7 +125,6 @@ function renderizarEstadisticasTiempos() {
                         }
                     });
 
-                    // Guardar los jugadores de esta partida para la consulta combinada (2, 3 o 4 jugadores)
                     if (jugadoresEnPartida.length > 0) {
                         partidasDetalleGlobal.push(jugadoresEnPartida);
                     }
@@ -242,12 +239,46 @@ function renderizarEstadisticasTiempos() {
 
 
     // ==========================================
-    // RENDERIZAR VISTA 3: EQUIPOS Y BUSCADOR MÚLTIPLE (2 a 4 JUGADORES)
+    // RENDERIZAR VISTA 3: CONSULTA GRUPAL (SUPERIOR) Y EQUIPOS (INFERIOR)
     // ==========================================
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
-        <h3>🤝 Rendimiento por Equipos (3v3 / 4v4)</h3>
-        <div style="overflow-x: auto; margin-top: 15px; margin-bottom: 35px;">
+        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
+        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Ingresa de 2 a 4 jugadores (puedes dejar campos vacíos si solo deseas consultar duplas o tríos) para conocer sus estadísticas conjuntas.</p>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 1:</label>
+                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 2:</label>
+                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 3 (Opcional):</label>
+                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 4 (Opcional):</label>
+                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+            </div>
+            
+            <datalist id="lista-jugadores-sug">
+                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
+            </datalist>
+
+            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer;">Consultar Sinergia Grupal</button>
+        </div>
+
+        <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 35px; display: none;">
+            <!-- El resultado se inyectará aquí -->
+        </div>
+
+        <h3 style="margin-top: 25px;">🤝 Rendimiento por Equipos (3v3 / 4v4)</h3>
+        <div style="overflow-x: auto; margin-top: 15px;">
             <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
@@ -286,40 +317,6 @@ function renderizarEstadisticasTiempos() {
                 </tbody>
             </table>
         </div>
-
-        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Ingresa de 2 a 4 jugadores (puedes dejar campos vacíos si solo deseas consultar duplas o tríos) para conocer sus estadísticas conjuntas.</p>
-        
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 1:</label>
-                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 2:</label>
-                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 3 (Opcional):</label>
-                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 4 (Opcional):</label>
-                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
-                </div>
-            </div>
-            
-            <datalist id="lista-jugadores-sug">
-                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
-            </datalist>
-
-            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer;">Consultar Sinergia Grupal</button>
-        </div>
-
-        <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
-            <!-- El resultado se inyectará aquí -->
-        </div>
     `;
 
     secEnfrentamientos.innerHTML = htmlEnfrentamientos;
@@ -334,7 +331,6 @@ function renderizarEstadisticasTiempos() {
             const j4 = document.getElementById("input-sinergia-4").value.trim();
             const contenedorResultado = document.getElementById("resultado-sinergia-container");
 
-            // Recopilar solo los nombres ingresados y eliminar duplicados en la selección
             let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
             seleccionados = [...new Set(seleccionados.map(j => obtenerNickOficialEstadisticas(j)))];
 
@@ -347,17 +343,12 @@ function renderizarEstadisticasTiempos() {
             let victoriasJuntos = 0;
             let derrotasJuntos = 0;
 
-            // Analizar cada partida registrada
             partidasDetalleGlobal.forEach(jugadoresPartida => {
                 const nombresEnPartida = jugadoresPartida.map(jp => jp.nombre);
-                
-                // Verificar si TODOS los jugadores seleccionados participaron en esta partida
                 const todosPresentes = seleccionados.every(sel => nombresEnPartida.includes(sel));
 
                 if (todosPresentes) {
                     partidasJuntos++;
-                    
-                    // Comprobar si todos ganaron o si alguno perdió en conjunto
                     let todosGanaron = true;
                     let algunoPerdio = false;
 
