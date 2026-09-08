@@ -194,7 +194,7 @@ function renderTabla() {
     }
 }
 
-// Configurar autocompletado al escribir en el input de Historial Antiguo
+// Autocompletar al escribir el Historial Antiguo para modificar sus nicks vinculados
 function configurarAutocompletado() {
     const inputAntiguo = document.getElementById("historial-antiguo");
     if (!inputAntiguo) return;
@@ -210,7 +210,6 @@ function configurarAutocompletado() {
                 if (encontrado && encontrado.oficiales && encontrado.oficiales[i - 1]) {
                     inp.value = encontrado.oficiales[i - 1];
                 } else if (!encontrado && i === 1) {
-                    // Si no existe, sugerir el mismo nombre en el nick 1 por defecto
                     inp.value = this.value;
                 } else if (!encontrado) {
                     inp.value = "";
@@ -232,7 +231,7 @@ function guardarEquivalencia() {
     ].filter(n => n !== "");
 
     if (!antiguo) {
-        alert("Por favor ingresa el nombre de Historial Antiguo.");
+        alert("Por favor ingresa el Nombre Registrado (Historial Antiguo).");
         return;
     }
 
@@ -242,11 +241,10 @@ function guardarEquivalencia() {
 
     let listaActual = obtenerEquivalencias();
     
-    // Buscar si ya existe por nombre antiguo (insensible a mayúsculas/minúsculas)
+    // Busca estrictamente por el nombre registrado (antiguo) para actualizarlo en vez de duplicarlo
     let existente = listaActual.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
     
     if (existente) {
-        // Actualiza el registro existente en lugar de duplicarlo
         existente.oficiales = nks;
         existente.oficial = nks[0];
         existente.revisado = true;
@@ -257,7 +255,7 @@ function guardarEquivalencia() {
             antiguo: antiguo, 
             oficiales: nks,
             oficial: nks[0],
-            esNuevo: false,
+            esNuevo: true,
             revisado: true
         });
     }
@@ -272,7 +270,7 @@ function guardarEquivalencia() {
     }
 
     renderTabla();
-    alert("¡Corrección guardada correctamente!");
+    alert("¡Equivalencias y nicks oficiales actualizados correctamente!");
 }
 
 function eliminarEquivalencia() {
@@ -290,7 +288,6 @@ function eliminarEquivalencia() {
     renderTabla();
 }
 
-// Inicialización
 document.addEventListener("DOMContentLoaded", () => {
     renderTabla();
     configurarAutocompletado();
