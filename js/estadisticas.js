@@ -54,91 +54,108 @@ function renderizarEstadisticasTiempos() {
     let listaGlobalJugadores = new Set();
     let partidasDetalleGlobal = [];
 
+    // Capturamos el mes y año seleccionados en el dashboard para asegurar que solo se lea el periodo activo
+    const selectAnio = document.getElementById("select-anio") || document.getElementById("anio");
+    const selectMes = document.getElementById("select-mes") || document.getElementById("mes");
+    const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
+    const mesSeleccionado = selectMes ? selectMes.value : "Agosto";
+
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
+        
+        // Validar que la clave pertenezca a los registros y corresponda al periodo activo seleccionado
         if (clave && clave.startsWith("registros_")) {
-            try {
-                const registros = JSON.parse(localStorage.getItem(clave));
-                if (Array.isArray(registros) && registros.length > 0) {
-                    let jugadoresEnPartida = [];
+            // Filtro de seguridad por mes/año si la clave contiene la estructura del periodo
+            if (clave.includes(mesSeleccionado) && clave.includes(anioSeleccionado)) {
+                try {
+                    const registros = JSON.parse(localStorage.getItem(clave));
+                    if (Array.isArray(registros) && registros.length > 0) {
+                        let jugadoresEnPartida = [];
+                        let partidaYaProcesadaEnEstaClave = new Set();
 
-                    registros.forEach(reg => {
-                        const nombreRaw = reg.jugador || reg.Jugador;
-                        if (!nombreRaw) return;
-                        const nombre = obtenerNickOficialEstadisticas(nombreRaw);
-                        listaGlobalJugadores.add(nombre);
+                        registros.forEach(reg => {
+                            const nombreRaw = reg.jugador || reg.Jugador;
+                            if (!nombreRaw) return;
+                            const nombre = obtenerNickOficialEstadisticas(nombreRaw);
+                            
+                            // Evitar duplicar al mismo jugador dentro de la misma clave de partida
+                            if (partidaYaProcesadaEnEstaClave.has(nombre)) return;
+                            partidaYaProcesadaEnEstaClave.add(nombre);
 
-                        const pg = (reg.pg === 1 || reg.PG === 1) ? 1 : 0;
-                        const pp = (reg.pp === 1 || reg.PP === 1) ? 1 : 0;
-                        const equipoReg = (reg.equipo || "Sin Equipo").trim();
+                            listaGlobalJugadores.add(nombre);
 
-                        jugadoresEnPartida.push({ nombre, pg, pp, equipo: equipoReg });
+                            const pg = (reg.pg === 1 || reg.PG === 1) ? 1 : 0;
+                            const pp = (reg.pp === 1 || reg.PP === 1) ? 1 : 0;
+                            const equipoReg = (reg.equipo || "Sin Equipo").trim();
 
-                        // 1. Estadísticas Individuales
-                        if (!estadisticasJugadores[nombre]) {
-                            estadisticasJugadores[nombre] = {
-                                nombre: nombre,
-                                totalPartidas: 0,
-                                victorias: 0,
-                                derrotas: 0,
-                                unidadesTotales: 0,
-                                edificiosTotales: 0,
-                                segundosTotales: 0
-                            };
-                        }
+                            jugadoresEnPartida.push({ nombre, pg, pp, equipo: equipoReg });
 
-                        const stats = estadisticasJugadores[nombre];
-                        stats.totalPartidas++;
-                        if (pg === 1) stats.victorias++;
-                        if (pp === 1) stats.derrotas++;
-
-                        stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || 0, 10);
-                        stats.edificiosTotales += parseInt(reg.edificiosArrasados || 0, 10);
-                        stats.segundosTotales += convertirDuracionASegundos(reg.duracion);
-
-                        // 2. Estadísticas de Civilizaciones
-                        const civ = (reg.civ || "Desconocida").trim();
-                        if (civ && civ !== "-") {
-                            if (!estadisticasCivilizaciones[civ]) {
-                                estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
-                            }
-                            estadisticasCivilizaciones[civ].jugadas++;
-                            if (pg === 1) estadisticasCivilizaciones[civ].victorias++;
-                            if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
-                        }
-
-                        // 3. Estadísticas por Equipo
-                        if (equipoReg && equipoReg !== "-") {
-                            const claveEquipo = `${clave} - ${equipoReg}`;
-                            if (!estadisticasEquipos[claveEquipo]) {
-                                estadisticasEquipos[claveEquipo] = {
-                                    nombreEquipo: equipoReg,
-                                    partidaKey: clave,
+                            // 1. Estadísticas Individuales
+                            if (!estadisticasJugadores[nombre]) {
+                                estadisticasJugadores[nombre] = {
+                                    nombre: nombre,
+                                    totalPartidas: 0,
                                     victorias: 0,
                                     derrotas: 0,
-                                    miembros: new Set()
+                                    unidadesTotales: 0,
+                                    edificiosTotales: 0,
+                                    segundosTotales: 0
                                 };
                             }
-                            estadisticasEquipos[claveEquipo].miembros.add(nombre);
-                            if (pg === 1) estadisticasEquipos[claveEquipo].victorias = 1;
-                            if (pp === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
-                        }
-                    });
 
-                    if (jugadoresEnPartida.length > 0) {
-                        partidasDetalleGlobal.push(jugadoresEnPartida);
+                            const stats = estadisticasJugadores[nombre];
+                            stats.totalPartidas++;
+                            if (pg === 1) stats.victorias++;
+                            if (pp === 1) stats.derrotas++;
+
+                            stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || 0, 10);
+                            stats.edificiosTotales += parseInt(reg.edificiosArrasados || 0, 10);
+                            stats.segundosTotales += convertirDuracionASegundos(reg.duracion);
+
+                            // 2. Estadísticas de Civilizaciones
+                            const civ = (reg.civ || "Desconocida").trim();
+                            if (civ && civ !== "-") {
+                                if (!estadisticasCivilizaciones[civ]) {
+                                    estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
+                                }
+                                estadisticasCivilizaciones[civ].jugadas++;
+                                if (pg === 1) estadisticasCivilizaciones[civ].victorias++;
+                                if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
+                            }
+
+                            // 3. Estadísticas por Equipo
+                            if (equipoReg && equipoReg !== "-") {
+                                const claveEquipo = `${clave} - ${equipoReg}`;
+                                if (!estadisticasEquipos[claveEquipo]) {
+                                    estadisticasEquipos[claveEquipo] = {
+                                        nombreEquipo: equipoReg,
+                                        partidaKey: clave,
+                                        victorias: 0,
+                                        derrotas: 0,
+                                        miembros: new Set()
+                                    };
+                                }
+                                estadisticasEquipos[claveEquipo].miembros.add(nombre);
+                                if (pg === 1) estadisticasEquipos[claveEquipo].victorias = 1;
+                                if (pp === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
+                            }
+                        });
+
+                        if (jugadoresEnPartida.length > 0) {
+                            partidasDetalleGlobal.push(jugadoresEnPartida);
+                        }
                     }
+                } catch (e) {
+                    console.error("Error al procesar registros para estadísticas:", e);
                 }
-            } catch (e) {
-                console.error("Error al procesar registros para estadísticas:", e);
             }
         }
     }
 
     // ==========================================
-    // RENDERIZAR VISTA 1: TIEMPOS DE PARTIDA Y TOTALES
+    // RENDERIZAR VISTA 1: TIEMPOS DE PARTIDA Y TOTALES (Solo jugadores con al menos 1 partida real)
     // ==========================================
-    const listaJugadores = Object.values(estadisticasJugadores);
+    const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     let htmlTiempos = `
         <h3>⏱️ Tiempos de Partida, Totales y Promedios por Jugador</h3>
         <div style="background: #f8f9fa; padding: 12px 15px; border-radius: 6px; margin-top: 10px; margin-bottom: 15px; font-size: 0.9em; border-left: 4px solid #0d6efd;">
@@ -171,7 +188,7 @@ function renderizarEstadisticasTiempos() {
     `;
 
     if (listaJugadores.length === 0) {
-        htmlTiempos += `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #6c757d;">No hay registros de tiempos disponibles.</td></tr>`;
+        htmlTiempos += `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #6c757d;">No hay registros de tiempos disponibles para este periodo.</td></tr>`;
     } else {
         listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
         listaJugadores.forEach(j => {
@@ -321,7 +338,7 @@ function renderizarEstadisticasTiempos() {
 
     secEnfrentamientos.innerHTML = htmlEnfrentamientos;
 
-    // Lógica del buscador flexible (2 a 4 jugadores) validando Mismo Equipo
+    // Lógica del buscador flexible validando Mismo Equipo
     const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
     if (btnConsultarSinergia) {
         btnConsultarSinergia.addEventListener("click", () => {
@@ -344,7 +361,6 @@ function renderizarEstadisticasTiempos() {
             let derrotasJuntos = 0;
 
             partidasDetalleGlobal.forEach(jugadoresPartida => {
-                // Agrupar los jugadores de esta partida por equipo
                 let equiposEnPartida = {};
                 jugadoresPartida.forEach(jp => {
                     if (!equiposEnPartida[jp.equipo]) {
@@ -353,7 +369,6 @@ function renderizarEstadisticasTiempos() {
                     equiposEnPartida[jp.equipo].push(jp);
                 });
 
-                // Revisar si TODOS los seleccionados pertenecen al MISMO equipo en esta partida
                 Object.values(equiposEnPartida).forEach(miembrosEquipo => {
                     const nombresEnEquipo = miembrosEquipo.map(me => me.nombre);
                     const todosEnEsteEquipo = seleccionados.every(sel => nombresEnEquipo.includes(sel));
