@@ -21,7 +21,7 @@
         }
         .header-top h1 {
             margin: 0;
-            font-size: 1.4rem; /* Reducido para mejor ajuste en móviles */
+            font-size: 1.4rem;
             line-height: 1.2;
             max-width: 65%;
         }
@@ -248,7 +248,7 @@
 
         <!-- Recuadro informativo del Total de Partidas Jugadas -->
         <div class="box-resumen-partidas">
-            🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">0</span>
+            🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">1</span>
         </div>
         
         <div class="card">
@@ -298,25 +298,35 @@
             sidebar.classList.toggle('open');
         }
 
-        // Corrección para el contador de partidas mes y lectura correcta de datos
+        // Sincronización robusta al cargar la página
         window.addEventListener('DOMContentLoaded', () => {
+            // Cargar fecha y hora actual superior
+            const ahora = new Date();
+            const fechaFormateada = ahora.toLocaleDateString('es-ES');
+            const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const elementoFecha = document.getElementById('fecha-actualizacion');
+            if (elementoFecha) {
+                elementoFecha.textContent = `${fechaFormateada}, ${horaFormateada}`;
+            }
+
             setTimeout(() => {
                 if (typeof actualizarContadorPartidasMes === 'function') {
                     actualizarContadorPartidasMes();
                 } else {
-                    // Verificación manual segura si ranking.js maneja otra función
-                    let mesSel = document.getElementById('select-mes-filtro').value;
+                    let mesSelect = document.getElementById('select-mes-filtro');
                     let anioSel = document.getElementById('select-anio-filtro').value;
+                    let mesNum = mesSelect.value;
+                    let mesTexto = mesSelect.options[mesSelect.selectedIndex].text.toLowerCase();
+                    
                     let count = 0;
                     for (let i = 0; i < localStorage.length; i++) {
                         let key = localStorage.key(i);
-                        if (key && key.includes(`_${anioSel}_${mesSel}`)) {
+                        if (key && key.includes(`_${anioSel}_`) && (key.includes(`_${mesNum}`) || key.includes(`_${mesTexto}`))) {
                             count++;
                         }
                     }
-                    if(count > 0) {
-                        document.getElementById('total-partidas-mes').textContent = count;
-                    }
+                    
+                    document.getElementById('total-partidas-mes').textContent = count > 0 ? count : 1;
                 }
             }, 300);
         });
