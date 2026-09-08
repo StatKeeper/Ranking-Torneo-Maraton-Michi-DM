@@ -8,7 +8,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* --- ESTILOS PARA PANEL MÓVIL Y MODAL (LIGHTBOX) --- */
+        /* --- ESTILOS PARA PANEL FIJO EN PC Y MENÚ HAMBURGUESA EN MÓVIL --- */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+        }
+
         .admin-toggle-btn {
             display: none;
             position: fixed;
@@ -24,22 +39,17 @@
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+
         @media (max-width: 768px) {
             .admin-toggle-btn {
                 display: block;
             }
             #sidebar {
-                position: fixed;
-                top: 0;
+                left: auto;
                 right: -280px;
                 width: 260px;
                 height: 100%;
-                background: #fff;
                 box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-                z-index: 999;
-                padding: 20px;
-                box-sizing: border-box;
-                transition: transform 0.3s ease;
             }
             #sidebar.open {
                 transform: translateX(-280px);
@@ -49,6 +59,7 @@
                 padding: 10px !important;
             }
         }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -265,10 +276,10 @@
             btnDownloadCandidatos.download = `Candidatos_${jornadaText}_${partidaText}.png`;
         }
 
-        selectFecha.addEventListener('change', actualizarContenido);
-        selectPartida.addEventListener('change', actualizarContenido);
-        selectAnio.addEventListener('change', actualizarContenido);
-        selectMes.addEventListener('change', actualizarContenido);
+        selectFecha.addEventListener('change', actualizarContenedor);
+        selectPartida.addEventListener('change', actualizarContenedor);
+        selectAnio.addEventListener('change', actualizarContenedor);
+        selectMes.addEventListener('change', actualizarContenedor);
 
         // Cargar al iniciar
         actualizarContenido();
