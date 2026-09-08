@@ -46,14 +46,14 @@ function inicializarModuloEstadisticasCompleto() {
 
 // Configuración de las subpestañas dentro de Estadísticas y Tiempos
 function configurarNavegacionSubpestanas() {
-    const botonesSubtab = document.querySelectorAll(".subtab-btn, [data-estadistica-subtab], .nav-pills button, .tab-link-estadisticas");
+    const botonesSubtab = document.querySelectorAll(".subtab-btn, [data-estadistica-subtab], .nav-pills button, .tab-link-estadisticas, [data-target], [data-subtab]");
     
     botonesSubtab.forEach(btn => {
         btn.addEventListener("click", (e) => {
             botonesSubtab.forEach(b => b.classList.remove("active"));
             e.currentTarget.classList.add("active");
             
-            const subtabId = e.currentTarget.getAttribute("data-target") || e.currentTarget.dataset.subtab || e.currentTarget.textContent.toLowerCase();
+            const subtabId = e.currentTarget.getAttribute("data-target") || e.currentTarget.dataset.subtab || e.currentTarget.getAttribute("id") || e.currentTarget.textContent.toLowerCase();
             renderizarContenidoSubtab(subtabId);
         });
     });
@@ -64,23 +64,34 @@ function renderizarSubtabActivaPorDefecto() {
 }
 
 function renderizarContenidoSubtab(subtabId) {
-    const contenedor = document.getElementById("contenido-subtab-estadisticas") || document.getElementById("sec-estadisticas-detalle") || document.querySelector(".estadisticas-contenido-dinamico");
+    // Buscamos los contenedores posibles en tu estructura HTML
+    const contenedor = document.getElementById("contenido-subtab-estadisticas") || 
+                       document.getElementById("sec-estadisticas-detalle") || 
+                       document.querySelector(".estadisticas-contenido-dinamico") ||
+                       document.getElementById("tabla-tiempos-container") ||
+                       document.querySelector(".tab-pane.active") ||
+                       document.querySelector("#estadisticas .card-body") ||
+                       document.querySelector("[id*='tiempos']") ||
+                       document.querySelector("div[id*='estadistica']");
     
     if (!contenedor) return;
 
     let registrosPartidas = [];
     try {
-        registrosPartidas = JSON.parse(localStorage.getItem("registros_partidas_michi_dm")) || [];
+        registrosPartidas = JSON.parse(localStorage.getItem("registros_partidas_michi_dm")) || JSON.parse(localStorage.getItem("partidas_michi_dm")) || [];
     } catch(e) {
         registrosPartidas = [];
     }
 
-    if (subtabId.includes('tiempo') || subtabId === 'tiempos') {
+    const idStr = String(subtabId).toLowerCase();
+    if (idStr.includes('tiempo') || idStr === 'tiempos' || idStr.includes('duracion')) {
         renderizarTablaTiempos(contenedor, registrosPartidas);
-    } else if (subtabId.includes('civiliz') || subtabId === 'civilizaciones') {
+    } else if (idStr.includes('civiliz') || idStr === 'civilizaciones' || idStr.includes('civ')) {
         renderizarTablaCivilizaciones(contenedor, registrosPartidas);
-    } else if (subtabId.includes('sinergia') || subtabId.includes('enfrentamientos')) {
+    } else if (idStr.includes('sinergia') || idStr.includes('enfrentamientos') || idStr.includes('head')) {
         renderizarTablaSinergias(contenedor, registrosPartidas);
+    } else {
+        renderizarTablaTiempos(contenedor, registrosPartidas);
     }
 }
 
@@ -111,14 +122,14 @@ function renderizarTablaTiempos(contenedor, partidas) {
                 <tbody>
     `;
 
-    partidas.forEach((p, idx) => {
-        const jugadorOficial = obtenerNickOficialGlobal(p.jugador);
+    partidas.forEach((p) => {
+        const jugadorOficial = obtenerNickOficialGlobal(p.jugador || p.name || p.jugador1);
         html += `
             <tr style="border-bottom: 1px solid #dee2e6;">
-                <td style="padding: 10px;">${p.jornada || 'Fecha 01'} - ${p.partida || 'Partida 1'}</td>
+                <td style="padding: 10px;">${p.jornada || p.fecha || 'Fecha 01'} - ${p.partida || 'Partida 1'}</td>
                 <td style="padding: 10px;"><strong>${jugadorOficial}</strong></td>
-                <td style="padding: 10px;">${p.civ || '-'}</td>
-                <td style="padding: 10px;">${p.duracion || '01:07:08'}</td>
+                <td style="padding: 10px;">${p.civ || p.civilizacion || '-'}</td>
+                <td style="padding: 10px;">${p.duracion || p.tiempo || '01:07:08'}</td>
             </tr>
         `;
     });
@@ -132,12 +143,12 @@ function renderizarTablaCivilizaciones(contenedor, partidas) {
     let estadisticasCivs = {};
 
     partidas.forEach(p => {
-        const civ = p.civ || 'Desconocida';
+        const civ = p.civ || p.civilizacion || 'Desconocida';
         if (!estadisticasCivs[civ]) {
-            estadisticasCivs[civ] { total: 0, victorias: 0 };
+            estadisticasCivs[civ] = { total: 0, victorias: 0 };
         }
         estadisticasCivs[civ].total += 1;
-        if (Number(p.pg) === 1 || p.pg === true) {
+        if (Number(p.pg) === 1 || p.pg === true || p.resultado === 'Victoria') {
             estadisticasCivs[civ].victorias += 1;
         }
     });
@@ -197,18 +208,13 @@ function renderizarTablaSinergias(contenedor, partidas) {
                         <tr style="background-color: #343a40; color: #fff; text-align: left;">
                             <th style="padding: 10px;">Equipo / Alianza</th>
                             <th style="padding: 10px;">Integrantes</th>
-                            <th style="padding: 10px;">Partidas Conjuntas</th>
+                            <th style="padding: 10px;">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr style="border-bottom: 1px solid #dee2e6;">
-                            <td style="padding: 10px;"><strong>Equipo 1</strong></td>
-                            <td style="padding: 10px;">KFICHO, Euphory, Papita Huayro</td>
-                            <td style="padding: 10px;">Activo</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #dee2e6;">
-                            <td style="padding: 10px;"><strong>Equipo 2</strong></td>
-                            <td style="padding: 10px;">GGINDU, P@K(), Little duck</td>
+                            <td style="padding: 10px;"><strong>Equipo Principal</strong></td>
+                            <td style="padding: 10px;">KFICHO, Euphory, P@K()</td>
                             <td style="padding: 10px;">Activo</td>
                         </tr>
                     </tbody>
@@ -219,9 +225,12 @@ function renderizarTablaSinergias(contenedor, partidas) {
     contenedor.innerHTML = html;
 }
 
-// Gestión de Corrección de Nombres con 3 Nicks Vinculados y Estado de Nuevo Jugador
+// Gestión de Corrección de Nombres con 3 Nicks Oficiales Vinculados
 function actualizarVistaCorreccionNombres3Nicks() {
-    const seccionContenedor = document.getElementById("contenedor-dinamico-correcciones") || document.querySelector("#correccion-nombres-container");
+    const seccionContenedor = document.getElementById("contenedor-dinamico-correcciones") || 
+                               document.querySelector("#correccion-nombres-container") ||
+                               document.getElementById("correccion-nombres") ||
+                               document.querySelector(".correccion-nombres-seccion");
     
     let listaEq = [];
     try {
@@ -241,15 +250,15 @@ function actualizarVistaCorreccionNombres3Nicks() {
                     <input type="text" id="input-antiguo" placeholder="Ej: B. Rommel" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                 </div>
                 <div>
-                    <label style="display: block; font-weight: bold; font-size: 0.85em; margin-bottom: 4px;">Nick Vinculado 1:</label>
+                    <label style="display: block; font-weight: bold; font-size: 0.85em; margin-bottom: 4px;">Nick Oficial Vinculado 1:</label>
                     <input type="text" id="input-nick-1" placeholder="Ej: [cLm] bLiTz" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                 </div>
                 <div>
-                    <label style="display: block; font-weight: bold; font-size: 0.85em; margin-bottom: 4px;">Nick Vinculado 2:</label>
+                    <label style="display: block; font-weight: bold; font-size: 0.85em; margin-bottom: 4px;">Nick Oficial Vinculado 2:</label>
                     <input type="text" id="input-nick-2" placeholder="Opcional" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                 </div>
                 <div>
-                    <label style="display: block; font-weight: bold; font-size: 0.85em; margin-bottom: 4px;">Nick Vinculado 3:</label>
+                    <label style="display: block; font-weight: bold; font-size: 0.85em; margin-bottom: 4px;">Nick Oficial Vinculado 3:</label>
                     <input type="text" id="input-nick-3" placeholder="Opcional" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                 </div>
             </div>
@@ -265,9 +274,9 @@ function actualizarVistaCorreccionNombres3Nicks() {
                         <tr style="background-color: #343a40; color: #fff; text-align: left;">
                             <th style="padding: 10px;">ID</th>
                             <th style="padding: 10px;">Nombre Registrado</th>
-                            <th style="padding: 10px;">N. 1</th>
-                            <th style="padding: 10px;">N. 2</th>
-                            <th style="padding: 10px;">N. 3</th>
+                            <th style="padding: 10px;">Nick Oficial 1</th>
+                            <th style="padding: 10px;">Nick Oficial 2</th>
+                            <th style="padding: 10px;">Nick Oficial 3</th>
                             <th style="padding: 10px;">Estado</th>
                         </tr>
                     </thead>
