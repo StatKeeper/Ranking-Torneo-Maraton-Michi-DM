@@ -128,12 +128,12 @@
     </div>
 
     <div id="main-content">
-        <!-- Encabezado superior con título, fecha/hora y botón Admin seguro -->
+        <!-- Encabezado superior con título, fecha/hora y botón Admin seguro corregido con id="ultima-actualizacion" -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
                 <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-                <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
+                <div id="ultima-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
             </div>
         </div>
 
@@ -208,15 +208,25 @@
         }
 
         function cambiarSubtab(seccion) {
-            // Ocultar todas las secciones
             document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
-            // Quitar clase activa a los botones
             document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
 
-            // Mostrar la sección seleccionada
             document.getElementById('sec-' + seccion).style.display = 'block';
             event.currentTarget.classList.add('active');
         }
+
+        // Script de sincronización para actualizar la fecha y hora idéntico al resto de pestañas
+        document.addEventListener("DOMContentLoaded", function() {
+            const elFecha = document.getElementById('ultima-actualizacion');
+            if (elFecha) {
+                const ahora = new Date();
+                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
+                const horaStr = ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase();
+                elFecha.textContent = `${fechaStr}, ${horaStr}`;
+            }
+        });
     </script>
 </body>
 </html>
