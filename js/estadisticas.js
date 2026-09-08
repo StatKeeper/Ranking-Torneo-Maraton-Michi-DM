@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     renderizarEstadisticasTiempos();
 
-    // Escuchar cambios en los selectores para actualizar automáticamente las estadísticas
-    const selectAnio = document.getElementById("select-anio") || document.getElementById("anio");
-    const selectMes = document.getElementById("select-mes") || document.getElementById("mes");
+    // Escuchar cambios en los selectores sincronizados con la interfaz unificada
+    const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
+    const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
 
     if (selectAnio) {
         selectAnio.addEventListener("change", renderizarEstadisticasTiempos);
@@ -65,27 +65,36 @@ function renderizarEstadisticasTiempos() {
     let listaGlobalJugadores = new Set();
     let partidasDetalleGlobal = [];
 
-    const selectAnio = document.getElementById("select-anio") || document.getElementById("anio");
-    const selectMes = document.getElementById("select-mes") || document.getElementById("mes");
+    // Lectura robusta compatible con los IDs de las vistas de la plataforma
+    const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
+    const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
+    
     const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
-    const mesSeleccionado = selectMes ? selectMes.value : "Agosto";
+    const mesSeleccionado = selectMes ? selectMes.value : "08";
 
-    // Mapeo para soportar tanto texto como formato numérico en localStorage (ej. Agosto / 08)
-    const mesesMap = {
-        "Agosto": "08",
-        "Septiembre": "09",
-        "Octubre": "10",
-        "Noviembre": "11",
-        "Diciembre": "12"
+    // Mapeo flexible para soportar tanto texto (Agosto) como formato numérico de mes (08)
+    const mesesMapInverso = {
+        "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+        "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+        "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
     };
-    const mesFormatoNum = mesesMap[mesSeleccionado] || "08";
+
+    const mesesMapTexto = {
+        "enero": "01", "febrero": "02", "marzo": "03", "abril": "04",
+        "mayo": "05", "junio": "06", "julio": "07", "agosto": "08",
+        "septiembre": "09", "octubre": "10", "noviembre": "11", "diciembre": "12",
+        "Agosto": "08", "Septiembre": "09", "Octubre": "10", "Noviembre": "11", "Diciembre": "12"
+    };
+
+    const mesFormatoNum = mesesMapTexto[mesSeleccionado] || mesSeleccionado;
+    const mesFormatoTexto = mesesMapInverso[mesSeleccionado] || mesSeleccionado;
 
     // Recorremos estrictamente el localStorage buscando claves de registros validando el periodo
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         
         if (clave && clave.startsWith("registros_")) {
-            if (clave.includes(anioSeleccionado) && (clave.includes(mesSeleccionado) || clave.includes(mesFormatoNum))) {
+            if (clave.includes(anioSeleccionado) && (clave.includes(mesFormatoNum) || clave.toLowerCase().includes(mesFormatoTexto.toLowerCase()))) {
                 try {
                     const registros = JSON.parse(localStorage.getItem(clave));
                     if (Array.isArray(registros) && registros.length > 0) {
