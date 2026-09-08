@@ -72,13 +72,15 @@ function renderTablaRankingGeneral() {
     // 1. Recopilar y ordenar cronológicamente todas las claves de partidas del mes/año seleccionado
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
-        if (clave && clave.startsWith("registros_") && clave.includes(`_${periodoSeleccionado}_`)) {
+        // Filtro estricto: Debe comenzar con "registros_", NUNCA con "img_" y pertenecer al período seleccionado
+        if (clave && clave.startsWith("registros_") && !clave.startsWith("img_") && clave.includes(`_${periodoSeleccionado}_`)) {
             const claveLower = clave.toLowerCase();
-            // Descartar explícitamente registros auxiliares como galardones, candidatos o imágenes
+            // Descartar explícitamente registros auxiliares como galardones, candidatos, imágenes o elementos gráficos
             if (
                 !claveLower.includes("galardon") &&
                 !claveLower.includes("candidato") &&
-                !claveLower.includes("imagen")
+                !claveLower.includes("imagen") &&
+                !claveLower.includes("img")
             ) {
                 if (claveLower.includes("partida") || /\d+_\d+$/.test(claveLower)) {
                     clavesPartidasMes.push(clave);
