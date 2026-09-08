@@ -341,3 +341,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderTablaRankingGeneral();
 });
+// Blindaje definitivo para evitar que otro script altere el contador de partidas
+setInterval(() => {
+    const elTotalPartidasMes = document.getElementById("total-partidas-mes");
+    if (elTotalPartidasMes) {
+        let contadorReal = 0;
+        for (let i = 0; i < localStorage.length; i++) {
+            const clave = localStorage.key(i);
+            if (clave && clave.startsWith("registros_2026-08")) {
+                contadorReal++;
+            }
+        }
+        if (elTotalPartidasMes.textContent != contadorReal) {
+            elTotalPartidasMes.textContent = contadorReal;
+        }
+    }
+}, 100);
