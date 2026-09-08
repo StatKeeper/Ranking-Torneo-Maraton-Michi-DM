@@ -201,7 +201,55 @@
             }
         });
 
-        // Función para guardar las imágenes localmente
+        // Función auxiliar para comprimir la imagen antes de guardarla en localStorage
+        function comprimirYGuardarImagen(file, storageKey, callback) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Limitar dimensiones máximas para garantizar bajo peso sin perder legibilidad
+                    const maxWidth = 1200;
+                    const maxHeight = 1600;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convertir a formato JPG comprimido al 85% de calidad
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+                    try {
+                        localStorage.setItem(storageKey, dataUrl);
+                        callback(true);
+                    } catch (err) {
+                        alert("La imagen sigue siendo demasiado grande incluso después de comprimirla. Intenta con una imagen más ligera.");
+                        callback(false);
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Función para guardar las imágenes localmente con compresión automática
         function guardarImagenesCandidatos() {
             const anio = document.getElementById('select-anio').value || "2026";
             const mes = document.getElementById('select-mes').value || "agosto";
@@ -225,36 +273,22 @@
             const total = (fileGalardon ? 1 : 0) + (fileCandidatos ? 1 : 0);
 
             if (fileGalardon) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        localStorage.setItem(`${keyBase}_galardon`, e.target.result);
-                    } catch (err) {
-                        alert("La imagen es demasiado pesada para el almacenamiento local. Usa una versión más ligera.");
-                    }
-                    verificarFin();
-                };
-                reader.readAsDataURL(fileGalardon);
+                comprimirYGuardarImagen(fileGalardon, `${keyBase}_galardon`, function(success) {
+                    if (success) verificarFin();
+                });
             }
 
             if (fileCandidatos) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        localStorage.setItem(`${keyBase}_candidatos`, e.target.result);
-                    } catch (err) {
-                        alert("La imagen es demasiado pesada para el almacenamiento local.");
-                    }
-                    verificarFin();
-                };
-                reader.readAsDataURL(fileCandidatos);
+                comprimirYGuardarImagen(fileCandidatos, `${keyBase}_candidatos`, function(success) {
+                    if (success) verificarFin();
+                });
             }
 
             function verificarFin() {
                 completados++;
                 if (completados === total) {
                     const msg = document.getElementById('msg-exito-img');
-                    msg.textContent = "¡Imágenes guardadas correctamente!";
+                    msg.textContent = "¡Imágenes comprimidas y guardadas correctamente!";
                     msg.style.display = "inline";
                     setTimeout(() => { msg.style.display = "none"; }, 4000);
                 }
