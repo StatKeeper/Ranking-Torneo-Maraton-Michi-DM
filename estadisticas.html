@@ -5,6 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Maratón Michi DM - Estadísticas y Tiempos</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            gap: 10px;
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            max-width: 65%;
+        }
+        .header-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .header-top .fecha-actualizacion {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #444;
+            text-align: right;
+        }
+
+        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #f4f1ea;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: #fff;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #ccc;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover {
+            background: #fdf8ed;
+            color: #b8860b;
+            border-color: #b8860b;
+        }
+        .tab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+
+        /* --- PANEL LATERAL CORREGIDO PARA MÓVILES Y PC --- */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100%;
+            background: #fff;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+        }
+        #main-content {
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%); /* Oculto por defecto en celulares a la izquierda */
+            }
+            #sidebar.open {
+                transform: translateX(0); /* Se despliega al pulsar el botón Admin */
+            }
+            #main-content {
+                margin-left: 0 !important;
+                padding: 10px !important;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -16,7 +128,14 @@
     </div>
 
     <div id="main-content">
-        <h1>🏆 Ranking Maratón Michi DM</h1>
+        <!-- Encabezado superior con título, fecha/hora y botón Admin seguro -->
+        <div class="header-top">
+            <h1>Ranking Maratón Michi DM</h1>
+            <div class="header-info-container">
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
+                <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
+            </div>
+        </div>
 
         <!-- Pestañas Principales -->
         <div class="tabs">
@@ -76,6 +195,11 @@
     <script src="js/auth.js"></script>
     <script src="js/estadisticas.js"></script>
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
         function cambiarSubtab(seccion) {
             // Ocultar todas las secciones
             document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
