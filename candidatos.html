@@ -35,11 +35,11 @@
 
         <h2 class="mb-3">⭐ Candidatos al Jugador de la Fecha</h2>
 
-        <!-- Barra de Controles: Filtros amplios (31 Fechas y 10 Partidas) -->
+        <!-- Barra de Controles Optimizada -->
         <div class="card shadow-sm p-3 mb-4 bg-white border-0" style="border-radius: 10px;">
             <div class="row align-items-center g-3">
                 <div class="col-md-3">
-                    <span id="label-fecha-partida" class="fw-bold text-dark fs-5">Fecha 02 &nbsp;&nbsp; Partida 3</span>
+                    <span id="label-fecha-partida" class="fw-bold text-dark fs-5">Fecha 01 &nbsp;&nbsp; Partida 1</span>
                 </div>
                 <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
                     <div class="d-flex align-items-center gap-2">
@@ -71,32 +71,32 @@
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <label for="select-fecha-num" class="fw-bold text-secondary mb-0">Fecha:</label>
-                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 100px;">
-                            <!-- Generado por JS del 1 al 31 -->
+                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 110px;">
+                            <!-- Generado por JS -->
                         </select>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <label for="select-partida-num" class="fw-bold text-secondary mb-0">Partida:</label>
-                        <select id="select-partida-num" class="form-select form-select-sm" style="width: 90px;">
-                            <!-- Generado por JS del 1 al 10 -->
+                        <select id="select-partida-num" class="form-select form-select-sm" style="width: 110px;">
+                            <!-- Generado por JS con texto completo -->
                         </select>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenedor Visual Dinámico de Infografías y Galardón -->
+        <!-- Contenedor Visual Dinámico en Formato Vertical (Estilo Móvil) -->
         <div class="row g-4 justify-content-center">
             <!-- Tarjeta 1: Jugador de la Fecha -->
-            <div class="col-lg-5 col-md-6">
-                <div class="card shadow-lg border-0 h-100" style="border-radius: 12px; overflow: hidden; background: #fff;">
+            <div class="col-lg-5 col-md-6 d-flex justify-content-center">
+                <div class="card shadow-lg border-0 w-100" style="max-width: 480px; border-radius: 12px; overflow: hidden; background: #fff;">
                     <div class="card-header bg-dark text-white text-center py-3">
                         <h5 class="m-0" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">
                             <i class="fas fa-crown text-warning"></i> Jugador de la Fecha
                         </h5>
                     </div>
-                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 350px;">
-                        <img id="img-galardon" src="" alt="Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/400x500/111/b8860b?text=Galardon+No+Disponible';">
+                    <div class="card-body text-center p-2 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 550px;">
+                        <img id="img-galardon" src="" alt="Jugador de la Fecha" class="img-fluid rounded shadow" style="width: 100%; max-height: 750px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/400x700/111/b8860b?text=Galardon+No+Disponible';">
                     </div>
                     <div class="card-footer bg-light text-center py-3">
                         <a id="btn-download-galardon" href="#" download="Jugador_de_la_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
@@ -107,15 +107,15 @@
             </div>
 
             <!-- Tarjeta 2: Evaluación de Candidatos -->
-            <div class="col-lg-7 col-md-6">
-                <div class="card shadow-lg border-0 h-100" style="border-radius: 12px; overflow: hidden; background: #fff;">
+            <div class="col-lg-5 col-md-6 d-flex justify-content-center">
+                <div class="card shadow-lg border-0 w-100" style="max-width: 480px; border-radius: 12px; overflow: hidden; background: #fff;">
                     <div class="card-header bg-dark text-white text-center py-3">
                         <h5 class="m-0" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">
                             <i class="fas fa-chart-bar text-warning"></i> Evaluación de Candidatos
                         </h5>
                     </div>
-                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 350px;">
-                        <img id="img-candidatos" src="" alt="Candidatos al Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/500x500/111/b8860b?text=Candidatos+No+Disponible';">
+                    <div class="card-body text-center p-2 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 550px;">
+                        <img id="img-candidatos" src="" alt="Candidatos al Jugador de la Fecha" class="img-fluid rounded shadow" style="width: 100%; max-height: 750px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/400x700/111/b8860b?text=Candidatos+No+Disponible';">
                     </div>
                     <div class="card-footer bg-light text-center py-3">
                         <a id="btn-download-candidatos" href="#" download="Candidatos_Ranking_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
@@ -140,7 +140,7 @@
         const btnDownloadGalardon = document.getElementById('btn-download-galardon');
         const btnDownloadCandidatos = document.getElementById('btn-download-candidatos');
 
-        // Generar 31 fechas
+        // Generar 31 fechas con formato Fecha 01, Fecha 02...
         for (let i = 1; i <= 31; i++) {
             let opt = document.createElement('option');
             let numStr = i < 10 ? '0' + i : i;
@@ -150,7 +150,7 @@
             selectFecha.appendChild(opt);
         }
 
-        // Generar 10 partidas
+        // Generar 10 partidas con texto completo Partida 1, Partida 2...
         for (let i = 1; i <= 10; i++) {
             let opt = document.createElement('option');
             opt.value = i;
@@ -168,16 +168,15 @@
             const fStr = fNum < 10 ? '0' + fNum : fNum;
             labelFechaPartida.textContent = `Fecha ${fStr}    Partida ${pNum}`;
 
-            // Construir la llave exacta que utiliza la galería en localStorage
+            // Llave exacta con la que guarda la galería: img_2026_agosto_f01_p1_galardon
             const keyBase = `img_${anio}_${mes.toLowerCase()}_f${fStr}_p${pNum}`;
             const savedGalardon = localStorage.getItem(`${keyBase}_galardon`);
             const savedCandidatos = localStorage.getItem(`${keyBase}_candidatos`);
 
-            // Nombres de respaldo por archivo estático si no están en localStorage
+            // Respaldos estáticos si no están en localStorage
             const nombreGalardonRespaldo = `galardon_${anio}_${mes}_f${fStr}_p${pNum}.png`;
             const nombreCandidatosRespaldo = `candidatos_${anio}_${mes}_f${fStr}_p${pNum}.png`;
 
-            // Asignar fuentes (prioriza localStorage, luego respaldo)
             const fuenteGalardon = savedGalardon ? savedGalardon : nombreGalardonRespaldo;
             const fuenteCandidatos = savedCandidatos ? savedCandidatos : nombreCandidatosRespaldo;
 
@@ -191,11 +190,11 @@
         }
 
         selectFecha.addEventListener('change', actualizarContenido);
-        selectPartida.addEventListener('change', actualizarContenido); // Corregido el nombre de la función
+        selectPartida.addEventListener('change', actualizarContenido);
         selectAnio.addEventListener('change', actualizarContenido);
         selectMes.addEventListener('change', actualizarContenido);
 
-        // Ejecutar al cargar la página
+        // Ejecutar al cargar
         actualizarContenido();
     </script>
 </body>
