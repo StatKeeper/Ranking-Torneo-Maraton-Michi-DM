@@ -39,7 +39,7 @@
         <div class="card shadow-sm p-3 mb-4 bg-white border-0" style="border-radius: 10px;">
             <div class="row align-items-center g-3">
                 <div class="col-md-3">
-                    <span id="label-fecha-partida" class="fw-bold text-dark fs-5">Fecha 01 &nbsp;&nbsp; Partida 1</span>
+                    <span id="label-fecha-partida" class="fw-bold text-dark fs-5">Fecha 02 &nbsp;&nbsp; Partida 3</span>
                 </div>
                 <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
                     <div class="d-flex align-items-center gap-2">
@@ -129,7 +129,6 @@
 
     <script src="js/auth.js"></script>
     <script>
-        // Poblar selectores de Fecha (1 a 31) y Partida (1 a 10)
         const selectFecha = document.getElementById('select-fecha-num');
         const selectPartida = document.getElementById('select-partida-num');
         const selectAnio = document.getElementById('select-año');
@@ -147,7 +146,7 @@
             let numStr = i < 10 ? '0' + i : i;
             opt.value = i;
             opt.textContent = `Fecha ${numStr}`;
-            if (i === 2) opt.selected = true; // Por defecto fecha 2 según tu vista previa
+            if (i === 1) opt.selected = true; 
             selectFecha.appendChild(opt);
         }
 
@@ -156,7 +155,7 @@
             let opt = document.createElement('option');
             opt.value = i;
             opt.textContent = `Partida ${i}`;
-            if (i === 3) opt.selected = true; // Por defecto partida 3 según tu vista previa
+            if (i === 1) opt.selected = true; 
             selectPartida.appendChild(opt);
         }
 
@@ -169,28 +168,34 @@
             const fStr = fNum < 10 ? '0' + fNum : fNum;
             labelFechaPartida.textContent = `Fecha ${fStr}    Partida ${pNum}`;
 
-            // Convención de nombres basada en selección (ej. galardon_2026_agosto_f02_p3.png)
-            // Si prefieres nombres más simples, puedes ajustar esta convención.
-            const nombreGalardon = `galardon_${anio}_${mes}_f${fStr}_p${pNum}.png`;
-            const nombreCandidatos = `candidatos_${anio}_${mes}_f${fStr}_p${pNum}.png`;
+            // Construir la llave exacta que utiliza la galería en localStorage
+            const keyBase = `img_${anio}_${mes.toLowerCase()}_f${fStr}_p${pNum}`;
+            const savedGalardon = localStorage.getItem(`${keyBase}_galardon`);
+            const savedCandidatos = localStorage.getItem(`${keyBase}_candidatos`);
 
-            // Para pruebas iniciales si usas archivos genéricos, puedes dejar un respaldo, 
-            // pero aquí apuntará directamente al archivo específico de esa fecha/partida:
-            imgGalardon.src = nombreGalardon;
-            btnDownloadGalardon.href = nombreGalardon;
+            // Nombres de respaldo por archivo estático si no están en localStorage
+            const nombreGalardonRespaldo = `galardon_${anio}_${mes}_f${fStr}_p${pNum}.png`;
+            const nombreCandidatosRespaldo = `candidatos_${anio}_${mes}_f${fStr}_p${pNum}.png`;
+
+            // Asignar fuentes (prioriza localStorage, luego respaldo)
+            const fuenteGalardon = savedGalardon ? savedGalardon : nombreGalardonRespaldo;
+            const fuenteCandidatos = savedCandidatos ? savedCandidatos : nombreCandidatosRespaldo;
+
+            imgGalardon.src = fuenteGalardon;
+            btnDownloadGalardon.href = fuenteGalardon;
             btnDownloadGalardon.download = `Galardon_Fecha_${fStr}_Partida_${pNum}.png`;
 
-            imgCandidatos.src = nombreCandidatos;
-            btnDownloadCandidatos.href = nombreCandidatos;
+            imgCandidatos.src = fuenteCandidatos;
+            btnDownloadCandidatos.href = fuenteCandidatos;
             btnDownloadCandidatos.download = `Candidatos_Fecha_${fStr}_Partida_${pNum}.png`;
         }
 
         selectFecha.addEventListener('change', actualizarContenido);
-        selectPartida.addEventListener('change', actualizarContenedor);
+        selectPartida.addEventListener('change', actualizarContenido); // Corregido el nombre de la función
         selectAnio.addEventListener('change', actualizarContenido);
         selectMes.addEventListener('change', actualizarContenido);
 
-        // Ejecutar al cargar
+        // Ejecutar al cargar la página
         actualizarContenido();
     </script>
 </body>
