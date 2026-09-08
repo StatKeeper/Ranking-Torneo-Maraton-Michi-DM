@@ -62,7 +62,7 @@ function renderTablaRankingGeneral() {
 
     const anioSel = selectAnioFiltro ? selectAnioFiltro.value : "2026";
     const mesSel = selectMesFiltro ? selectMesFiltro.value : "08";
-    const periodoSeleccionado = `${anioSel}-${mesSel}`; // Formato: 2026-08
+    const periodoSeleccionado = `${anioSel}-${mesSel}`;
 
     let clavesPartidasMes = [];
     let ultimaJornada = "01";
@@ -77,9 +77,7 @@ function renderTablaRankingGeneral() {
         }
     }
 
-    // Ordenar las claves cronológicamente (asumiendo formato tipo registros_..._FechaX_PartidaY o orden alfabético/numérico de fecha-partida)
     clavesPartidasMes.sort((a, b) => {
-        // Extraer números de jornada y partida para un orden correcto
         const matchA = a.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || a.match(/(\d+)_(\d+)$/);
         const matchB = b.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || b.match(/(\d+)_(\d+)$/);
         if (matchA && matchB) {
@@ -98,7 +96,6 @@ function renderTablaRankingGeneral() {
     let totalJugadoresAnteriores = 0;
 
     if (clavesPartidasMes.length > 0) {
-        // Tomamos todas las partidas EXCEPTO la última para calcular el ranking previo
         const clavesAnteriores = clavesPartidasMes.slice(0, clavesPartidasMes.length - 1);
         let acumuladoAnteriorMap = {};
 
@@ -127,7 +124,7 @@ function renderTablaRankingGeneral() {
         totalJugadoresAnteriores = listaAnterior.length;
 
         listaAnterior.forEach((jug, idx) => {
-            posicionesAnterioresMap[jug.jugador] = idx + 1; // Posición 1-indexed
+            posicionesAnterioresMap[jug.jugador] = idx + 1;
         });
     }
 
@@ -222,7 +219,6 @@ function renderTablaRankingGeneral() {
         return;
     }
 
-    // Ordenar jugadores por puntos actuales (mayor a menor)
     jugadores.sort((a, b) => b.pts - a.pts);
 
     let totalPts = 0, totalE = 0, totalR = 0, totalM = 0, totalO = 0, totalS = 0, totalRch = 0, totalMG = 0, totalRLP = 0, totalTB = 0;
@@ -231,17 +227,13 @@ function renderTablaRankingGeneral() {
     jugadores.forEach((jug, index) => {
         const posActual = index + 1;
         
-        // 4. Cálculo dinámico de la Variación (Var)
         let variacion = 0;
         if (clavesPartidasMes.length <= 1) {
-            // Si es la primera partida registrada del mes/período, la variación es 0
             variacion = 0;
         } else if (posicionesAnterioresMap[jug.jugador] !== undefined) {
-            // Si ya participó antes, la variación es Posición Anterior - Posición Actual
             const posAnterior = posicionesAnterioresMap[jug.jugador];
             variacion = posAnterior - posActual;
         } else {
-            // Si es un jugador nuevo (debutante en esta partida), se asume posición previa = totalJugadoresAnteriores + 1
             const posAnteriorVirtual = totalJugadoresAnteriores + 1;
             variacion = posAnteriorVirtual - posActual;
         }
