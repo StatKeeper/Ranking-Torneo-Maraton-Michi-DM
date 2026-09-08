@@ -71,21 +71,17 @@
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <label for="select-fecha-num" class="fw-bold text-secondary mb-0">Fecha:</label>
-                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 110px;">
-                            <!-- Generado por JS -->
-                        </select>
+                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 110px;"></select>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <label for="select-partida-num" class="fw-bold text-secondary mb-0">Partida:</label>
-                        <select id="select-partida-num" class="form-select form-select-sm" style="width: 120px;">
-                            <!-- Generado por JS -->
-                        </select>
+                        <select id="select-partida-num" class="form-select form-select-sm" style="width: 120px;"></select>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenedor Visual Vertical para Celulares -->
+        <!-- Contenedor Visual Vertical -->
         <div class="row g-4 justify-content-center">
             <!-- Tarjeta 1: Jugador de la Fecha -->
             <div class="col-lg-5 col-md-6 d-flex justify-content-center">
@@ -140,11 +136,11 @@
         const btnDownloadGalardon = document.getElementById('btn-download-galardon');
         const btnDownloadCandidatos = document.getElementById('btn-download-candidatos');
 
-        // Generar 31 fechas
+        // Generar 31 fechas con formato idéntico (Fecha 01, Fecha 02...)
         for (let i = 1; i <= 31; i++) {
             let opt = document.createElement('option');
             let numStr = i < 10 ? '0' + i : i;
-            opt.value = i;
+            opt.value = `Fecha ${numStr}`;
             opt.textContent = `Fecha ${numStr}`;
             if (i === 1) opt.selected = true; 
             selectFecha.appendChild(opt);
@@ -153,7 +149,7 @@
         // Generar 10 partidas
         for (let i = 1; i <= 10; i++) {
             let opt = document.createElement('option');
-            opt.value = i;
+            opt.value = `Partida ${i}`;
             opt.textContent = `Partida ${i}`;
             if (i === 1) opt.selected = true; 
             selectPartida.appendChild(opt);
@@ -162,34 +158,35 @@
         function actualizarContenido() {
             const anio = selectAnio.value;
             const mes = selectMes.value;
-            const fNum = parseInt(selectFecha.value);
-            const pNum = selectPartida.value;
+            const jornadaText = selectFecha.value;
+            const partidaText = selectPartida.value;
             
-            const fStr = fNum < 10 ? '0' + fNum : fNum;
-            labelFechaPartida.textContent = `Fecha ${fStr}    Partida ${pNum}`;
+            labelFechaPartida.textContent = `${jornadaText}    ${partidaText}`;
+
+            const fNum = jornadaText.replace(/\D/g, '');
+            const pNum = partidaText.replace(/\D/g, '');
+            const fStr = fNum.padStart(2, '0');
 
             const keyBase = `img_${anio}_${mes.toLowerCase()}_f${fStr}_p${pNum}`;
+            
             const savedGalardon = localStorage.getItem(`${keyBase}_galardon`);
             const savedCandidatos = localStorage.getItem(`${keyBase}_candidatos`);
 
-            // Si existen en localStorage, los cargamos; si no, dejamos vacío para que actúe el onerror de la imagen
             if (savedGalardon) {
                 imgGalardon.src = savedGalardon;
                 btnDownloadGalardon.href = savedGalardon;
             } else {
-                imgGalardon.src = `galardon_${anio}_${mes}_f${fStr}_p${pNum}.png`;
-                btnDownloadGalardon.href = `#`;
+                imgGalardon.src = ""; // Dispara el onerror limpiamente
             }
-            btnDownloadGalardon.download = `Galardon_Fecha_${fStr}_Partida_${pNum}.png`;
+            btnDownloadGalardon.download = `Galardon_${jornadaText}_${partidaText}.png`;
 
             if (savedCandidatos) {
                 imgCandidatos.src = savedCandidatos;
                 btnDownloadCandidatos.href = savedCandidatos;
             } else {
-                imgCandidatos.src = `candidatos_${anio}_${mes}_f${fStr}_p${pNum}.png`;
-                btnDownloadCandidatos.href = `#`;
+                imgCandidatos.src = ""; // Dispara el onerror limpiamente
             }
-            btnDownloadCandidatos.download = `Candidatos_Fecha_${fStr}_Partida_${pNum}.png`;
+            btnDownloadCandidatos.download = `Candidatos_${jornadaText}_${partidaText}.png`;
         }
 
         selectFecha.addEventListener('change', actualizarContenido);
@@ -197,7 +194,7 @@
         selectAnio.addEventListener('change', actualizarContenido);
         selectMes.addEventListener('change', actualizarContenido);
 
-        // Ejecutar al cargar
+        // Cargar al iniciar
         actualizarContenido();
     </script>
 </body>
