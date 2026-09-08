@@ -103,13 +103,11 @@ let equivalencias = [
     { id: 102, antiguo: "Your true papa", oficiales: ["Your true papa"] }
 ];
 
-// Función para recuperar lista guardada o la base (con migración automática si existía formato antiguo 'oficial')
 function obtenerEquivalencias() {
     const guardadas = localStorage.getItem("equivalencias_michi_dm");
     if (guardadas) {
         try {
             let listaParseada = JSON.parse(guardadas);
-            // Migrar registros viejos que tenían 'oficial' como string único a 'oficiales' como array
             return listaParseada.map(item => {
                 if (!item.oficiales && item.oficial) {
                     item.oficiales = [item.oficial];
@@ -140,7 +138,6 @@ function renderTabla() {
     listaActual.forEach(eq => {
         let ofs = eq.oficiales || (eq.oficial ? [eq.oficial] : []);
 
-        // 1. TABLA SUPERIOR: Muestra a todos con sus 5 columnas de nicks
         if (tbodyEq) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -155,7 +152,6 @@ function renderTabla() {
             tbodyEq.appendChild(tr);
         }
 
-        // 2. TABLA INFERIOR: Muestra si ha sido corregido, es nuevo o fue revisado
         const esCorregido = ofs.length > 0 && !(ofs.length === 1 && ofs[0].toLowerCase() === eq.antiguo.toLowerCase());
         const esNuevoRegistrado = eq.esNuevo;
         const esRevisado = eq.revisado;
@@ -198,10 +194,35 @@ function renderTabla() {
     }
 }
 
+// Configurar autocompletado al escribir en el input de Historial Antiguo
+function configurarAutocompletado() {
+    const inputAntiguo = document.getElementById("historial-antiguo");
+    if (!inputAntiguo) return;
+
+    inputAntiguo.addEventListener("input", function() {
+        let val = this.value.trim().toLowerCase();
+        let lista = obtenerEquivalencias();
+        let encontrado = lista.find(e => e.antiguo.toLowerCase() === val);
+
+        for (let i = 1; i <= 5; i++) {
+            let inp = document.getElementById(`nick-oficial-${i}`);
+            if (inp) {
+                if (encontrado && encontrado.oficiales && encontrado.oficiales[i - 1]) {
+                    inp.value = encontrado.oficiales[i - 1];
+                } else if (!encontrado && i === 1) {
+                    // Si no existe, sugerir el mismo nombre en el nick 1 por defecto
+                    inp.value = this.value;
+                } else if (!encontrado) {
+                    inp.value = "";
+                }
+            }
+        }
+    });
+}
+
 function guardarEquivalencia() {
     let antiguo = document.getElementById("historial-antiguo").value.trim();
     
-    // Capturar hasta 5 nicks de los inputs
     let nks = [
         document.getElementById("nick-oficial-1") ? document.getElementById("nick-oficial-1").value.trim() : "",
         document.getElementById("nick-oficial-2") ? document.getElementById("nick-oficial-2").value.trim() : "",
@@ -210,33 +231,24 @@ function guardarEquivalencia() {
         document.getElementById("nick-oficial-5") ? document.getElementById("nick-oficial-5").value.trim() : ""
     ].filter(n => n !== "");
 
-    // Compatibilidad en caso de que aún mantengas o uses un input único temporalmente
-    let inputUnico = document.getElementById("nick-oficial");
-    if (inputUnico && inputUnico.value.trim() !== "") {
-        let valUnico = inputUnico.value.trim();
-        if (!nks.includes(valUnico)) nks.push(valUnico);
-    }
-
-    if (!antiguo && nks.length === 0) {
-        alert("Por favor ingresa al menos un nombre de historial y un nick oficial.");
+    if (!antiguo) {
+        alert("Por favor ingresa el nombre de Historial Antiguo.");
         return;
     }
 
-    let listaActual = obtenerEquivalencias();
-    let esJugadorNuevo = false;
-
-    if (!antiguo) {
-        antiguo = nks[0];
-        esJugadorNuevo = true;
-    } else if (nks.length === 0) {
+    if (nks.length === 0) {
         nks = [antiguo];
     }
 
-    const existente = listaActual.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
+    let listaActual = obtenerEquivalencias();
+    
+    // Buscar si ya existe por nombre antiguo (insensible a mayúsculas/minúsculas)
+    let existente = listaActual.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
     
     if (existente) {
+        // Actualiza el registro existente en lugar de duplicarlo
         existente.oficiales = nks;
-        existente.oficial = nks[0]; // retrocompatibilidad
+        existente.oficial = nks[0];
         existente.revisado = true;
     } else {
         const nuevoId = listaActual.length > 0 ? Math.max(...listaActual.map(e => e.id)) + 1 : 1;
@@ -244,25 +256,23 @@ function guardarEquivalencia() {
             id: nuevoId, 
             antiguo: antiguo, 
             oficiales: nks,
-            oficial: nks[0], // retrocompatibilidad
-            esNuevo: esJugadorNuevo,
+            oficial: nks[0],
+            esNuevo: false,
             revisado: true
         });
     }
     
-    // Guardar permanentemente en memoria local
     localStorage.setItem("equivalencias_michi_dm", JSON.stringify(listaActual));
 
     // Limpiar formulario
     document.getElementById("historial-antiguo").value = "";
-    if (document.getElementById("nick-oficial-1")) document.getElementById("nick-oficial-1").value = "";
-    if (document.getElementById("nick-oficial-2")) document.getElementById("nick-oficial-2").value = "";
-    if (document.getElementById("nick-oficial-3")) document.getElementById("nick-oficial-3").value = "";
-    if (document.getElementById("nick-oficial-4")) document.getElementById("nick-oficial-4").value = "";
-    if (document.getElementById("nick-oficial-5")) document.getElementById("nick-oficial-5").value = "";
-    if (document.getElementById("nick-oficial")) document.getElementById("nick-oficial").value = "";
+    for (let i = 1; i <= 5; i++) {
+        let inp = document.getElementById(`nick-oficial-${i}`);
+        if (inp) inp.value = "";
+    }
 
     renderTabla();
+    alert("¡Corrección guardada correctamente!");
 }
 
 function eliminarEquivalencia() {
@@ -275,16 +285,13 @@ function eliminarEquivalencia() {
     let listaActual = obtenerEquivalencias();
     listaActual = listaActual.filter(e => e.id !== id);
     
-    // Guardar cambios en el navegador
     localStorage.setItem("equivalencias_michi_dm", JSON.stringify(listaActual));
-
     document.getElementById("id-borrar").value = "";
     renderTabla();
 }
 
-// Renderizado directo
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderTabla);
-} else {
+// Inicialización
+document.addEventListener("DOMContentLoaded", () => {
     renderTabla();
-}
+    configurarAutocompletado();
+});
