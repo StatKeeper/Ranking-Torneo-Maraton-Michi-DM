@@ -51,8 +51,8 @@ function renderizarEstadisticasTiempos() {
     let estadisticasJugadores = {};
     let estadisticasCivilizaciones = {};
     let estadisticasEquipos = {};
-    let registrosPartidasPorClave = {};
     let duplasPartidas = {};
+    let listaGlobalJugadores = new Set();
 
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
@@ -60,14 +60,14 @@ function renderizarEstadisticasTiempos() {
             try {
                 const registros = JSON.parse(localStorage.getItem(clave));
                 if (Array.isArray(registros) && registros.length > 0) {
-                    registrosPartidasPorClave[clave] = registros;
-
                     let jugadoresEnPartida = [];
 
                     registros.forEach(reg => {
                         const nombreRaw = reg.jugador || reg.Jugador;
                         if (!nombreRaw) return;
                         const nombre = obtenerNickOficialEstadisticas(nombreRaw);
+                        listaGlobalJugadores.add(nombre);
+
                         jugadoresEnPartida.push({
                             nombre: nombre,
                             pg: (reg.pg === 1 || reg.PG === 1) ? 1 : 0,
@@ -111,25 +111,23 @@ function renderizarEstadisticasTiempos() {
                         // 3. Estadísticas por Equipo
                         const equipo = (reg.equipo || "Sin Equipo").trim();
                         if (equipo && equipo !== "-") {
-                            const claveEquipo = `${reg.jornada || 'J'} - ${equipo}`;
+                            const claveEquipo = `${clave} - ${equipo}`;
                             if (!estadisticasEquipos[claveEquipo]) {
                                 estadisticasEquipos[claveEquipo] = {
                                     nombreEquipo: equipo,
-                                    jornada: reg.jornada || "-",
-                                    partidas: 0,
+                                    partidaKey: clave,
                                     victorias: 0,
                                     derrotas: 0,
                                     miembros: new Set()
                                 };
                             }
                             estadisticasEquipos[claveEquipo].miembros.add(nombre);
-                            estadisticasEquipos[claveEquipo].partidas = 1; 
                             if (reg.pg === 1 || reg.PG === 1) estadisticasEquipos[claveEquipo].victorias = 1;
                             if (reg.pp === 1 || reg.PP === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
                         }
                     });
 
-                    // Generar combinaciones de duplas
+                    // Generar combinaciones de duplas por partida
                     for (let a = 0; a < jugadoresEnPartida.length; a++) {
                         for (let b = a + 1; b < jugadoresEnPartida.length; b++) {
                             let p1 = jugadoresEnPartida[a].nombre;
@@ -138,7 +136,7 @@ function renderizarEstadisticasTiempos() {
                             let keyDupla = [p1, p2].sort().join(" & ");
 
                             if (!duplasPartidas[keyDupla]) {
-                                duplasPartidas[keyDupla] = { dupla: keyDupla, juntas: 0, victorias: 0, derrotas: 0 };
+                                duplasPartidas[keyDupla] = { jugador1: [p1, p2].sort()[0], jugador2: [p1, p2].sort()[1], juntas: 0, victorias: 0, derrotas: 0 };
                             }
                             duplasPartidas[keyDupla].juntas++;
                             if (jugadoresEnPartida[a].pg === 1 && jugadoresEnPartida[b].pg === 1) {
@@ -156,18 +154,20 @@ function renderizarEstadisticasTiempos() {
     }
 
     // ==========================================
-    // RENDERIZAR VISTA 1: TIEMPOS DE PARTIDA
+    // RENDERIZAR VISTA 1: TIEMPOS DE PARTIDA Y TOTALES
     // ==========================================
     const listaJugadores = Object.values(estadisticasJugadores);
     let htmlTiempos = `
-        <h3>⏱️ Tiempos de Partida y Promedios por Jugador</h3>
+        <h3>⏱️ Tiempos de Partida, Totales y Promedios por Jugador</h3>
         <div style="background: #f8f9fa; padding: 12px 15px; border-radius: 6px; margin-top: 10px; margin-bottom: 15px; font-size: 0.9em; border-left: 4px solid #0d6efd;">
             <strong>Leyenda de Diminutivos:</strong>
             <ul style="margin: 5px 0 0 20px; padding: 0; color: #495057;">
                 <li><strong>Part.</strong>: Partidas Registradas</li>
                 <li><strong>Dur. Acum.</strong>: Duración Total Acumulada</li>
                 <li><strong>Prom. Dur.</strong>: Promedio de Duración por Partida</li>
+                <li><strong>Tot. Unid.</strong>: Total de Unidades Asesinadas</li>
                 <li><strong>Prom. Unid.</strong>: Promedio de Unidades Asesinadas por Partida</li>
+                <li><strong>Tot. Edif.</strong>: Total de Edificios Arrasados</li>
                 <li><strong>Prom. Edif.</strong>: Promedio de Edificios Arrasados por Partida</li>
             </ul>
         </div>
@@ -179,7 +179,9 @@ function renderizarEstadisticasTiempos() {
                         <th style="padding: 12px;" title="Partidas Registradas">Part.</th>
                         <th style="padding: 12px;" title="Duración Total Acumulada">Dur. Acum.</th>
                         <th style="padding: 12px;" title="Promedio de Duración por Partida">Prom. Dur.</th>
+                        <th style="padding: 12px;" title="Total de Unidades Asesinadas">Tot. Unid.</th>
                         <th style="padding: 12px;" title="Promedio de Unidades Asesinadas por Partida">Prom. Unid.</th>
+                        <th style="padding: 12px;" title="Total de Edificios Arrasados">Tot. Edif.</th>
                         <th style="padding: 12px;" title="Promedio de Edificios Arrasados por Partida">Prom. Edif.</th>
                     </tr>
                 </thead>
@@ -187,7 +189,7 @@ function renderizarEstadisticasTiempos() {
     `;
 
     if (listaJugadores.length === 0) {
-        htmlTiempos += `<tr><td colspan="6" style="text-align: center; padding: 25px; color: #6c757d;">No hay registros de tiempos disponibles.</td></tr>`;
+        htmlTiempos += `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #6c757d;">No hay registros de tiempos disponibles.</td></tr>`;
     } else {
         listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
         listaJugadores.forEach(j => {
@@ -201,7 +203,9 @@ function renderizarEstadisticasTiempos() {
                     <td style="padding: 12px;">${j.totalPartidas}</td>
                     <td style="padding: 12px;">${convertirSegundosADuracion(j.segundosTotales)}</td>
                     <td style="padding: 12px; font-weight: bold; color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</td>
+                    <td style="padding: 12px;">${j.unidadesTotales}</td>
                     <td style="padding: 12px;">${promedioUnidades}</td>
+                    <td style="padding: 12px;">${j.edificiosTotales}</td>
                     <td style="padding: 12px;">${promedioEdificios}</td>
                 </tr>
             `;
@@ -253,14 +257,12 @@ function renderizarEstadisticasTiempos() {
 
 
     // ==========================================
-    // RENDERIZAR VISTA 3: SINERGIA Y ENFRENTAMIENTOS
+    // RENDERIZAR VISTA 3: EQUIPOS Y BUSCADOR DE DUPLAS
     // ==========================================
     const listaEquipos = Object.values(estadisticasEquipos);
-    const listaDuplas = Object.values(duplasPartidas);
-
     let htmlEnfrentamientos = `
         <h3>🤝 Rendimiento por Equipos (3v3 / 4v4)</h3>
-        <div style="overflow-x: auto; margin-top: 15px; margin-bottom: 30px;">
+        <div style="overflow-x: auto; margin-top: 15px; margin-bottom: 35px;">
             <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
@@ -289,7 +291,7 @@ function renderizarEstadisticasTiempos() {
                     <td style="padding: 12px;">${totalP}</td>
                     <td style="padding: 12px; color: #198754; font-weight: bold;">${eq.victorias}</td>
                     <td style="padding: 12px; color: #dc3545; font-weight: bold;">${eq.derrotas}</td>
-                    <td style="padding: 12px; font-weight: bold; color: ${eq.victorias > 0 ? '#198754' : '#6c757d'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
+                    <td style="padding: 12px; font-weight: bold; color: ${eq.victorias > 0 && eq.derrotas === 0 ? '#198754' : '#0d6efd'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
                 </tr>
             `;
         });
@@ -300,54 +302,94 @@ function renderizarEstadisticasTiempos() {
             </table>
         </div>
 
-        <h3>👥 Sinergia de Duplas (Parejas en Equipo)</h3>
-        <div style="overflow-x: auto; margin-top: 15px;">
-            <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <thead>
-                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 12px;">Dupla de Jugadores</th>
-                        <th style="padding: 12px;">Partidas Juntos</th>
-                        <th style="padding: 12px;">Victorias Conjuntas</th>
-                        <th style="padding: 12px;">Derrotas Conjuntas</th>
-                        <th style="padding: 12px;">Estado / Sinergia</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
+        <h3>🔍 Consulta Interactiva de Sinergia de Duplas</h3>
+        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Selecciona o escribe el nombre de dos jugadores para consultar sus estadísticas conjuntas en equipo.</p>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 1:</label>
+                    <input type="text" id="input-dupla-1" list="lista-jugadores-sug" placeholder="Escribe o selecciona..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 2:</label>
+                    <input type="text" id="input-dupla-2" list="lista-jugadores-sug" placeholder="Escribe o selecciona..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+            </div>
+            
+            <datalist id="lista-jugadores-sug">
+                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
+            </datalist>
 
-    if (listaDuplas.length === 0) {
-        htmlEnfrentamientos += `<tr><td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">No hay suficientes datos de duplas conjuntas.</td></tr>`;
-    } else {
-        listaDuplas.sort((a, b) => b.juntas - a.juntas);
-        listaDuplas.forEach(d => {
-            const sinergiaEf = d.juntas > 0 ? ((d.victorias / d.juntas) * 100).toFixed(0) : 0;
-            let estadoTexto = `${sinergiaEf}% Efectividad`;
-            let colorEstado = '#0d6efd';
-            if (d.victorias > 0 && d.derrotas === 0) {
-                estadoTexto = '🔥 Dupla Invicta';
-                colorEstado = '#198754';
-            } else if (d.derrotas > 0 && d.victorias === 0) {
-                estadoTexto = '⚠️ Sin victorias juntos';
-                colorEstado = '#dc3545';
-            }
+            <button id="btn-consultar-dupla" style="background: #0d6efd; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer;">Consultar Sinergia</button>
+        </div>
 
-            htmlEnfrentamientos += `
-                <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 12px;"><strong>${d.dupla}</strong></td>
-                    <td style="padding: 12px;">${d.juntas}</td>
-                    <td style="padding: 12px; color: #198754; font-weight: bold;">${d.victorias}</td>
-                    <td style="padding: 12px; color: #dc3545; font-weight: bold;">${d.derrotas}</td>
-                    <td style="padding: 12px; font-weight: bold; color: ${colorEstado};">${estadoTexto}</td>
-                </tr>
-            `;
-        });
-    }
-
-    htmlEnfrentamientos += `
-                </tbody>
-            </table>
+        <div id="resultado-dupla-container" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
+            <!-- El resultado se inyectará aquí -->
         </div>
     `;
 
     secEnfrentamientos.innerHTML = htmlEnfrentamientos;
+
+    // Lógica del buscador interactivo de duplas
+    const btnConsultar = document.getElementById("btn-consultar-dupla");
+    if (btnConsultar) {
+        btnConsultar.addEventListener("click", () => {
+            const j1Val = document.getElementById("input-dupla-1").value.trim();
+            const j2Val = document.getElementById("input-dupla-2").value.trim();
+            const contenedorResultado = document.getElementById("resultado-dupla-container");
+
+            if (!j1Val || !j2Val) {
+                alert("Por favor selecciona o escribe el nombre de ambos jugadores.");
+                return;
+            }
+
+            if (j1Val.toLowerCase() === j2Val.toLowerCase()) {
+                alert("Debes seleccionar dos jugadores distintos.");
+                return;
+            }
+
+            const claveDuplaBusqueda = [j1Val, j2Val].sort().join(" & ");
+            const datosDupla = duplasPartidas[claveDuplaBusqueda];
+
+            contenedorResultado.style.display = "block";
+
+            if (!datosDupla || datosDupla.juntas === 0) {
+                contenedorResultado.innerHTML = `
+                    <h4 style="color: #6c757d; margin-bottom: 10px;">📊 Resultado para: ${j1Val} & ${j2Val}</h4>
+                    <p style="color: #dc3545; margin: 0;">⚠️ Estos jugadores aún no han registrado partidas juntos en el torneo.</p>
+                `;
+            } else {
+                const efDupla = ((datosDupla.victorias / datosDupla.juntas) * 100).toFixed(0);
+                let badgeEstado = `<span style="color: #0d6efd; font-weight: bold;">${efDupla}% Efectividad</span>`;
+                if (datosDupla.victorias > 0 && datosDupla.derrotas === 0) {
+                    badgeEstado = `<span style="color: #198754; font-weight: bold;">🔥 ¡Dupla Invicta!</span>`;
+                } else if (datosDupla.derrotas > 0 && datosDupla.victorias === 0) {
+                    badgeEstado = `<span style="color: #dc3545; font-weight: bold;">⚠️ Sin victorias conjuntas</span>`;
+                }
+
+                contenedorResultado.innerHTML = `
+                    <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta: ${datosDupla.jugador1} y ${datosDupla.jugador2}</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center;">
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 0.85em; color: #6c757d;">Partidas Juntos</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #343a40;">${datosDupla.juntas}</div>
+                        </div>
+                        <div style="background: #e8f5e9; padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 0.85em; color: #198754;">Victorias</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #198754;">${datosDupla.victorias}</div>
+                        </div>
+                        <div style="background: #ffebee; padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 0.85em; color: #dc3545;">Derrotas</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #dc3545;">${datosDupla.derrotas}</div>
+                        </div>
+                        <div style="background: #e7f1ff; padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 0.85em; color: #0d6efd;">Estado Sinergia</div>
+                            <div style="font-size: 1.1em; margin-top: 4px;">${badgeEstado}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
 }
