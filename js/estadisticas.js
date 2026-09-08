@@ -62,7 +62,6 @@ function renderizarEstadisticasTiempos() {
                 if (Array.isArray(registros) && registros.length > 0) {
                     registrosPartidasPorClave[clave] = registros;
 
-                    // Agrupar jugadores por partida para calcular sinergia de duplas
                     let jugadoresEnPartida = [];
 
                     registros.forEach(reg => {
@@ -109,7 +108,7 @@ function renderizarEstadisticasTiempos() {
                             if (reg.pp === 1 || reg.PP === 1) estadisticasCivilizaciones[civ].derrotas++;
                         }
 
-                        // 3. Estadísticas por Equipo (ej. caficho)
+                        // 3. Estadísticas por Equipo
                         const equipo = (reg.equipo || "Sin Equipo").trim();
                         if (equipo && equipo !== "-") {
                             const claveEquipo = `${reg.jornada || 'J'} - ${equipo}`;
@@ -124,27 +123,24 @@ function renderizarEstadisticasTiempos() {
                                 };
                             }
                             estadisticasEquipos[claveEquipo].miembros.add(nombre);
-                            // Evitar duplicar conteo de partidas si hay varios miembros del mismo equipo en la misma clave
                             estadisticasEquipos[claveEquipo].partidas = 1; 
                             if (reg.pg === 1 || reg.PG === 1) estadisticasEquipos[claveEquipo].victorias = 1;
                             if (reg.pp === 1 || reg.PP === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
                         }
                     });
 
-                    // Generar combinaciones de duplas (parejas) que jugaron juntas en esta partida
+                    // Generar combinaciones de duplas
                     for (let a = 0; a < jugadoresEnPartida.length; a++) {
                         for (let b = a + 1; b < jugadoresEnPartida.length; b++) {
                             let p1 = jugadoresEnPartida[a].nombre;
                             let p2 = jugadoresEnPartida[b].nombre;
                             if (p1 === p2) continue;
-                            // Ordenar alfabéticamente para que la dupla [A, B] sea igual a [B, A]
                             let keyDupla = [p1, p2].sort().join(" & ");
 
                             if (!duplasPartidas[keyDupla]) {
                                 duplasPartidas[keyDupla] = { dupla: keyDupla, juntas: 0, victorias: 0, derrotas: 0 };
                             }
                             duplasPartidas[keyDupla].juntas++;
-                            // Si ambos ganaron en la partida
                             if (jugadoresEnPartida[a].pg === 1 && jugadoresEnPartida[b].pg === 1) {
                                 duplasPartidas[keyDupla].victorias++;
                             } else if (jugadoresEnPartida[a].pp === 1 || jugadoresEnPartida[b].pp === 1) {
@@ -165,16 +161,26 @@ function renderizarEstadisticasTiempos() {
     const listaJugadores = Object.values(estadisticasJugadores);
     let htmlTiempos = `
         <h3>⏱️ Tiempos de Partida y Promedios por Jugador</h3>
+        <div style="background: #f8f9fa; padding: 12px 15px; border-radius: 6px; margin-top: 10px; margin-bottom: 15px; font-size: 0.9em; border-left: 4px solid #0d6efd;">
+            <strong>Leyenda de Diminutivos:</strong>
+            <ul style="margin: 5px 0 0 20px; padding: 0; color: #495057;">
+                <li><strong>Part.</strong>: Partidas Registradas</li>
+                <li><strong>Dur. Acum.</strong>: Duración Total Acumulada</li>
+                <li><strong>Prom. Dur.</strong>: Promedio de Duración por Partida</li>
+                <li><strong>Prom. Unid.</strong>: Promedio de Unidades Asesinadas por Partida</li>
+                <li><strong>Prom. Edif.</strong>: Promedio de Edificios Arrasados por Partida</li>
+            </ul>
+        </div>
         <div style="overflow-x: auto; margin-top: 15px;">
             <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
                         <th style="padding: 12px;">Jugador</th>
-                        <th style="padding: 12px;">Partidas Registradas</th>
-                        <th style="padding: 12px;">Duración Total Acumulada</th>
-                        <th style="padding: 12px;">Promedio de Duración por Partida</th>
-                        <th style="padding: 12px;">Unidades Asesinadas</th>
-                        <th style="padding: 12px;">Edificios Arrasados</th>
+                        <th style="padding: 12px;" title="Partidas Registradas">Part.</th>
+                        <th style="padding: 12px;" title="Duración Total Acumulada">Dur. Acum.</th>
+                        <th style="padding: 12px;" title="Promedio de Duración por Partida">Prom. Dur.</th>
+                        <th style="padding: 12px;" title="Promedio de Unidades Asesinadas por Partida">Prom. Unid.</th>
+                        <th style="padding: 12px;" title="Promedio de Edificios Arrasados por Partida">Prom. Edif.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -186,14 +192,17 @@ function renderizarEstadisticasTiempos() {
         listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
         listaJugadores.forEach(j => {
             const promedioSeg = j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0;
+            const promedioUnidades = j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0;
+            const promedioEdificios = j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0;
+
             htmlTiempos += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
                     <td style="padding: 12px;"><strong>${j.nombre}</strong></td>
                     <td style="padding: 12px;">${j.totalPartidas}</td>
                     <td style="padding: 12px;">${convertirSegundosADuracion(j.segundosTotales)}</td>
                     <td style="padding: 12px; font-weight: bold; color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</td>
-                    <td style="padding: 12px;">${j.unidadesTotales}</td>
-                    <td style="padding: 12px;">${j.edificiosTotales}</td>
+                    <td style="padding: 12px;">${promedioUnidades}</td>
+                    <td style="padding: 12px;">${promedioEdificios}</td>
                 </tr>
             `;
         });
