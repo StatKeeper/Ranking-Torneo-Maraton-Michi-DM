@@ -70,8 +70,9 @@ function renderizarEstadisticasTiempos() {
 
                         const pg = (reg.pg === 1 || reg.PG === 1) ? 1 : 0;
                         const pp = (reg.pp === 1 || reg.PP === 1) ? 1 : 0;
+                        const equipoReg = (reg.equipo || "Sin Equipo").trim();
 
-                        jugadoresEnPartida.push({ nombre, pg, pp });
+                        jugadoresEnPartida.push({ nombre, pg, pp, equipo: equipoReg });
 
                         // 1. Estadísticas Individuales
                         if (!estadisticasJugadores[nombre]) {
@@ -107,12 +108,11 @@ function renderizarEstadisticasTiempos() {
                         }
 
                         // 3. Estadísticas por Equipo
-                        const equipo = (reg.equipo || "Sin Equipo").trim();
-                        if (equipo && equipo !== "-") {
-                            const claveEquipo = `${clave} - ${equipo}`;
+                        if (equipoReg && equipoReg !== "-") {
+                            const claveEquipo = `${clave} - ${equipoReg}`;
                             if (!estadisticasEquipos[claveEquipo]) {
                                 estadisticasEquipos[claveEquipo] = {
-                                    nombreEquipo: equipo,
+                                    nombreEquipo: equipoReg,
                                     partidaKey: clave,
                                     victorias: 0,
                                     derrotas: 0,
@@ -244,7 +244,7 @@ function renderizarEstadisticasTiempos() {
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
         <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Ingresa de 2 a 4 jugadores (puedes dejar campos vacíos si solo deseas consultar duplas o tríos) para conocer sus estadísticas conjuntas.</p>
+        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Ingresa de 2 a 4 jugadores (puedes dejar campos vacíos si solo deseas consultar duplas o tríos) para conocer sus estadísticas conjuntas en el mismo equipo.</p>
         
         <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
@@ -321,7 +321,7 @@ function renderizarEstadisticasTiempos() {
 
     secEnfrentamientos.innerHTML = htmlEnfrentamientos;
 
-    // Lógica del buscador flexible (2 a 4 jugadores)
+    // Lógica del buscador flexible (2 a 4 jugadores) validando Mismo Equipo
     const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
     if (btnConsultarSinergia) {
         btnConsultarSinergia.addEventListener("click", () => {
@@ -344,36 +344,49 @@ function renderizarEstadisticasTiempos() {
             let derrotasJuntos = 0;
 
             partidasDetalleGlobal.forEach(jugadoresPartida => {
-                const nombresEnPartida = jugadoresPartida.map(jp => jp.nombre);
-                const todosPresentes = seleccionados.every(sel => nombresEnPartida.includes(sel));
-
-                if (todosPresentes) {
-                    partidasJuntos++;
-                    let todosGanaron = true;
-                    let algunoPerdio = false;
-
-                    seleccionados.forEach(sel => {
-                        const datosJugador = jugadoresPartida.find(jp => jp.nombre === sel);
-                        if (datosJugador) {
-                            if (datosJugador.pg !== 1) todosGanaron = false;
-                            if (datosJugador.pp === 1) algunoPerdio = true;
-                        }
-                    });
-
-                    if (todosGanaron) {
-                        victoriasJuntos++;
-                    } else if (algunoPerdio) {
-                        derrotasJuntos++;
+                // Agrupar los jugadores de esta partida por equipo
+                let equiposEnPartida = {};
+                jugadoresPartida.forEach(jp => {
+                    if (!equiposEnPartida[jp.equipo]) {
+                        equiposEnPartida[jp.equipo] = [];
                     }
-                }
+                    equiposEnPartida[jp.equipo].push(jp);
+                });
+
+                // Revisar si TODOS los seleccionados pertenecen al MISMO equipo en esta partida
+                Object.values(equiposEnPartida).forEach(miembrosEquipo => {
+                    const nombresEnEquipo = miembrosEquipo.map(me => me.nombre);
+                    const todosEnEsteEquipo = seleccionados.every(sel => nombresEnEquipo.includes(sel));
+
+                    if (todosEnEsteEquipo) {
+                        partidasJuntos++;
+                        
+                        let todosGanaron = true;
+                        let algunoPerdio = false;
+
+                        seleccionados.forEach(sel => {
+                            const datosJugador = miembrosEquipo.find(me => me.nombre === sel);
+                            if (datosJugador) {
+                                if (datosJugador.pg !== 1) todosGanaron = false;
+                                if (datosJugador.pp === 1) algunoPerdio = true;
+                            }
+                        });
+
+                        if (todosGanaron) {
+                            victoriasJuntos++;
+                        } else if (algunoPerdio) {
+                            derrotasJuntos++;
+                        }
+                    }
+                });
             });
 
             contenedorResultado.style.display = "block";
 
             if (partidasJuntos === 0) {
                 contenedorResultado.innerHTML = `
-                    <h4 style="color: #343a40; margin-bottom: 10px;">📊 Sinergia para: ${seleccionados.join(" & ")}</h4>
-                    <p style="color: #dc3545; margin: 0;">⚠️ Estos jugadores no han registrado ninguna partida juntos en el torneo.</p>
+                    <h4 style="color: #343a40; margin-bottom: 10px;">📊 Sinergia para: ${seleccionados.join(" , ")}</h4>
+                    <p style="color: #dc3545; margin: 0; font-weight: bold;">⚠️ Partida no existente: Estos jugadores no han participado juntos en el mismo equipo/bando en ninguna partida registrada.</p>
                 `;
             } else {
                 const efSinergia = ((victoriasJuntos / partidasJuntos) * 100).toFixed(0);
@@ -385,7 +398,7 @@ function renderizarEstadisticasTiempos() {
                 }
 
                 contenedorResultado.innerHTML = `
-                    <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta: ${seleccionados.join(" , ")}</h4>
+                    <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta (Mismo Equipo): ${seleccionados.join(" , ")}</h4>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center;">
                         <div style="background: #f8f9fa; padding: 10px; border-radius: 6px;">
                             <div style="font-size: 0.85em; color: #6c757d;">Partidas Juntos</div>
