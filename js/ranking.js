@@ -72,22 +72,29 @@ function renderTablaRankingGeneral() {
     // 1. Recopilar y ordenar cronológicamente todas las claves de partidas del mes/año seleccionado
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
-        if (clave && clave.includes(`_${periodoSeleccionado}_`)) {
+        if (clave) {
             const claveLower = clave.toLowerCase();
-            
-            // Filtro radical y estricto: Descartar inmediatamente cualquier clave que sea de imágenes, galardones o candidatos
-            const esAuxiliar = 
+
+            // BLOQUEO ABSOLUTO 1: Si la clave comienza o contiene "img_", descartar de inmediato sin importar nada más.
+            if (claveLower.startsWith("img_") || claveLower.includes("img_")) {
+                continue;
+            }
+
+            // BLOQUEO ABSOLUTO 2: Descartar cualquier rastro de galardones, candidatos o evaluaciones.
+            if (
                 claveLower.includes("galardon") ||
                 claveLower.includes("galardón") ||
                 claveLower.includes("candidato") ||
-                claveLower.includes("imagen") ||
-                claveLower.includes("img") ||
                 claveLower.includes("evaluacion") ||
-                claveLower.includes("evaluación");
+                claveLower.includes("evaluación") ||
+                claveLower.includes("imagen")
+            ) {
+                continue;
+            }
 
-            if (!esAuxiliar) {
-                // Asegurarnos de que pertenezca a un registro de partida válido
-                if (claveLower.includes("registros_") && (claveLower.includes("partida") || /\d+_\d+$/.test(claveLower))) {
+            // Validar que pertenezca al período seleccionado y sea un registro válido de partida
+            if (clave.includes(`_${periodoSeleccionado}_`) && clave.startsWith("registros_")) {
+                if (claveLower.includes("partida") || /\d+_\d+$/.test(claveLower)) {
                     clavesPartidasMes.push(clave);
                 }
             }
