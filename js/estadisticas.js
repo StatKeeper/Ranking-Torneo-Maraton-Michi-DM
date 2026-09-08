@@ -112,8 +112,9 @@ function renderizarEstadisticasTiempos() {
                             stats.edificiosTotales += parseInt(reg.edificiosArrasados || 0, 10);
                             stats.segundosTotales += convertirDuracionASegundos(reg.duracion);
 
-                            // 2. Estadísticas de Civilizaciones
-                            const civ = (reg.civ || "Desconocida").trim();
+                            // 2. Estadísticas de Civilizaciones (Corregido para capturar correctamente la civ)
+                            const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion || "Desconocida";
+                            const civ = String(civRaw).trim();
                             if (civ && civ !== "-") {
                                 if (!estadisticasCivilizaciones[civ]) {
                                     estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
@@ -153,7 +154,7 @@ function renderizarEstadisticasTiempos() {
     }
 
     // ==========================================
-    // RENDERIZAR VISTA 1: TIEMPOS DE PARTIDA Y TOTALES (Solo jugadores con al menos 1 partida real)
+    // RENDERIZAR VISTA 1: TIEMPOS DE PARTIDA Y TOTALES
     // ==========================================
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     let htmlTiempos = `
@@ -256,7 +257,7 @@ function renderizarEstadisticasTiempos() {
 
 
     // ==========================================
-    // RENDERIZAR VISTA 3: CONSULTA GRUPAL (SUPERIOR) Y EQUIPOS (INFERIOR)
+    // RENDERIZAR VISTA 3: CONSULTA GRUPAL Y EQUIPOS
     // ==========================================
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
