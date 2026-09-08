@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Maratón Michi DM - Candidatos al Jugador de la Fecha</title>
     <link rel="stylesheet" href="css/estilos.css">
-    <!-- FontAwesome para iconos de descarga y coronas -->
+    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Bootstrap CSS opcional para diseño responsivo fluido y limpio -->
+    <!-- Bootstrap CSS para estructura limpia y responsiva -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -20,8 +20,15 @@
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <h1>🏆 Ranking Maratón Michi DM</h1>
+        <!-- Cabecera Superior igual a Clasificación General -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="m-0">🏆 Ranking Maratón Michi DM</h1>
+            <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.95rem;">
+                08/09/2026, 03:31:45 p. m.
+            </div>
+        </div>
 
+        <!-- Pestañas de Navegación -->
         <div class="tabs mb-4">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
@@ -30,7 +37,61 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2 class="mb-4">⭐ Candidatos al Jugador de la Fecha</h2>
+        <h2 class="mb-3">⭐ Candidatos al Jugador de la Fecha</h2>
+
+        <!-- Barra de Controles: Filtros de Año, Mes, Fecha y Partida -->
+        <div class="card shadow-sm p-3 mb-4 bg-white border-0" style="border-radius: 10px;">
+            <div class="row align-items-center g-3">
+                <div class="col-md-3">
+                    <span id="label-fecha-partida" class="fw-bold text-dark fs-5">Fecha 01 &nbsp;&nbsp; Partida 1</span>
+                </div>
+                <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="select-año" class="fw-bold text-secondary mb-0">Año:</label>
+                        <select id="select-año" class="form-select form-select-sm" style="width: 100px;">
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="select-mes" class="fw-bold text-secondary mb-0">Mes:</label>
+                        <select id="select-mes" class="form-select form-select-sm" style="width: 120px;">
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto" selected>Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="select-fecha-num" class="fw-bold text-secondary mb-0">Fecha:</label>
+                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 90px;">
+                            <option value="1" selected>Fecha 01</option>
+                            <option value="2">Fecha 02</option>
+                            <option value="3">Fecha 03</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="select-partida-num" class="fw-bold text-secondary mb-0">Partida:</label>
+                        <select id="select-partida-num" class="form-select form-select-sm" style="width: 90px;">
+                            <option value="1" selected>Partida 1</option>
+                            <option value="2">Partida 2</option>
+                            <option value="3">Partida 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Contenedor Visual de Infografías y Galardón -->
         <div class="row g-4 justify-content-center">
@@ -42,11 +103,11 @@
                             <i class="fas fa-crown text-warning"></i> Jugador de la Fecha
                         </h5>
                     </div>
-                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black">
-                        <img src="galardon_fecha_06.png" alt="Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 500px; object-fit: contain; border: 2px solid #b8860b;">
+                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 350px;">
+                        <img id="img-galardon" src="galardon_fecha_06.png" alt="Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/400x500/111/b8860b?text=Galardon+No+Disponible';">
                     </div>
                     <div class="card-footer bg-light text-center py-3">
-                        <a href="galardon_fecha_06.png" download="Jugador_de_la_Fecha_Bio_Tine.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
+                        <a id="btn-download-galardon" href="galardon_fecha_06.png" download="Jugador_de_la_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
                             <i class="fas fa-download"></i> Descargar Imagen (HD)
                         </a>
                     </div>
@@ -61,11 +122,11 @@
                             <i class="fas fa-chart-bar text-warning"></i> Evaluación de Candidatos
                         </h5>
                     </div>
-                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black">
-                        <img src="candidatos_fecha_06.png" alt="Candidatos al Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 500px; object-fit: contain; border: 2px solid #b8860b;">
+                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 350px;">
+                        <img id="img-candidatos" src="candidatos_fecha_06.png" alt="Candidatos al Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/500x500/111/b8860b?text=Candidatos+No+Disponible';">
                     </div>
                     <div class="card-footer bg-light text-center py-3">
-                        <a href="candidatos_fecha_06.png" download="Candidatos_Ranking_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
+                        <a id="btn-download-candidatos" href="candidatos_fecha_06.png" download="Candidatos_Ranking_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
                             <i class="fas fa-download"></i> Descargar Imagen (HD)
                         </a>
                     </div>
@@ -75,5 +136,20 @@
     </div>
 
     <script src="js/auth.js"></script>
+    <script>
+        // Script para actualizar dinámicamente los textos y las etiquetas de la barra superior al cambiar opciones
+        const selectFecha = document.getElementById('select-fecha-num');
+        const selectPartida = document.getElementById('select-partida-num');
+        const labelFechaPartida = document.getElementById('label-fecha-partida');
+
+        function actualizarEtiqueta() {
+            const f = selectFecha.value.padStart(2, '0');
+            const p = selectPartida.value;
+            labelFechaPartida.textContent = `Fecha ${f}    Partida ${p}`;
+        }
+
+        selectFecha.addEventListener('change', actualizarEtiqueta);
+        selectPartida.addEventListener('change', actualizarEtiqueta);
+    </script>
 </body>
 </html>
