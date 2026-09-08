@@ -1,5 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     renderizarEstadisticasTiempos();
+
+    // Escuchar cambios en los selectores para actualizar automáticamente las estadísticas
+    const selectAnio = document.getElementById("select-anio") || document.getElementById("anio");
+    const selectMes = document.getElementById("select-mes") || document.getElementById("mes");
+
+    if (selectAnio) {
+        selectAnio.addEventListener("change", renderizarEstadisticasTiempos);
+    }
+    if (selectMes) {
+        selectMes.addEventListener("change", renderizarEstadisticasTiempos);
+    }
 });
 
 function obtenerNickOficialEstadisticas(nombreIngresado) {
@@ -59,13 +70,22 @@ function renderizarEstadisticasTiempos() {
     const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
     const mesSeleccionado = selectMes ? selectMes.value : "Agosto";
 
+    // Mapeo para soportar tanto texto como formato numérico en localStorage (ej. Agosto / 08)
+    const mesesMap = {
+        "Agosto": "08",
+        "Septiembre": "09",
+        "Octubre": "10",
+        "Noviembre": "11",
+        "Diciembre": "12"
+    };
+    const mesFormatoNum = mesesMap[mesSeleccionado] || "08";
+
     // Recorremos estrictamente el localStorage buscando claves de registros validando el periodo
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         
         if (clave && clave.startsWith("registros_")) {
-            // Filtro estricto por mes y año seleccionado
-            if (clave.includes(mesSeleccionado) && clave.includes(anioSeleccionado)) {
+            if (clave.includes(anioSeleccionado) && (clave.includes(mesSeleccionado) || clave.includes(mesFormatoNum))) {
                 try {
                     const registros = JSON.parse(localStorage.getItem(clave));
                     if (Array.isArray(registros) && registros.length > 0) {
@@ -110,7 +130,7 @@ function renderizarEstadisticasTiempos() {
                             stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || 0, 10);
                             stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
 
-                            // 2. Civilizaciones reales del registro (Gurjaras, Mayas, Turcos, etc.)
+                            // 2. Civilizaciones reales del registro
                             const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
                             if (civRaw && civRaw !== "-" && String(civRaw).trim() !== "") {
                                 const civ = String(civRaw).trim();
@@ -212,7 +232,6 @@ function renderizarEstadisticasTiempos() {
     htmlTiempos += `</tbody></table></div>`;
     secTiempos.innerHTML = htmlTiempos;
 
-
     // ==========================================
     // RENDERIZAR VISTA 2: CIVILIZACIONES Y WIN RATE
     // ==========================================
@@ -252,7 +271,6 @@ function renderizarEstadisticasTiempos() {
     }
     htmlCivs += `</tbody></table></div>`;
     secCivilizaciones.innerHTML = htmlCivs;
-
 
     // ==========================================
     // RENDERIZAR VISTA 3: CONSULTA GRUPAL Y EQUIPOS
