@@ -91,6 +91,11 @@ function renderTablaRankingGeneral() {
 
     let clavesPartidasUnicas = new Set(clavesPartidasMes);
 
+    // Actualizar el contador de inmediato con el tamaño real de claves únicas encontradas
+    if (elTotalPartidasMes) {
+        elTotalPartidasMes.textContent = clavesPartidasUnicas.size > 0 ? clavesPartidasUnicas.size : 0;
+    }
+
     // 2. Calcular el estado ANTERIOR (acumulado hasta antes de la última partida del conjunto)
     let posicionesAnterioresMap = {};
     let totalJugadoresAnteriores = 0;
@@ -200,7 +205,6 @@ function renderTablaRankingGeneral() {
     if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || new Date().toLocaleString("es-PE");
     if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
     if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
-    if (elTotalPartidasMes) elTotalPartidasMes.textContent = clavesPartidasUnicas.size;
 
     let jugadores = Object.values(acumuladoMap);
     
