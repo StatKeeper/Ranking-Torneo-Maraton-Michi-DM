@@ -32,11 +32,28 @@
             <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr;">
                 <div>
                     <label>Año:</label>
-                    <select id="select-anio"></select>
+                    <select id="select-anio">
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                    </select>
                 </div>
                 <div>
                     <label>Mes:</label>
-                    <select id="select-mes"></select>
+                    <select id="select-mes">
+                        <option value="enero">Enero</option>
+                        <option value="febrero">Febrero</option>
+                        <option value="marzo">Marzo</option>
+                        <option value="abril">Abril</option>
+                        <option value="mayo">Mayo</option>
+                        <option value="junio">Junio</option>
+                        <option value="julio">Julio</option>
+                        <option value="agosto" selected>Agosto</option>
+                        <option value="septiembre">Septiembre</option>
+                        <option value="octubre">Octubre</option>
+                        <option value="noviembre">Noviembre</option>
+                        <option value="diciembre">Diciembre</option>
+                    </select>
                 </div>
                 <div>
                     <label>Jornada:</label>
@@ -60,7 +77,7 @@
             <button class="btn-action" style="margin-top: 15px;" onclick="procesarRegistroMasivo()">🚀 Procesar y Registrar Todo</button>
         </div>
 
-        <!-- NUEVA SECCIÓN: Subida de Imágenes de Galardón y Candidatos -->
+        <!-- SECCIÓN: Subida de Gráficos de Galardón y Candidatos -->
         <h2>🖼️ Subida de Gráficos (Galardón y Candidatos)</h2>
 
         <div class="card" style="border-left: 5px solid #b8860b;">
@@ -79,9 +96,10 @@
                 </div>
             </div>
 
-            <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
+            <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                 <button class="btn-action" style="background-color: #b8860b;" onclick="guardarImagenesCandidatos()">💾 Guardar Imágenes para esta Fecha</button>
-                <span id="msg-exito-img" style="color: green; font-weight: bold; display: none;">¡Imágenes guardadas correctamente!</span>
+                <button class="btn-action btn-delete" style="background-color: #d9534f;" onclick="eliminarImagenesCandidatos()">🗑️ Eliminar Imágenes de esta Fecha</button>
+                <span id="msg-exito-img" style="color: green; font-weight: bold; display: none;">¡Operación realizada correctamente!</span>
             </div>
         </div>
 
@@ -143,9 +161,8 @@
     <script src="js/equivalencias.js"></script>
     <script src="js/registro_masivo.js"></script>
     <script>
-        // Script complementario para poblar 31 jornadas y 10 partidas, y gestionar la subida de imágenes
         document.addEventListener("DOMContentLoaded", function() {
-            // Poblar Jornadas (1 a 31) en los selectores principales si tu script externo no los llena completo
+            // Poblar Jornadas (1 a 31)
             const jornadaSelect = document.getElementById('jornada-select');
             const gestionJornada = document.getElementById('gestion-jornada');
             
@@ -184,14 +201,13 @@
             }
         });
 
-        // Función para guardar las imágenes localmente vinculadas a los selectores superiores
+        // Función para guardar las imágenes localmente
         function guardarImagenesCandidatos() {
             const anio = document.getElementById('select-anio').value || "2026";
             const mes = document.getElementById('select-mes').value || "agosto";
             const jornadaText = document.getElementById('jornada-select').value || "Fecha 01";
             const partidaText = document.getElementById('partida-select').value || "Partida 1";
 
-            // Extraer números limpios para la llave
             const fNum = jornadaText.replace(/\D/g, '');
             const pNum = partidaText.replace(/\D/g, '');
             const fStr = fNum.padStart(2, '0');
@@ -211,7 +227,11 @@
             if (fileGalardon) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    localStorage.setItem(`${keyBase}_galardon`, e.target.result);
+                    try {
+                        localStorage.setItem(`${keyBase}_galardon`, e.target.result);
+                    } catch (err) {
+                        alert("La imagen es demasiado pesada para el almacenamiento local. Usa una versión más ligera.");
+                    }
                     verificarFin();
                 };
                 reader.readAsDataURL(fileGalardon);
@@ -220,7 +240,11 @@
             if (fileCandidatos) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    localStorage.setItem(`${keyBase}_candidatos`, e.target.result);
+                    try {
+                        localStorage.setItem(`${keyBase}_candidatos`, e.target.result);
+                    } catch (err) {
+                        alert("La imagen es demasiado pesada para el almacenamiento local.");
+                    }
                     verificarFin();
                 };
                 reader.readAsDataURL(fileCandidatos);
@@ -230,9 +254,37 @@
                 completados++;
                 if (completados === total) {
                     const msg = document.getElementById('msg-exito-img');
+                    msg.textContent = "¡Imágenes guardadas correctamente!";
                     msg.style.display = "inline";
                     setTimeout(() => { msg.style.display = "none"; }, 4000);
                 }
+            }
+        }
+
+        // Función para eliminar las imágenes guardadas si hubo un error
+        function eliminarImagenesCandidatos() {
+            const anio = document.getElementById('select-anio').value || "2026";
+            const mes = document.getElementById('select-mes').value || "agosto";
+            const jornadaText = document.getElementById('jornada-select').value || "Fecha 01";
+            const partidaText = document.getElementById('partida-select').value || "Partida 1";
+
+            const fNum = jornadaText.replace(/\D/g, '');
+            const pNum = partidaText.replace(/\D/g, '');
+            const fStr = fNum.padStart(2, '0');
+
+            const keyBase = `img_${anio}_${mes.toLowerCase()}_f${fStr}_p${pNum}`;
+
+            if (confirm(`¿Estás seguro de eliminar las imágenes de ${jornadaText} - ${partidaText}?`)) {
+                localStorage.removeItem(`${keyBase}_galardon`);
+                localStorage.removeItem(`${keyBase}_candidatos`);
+                
+                document.getElementById('input-file-galardon').value = "";
+                document.getElementById('input-file-candidatos').value = "";
+
+                const msg = document.getElementById('msg-exito-img');
+                msg.textContent = "¡Imágenes eliminadas correctamente!";
+                msg.style.display = "inline";
+                setTimeout(() => { msg.style.display = "none"; }, 4000);
             }
         }
     </script>
