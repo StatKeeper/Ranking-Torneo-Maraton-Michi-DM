@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     renderizarEstadisticasTiempos();
 
-    // Escuchar cambios en los selectores sincronizados con la interfaz unificada
     const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
     const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
 
@@ -65,14 +64,12 @@ function renderizarEstadisticasTiempos() {
     let listaGlobalJugadores = new Set();
     let partidasDetalleGlobal = [];
 
-    // Lectura robusta compatible con los IDs de las vistas de la plataforma
     const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
     const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
     
     const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
     const mesSeleccionado = selectMes ? selectMes.value : "08";
 
-    // Mapeo flexible para soportar tanto texto (Agosto) como formato numérico de mes (08)
     const mesesMapInverso = {
         "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
         "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
@@ -89,11 +86,12 @@ function renderizarEstadisticasTiempos() {
     const mesFormatoNum = mesesMapTexto[mesSeleccionado] || mesSeleccionado;
     const mesFormatoTexto = mesesMapInverso[mesSeleccionado] || mesSeleccionado;
 
-    // Recorremos estrictamente el localStorage buscando claves de registros validando el periodo
+    // Recorremos estrictamente el localStorage buscando claves de registros validando el periodo y descartando imágenes
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         
-        if (clave && clave.startsWith("registros_")) {
+        // CORRECCIÓN: Validamos que empiece estrictamente con "registros_" y NO contenga "img_"
+        if (clave && clave.startsWith("registros_") && !clave.includes("img_")) {
             if (clave.includes(anioSeleccionado) && (clave.includes(mesFormatoNum) || clave.toLowerCase().includes(mesFormatoTexto.toLowerCase()))) {
                 try {
                     const registros = JSON.parse(localStorage.getItem(clave));
@@ -117,7 +115,6 @@ function renderizarEstadisticasTiempos() {
 
                             jugadoresEnPartida.push({ nombre, pg, pp, equipo: equipoReg });
 
-                            // 1. Estadísticas Individuales
                             if (!estadisticasJugadores[nombre]) {
                                 estadisticasJugadores[nombre] = {
                                     nombre: nombre,
@@ -139,7 +136,6 @@ function renderizarEstadisticasTiempos() {
                             stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || 0, 10);
                             stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
 
-                            // 2. Civilizaciones reales del registro
                             const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
                             if (civRaw && civRaw !== "-" && String(civRaw).trim() !== "") {
                                 const civ = String(civRaw).trim();
@@ -151,7 +147,6 @@ function renderizarEstadisticasTiempos() {
                                 if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
                             }
 
-                            // 3. Equipos Reales
                             if (equipoReg && equipoReg !== "-") {
                                 const claveEquipo = `${clave} - ${equipoReg}`;
                                 if (!estadisticasEquipos[claveEquipo]) {
