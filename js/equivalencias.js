@@ -104,25 +104,37 @@ let equivalencias = [
 ];
 
 function obtenerEquivalencias() {
+    let lista = [];
     const guardadas = localStorage.getItem("equivalencias_michi_dm");
     if (guardadas) {
         try {
-            let listaParseada = JSON.parse(guardadas);
-            return listaParseada.map(item => {
-                if (!item.oficiales && item.oficial) {
-                    item.oficiales = [item.oficial];
-                } else if (!item.oficiales) {
-                    item.oficiales = [];
-                }
-                return item;
-            });
+            lista = JSON.parse(guardadas);
         } catch (e) {
-            return equivalencias;
+            lista = equivalencias;
         }
     } else {
-        localStorage.setItem("equivalencias_michi_dm", JSON.stringify(equivalencias));
-        return equivalencias;
+        lista = equivalencias;
     }
+
+    // Asegurar estructura de oficiales
+    lista = lista.map(item => {
+        if (!item.oficiales && item.oficial) {
+            item.oficiales = [item.oficial];
+        } else if (!item.oficiales) {
+            item.oficiales = [];
+        }
+        return item;
+    });
+
+    // Ordenar estrictamente alfabéticamente por el nombre registrado (antiguo)
+    lista.sort((a, b) => a.antiguo.localeCompare(b.antiguo, 'es', { sensitivity: 'accent', numeric: true }));
+
+    // Reasignar IDs correlativos (1, 2, 3...) tras el ordenamiento alfabético
+    lista.forEach((item, index) => {
+        item.id = index + 1;
+    });
+
+    return lista;
 }
 
 function renderTabla() {
@@ -136,7 +148,7 @@ function renderTabla() {
     let contadorDetectados = 0;
 
     listaActual.forEach(eq => {
-        let ofs = eq.oficiales || (eq.oficial ? [eq.oficial] : []);
+        let ofs = eq.oficiales;
 
         if (tbodyEq) {
             const tr = document.createElement("tr");
@@ -194,7 +206,6 @@ function renderTabla() {
     }
 }
 
-// Autocompletar al escribir el Historial Antiguo para modificar sus nicks vinculados
 function configurarAutocompletado() {
     const inputAntiguo = document.getElementById("historial-antiguo");
     if (!inputAntiguo) return;
@@ -240,8 +251,6 @@ function guardarEquivalencia() {
     }
 
     let listaActual = obtenerEquivalencias();
-    
-    // Busca estrictamente por el nombre registrado (antiguo) para actualizarlo en vez de duplicarlo
     let existente = listaActual.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
     
     if (existente) {
@@ -249,9 +258,7 @@ function guardarEquivalencia() {
         existente.oficial = nks[0];
         existente.revisado = true;
     } else {
-        const nuevoId = listaActual.length > 0 ? Math.max(...listaActual.map(e => e.id)) + 1 : 1;
         listaActual.push({ 
-            id: nuevoId, 
             antiguo: antiguo, 
             oficiales: nks,
             oficial: nks[0],
@@ -260,6 +267,7 @@ function guardarEquivalencia() {
         });
     }
     
+    // Al guardar, la función obtenerEquivalencias() ordenará todo alfabéticamente y recalculará los IDs
     localStorage.setItem("equivalencias_michi_dm", JSON.stringify(listaActual));
 
     // Limpiar formulario
@@ -270,7 +278,7 @@ function guardarEquivalencia() {
     }
 
     renderTabla();
-    alert("¡Equivalencias y nicks oficiales actualizados correctamente!");
+    alert("¡Jugador registrado/actualizado y ordenado alfabéticamente con éxito!");
 }
 
 function eliminarEquivalencia() {
