@@ -68,9 +68,74 @@
             font-weight: bold;
             font-size: 1.2rem;
         }
+
+        /* --- ESTILOS PARA PANEL MÓVIL Y MODAL (LIGHTBOX) --- */
+        .admin-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 768px) {
+            .admin-toggle-btn {
+                display: block;
+            }
+            #sidebar {
+                position: fixed;
+                top: 0;
+                right: -280px;
+                width: 260px;
+                height: 100%;
+                background: #fff;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                z-index: 999;
+                padding: 20px;
+                box-sizing: border-box;
+                transition: transform 0.3s ease;
+            }
+            #sidebar.open {
+                transform: translateX(-280px);
+            }
+            #main-content {
+                margin-left: 0 !important;
+                padding: 10px !important;
+            }
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+        .modal-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: default;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Botón flotante para panel de control en móviles -->
+    <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
 
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
@@ -79,7 +144,7 @@
         <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
     </div>
 
-    <div id="main-content">
+    <div id="main-content" style="margin-left: 280px; padding: 20px;">
         <!-- Encabezado superior con título y fecha/hora -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
@@ -94,6 +159,13 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
+        <!-- Botones de Acceso Rápido a Últimas Imágenes -->
+        <div class="card" style="background: #fdfcf7; border-left: 5px solid #b8860b; padding: 12px 15px; margin: 15px 0; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <span style="font-weight: bold; color: #333; font-size: 0.95rem;">🖼️ Accesos Rápidos (Última Fecha):</span>
+            <button type="button" style="background-color: #b8860b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem;" onclick="verUltimaImagen('galardon')">👑 Ver Último Galardón</button>
+            <button type="button" style="background-color: #4682b4; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem;" onclick="verUltimaImagen('candidatos')">📊 Ver Última Evaluación</button>
+        </div>
+
         <h2>📊 Clasificación General</h2>
         
         <!-- Barra de Jornada y Filtros Independientes de Año / Mes -->
@@ -106,7 +178,6 @@
             <div class="filtro-historico">
                 <label for="select-anio-filtro">Año:</label>
                 <select id="select-anio-filtro" onchange="renderTablaRankingGeneral()">
-                    <!-- Se llenará dinámicamente o por defecto -->
                     <option value="2026" selected>2026</option>
                 </select>
 
@@ -135,37 +206,94 @@
         
         <div class="card">
             <h3>Tabla de Posiciones</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Var</th>
-                        <th>Jugador</th>
-                        <th>Pts</th>
-                        <th>V/PJ</th>
-                        <th>Ultimo Suceso</th>
-                        <th>V/D</th>
-                        <th>E</th>
-                        <th>R</th>
-                        <th>M</th>
-                        <th>O</th>
-                        <th>S</th>
-                        <th>Rch</th>
-                        <th>MG</th>
-                        <th>RLP</th>
-                        <th>TB</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-clasificacion">
-                    <tr>
-                        <td colspan="16" style="text-align: center;">Cargando datos del torneo...</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Var</th>
+                            <th>Jugador</th>
+                            <th>Pts</th>
+                            <th>V/PJ</th>
+                            <th>Ultimo Suceso</th>
+                            <th>V/D</th>
+                            <th>E</th>
+                            <th>R</th>
+                            <th>M</th>
+                            <th>O</th>
+                            <th>S</th>
+                            <th>Rch</th>
+                            <th>MG</th>
+                            <th>RLP</th>
+                            <th>TB</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-clasificacion">
+                        <tr>
+                            <td colspan="16" style="text-align: center;">Cargando datos del torneo...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
+
+    <!-- Modal para ver imágenes a pantalla completa (Lightbox) -->
+    <div id="modal-imagen" class="modal-overlay" onclick="cerrarModalImagen()">
+        <img id="img-modal-contenido" src="" alt="Imagen Ampliada">
     </div>
 
     <script src="js/auth.js"></script>
     <script src="js/ranking.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Función para buscar y mostrar automáticamente la última imagen guardada
+        function verUltimaImagen(tipo) {
+            let keys = Object.keys(localStorage);
+            let filtradas = keys.filter(k => k.startsWith('img_') && k.endsWith(`_${tipo}`));
+            
+            if (filtradas.length === 0) {
+                alert("No hay imágenes guardadas en el sistema todavía.");
+                return;
+            }
+
+            filtradas.sort();
+            let ultimaKey = filtradas[filtradas.length - 1];
+            let dataUrl = localStorage.getItem(ultimaKey);
+
+            if (dataUrl) {
+                const modal = document.getElementById('modal-imagen');
+                const img = document.getElementById('img-modal-contenido');
+                img.src = dataUrl;
+                modal.style.display = 'flex';
+            } else {
+                alert("No se pudo cargar la imagen.");
+            }
+        }
+
+        function cerrarModalImagen() {
+            document.getElementById('modal-imagen').style.display = 'none';
+        }
+
+        // Habilitar zoom en cualquier imagen de la página si la hubiera
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('img').forEach(img => {
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', function(e) {
+                    if(this.src && !this.classList.contains('no-zoom')) {
+                        e.stopPropagation();
+                        const modal = document.getElementById('modal-imagen');
+                        const modalImg = document.getElementById('img-modal-contenido');
+                        modalImg.src = this.src;
+                        modal.style.display = 'flex';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
