@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Maratón Michi DM - Candidatos al Jugador de la Fecha</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <!-- FontAwesome para iconos de descarga y coronas -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap CSS opcional para diseño responsivo fluido y limpio -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -15,10 +19,10 @@
         <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
     </div>
 
-    <div id="main-content">
+    <div id="main-content" class="container-fluid p-4">
         <h1>🏆 Ranking Maratón Michi DM</h1>
 
-        <div class="tabs">
+        <div class="tabs mb-4">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
             <a href="candidatos.html" class="tab-btn active">⭐ Candidatos al Jugador de la Fecha</a>
@@ -26,27 +30,47 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2>⭐ Candidatos al Jugador de la Fecha</h2>
+        <h2 class="mb-4">⭐ Candidatos al Jugador de la Fecha</h2>
 
-        <div class="card">
-            <h3>Tabla de Evaluación de Candidatos</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Jugador</th>
-                        <th>Partidas Ganadas</th>
-                        <th>Tiempo de Victoria</th>
-                        <th>Victoria vs Top 5</th>
-                        <th>Mérito / Consistencia</th>
-                        <th>Puntaje Candidato</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-candidatos">
-                    <tr>
-                        <td colspan="6" style="text-align: center;">Sin registros para la fecha actual.</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Contenedor Visual de Infografías y Galardón -->
+        <div class="row g-4 justify-content-center">
+            <!-- Tarjeta 1: Jugador de la Fecha (Proclamación) -->
+            <div class="col-lg-5 col-md-6">
+                <div class="card shadow-lg border-0 h-100" style="border-radius: 12px; overflow: hidden; background: #fff;">
+                    <div class="card-header bg-dark text-white text-center py-3">
+                        <h5 class="m-0" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">
+                            <i class="fas fa-crown text-warning"></i> Jugador de la Fecha
+                        </h5>
+                    </div>
+                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black">
+                        <img src="galardon_fecha_06.png" alt="Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 500px; object-fit: contain; border: 2px solid #b8860b;">
+                    </div>
+                    <div class="card-footer bg-light text-center py-3">
+                        <a href="galardon_fecha_06.png" download="Jugador_de_la_Fecha_Bio_Tine.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
+                            <i class="fas fa-download"></i> Descargar Imagen (HD)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2: Tabla de Evaluación y Candidatos -->
+            <div class="col-lg-7 col-md-6">
+                <div class="card shadow-lg border-0 h-100" style="border-radius: 12px; overflow: hidden; background: #fff;">
+                    <div class="card-header bg-dark text-white text-center py-3">
+                        <h5 class="m-0" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">
+                            <i class="fas fa-chart-bar text-warning"></i> Evaluación de Candidatos
+                        </h5>
+                    </div>
+                    <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black">
+                        <img src="candidatos_fecha_06.png" alt="Candidatos al Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 500px; object-fit: contain; border: 2px solid #b8860b;">
+                    </div>
+                    <div class="card-footer bg-light text-center py-3">
+                        <a href="candidatos_fecha_06.png" download="Candidatos_Ranking_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
+                            <i class="fas fa-download"></i> Descargar Imagen (HD)
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
