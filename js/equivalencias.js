@@ -1,4 +1,4 @@
-let equivalencias = [
+let equivalenciasBase = [
     { id: 1, antiguo: "123 Dabs", oficiales: ["123 Dabs"] },
     { id: 2, antiguo: "12Kills", oficiales: ["12Kills"] },
     { id: 3, antiguo: "AAAwesomeGuy", oficiales: ["AAAwesomeGuy"] },
@@ -106,17 +106,18 @@ let equivalencias = [
 function obtenerEquivalencias() {
     let lista = [];
     const guardadas = localStorage.getItem("equivalencias_michi_dm");
+    
     if (guardadas) {
         try {
             lista = JSON.parse(guardadas);
         } catch (e) {
-            lista = equivalencias;
+            lista = equivalenciasBase;
         }
     } else {
-        lista = equivalencias;
+        lista = equivalenciasBase;
     }
 
-    // Asegurar estructura de oficiales
+    // Normalizar formato de oficiales
     lista = lista.map(item => {
         if (!item.oficiales && item.oficial) {
             item.oficiales = [item.oficial];
@@ -126,13 +127,16 @@ function obtenerEquivalencias() {
         return item;
     });
 
-    // Ordenar estrictamente alfabéticamente por el nombre registrado (antiguo)
+    // Ordenar rigurosamente alfabéticamente por el Nombre Registrado (antiguo)
     lista.sort((a, b) => a.antiguo.localeCompare(b.antiguo, 'es', { sensitivity: 'accent', numeric: true }));
 
-    // Reasignar IDs correlativos (1, 2, 3...) tras el ordenamiento alfabético
+    // Asignar IDs correlativos y limpios (1, 2, 3...) según su nueva posición alfabética
     lista.forEach((item, index) => {
         item.id = index + 1;
     });
+
+    // Guardar de inmediato el orden y IDs actualizados en el almacenamiento local
+    localStorage.setItem("equivalencias_michi_dm", JSON.stringify(lista));
 
     return lista;
 }
@@ -267,7 +271,7 @@ function guardarEquivalencia() {
         });
     }
     
-    // Al guardar, la función obtenerEquivalencias() ordenará todo alfabéticamente y recalculará los IDs
+    // Al ejecutar guardar, obtenerEquivalencias() reordenará todo alfabéticamente y actualizará el localStorage
     localStorage.setItem("equivalencias_michi_dm", JSON.stringify(listaActual));
 
     // Limpiar formulario
@@ -278,7 +282,7 @@ function guardarEquivalencia() {
     }
 
     renderTabla();
-    alert("¡Jugador registrado/actualizado y ordenado alfabéticamente con éxito!");
+    alert("¡Jugador guardado y ordenado alfabéticamente en la posición correcta!");
 }
 
 function eliminarEquivalencia() {
