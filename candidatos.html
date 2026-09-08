@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Maratón Michi DM - Candidatos al Jugador de la Fecha</title>
     <link rel="stylesheet" href="css/estilos.css">
-    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Bootstrap CSS para estructura limpia y responsiva -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -20,7 +18,6 @@
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <!-- Cabecera Superior igual a Clasificación General -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="m-0">🏆 Ranking Maratón Michi DM</h1>
             <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.95rem;">
@@ -28,7 +25,6 @@
             </div>
         </div>
 
-        <!-- Pestañas de Navegación -->
         <div class="tabs mb-4">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
@@ -39,7 +35,7 @@
 
         <h2 class="mb-3">⭐ Candidatos al Jugador de la Fecha</h2>
 
-        <!-- Barra de Controles: Filtros de Año, Mes, Fecha y Partida -->
+        <!-- Barra de Controles: Filtros amplios (31 Fechas y 10 Partidas) -->
         <div class="card shadow-sm p-3 mb-4 bg-white border-0" style="border-radius: 10px;">
             <div class="row align-items-center g-3">
                 <div class="col-md-3">
@@ -59,43 +55,39 @@
                     <div class="d-flex align-items-center gap-2">
                         <label for="select-mes" class="fw-bold text-secondary mb-0">Mes:</label>
                         <select id="select-mes" class="form-select form-select-sm" style="width: 120px;">
-                            <option value="Enero">Enero</option>
-                            <option value="Febrero">Febrero</option>
-                            <option value="Marzo">Marzo</option>
-                            <option value="Abril">Abril</option>
-                            <option value="Mayo">Mayo</option>
-                            <option value="Junio">Junio</option>
-                            <option value="Julio">Julio</option>
-                            <option value="Agosto" selected>Agosto</option>
-                            <option value="Septiembre">Septiembre</option>
-                            <option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option>
-                            <option value="Diciembre">Diciembre</option>
+                            <option value="enero">Enero</option>
+                            <option value="febrero">Febrero</option>
+                            <option value="marzo">Marzo</option>
+                            <option value="abril">Abril</option>
+                            <option value="mayo">Mayo</option>
+                            <option value="junio">Junio</option>
+                            <option value="julio">Julio</option>
+                            <option value="agosto" selected>Agosto</option>
+                            <option value="septiembre">Septiembre</option>
+                            <option value="octubre">Octubre</option>
+                            <option value="noviembre">Noviembre</option>
+                            <option value="diciembre">Diciembre</option>
                         </select>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <label for="select-fecha-num" class="fw-bold text-secondary mb-0">Fecha:</label>
-                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 90px;">
-                            <option value="1" selected>Fecha 01</option>
-                            <option value="2">Fecha 02</option>
-                            <option value="3">Fecha 03</option>
+                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 100px;">
+                            <!-- Generado por JS del 1 al 31 -->
                         </select>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <label for="select-partida-num" class="fw-bold text-secondary mb-0">Partida:</label>
                         <select id="select-partida-num" class="form-select form-select-sm" style="width: 90px;">
-                            <option value="1" selected>Partida 1</option>
-                            <option value="2">Partida 2</option>
-                            <option value="3">Partida 3</option>
+                            <!-- Generado por JS del 1 al 10 -->
                         </select>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenedor Visual de Infografías y Galardón -->
+        <!-- Contenedor Visual Dinámico de Infografías y Galardón -->
         <div class="row g-4 justify-content-center">
-            <!-- Tarjeta 1: Jugador de la Fecha (Proclamación) -->
+            <!-- Tarjeta 1: Jugador de la Fecha -->
             <div class="col-lg-5 col-md-6">
                 <div class="card shadow-lg border-0 h-100" style="border-radius: 12px; overflow: hidden; background: #fff;">
                     <div class="card-header bg-dark text-white text-center py-3">
@@ -104,17 +96,17 @@
                         </h5>
                     </div>
                     <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 350px;">
-                        <img id="img-galardon" src="galardon_fecha_06.png" alt="Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/400x500/111/b8860b?text=Galardon+No+Disponible';">
+                        <img id="img-galardon" src="" alt="Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/400x500/111/b8860b?text=Galardon+No+Disponible';">
                     </div>
                     <div class="card-footer bg-light text-center py-3">
-                        <a id="btn-download-galardon" href="galardon_fecha_06.png" download="Jugador_de_la_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
+                        <a id="btn-download-galardon" href="#" download="Jugador_de_la_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
                             <i class="fas fa-download"></i> Descargar Imagen (HD)
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Tarjeta 2: Tabla de Evaluación y Candidatos -->
+            <!-- Tarjeta 2: Evaluación de Candidatos -->
             <div class="col-lg-7 col-md-6">
                 <div class="card shadow-lg border-0 h-100" style="border-radius: 12px; overflow: hidden; background: #fff;">
                     <div class="card-header bg-dark text-white text-center py-3">
@@ -123,10 +115,10 @@
                         </h5>
                     </div>
                     <div class="card-body text-center p-3 d-flex flex-column align-items-center justify-content-center bg-black" style="min-height: 350px;">
-                        <img id="img-candidatos" src="candidatos_fecha_06.png" alt="Candidatos al Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/500x500/111/b8860b?text=Candidatos+No+Disponible';">
+                        <img id="img-candidatos" src="" alt="Candidatos al Jugador de la Fecha" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: contain; border: 2px solid #b8860b;" onerror="this.src='https://via.placeholder.com/500x500/111/b8860b?text=Candidatos+No+Disponible';">
                     </div>
                     <div class="card-footer bg-light text-center py-3">
-                        <a id="btn-download-candidatos" href="candidatos_fecha_06.png" download="Candidatos_Ranking_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
+                        <a id="btn-download-candidatos" href="#" download="Candidatos_Ranking_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
                             <i class="fas fa-download"></i> Descargar Imagen (HD)
                         </a>
                     </div>
@@ -137,19 +129,69 @@
 
     <script src="js/auth.js"></script>
     <script>
-        // Script para actualizar dinámicamente los textos y las etiquetas de la barra superior al cambiar opciones
+        // Poblar selectores de Fecha (1 a 31) y Partida (1 a 10)
         const selectFecha = document.getElementById('select-fecha-num');
         const selectPartida = document.getElementById('select-partida-num');
+        const selectAnio = document.getElementById('select-año');
+        const selectMes = document.getElementById('select-mes');
+        
         const labelFechaPartida = document.getElementById('label-fecha-partida');
+        const imgGalardon = document.getElementById('img-galardon');
+        const imgCandidatos = document.getElementById('img-candidatos');
+        const btnDownloadGalardon = document.getElementById('btn-download-galardon');
+        const btnDownloadCandidatos = document.getElementById('btn-download-candidatos');
 
-        function actualizarEtiqueta() {
-            const f = selectFecha.value.padStart(2, '0');
-            const p = selectPartida.value;
-            labelFechaPartida.textContent = `Fecha ${f}    Partida ${p}`;
+        // Generar 31 fechas
+        for (let i = 1; i <= 31; i++) {
+            let opt = document.createElement('option');
+            let numStr = i < 10 ? '0' + i : i;
+            opt.value = i;
+            opt.textContent = `Fecha ${numStr}`;
+            if (i === 2) opt.selected = true; // Por defecto fecha 2 según tu vista previa
+            selectFecha.appendChild(opt);
         }
 
-        selectFecha.addEventListener('change', actualizarEtiqueta);
-        selectPartida.addEventListener('change', actualizarEtiqueta);
+        // Generar 10 partidas
+        for (let i = 1; i <= 10; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `Partida ${i}`;
+            if (i === 3) opt.selected = true; // Por defecto partida 3 según tu vista previa
+            selectPartida.appendChild(opt);
+        }
+
+        function actualizarContenido() {
+            const anio = selectAnio.value;
+            const mes = selectMes.value;
+            const fNum = parseInt(selectFecha.value);
+            const pNum = selectPartida.value;
+            
+            const fStr = fNum < 10 ? '0' + fNum : fNum;
+            labelFechaPartida.textContent = `Fecha ${fStr}    Partida ${pNum}`;
+
+            // Convención de nombres basada en selección (ej. galardon_2026_agosto_f02_p3.png)
+            // Si prefieres nombres más simples, puedes ajustar esta convención.
+            const nombreGalardon = `galardon_${anio}_${mes}_f${fStr}_p${pNum}.png`;
+            const nombreCandidatos = `candidatos_${anio}_${mes}_f${fStr}_p${pNum}.png`;
+
+            // Para pruebas iniciales si usas archivos genéricos, puedes dejar un respaldo, 
+            // pero aquí apuntará directamente al archivo específico de esa fecha/partida:
+            imgGalardon.src = nombreGalardon;
+            btnDownloadGalardon.href = nombreGalardon;
+            btnDownloadGalardon.download = `Galardon_Fecha_${fStr}_Partida_${pNum}.png`;
+
+            imgCandidatos.src = nombreCandidatos;
+            btnDownloadCandidatos.href = nombreCandidatos;
+            btnDownloadCandidatos.download = `Candidatos_Fecha_${fStr}_Partida_${pNum}.png`;
+        }
+
+        selectFecha.addEventListener('change', actualizarContenido);
+        selectPartida.addEventListener('change', actualizarContenedor);
+        selectAnio.addEventListener('change', actualizarContenido);
+        selectMes.addEventListener('change', actualizarContenido);
+
+        // Ejecutar al cargar
+        actualizarContenido();
     </script>
 </body>
 </html>
