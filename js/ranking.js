@@ -75,28 +75,14 @@ function renderTablaRankingGeneral() {
         if (clave) {
             const claveLower = clave.toLowerCase();
 
-            // BLOQUEO ABSOLUTO 1: Si la clave comienza o contiene "img_", descartar de inmediato sin importar nada más.
-            if (claveLower.startsWith("img_") || claveLower.includes("img_")) {
+            // FILTRO ESTRICTO: Ignorar de forma absoluta cualquier clave que comience con "img_"
+            if (claveLower.startsWith("img_")) {
                 continue;
             }
 
-            // BLOQUEO ABSOLUTO 2: Descartar cualquier rastro de galardones, candidatos o evaluaciones.
-            if (
-                claveLower.includes("galardon") ||
-                claveLower.includes("galardón") ||
-                claveLower.includes("candidato") ||
-                claveLower.includes("evaluacion") ||
-                claveLower.includes("evaluación") ||
-                claveLower.includes("imagen")
-            ) {
-                continue;
-            }
-
-            // Validar que pertenezca al período seleccionado y sea un registro válido de partida
+            // Validar estrictamente que la clave pertenezca al período y comience con "registros_"
             if (clave.includes(`_${periodoSeleccionado}_`) && clave.startsWith("registros_")) {
-                if (claveLower.includes("partida") || /\d+_\d+$/.test(claveLower)) {
-                    clavesPartidasMes.push(clave);
-                }
+                clavesPartidasMes.push(clave);
             }
         }
     }
