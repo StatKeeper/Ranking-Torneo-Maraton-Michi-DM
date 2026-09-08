@@ -59,10 +59,12 @@ function renderizarEstadisticasTiempos() {
     const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
     const mesSeleccionado = selectMes ? selectMes.value : "Agosto";
 
+    // Recorremos estrictamente el localStorage buscando claves de registros validando el periodo
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         
         if (clave && clave.startsWith("registros_")) {
+            // Filtro estricto por mes y año seleccionado
             if (clave.includes(mesSeleccionado) && clave.includes(anioSeleccionado)) {
                 try {
                     const registros = JSON.parse(localStorage.getItem(clave));
@@ -108,10 +110,10 @@ function renderizarEstadisticasTiempos() {
                             stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || 0, 10);
                             stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
 
-                            // 2. Estadísticas de Civilizaciones corregidas de forma robusta
-                            const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion || "Desconocida";
-                            const civ = String(civRaw).trim();
-                            if (civ && civ !== "-" && civ !== "Desconocida") {
+                            // 2. Civilizaciones reales del registro (Gurjaras, Mayas, Turcos, etc.)
+                            const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
+                            if (civRaw && civRaw !== "-" && String(civRaw).trim() !== "") {
+                                const civ = String(civRaw).trim();
                                 if (!estadisticasCivilizaciones[civ]) {
                                     estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
                                 }
@@ -120,7 +122,7 @@ function renderizarEstadisticasTiempos() {
                                 if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
                             }
 
-                            // 3. Estadísticas por Equipo
+                            // 3. Equipos Reales
                             if (equipoReg && equipoReg !== "-") {
                                 const claveEquipo = `${clave} - ${equipoReg}`;
                                 if (!estadisticasEquipos[claveEquipo]) {
