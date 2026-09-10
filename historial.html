@@ -311,7 +311,7 @@
                     return;
                 }
 
-                // Ordenar todas las claves cronológicamente (de más antiguo a más reciente) para el cálculo acumulativo exacto
+                // Ordenar cronológicamente (de más antiguo a más reciente)
                 keys.sort((a, b) => {
                     let ma = matchesMap[a];
                     let mb = matchesMap[b];
@@ -320,9 +320,10 @@
                     return idA - idB;
                 });
 
-                // Cálculo acumulativo idéntico al de la Clasificación General para determinar las variaciones exactas por partida
+                // Cálculo acumulativo exacto respetando el debut de los jugadores
                 let posicionesPorPartidaMap = {};
                 let rankingAcumuladoMap = {};
+                let jugadoresConParticipacionPrevia = new Set();
 
                 keys.forEach(k => {
                     let m = matchesMap[k];
@@ -331,13 +332,16 @@
                     listaAnterior.forEach((j, idx) => {
                         posicionesAnterioresMap[j.jugador] = idx + 1;
                     });
-                    let totalJugadoresAnteriores = listaAnterior.length;
 
+                    // Identificar qué jugadores participan en *esta* partida específica
+                    let jugadoresEnEstaPartida = new Set();
                     try {
                         m.registros.forEach(r => {
                             let nombreRaw = r.jugador || r.Jugador;
                             if (!nombreRaw) return;
                             let nombre = obtenerNombreOficial(nombreRaw);
+                            jugadoresEnEstaPartida.add(nombre);
+                            
                             if (!rankingAcumuladoMap[nombre]) {
                                 rankingAcumuladoMap[nombre] = { jugador: nombre, pts: 0 };
                             }
@@ -348,22 +352,28 @@
                     let listaActual = Object.values(rankingAcumuladoMap).sort((a, b) => b.pts - a.pts);
                     let variacionesEstaPartida = {};
 
-                    // Detectar estrictamente si es la primera partida absoluta (Fecha 01, Partida 1)
                     let esPrimeraPartidaTotal = (parseInt(m.fechaNum, 10) === 1 && parseInt(m.partidaNum, 10) === 1 && keys[0] === k);
 
                     listaActual.forEach((j, idx) => {
                         let posActual = idx + 1;
                         let variacion = 0;
+
                         if (esPrimeraPartidaTotal) {
+                            variacion = 0;
+                        } else if (!jugadoresConParticipacionPrevia.has(j.jugador)) {
+                            // REGLA CLAVE: Si el jugador no tenía participación previa antes de esta partida, es su DEBUT. Su variación debe ser 0.
                             variacion = 0;
                         } else if (posicionesAnterioresMap[j.jugador] !== undefined) {
                             let posAnterior = posicionesAnterioresMap[j.jugador];
                             variacion = posAnterior - posActual;
-                        } else {
-                            let posAnteriorVirtual = totalJugadoresAnteriores + 1;
-                            variacion = posAnteriorVirtual - posActual;
                         }
+
                         variacionesEstaPartida[j.jugador] = variacion;
+                    });
+
+                    // Registrar a los jugadores de esta partida como "con participación previa" para las partidas futuras
+                    jugadoresEnEstaPartida.forEach(jName => {
+                        jugadoresConParticipacionPrevia.add(jName);
                     });
 
                     posicionesPorPartidaMap[k] = variacionesEstaPartida;
@@ -440,7 +450,7 @@
 
                     let cardHTML = `
                         <div class="match-card">
-                            <div class="match-header">
+                            <div class="match-header"> limpia
                                 <div class="match-title-group">
                                     <div class="match-map-icon">
                                         <i class="fas fa-map"></i>
