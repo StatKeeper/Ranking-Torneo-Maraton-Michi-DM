@@ -353,13 +353,13 @@ function renderTablaRankingGeneral() {
 document.addEventListener("DOMContentLoaded", async () => {
     inicializarSelectoresAnioFiltro();
     
-    // 1. Renderizar de inmediato con los datos guardados localmente
+    // 1. Renderizar de inmediato con los datos guardados localmente para que la tabla nunca aparezca vacía
     renderTablaRankingGeneral();
 
-    // 2. Intentar actualizar desde la nube en segundo plano de manera segura
+    // 2. Intentar actualizar desde la nube en segundo plano de manera segura (no bloqueante)
     try {
         await cargarDatosNubeYSincronizar();
-        renderTablaRankingGeneral(); // Volver a pintar si descargó datos nuevos
+        renderTablaRankingGeneral(); // Volver a pintar si descargó datos nuevos de la nube
     } catch(e) {
         console.log("Modo offline o sin conexión a nube.");
     }
