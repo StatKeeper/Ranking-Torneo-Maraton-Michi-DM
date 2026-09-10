@@ -72,7 +72,7 @@
             </div>
 
             <div style="margin-top: 15px;">
-                <label>Bloque de datos (JUGADOR | V/D (0/1) | E | R | M | O | S | Rch | MG | RLP | [U. Ases.] | [E. Arr.] | [Equipo] | [Civ]):</label>
+                <label>Bloque de datos (Suma estricta de las 9 columnas numéricas iniciales):</label>
                 <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
             </div>
 
@@ -350,13 +350,13 @@
             } catch(e) {}
         }
 
-        // PROCESAMIENTO MATEMÁTICO AUTOMÁTICO: Suma 3 puntos si V/D es 1 + cada bono en ceros y unos
+        // SUMATORIA ESTRICTA DE LAS 9 COLUMNAS INICIALES
         function procesarRegistroMasivo() {
             const anio = document.getElementById('select-anio').value;
             const mes = document.getElementById('select-mes').value;
             const jornada = document.getElementById('jornada-select').value;
             const partida = document.getElementById('partida-select').value;
-            const duracion = document.getElementById('duracion-partida').value || "01:07:08";
+            let duracion = document.getElementById('duracion-partida').value || "01:07:08";
             const texto = document.getElementById('bloque-datos').value.trim();
 
             if (!texto) {
@@ -376,6 +376,11 @@
                 if (!lineaTrim) return;
 
                 if (lineaTrim.toLowerCase().includes("partida") && lineaTrim.includes(":")) {
+                    let partesDuracion = lineaTrim.split(/\s+/);
+                    let ultimaParte = partesDuracion[partesDuracion.length - 1];
+                    if (ultimaParte.includes(":")) {
+                        duracion = ultimaParte;
+                    }
                     return;
                 }
 
@@ -393,59 +398,56 @@
                         }
                     }
 
-                    // Columna 1: V/D (0 o 1)
-                    let vd = parseInt(partes[1]) || 0;
-                    
-                    // Columnas de bonos (0 o 1)
-                    let e = parseInt(partes[2]) || 0;
-                    let r = parseInt(partes[3]) || 0;
-                    let m = parseInt(partes[4]) || 0;
-                    let o = parseInt(partes[5]) || 0;
-                    let s = parseInt(partes[6]) || 0;
-                    let rch = parseInt(partes[7]) || 0;
-                    let mg = parseInt(partes[8]) || 0;
-                    let rlp = parseInt(partes[9]) || 0;
+                    // Extraemos exactamente las 9 columnas numéricas de puntaje/bonos (desde el índice 1 hasta el 9)
+                    let col1 = parseInt(partes[1]) || 0; // Puntos base / Victoria (Ej: 3 o 0)
+                    let col2 = parseInt(partes[2]) || 0; // Bono 1 (E)
+                    let col3 = parseInt(partes[3]) || 0; // Bono 2 (R)
+                    let col4 = parseInt(partes[4]) || 0; // Bono 3 (M)
+                    let col5 = parseInt(partes[5]) || 0; // Bono 4 (O)
+                    let col6 = parseInt(partes[6]) || 0; // Bono 5 (S)
+                    let col7 = parseInt(partes[7]) || 0; // Bono 6 (Rch)
+                    let col8 = parseInt(partes[8]) || 0; // Bono 7 (MG)
+                    let col9 = parseInt(partes[9]) || 0; // Bono 8 (RLP)
+
+                    // SUMATORIA TOTAL AUTOMÁTICA DE LAS 9 COLUMNAS
+                    let ptsTotales = col1 + col2 + col3 + col4 + col5 + col6 + col7 + col8 + col9;
+
+                    // Determinamos si ganó o perdió (si la primera columna es mayor a 0 o 3, se considera victoria)
+                    let pg = (col1 > 0) ? 1 : 0;
+                    let pp = (col1 === 0) ? 1 : 0;
 
                     let uAses = partes[10] || "0";
                     let eArr = partes[11] || "0";
                     let equipo = partes[12] || "Equipo 1";
                     let civ = partes[13] || "-";
 
-                    // FÓRMULA AUTOMÁTICA: 3 puntos si gana (vd === 1) + la suma de todos los bonos (0 o 1)
-                    let puntosBase = (vd === 1) ? 3 : 0;
-                    let sumaBonos = e + r + m + o + s + rch + mg + rlp;
-                    let ptsTotales = puntosBase + sumaBonos;
-
-                    let pg = vd === 1 ? 1 : 0;
-                    let pp = vd === 0 ? 1 : 0;
-
                     let sucesoNotas = [];
                     if (pg === 1) sucesoNotas.push("Victoria");
-                    if (e > 0) sucesoNotas.push("E");
-                    if (r > 0) sucesoNotas.push("R");
-                    if (m > 0) sucesoNotas.push("M");
-                    if (o > 0) sucesoNotas.push("O");
-                    if (s > 0) sucesoNotas.push("S");
-                    if (rch > 0) sucesoNotas.push("Rch");
-                    if (mg > 0) sucesoNotas.push("MG");
-                    if (rlp > 0) sucesoNotas.push("RLP");
+                    if (col2 > 0) sucesoNotas.push("E");
+                    if (col3 > 0) sucesoNotas.push("R");
+                    if (col4 > 0) sucesoNotas.push("M");
+                    if (col5 > 0) sucesoNotas.push("O");
+                    if (col6 > 0) sucesoNotas.push("S");
+                    if (col7 > 0) sucesoNotas.push("Rch");
+                    if (col8 > 0) sucesoNotas.push("MG");
+                    if (col9 > 0) sucesoNotas.push("RLP");
 
                     let sucesoNotaStr = sucesoNotas.length > 0 ? sucesoNotas.join(" + ") : (pg === 1 ? "Victoria" : "Derrota");
 
                     registros.push({
                         id: index + 1,
                         jugador: jugador,
-                        pts: ptsTotales, // Sumatoria automática calculada
+                        pts: ptsTotales, // Sumatoria exacta de las 9 columnas
                         pg: pg,
                         pp: pp,
-                        e: e,
-                        r: r,
-                        m: m,
-                        o: o,
-                        s: s,
-                        rch: rch,
-                        mg: mg,
-                        rlp: rlp,
+                        e: col2,
+                        r: col3,
+                        m: col4,
+                        o: col5,
+                        s: col6,
+                        rch: col7,
+                        mg: col8,
+                        rlp: col9,
                         uAses: uAses,
                         eArr: eArr,
                         equipo: equipo,
@@ -460,7 +462,7 @@
             if (registros.length > 0) {
                 const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
                 localStorage.setItem(storageKey, JSON.stringify(registros));
-                alert(`¡Se procesaron y sumaron automáticamente ${registros.length} registros con éxito!`);
+                alert(`¡Se procesaron ${registros.length} registros sumando correctamente las 9 columnas!`);
                 document.getElementById('bloque-datos').value = "";
                 
                 document.getElementById('gestion-anio').value = anio;
@@ -469,7 +471,7 @@
                 document.getElementById('gestion-partida').value = partida;
                 renderTablaGestionRegistros();
             } else {
-                alert("No se pudieron parsear los datos. Revisa el formato de las columnas.");
+                alert("No se pudieron parsear los datos. Revisa el formato.");
             }
         }
 
