@@ -72,7 +72,7 @@
             </div>
 
             <div style="margin-top: 15px;">
-                <label>Bloque de datos (JUGADOR | V/D | E | R | M | O | S | Rch | MG | RLP | [U. Ases.] | [E. Arr.] | [Equipo] | [Civ]):</label>
+                <label>Bloque de datos (JUGADOR | Pts / V/D | E | R | M | O | S | Rch | MG | RLP | [U. Ases.] | [E. Arr.] | [Equipo] | [Civ]):</label>
                 <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
             </div>
 
@@ -350,7 +350,7 @@
             } catch(e) {}
         }
 
-        // FUNCIÓN DE PROCESAMIENTO MASIVO ACTUALIZADA Y ROBUSTA
+        // FUNCIÓN DEFINITIVA: Lee directamente cualquier valor de puntos y bonos del texto plano
         function procesarRegistroMasivo() {
             const anio = document.getElementById('select-anio').value;
             const mes = document.getElementById('select-mes').value;
@@ -389,7 +389,12 @@
                         }
                     }
 
-                    let vd = parseInt(partes[1]) || 0;
+                    // Extraemos todos los números que vengan en la línea para identificar los bonos y puntos
+                    let numeros = partes.slice(1).map(p => parseInt(p)).filter(n => !isNaN(n));
+
+                    let vd = numeros[0] === 1 ? 1 : 0;
+                    
+                    // Leemos los bonos de las columnas individuales si están presentes
                     let e = parseInt(partes[2]) || 0;
                     let r = parseInt(partes[3]) || 0;
                     let m = parseInt(partes[4]) || 0;
@@ -399,15 +404,17 @@
                     let mg = parseInt(partes[8]) || 0;
                     let rlp = parseInt(partes[9]) || 0;
 
+                    let sumaBonos = e + r + m + o + s + rch + mg + rlp;
+                    let puntosBase = vd === 1 ? 3 : 0;
+
+                    // Si en la segunda columna o en los números hay un valor mayor que represente el total de puntos reales, lo usamos; de lo contrario sumamos base + bonos
+                    let ptsTotales = (numeros[1] > 3) ? numeros[1] : (puntosBase + sumaBonos);
+                    if (ptsTotales === 0 && vd === 1) ptsTotales = 3 + sumaBonos;
+
                     let uAses = partes[10] || "0";
                     let eArr = partes[11] || "0";
                     let equipo = partes[12] || "Equipo 1";
                     let civ = partes[13] || "-";
-
-                    // SUMATORIA ESTRICTA: 3 puntos si gana (vd === 1) + la suma de todos los bonos
-                    let puntosBaseVictoria = (vd === 1) ? 3 : 0;
-                    let totalBonos = e + r + m + o + s + rch + mg + rlp;
-                    let ptsTotales = puntosBaseVictoria + totalBonos;
 
                     let sucesoNotas = [];
                     if (vd === 1) sucesoNotas.push("Victoria");
@@ -450,7 +457,7 @@
             if (registros.length > 0) {
                 const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
                 localStorage.setItem(storageKey, JSON.stringify(registros));
-                alert(`¡Se procesaron y guardaron ${registros.length} registros sumando correctamente los puntos y bonos!`);
+                alert(`¡Se procesaron y guardaron ${registros.length} registros con la sumatoria correcta!`);
                 document.getElementById('bloque-datos').value = "";
                 
                 document.getElementById('gestion-anio').value = anio;
@@ -459,7 +466,7 @@
                 document.getElementById('gestion-partida').value = partida;
                 renderTablaGestionRegistros();
             } else {
-                alert("No se pudieron parsear los datos. Revisa el formato de las columnas.");
+                alert("No se pudieron parsear los datos. Revisa el formato.");
             }
         }
 
