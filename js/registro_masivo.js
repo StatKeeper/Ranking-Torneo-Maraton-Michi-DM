@@ -30,7 +30,7 @@ function configurarEventosRegistroMasivo() {
         }
     });
 
-    const btnProcesar = document.getElementById("btn-procesar-texto") || document.querySelector("button[onclick*='Procesar']");
+    const btnProcesar = document.getElementById("btn-procesar-texto") || document.querySelector("button[onclick*='Procesar']") || document.querySelector("button[onclick*='procesar']");
     if (btnProcesar && !btnProcesar.hasAttribute('data-listener')) {
         btnProcesar.setAttribute('data-listener', 'true');
         btnProcesar.addEventListener("click", procesarTextoPlanoRegistroMasivo);
@@ -38,7 +38,7 @@ function configurarEventosRegistroMasivo() {
 }
 
 function procesarTextoPlanoRegistroMasivo() {
-    const textarea = document.getElementById("texto-plano-input") || document.querySelector("textarea");
+    const textarea = document.getElementById("texto-plano-input") || document.getElementById("bloque-datos") || document.querySelector("textarea");
     if (!textarea || !textarea.value.trim()) {
         alert("Por favor ingresa o pega el texto plano con los registros de la partida.");
         return;
@@ -47,16 +47,21 @@ function procesarTextoPlanoRegistroMasivo() {
     const lineas = textarea.value.split("\n");
     let registrosPartida = [];
 
-    const selectAnio = document.getElementById("select-anio-registro") ? document.getElementById("select-anio-registro").value : "2026";
-    const selectMes = document.getElementById("select-mes-registro") ? document.getElementById("select-mes-registro").value : "08";
-    const selectFecha = document.getElementById("select-jornada-registro") || document.getElementById("select-fecha-registro");
-    const selectPartida = document.getElementById("select-partida-registro");
-    const inputDuracion = document.getElementById("input-duracion") || document.querySelector("input[placeholder*='01:07:08']");
+    const selectAnio = document.getElementById("select-anio-registro") || document.getElementById("select-anio");
+    const selectMes = document.getElementById("select-mes-registro") || document.getElementById("select-mes");
+    const selectFecha = document.getElementById("select-jornada-registro") || document.getElementById("select-fecha-registro") || document.getElementById("jornada-select");
+    const selectPartida = document.getElementById("select-partida-registro") || document.getElementById("partida-select");
+    const inputDuracion = document.getElementById("input-duracion") || document.getElementById("duracion-partida") || document.querySelector("input[placeholder*='01:07:08']");
 
+    let anioVal = selectAnio ? selectAnio.value : "2026";
+    let mesVal = selectMes ? selectMes.value : "agosto";
     let fechaStr = selectFecha ? selectFecha.value : "Fecha 01";
     let partidaStr = selectPartida ? selectPartida.value : "Partida 1";
     let duracionPartida = inputDuracion ? inputDuracion.value.trim() : "01:07:08";
     let duracionDetectada = "01:07:08";
+
+    const mesesMap = {enero:"01", febrero:"02", marzo:"03", abril:"04", mayo:"05", junio:"06", julio:"07", agosto:"08", septiembre:"09", octubre:"10", noviembre:"11", diciembre:"12"};
+    let mesNum = mesesMap[mesVal.toLowerCase()] || "08";
 
     lineas.forEach((linea, index) => {
         let lineaTrim = linea.trim();
@@ -71,15 +76,12 @@ function procesarTextoPlanoRegistroMasivo() {
             return;
         }
 
-        // Dividir por barras verticales '|' o por múltiples espacios/tabulaciones si fuera necesario
         let partes = lineaTrim.split('|').map(p => p.trim()).filter(p => p !== "");
-        if (partes.length < 10) {
+        if (partes.length < 3) {
             partes = lineaTrim.split(/\s{2,}|\t+/).map(p => p.trim()).filter(p => p !== "");
         }
 
-        console.log(`Línea ${index + 1} interpretada:`, partes);
-
-        if (partes.length >= 10) {
+        if (partes.length >= 2) {
             let jugador = partes[0].replace(/^\[.*?\]\s*/, '').trim();
             if (partes[0].startsWith("[")) {
                 let matchClan = partes[0].match(/^(\[.*?\])\s*(.*)$/);
@@ -88,26 +90,51 @@ function procesarTextoPlanoRegistroMasivo() {
                 }
             }
 
-            // Si el formato trae la columna de jugador limpia y luego los números:
-            let vd = parseInt(partes[1]) || 0;  // Victoria (1) / Derrota (0)
-            let e = parseInt(partes[2]) || 0;   // Excelencia
-            let r = parseInt(partes[3]) || 0;   // Resistencia
-            let m = parseInt(partes[4]) || 0;   // Militar
-            let o = parseInt(partes[5]) || 0;   // Oro
-            let s = parseInt(partes[6]) || 0;   // Sociedad
-            let rch = parseInt(partes[7]) || 0; // Racha
-            let mg = parseInt(partes[8]) || 0;  // Matagigantes
-            let rlp = parseInt(partes[9]) || 0; // Relámpago
+            // DETECCIÓN INTELIGENTE: Buscamos en las columnas numéricas cuál representa los puntos totales (Pts) y cuál la victoria (V/D)
+            let ptsTotales = 0;
+            let vd = 0;
+            let e = 0, r = 0, m = 0, o = 0, s = 0, rch = 0, mg = 0, rlp = 0;
+            let uAses = "0", eArr = "0", equipo = "Sin Equipo", civ = "-";
 
-            let uAses = parseInt(partes[10]) || 0; 
-            let eArr = parseInt(partes[11]) || 0;  
-            let equipo = partes[12] || "Equipo 1";
-            let civ = partes[13] || "-";
+            // Si el formato trae varias columnas, extraemos los valores buscando los números
+            let numerosEnLinea = partes.slice(1).map(p => parseInt(p)).filter(n => !isNaN(n));
+            
+            if (numerosEnLinea.length > 0) {
+                // Suponemos que la primera columna numérica después del nombre es V/D (0 o 1) o los Pts
+                if (numerosEnLinea[0] === 0 || numerosEnLinea[0] === 1) {
+                    vd = numerosEnLinea[0];
+                }
+                
+                // Si hay una columna explícita de puntos (suele ser la segunda o tercera columna numérica o la mayor si incluye bonos)
+                // Tomamos directamente el número que viene en la segunda columna si es mayor a 1, o sumamos V/D base (3 si gana) + bonos
+                let posiblePts = numerosEnLinea[1] !== undefined ? numerosEnLinea[1] : (vd === 1 ? 3 : 0);
+                
+                // Si en el texto plano pasas los bonos individuales, los leemos de las columnas posteriores
+                e = parseInt(partes[2]) || 0;
+                r = parseInt(partes[3]) || 0;
+                m = parseInt(partes[4]) || 0;
+                o = parseInt(partes[5]) || 0;
+                s = parseInt(partes[6]) || 0;
+                rch = parseInt(partes[7]) || 0;
+                mg = parseInt(partes[8]) || 0;
+                rlp = parseInt(partes[9]) || 0;
 
-            // Sumatoria estricta: Puntos base por victoria (3 si gana) + la suma de todos los bonos indicados
-            let puntosBaseVictoria = (vd === 1) ? 3 : 0;
-            let totalBonos = e + r + m + o + s + rch + mg + rlp;
-            let ptsTotales = puntosBaseVictoria + totalBonos;
+                // Si Pts en la columna 1 viene como 3 pero tiene bonos, nos aseguramos de respetar el puntaje real indicado o calcularlo
+                let sumaBonos = e + r + m + o + s + rch + mg + rlp;
+                let baseWin = (vd === 1) ? 3 : 0;
+                
+                // El puntaje total será el mayor entre lo que indique la columna de puntos y la suma real de victoria + bonos
+                ptsTotales = Math.max(posiblePts, baseWin + sumaBonos);
+                if (ptsTotales === 0 && vd === 1) ptsTotales = 3 + sumaBonos;
+
+                uAses = partes[10] || numerosEnLinea[9] || "0";
+                eArr = partes[11] || numerosEnLinea[10] || "0";
+                equipo = partes[12] || "Equipo 1";
+                civ = partes[13] || "-";
+            } else {
+                vd = partes[1] === "1" || partes[1]?.toLowerCase() === "true" ? 1 : 0;
+                ptsTotales = vd === 1 ? 3 : 0;
+            }
 
             let sucesoNotas = [];
             if (vd === 1) sucesoNotas.push("Victoria");
@@ -123,10 +150,19 @@ function procesarTextoPlanoRegistroMasivo() {
             let sucesoNotaStr = sucesoNotas.length > 0 ? sucesoNotas.join(" + ") : (vd === 1 ? "Victoria" : "Derrota");
 
             registrosPartida.push({
+                id: index + 1,
                 jugador: jugador,
                 pts: ptsTotales,
                 pg: vd,
                 pp: vd === 0 ? 1 : 0,
+                e: e,
+                r: r,
+                m: m,
+                o: o,
+                s: s,
+                rch: rch,
+                mg: mg,
+                rlp: rlp,
                 uAses: uAses,
                 eArr: eArr,
                 equipo: equipo,
@@ -139,36 +175,41 @@ function procesarTextoPlanoRegistroMasivo() {
     });
 
     if (registrosPartida.length === 0) {
-        alert("No se pudo interpretar el formato del texto plano. Revisa la estructura o presiona F12 para ver la consola.");
+        alert("No se pudo interpretar el formato del texto plano.");
         return;
     }
 
-    let claveStorage = `registros_${selectAnio}-${selectMes}_${fechaStr}_${partidaStr}`.replace(/\s+/g, '_');
+    let claveStorage = `registros_${anioVal}-${mesNum}_${fechaStr}_${partidaStr}`.replace(/\s+/g, '_');
     localStorage.setItem(claveStorage, JSON.stringify(registrosPartida));
 
-    alert("¡Partida procesada y registrada exitosamente con la sumatoria de puntos y bonos!");
+    alert("¡Partida procesada y registrada exitosamente con todos los puntos y bonos!");
     cargarDatosGestionRegistros();
 }
 
 function cargarDatosGestionRegistros() {
-    const tbody = document.getElementById("tabla-gestion-registros") || document.querySelector("table tbody");
+    const tbody = document.getElementById("tabla-gestion-registros") || document.getElementById("tabla-registros-guardados") || document.querySelector("table tbody");
     if (!tbody) return;
 
-    const selectAnio = document.getElementById("select-anio-registro") ? document.getElementById("select-anio-registro").value : "2026";
-    const selectMes = document.getElementById("select-mes-registro") ? document.getElementById("select-mes-registro").value : "08";
-    const selectFecha = document.getElementById("select-jornada-registro") || document.getElementById("select-fecha-registro");
-    const selectPartida = document.getElementById("select-partida-registro");
+    const selectAnio = document.getElementById("gestion-anio") || document.getElementById("select-anio");
+    const selectMes = document.getElementById("gestion-mes") || document.getElementById("select-mes");
+    const selectFecha = document.getElementById("gestion-jornada") || document.getElementById("jornada-select");
+    const selectPartida = document.getElementById("gestion-partida") || document.getElementById("partida-select");
 
+    let anioVal = selectAnio ? selectAnio.value : "2026";
+    let mesVal = selectMes ? selectMes.value : "agosto";
     let fechaStr = selectFecha ? selectFecha.value : "Fecha 01";
     let partidaStr = selectPartida ? selectPartida.value : "Partida 1";
 
-    let claveStorage = `registros_${selectAnio}-${selectMes}_${fechaStr}_${partidaStr}`.replace(/\s+/g, '_');
+    const mesesMap = {enero:"01", febrero:"02", marzo:"03", abril:"04", mayo:"05", junio:"06", julio:"07", agosto:"08", septiembre:"09", octubre:"10", noviembre:"11", diciembre:"12"};
+    let mesNum = mesesMap[mesVal.toLowerCase()] || "08";
+
+    let claveStorage = `registros_${anioVal}-${mesNum}_${fechaStr}_${partidaStr}`.replace(/\s+/g, '_');
     let datosGuardados = localStorage.getItem(claveStorage);
 
     tbody.innerHTML = "";
 
     if (!datosGuardados) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #888; padding: 15px;">No hay registros guardados para esta combinación de fecha y partida.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #888; padding: 15px;">No hay registros guardados para esta combinación.</td></tr>`;
         return;
     }
 
@@ -182,40 +223,20 @@ function cargarDatosGestionRegistros() {
         registros.forEach((reg, index) => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td><strong>${reg.jugador || "-"}</strong></td>
-                <td><span style="color: #0d6efd; font-weight: bold;">${reg.pts !== undefined ? reg.pts : 0}</span></td>
-                <td>${reg.pg !== undefined ? reg.pg : 0}</td>
-                <td>${reg.pp !== undefined ? reg.pp : 0}</td>
-                <td>${reg.uAses !== undefined ? reg.uAses : 0}</td>
-                <td>${reg.eArr !== undefined ? reg.eArr : 0}</td>
-                <td>${reg.equipo || "-"}</td>
-                <td>${reg.civ || "-"}</td>
-                <td>${reg.duracion || "01:07:08"}</td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;">${reg.id || (index + 1)}</td>
+                <td style="padding: 6px; border: 1px solid #444;"><strong>${reg.jugador || "-"}</strong></td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;"><span style="color: #0d6efd; font-weight: bold;">${reg.pts !== undefined ? reg.pts : 0}</span></td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;">${reg.pg !== undefined ? reg.pg : 0}</td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;">${reg.pp !== undefined ? reg.pp : 0}</td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;">${reg.uAses !== undefined ? reg.uAses : 0}</td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;">${reg.eArr !== undefined ? reg.eArr : 0}</td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;">${reg.equipo || "-"}</td>
+                <td style="padding: 6px; border: 1px solid #444;">${reg.civ || "-"}</td>
+                <td style="padding: 6px; border: 1px solid #444; text-align: center;">${reg.duracion || "01:07:08"}</td>
             `;
             tbody.appendChild(tr);
         });
     } catch (e) {
         console.error("Error al cargar registros de gestión:", e);
     }
-}
-
-function eliminarRegistroPartida(idIndividual = null) {
-    const selectAnio = document.getElementById("select-anio-registro") ? document.getElementById("select-anio-registro").value : "2026";
-    const selectMes = document.getElementById("select-mes-registro") ? document.getElementById("select-mes-registro").value : "08";
-    const selectFecha = document.getElementById("select-jornada-registro") || document.getElementById("select-fecha-registro");
-    const selectPartida = document.getElementById("select-partida-registro");
-
-    let fechaStr = selectFecha ? selectFecha.value : "Fecha 01";
-    let partidaStr = selectPartida ? selectPartida.value : "Partida 1";
-    let claveStorage = `registros_${selectAnio}-${selectMes}_${fechaStr}_${partidaStr}`.replace(/\s+/g, '_');
-
-    if (idIndividual !== null) {
-        let registros = JSON.parse(localStorage.getItem(claveStorage) || "[]");
-        registros.splice(idIndividual, 1);
-        localStorage.setItem(claveStorage, JSON.stringify(registros));
-    } else {
-        localStorage.removeItem(claveStorage);
-    }
-    cargarDatosGestionRegistros();
 }
