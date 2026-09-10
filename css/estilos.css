@@ -209,3 +209,74 @@ th {
 .admin-only {
     display: none;
 }
+/* ==========================================
+   DISEÑO RESPONSIVO PARA MÓVILES (Celulares)
+   ========================================== */
+@media (max-width: 768px) {
+    /* Cambiar el cuerpo a una sola columna vertical */
+    body {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    /* Ajustar el panel lateral para que ocupe todo el ancho arriba */
+    #sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        padding: 15px;
+    }
+
+    /* Contenido principal con menos margen en móviles */
+    #main-content {
+        padding: 15px;
+        overflow-x: hidden;
+    }
+
+    /* Permitir desplazamiento horizontal en pestañas principales si no entran */
+    .tabs {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 5px;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-btn {
+        flex-shrink: 0;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Permitir desplazamiento horizontal en subpestañas */
+    .subtabs {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 8px;
+        padding-bottom: 5px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .subtab-btn {
+        flex-shrink: 0;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Las tablas se vuelven desplazables horizontalmente para evitar romper la pantalla */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Tarjetas con padding más compacto en celular */
+    .card {
+        padding: 12px;
+    }
+}
