@@ -72,7 +72,7 @@
             </div>
 
             <div style="margin-top: 15px;">
-                <label>Bloque de datos (JUGADOR | Pts / V/D | E | R | M | O | S | Rch | MG | RLP | [U. Ases.] | [E. Arr.] | [Equipo] | [Civ]):</label>
+                <label>Bloque de datos (JUGADOR | V/D (0/1) | E | R | M | O | S | Rch | MG | RLP | [U. Ases.] | [E. Arr.] | [Equipo] | [Civ]):</label>
                 <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
             </div>
 
@@ -350,7 +350,7 @@
             } catch(e) {}
         }
 
-        // PROCESAMIENTO MASIVO DIRECTO Y RESPETUOSO DE LOS PUNTOS INDICADOS
+        // PROCESAMIENTO MATEMÁTICO AUTOMÁTICO: Suma 3 puntos si V/D es 1 + cada bono en ceros y unos
         function procesarRegistroMasivo() {
             const anio = document.getElementById('select-anio').value;
             const mes = document.getElementById('select-mes').value;
@@ -393,9 +393,10 @@
                         }
                     }
 
-                    // Leemos el número exacto que pusiste en la columna 2 como Pts totales
-                    let ptsIndicados = parseInt(partes[1]) || 0;
+                    // Columna 1: V/D (0 o 1)
+                    let vd = parseInt(partes[1]) || 0;
                     
+                    // Columnas de bonos (0 o 1)
                     let e = parseInt(partes[2]) || 0;
                     let r = parseInt(partes[3]) || 0;
                     let m = parseInt(partes[4]) || 0;
@@ -410,8 +411,13 @@
                     let equipo = partes[12] || "Equipo 1";
                     let civ = partes[13] || "-";
 
-                    let pg = ptsIndicados > 0 ? 1 : 0;
-                    let pp = ptsIndicados === 0 ? 1 : 0;
+                    // FÓRMULA AUTOMÁTICA: 3 puntos si gana (vd === 1) + la suma de todos los bonos (0 o 1)
+                    let puntosBase = (vd === 1) ? 3 : 0;
+                    let sumaBonos = e + r + m + o + s + rch + mg + rlp;
+                    let ptsTotales = puntosBase + sumaBonos;
+
+                    let pg = vd === 1 ? 1 : 0;
+                    let pp = vd === 0 ? 1 : 0;
 
                     let sucesoNotas = [];
                     if (pg === 1) sucesoNotas.push("Victoria");
@@ -429,7 +435,7 @@
                     registros.push({
                         id: index + 1,
                         jugador: jugador,
-                        pts: ptsIndicados,
+                        pts: ptsTotales, // Sumatoria automática calculada
                         pg: pg,
                         pp: pp,
                         e: e,
@@ -454,7 +460,7 @@
             if (registros.length > 0) {
                 const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
                 localStorage.setItem(storageKey, JSON.stringify(registros));
-                alert(`¡Se procesaron y guardaron ${registros.length} registros respetando los puntos indicados!`);
+                alert(`¡Se procesaron y sumaron automáticamente ${registros.length} registros con éxito!`);
                 document.getElementById('bloque-datos').value = "";
                 
                 document.getElementById('gestion-anio').value = anio;
@@ -463,7 +469,7 @@
                 document.getElementById('gestion-partida').value = partida;
                 renderTablaGestionRegistros();
             } else {
-                alert("No se pudieron parsear los datos. Revisa el formato.");
+                alert("No se pudieron parsear los datos. Revisa el formato de las columnas.");
             }
         }
 
