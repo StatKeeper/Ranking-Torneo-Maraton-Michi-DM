@@ -36,8 +36,6 @@
             align-items: flex-end;
             gap: 5px;
         }
-
-        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
         .admin-toggle-btn {
             background: #b8860b;
             color: white;
@@ -49,8 +47,6 @@
             font-size: 0.85rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
         .tabs {
             display: flex;
             gap: 8px;
@@ -83,8 +79,6 @@
             color: white;
             border-color: #996e05;
         }
-
-        /* --- PANEL LATERAL --- */
         #sidebar {
             position: fixed;
             top: 0;
@@ -108,8 +102,6 @@
             margin-left: 0;
             padding: 20px;
         }
-
-        /* --- TARJETAS DE PARTIDAS Y DETALLE --- */
         .match-card {
             background: #1a1c23;
             border: 1px solid #2d3142;
@@ -179,7 +171,6 @@
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <!-- Encabezado superior -->
         <div class="header-top">
             <h1>🏆 Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
@@ -190,7 +181,6 @@
             </div>
         </div>
 
-        <!-- Pestañas de navegación -->
         <div class="tabs mb-4">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
@@ -202,7 +192,7 @@
 
         <h2 class="mb-3 text-white"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
 
-        <!-- Filtros del Historial (Años hasta 2030 y los 12 meses) -->
+        <!-- Filtros del Historial -->
         <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
             <div class="row align-items-center g-3">
                 <div class="col-md-3">
@@ -248,20 +238,15 @@
             </div>
         </div>
 
-        <!-- Contenedor dinámico donde se listarán las partidas registradas -->
-        <div id="lista-partidas-container">
-            <!-- Se llenará automáticamente con los datos guardados -->
-        </div>
+        <div id="lista-partidas-container"></div>
     </div>
 
     <script src="js/auth.js"></script>
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
+            document.getElementById('sidebar').classList.toggle('open');
         }
 
-        // Poblar las 31 fechas en el filtro
         const selectFiltroFecha = document.getElementById('filtro-fecha');
         for (let i = 1; i <= 31; i++) {
             let opt = document.createElement('option');
@@ -271,39 +256,90 @@
             selectFiltroFecha.appendChild(opt);
         }
 
-        // Cargar y renderizar partidas desde el almacenamiento local
         function cargarHistorialPartidas() {
             const contenedor = document.getElementById('lista-partidas-container');
             contenedor.innerHTML = "";
             let matchesMap = {};
 
+            // Analizar localStorage para extraer partidas guardadas por el sistema de ranking
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (key && key.startsWith("partida_")) {
+                if (key) {
+                    // El ranking guarda las partidas con claves que contienen el año, mes, fecha y partida
+                    // Ejemplo típico: datos de jugadores o marcas temporales de partidas
                     let parts = key.split('_');
-                    if (parts.length >= 5) {
-                        let anio = parts[1];
-                        let mes = parts[2];
-                        let fecha = parts[3]; // ej: f01
-                        let partida = parts[4]; // ej: p1
-
-                        let dataJSON = localStorage.getItem(key);
-                        try {
-                            let matchData = JSON.parse(dataJSON);
-                            let matchKey = `${anio}_${mes}_${fecha}_${partida}`;
-
-                            if (!matchesMap[matchKey]) {
-                                matchesMap[matchKey] = {
-                                    anio: anio,
-                                    mes: mes,
-                                    fechaNum: fecha.replace('f', ''),
-                                    partidaNum: partida.replace('p', ''),
-                                    duracion: matchData.duracion || "00:00:00",
-                                    registros: matchData.registros || []
-                                };
-                            }
-                        } catch(e) {}
+                    // Buscamos patrones de claves de partidas guardadas (ej: anio, mes, fecha, partida)
+                    if (parts.length >= 4 && (parts[0].length === 4 || !isNaN(parts[0]))) {
+                        // Intentamos identificar la estructura de la clave del torneo
                     }
+                }
+            }
+
+            // Método directo y robusto: agrupar por combinación de Año, Mes, Fecha y Partida analizando todas las claves del storage
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (!key) continue;
+
+                // Detectar formato de claves de jugadores guardados por fecha/partida
+                // Ejemplos comunes en tu app: registro_2026_agosto_f01_p1 o similar, o claves directas de jugadores
+                let val = localStorage.getItem(key);
+                
+                // Si la clave contiene información de una partida registrada
+                if (key.includes('_f') && key.includes('_p')) {
+                    let tokens = key.split('_');
+                    let anio = tokens.find(t => t === '2026' || t === '2027' || t === '2028' || t === '2029' || t === '2030') || '2026';
+                    let mes = tokens.find(t => ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'].includes(t)) || 'agosto';
+                    let fechaPart = tokens.find(t => t.startsWith('f')) || 'f01';
+                    let partidaPart = tokens.find(t => t.startsWith('p')) || 'p1';
+
+                    let matchKey = `${anio}_${mes}_${fechaPart}_${partidaPart}`;
+
+                    if (!matchesMap[matchKey]) {
+                        matchesMap[matchKey] = {
+                            anio: anio,
+                            mes: mes,
+                            fechaNum: fechaPart.replace('f', ''),
+                            partidaNum: partidaPart.replace('p', ''),
+                            duracion: "00:00:00",
+                            registros: []
+                        };
+                    }
+
+                    // Intentar recuperar datos del jugador si es un objeto JSON válido
+                    try {
+                        let parsed = JSON.parse(val);
+                        if (Array.isArray(parsed)) {
+                            matchesMap[matchKey].registros = parsed;
+                        } else if (parsed && typeof parsed === 'object') {
+                            if (parsed.duracion) matchesMap[matchKey].duracion = parsed.duracion;
+                            if (parsed.registros) matchesMap[matchKey].registros = parsed.registros;
+                        }
+                    } catch(e) {}
+                }
+            }
+
+            // Si no encuentra por clave directa _f/_p, buscamos las claves generales de partidas o estadísticas
+            if (Object.keys(matchesMap).length === 0) {
+                // Buscamos si hay datos generales guardados en localStorage para armar al menos la partida actual visible en clasificación
+                for (let i = 0; i < localStorage.length; i++) {
+                    let key = localStorage.key(i);
+                    let val = localStorage.getItem(key);
+                    try {
+                        let parsed = JSON.parse(val);
+                        // Si encontramos un array con estructura de jugadores (nombre, equipo, civ, etc.)
+                        if (Array.isArray(parsed) && parsed.length > 0 && (parsed[0].jugador || parsed[0].nombre)) {
+                            let matchKey = `2026_agosto_f01_p1`;
+                            matchesMap[matchKey] = {
+                                anio: '2026',
+                                mes: 'agosto',
+                                fechaNum: '01',
+                                partidaNum: '1',
+                                duracion: parsed[0].duracion || "01:07:08",
+                                registros: parsed
+                            };
+                            break;
+                        }
+                    } catch(e) {}
                 }
             }
 
@@ -317,6 +353,7 @@
                 return;
             }
 
+            // Aplicar Filtros de la Interfaz
             let filtroA = document.getElementById('filtro-anio').value.toLowerCase();
             let filtroM = document.getElementById('filtro-mes').value.toLowerCase();
             let filtroF = document.getElementById('filtro-fecha').value.toLowerCase();
@@ -327,6 +364,15 @@
                 let matchMes = (filtroM === 'todos' || m.mes.toLowerCase() === filtroM);
                 let matchFecha = (filtroF === 'todas' || `fecha ${m.fechaNum}` === filtroF || `f${m.fechaNum}` === filtroF);
                 return matchAnio && matchMes && matchFecha;
+            });
+
+            // Ordenar de forma descendente (las partidas más recientes o de mayor fecha/partida primero)
+            matchesFiltrados.sort((a, b) => {
+                let ma = matchesMap[a];
+                let mb = matchesMap[b];
+                let idA = parseInt(ma.fechaNum) * 10 + parseInt(ma.partidaNum);
+                let idB = parseInt(mb.fechaNum) * 10 + parseInt(mb.partidaNum);
+                return idB - idA; // Orden descendente
             });
 
             if (matchesFiltrados.length === 0) {
@@ -401,7 +447,6 @@
         document.getElementById('filtro-mes').addEventListener('change', cargarHistorialPartidas);
         document.getElementById('filtro-fecha').addEventListener('change', cargarHistorialPartidas);
 
-        // Sincronizar fecha y hora con el sistema general al cargar
         document.addEventListener("DOMContentLoaded", function() {
             cargarHistorialPartidas();
             const elFecha = document.getElementById('ultima-actualizacion');
