@@ -72,7 +72,7 @@
             </div>
 
             <div style="margin-top: 15px;">
-                <label>Bloque de datos (Suma estricta de las 9 columnas numéricas iniciales):</label>
+                <label>Bloque de datos (Suma automática de las columnas de la línea):</label>
                 <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
             </div>
 
@@ -350,7 +350,7 @@
             } catch(e) {}
         }
 
-        // SUMATORIA ESTRICTA DE LAS 9 COLUMNAS INICIALES
+        // NUEVA FUNCIÓN DE SUMATORIA DIRECTA DE LAS 9 COLUMNAS INICIALES
         function procesarRegistroMasivo() {
             const anio = document.getElementById('select-anio').value;
             const mes = document.getElementById('select-mes').value;
@@ -398,23 +398,17 @@
                         }
                     }
 
-                    // Extraemos exactamente las 9 columnas numéricas de puntaje/bonos (desde el índice 1 hasta el 9)
-                    let col1 = parseInt(partes[1]) || 0; // Puntos base / Victoria (Ej: 3 o 0)
-                    let col2 = parseInt(partes[2]) || 0; // Bono 1 (E)
-                    let col3 = parseInt(partes[3]) || 0; // Bono 2 (R)
-                    let col4 = parseInt(partes[4]) || 0; // Bono 3 (M)
-                    let col5 = parseInt(partes[5]) || 0; // Bono 4 (O)
-                    let col6 = parseInt(partes[6]) || 0; // Bono 5 (S)
-                    let col7 = parseInt(partes[7]) || 0; // Bono 6 (Rch)
-                    let col8 = parseInt(partes[8]) || 0; // Bono 7 (MG)
-                    let col9 = parseInt(partes[9]) || 0; // Bono 8 (RLP)
+                    // Sumamos estrictamente desde el índice 1 hasta el 9 (las 9 columnas de ceros y unos / puntos)
+                    let ptsTotales = 0;
+                    let valoresBonos = [];
+                    for (let i = 1; i <= 9; i++) {
+                        let val = parseInt(partes[i]) || 0;
+                        ptsTotales += val;
+                        valoresBonos.push(val);
+                    }
 
-                    // SUMATORIA TOTAL AUTOMÁTICA DE LAS 9 COLUMNAS
-                    let ptsTotales = col1 + col2 + col3 + col4 + col5 + col6 + col7 + col8 + col9;
-
-                    // Determinamos si ganó o perdió (si la primera columna es mayor a 0 o 3, se considera victoria)
-                    let pg = (col1 > 0) ? 1 : 0;
-                    let pp = (col1 === 0) ? 1 : 0;
+                    let pg = (valoresBonos[0] > 0) ? 1 : 0;
+                    let pp = (valoresBonos[0] === 0) ? 1 : 0;
 
                     let uAses = partes[10] || "0";
                     let eArr = partes[11] || "0";
@@ -423,31 +417,31 @@
 
                     let sucesoNotas = [];
                     if (pg === 1) sucesoNotas.push("Victoria");
-                    if (col2 > 0) sucesoNotas.push("E");
-                    if (col3 > 0) sucesoNotas.push("R");
-                    if (col4 > 0) sucesoNotas.push("M");
-                    if (col5 > 0) sucesoNotas.push("O");
-                    if (col6 > 0) sucesoNotas.push("S");
-                    if (col7 > 0) sucesoNotas.push("Rch");
-                    if (col8 > 0) sucesoNotas.push("MG");
-                    if (col9 > 0) sucesoNotas.push("RLP");
+                    if (valoresBonos[1] > 0) sucesoNotas.push("E");
+                    if (valoresBonos[2] > 0) sucesoNotas.push("R");
+                    if (valoresBonos[3] > 0) sucesoNotas.push("M");
+                    if (valoresBonos[4] > 0) sucesoNotas.push("O");
+                    if (valoresBonos[5] > 0) sucesoNotas.push("S");
+                    if (valoresBonos[6] > 0) sucesoNotas.push("Rch");
+                    if (valoresBonos[7] > 0) sucesoNotas.push("MG");
+                    if (valoresBonos[8] > 0) sucesoNotas.push("RLP");
 
                     let sucesoNotaStr = sucesoNotas.length > 0 ? sucesoNotas.join(" + ") : (pg === 1 ? "Victoria" : "Derrota");
 
                     registros.push({
                         id: index + 1,
                         jugador: jugador,
-                        pts: ptsTotales, // Sumatoria exacta de las 9 columnas
+                        pts: ptsTotales,
                         pg: pg,
                         pp: pp,
-                        e: col2,
-                        r: col3,
-                        m: col4,
-                        o: col5,
-                        s: col6,
-                        rch: col7,
-                        mg: col8,
-                        rlp: col9,
+                        e: valoresBonos[1],
+                        r: valoresBonos[2],
+                        m: valoresBonos[3],
+                        o: valoresBonos[4],
+                        s: valoresBonos[5],
+                        rch: valoresBonos[6],
+                        mg: valoresBonos[7],
+                        rlp: valoresBonos[8],
                         uAses: uAses,
                         eArr: eArr,
                         equipo: equipo,
@@ -462,7 +456,7 @@
             if (registros.length > 0) {
                 const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
                 localStorage.setItem(storageKey, JSON.stringify(registros));
-                alert(`¡Se procesaron ${registros.length} registros sumando correctamente las 9 columnas!`);
+                alert(`¡Éxito! Se procesaron ${registros.length} registros con sumatoria total.`);
                 document.getElementById('bloque-datos').value = "";
                 
                 document.getElementById('gestion-anio').value = anio;
