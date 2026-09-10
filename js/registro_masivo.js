@@ -1,390 +1,435 @@
-// Credenciales y funciones de sincronización con la Nube (JSONBin.io)
-const JSONBIN_ID = "6aa25569ffd5d16053f50b5b";
-const JSONBIN_API_KEY = "$2a$10$CX4eQGnNUKp9i8TVe0.po09BYbaZ/Q64jH2ADLiUjxHtdxD8W5xwm";
-
-async function cargarDatosNube() {
-    try {
-        const respuesta = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-            headers: { "X-Master-Key": JSONBIN_API_KEY }
-        });
-        const resultado = await respuesta.json();
-        return resultado.record;
-    } catch (error) {
-        console.error("Error al cargar de la nube:", error);
-        return null;
-    }
-}
-
-async function guardarDatosNube(nuevosDatos) {
-    try {
-        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Master-Key": JSONBIN_API_KEY
-            },
-            body: JSON.stringify(nuevosDatos)
-        });
-    } catch (error) {
-        console.error("Error al guardar en la nube:", error);
-    }
-}
-
-// Sincroniza todo el localStorage actual hacia la nube
-async function sincronizarLocalStorageANube() {
-    let datosGlobales = {};
-    for (let i = 0; i < localStorage.length; i++) {
-        const clave = localStorage.key(i);
-        // Guardamos todo lo relevante de registros y acumulados
-        if (clave.startsWith("registros_") || clave === "ranking_acumulado_general" || clave === "equivalencias_michi_dm") {
-            datosGlobales[clave] = localStorage.getItem(clave);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Historial de Partidas</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            background-color: #121212;
+            color: #e0e0e0;
         }
-    }
-    await guardarDatosNube(datosGlobales);
-}
-
-// Poblado dinámico de Años (2026-2035), Meses, Jornadas (1-31) y Partidas (1-10)
-function cargarSelectoresFechaDinamicos() {
-    const anioInicio = 2026;
-    const anioFin = 2035;
-    const meses = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-
-    // 1. Llenar selectores de Año
-    const selectsAnio = document.querySelectorAll("#select-anio, #gestion-anio");
-    selectsAnio.forEach(sel => {
-        if (!sel) return;
-        const valorActual = sel.value;
-        sel.innerHTML = "";
-        for (let a = anioInicio; a <= anioFin; a++) {
-            const opt = document.createElement("option");
-            opt.value = a;
-            opt.textContent = a;
-            sel.appendChild(opt);
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            gap: 10px;
         }
-        if (valorActual) sel.value = valorActual;
-    });
-
-    // 2. Llenar selectores de Mes
-    const selectsMes = document.querySelectorAll("#select-mes, #gestion-mes");
-    selectsMes.forEach(sel => {
-        if (!sel) return;
-        const valorActual = sel.value;
-        sel.innerHTML = "";
-        meses.forEach((m, idx) => {
-            const opt = document.createElement("option");
-            const numMes = (idx + 1).toString().padStart(2, '0');
-            opt.value = numMes; 
-            opt.textContent = m;
-            sel.appendChild(opt);
-        });
-        if (valorActual) {
-            sel.value = valorActual;
-        } else {
-            sel.value = "08"; // Por defecto Agosto
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            max-width: 65%;
+            color: #f8f9fa;
         }
-    });
+        .header-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: #2a2a2a;
+            color: #ddd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #444;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover {
+            background: #333;
+            color: #d4af37;
+            border-color: #d4af37;
+        }
+        .tab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
+        #main-content {
+            margin-left: 0;
+            padding: 20px;
+        }
+        .match-card {
+            background: #1a1c23;
+            border: 1px solid #2d3142;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .match-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #2d3142;
+            padding-bottom: 8px;
+        }
+        .match-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .match-map-icon {
+            width: 45px;
+            height: 45px;
+            background: #2e3a23;
+            border: 2px solid #5c832f;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #a3c26a;
+        }
+        .match-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 0;
+        }
+        .match-subtitle {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .match-duration {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .table-dark-custom {
+            background-color: #16181f;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
 
-    // 3. Llenar selectores de Jornada
-    const selectsJornada = document.querySelectorAll("#jornada-select, #gestion-jornada");
-    selectsJornada.forEach(sel => {
-        if (!sel) return;
-        const valorActual = sel.value;
-        sel.innerHTML = "";
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label class="form-label mt-2">Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
+    </div>
+
+    <div id="main-content" class="container-fluid p-4">
+        <div class="header-top">
+            <h1>🏆 Ranking Maratón Michi DM</h1>
+            <div class="header-info-container">
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
+                <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.90rem;">
+                    --/--/---- --:--:-- --
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs mb-4">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
+            <a href="historial.html" class="tab-btn active">📜 Historial de Partidas</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2 class="mb-3 text-white"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
+
+        <!-- Filtros del Historial -->
+        <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
+            <div class="row align-items-center g-3">
+                <div class="col-md-3">
+                    <span class="fw-bold text-light fs-5"><i class="fas fa-filter text-warning"></i> Filtro de Encuentros</span>
+                </div>
+                <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 100px;">
+                            <option value="todos">Todos</option>
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 120px;">
+                            <option value="todos">Todos</option>
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08" selected>Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Fecha:</label>
+                        <select id="filtro-fecha" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
+                            <option value="todas">Todas</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lista-partidas-container"></div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Poblar las 31 fechas en el filtro
+        const selectFiltroFecha = document.getElementById('filtro-fecha');
         for (let i = 1; i <= 31; i++) {
-            const num = i < 10 ? `0${i}` : i;
-            const opt = document.createElement("option");
-            opt.value = `Fecha ${num}`;
-            opt.textContent = `Fecha ${num}`;
-            sel.appendChild(opt);
+            let opt = document.createElement('option');
+            let numStr = i < 10 ? '0' + i : i;
+            opt.value = `Fecha ${numStr}`;
+            opt.textContent = `Fecha ${numStr}`;
+            selectFiltroFecha.appendChild(opt);
         }
-        if (valorActual) sel.value = valorActual;
-    });
 
-    // 4. Llenar selectores de Partida
-    const selectsPartida = document.querySelectorAll("#partida-select, #gestion-partida");
-    selectsPartida.forEach(sel => {
-        if (!sel) return;
-        const valorActual = sel.value;
-        sel.innerHTML = "";
-        for (let p = 1; p <= 10; p++) {
-            const opt = document.createElement("option");
-            opt.value = `Partida ${p}`;
-            opt.textContent = `Partida ${p}`;
-            sel.appendChild(opt);
-        }
-        if (valorActual) sel.value = valorActual;
-    });
-}
+        function cargarHistorialPartidas() {
+            const contenedor = document.getElementById('lista-partidas-container');
+            contenedor.innerHTML = "";
+            let matchesMap = {};
 
-function obtenerNickOficialLocal(nombreIngresado) {
-    if (typeof equivalencias !== 'undefined') {
-        const guardadas = localStorage.getItem("equivalencias_michi_dm");
-        const lista = guardadas ? JSON.parse(guardadas) : equivalencias;
-        const buscado = lista.find(e => e.antiguo.toLowerCase() === nombreIngresado.toLowerCase().trim());
-        if (buscado) return buscado.oficial;
-    }
-    return nombreIngresado.trim();
-}
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key && key.startsWith("registros_")) {
+                    let val = localStorage.getItem(key);
+                    try {
+                        let registros = JSON.parse(val);
+                        if (Array.isArray(registros) && registros.length > 0) {
+                            let partes = key.split('_');
+                            let periodo = partes[1] || "2026-08"; 
+                            let fechaStr = partes[2] || "Fecha 01"; 
+                            let partidaStr = partes[3] || "Partida 1"; 
 
-function parsearNumeroSeguro(texto) {
-    if (!texto) return 0;
-    const limpio = texto.toString().replace(/[^0-9]/g, '');
-    return limpio ? parseInt(limpio, 10) : 0;
-}
+                            let anio = periodo.split('-')[0] || "2026";
+                            let mesNum = periodo.split('-')[1] || "08";
+                            let fechaNum = fechaStr.replace(/\D/g, '') || "01";
+                            let partidaNum = partidaStr.replace(/\D/g, '') || "1";
 
-async function procesarRegistroMasivo() {
-    const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
-    const mesVal = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "08";
-    
-    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
-    const periodo = `${anio}-${mesFormatted}`;
-    
-    const jornada = document.getElementById("jornada-select") ? document.getElementById("jornada-select").value : "Fecha 01";
-    const partidaSelect = document.getElementById("partida-select") ? document.getElementById("partida-select").value : "Partida 1";
-    const textoBloque = document.getElementById("bloque-datos") ? document.getElementById("bloque-datos").value : "";
+                            let matchKey = `${anio}_${mesNum}_${fechaNum}_${partidaNum}`;
+                            let duracionPartida = registros[0].duracion || "01:07:08";
 
-    if (!textoBloque.trim()) {
-        alert("Por favor ingresa el bloque de texto plano.");
-        return;
-    }
-
-    const lineas = textoBloque.split("\n");
-    let duracionExtraida = "";
-
-    for (let i = 0; i < lineas.length; i++) {
-        const lineaLimpia = lineas[i].trim();
-        if (lineaLimpia.toLowerCase().startsWith("partida")) {
-            const partesHeader = lineaLimpia.split(" ");
-            if (partesHeader.length >= 2) {
-                duracionExtraida = partesHeader[partesHeader.length - 1];
-                const inputDuracion = document.getElementById("duracion-partida");
-                if (inputDuracion) inputDuracion.value = duracionExtraida;
-            }
-            break;
-        }
-    }
-
-    if (!duracionExtraida) {
-        duracionExtraida = document.getElementById("duracion-partida") ? document.getElementById("duracion-partida").value : "00:00:00";
-    }
-
-    const fechaHoraActual = new Date().toLocaleString("es-PE", {
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-    });
-
-    const registrosProcesados = [];
-    let contadorId = 1;
-
-    const BONO_RACHA_ACTIVO = false;
-    const BONO_MG_ACTIVO = false;
-
-    lineas.forEach((linea) => {
-        if (!linea.includes("|")) return;
-
-        const partes = linea.split("|").map(p => p.trim());
-        if (partes.length < 10) return;
-
-        const nombreBruto = partes[0];
-        if (nombreBruto.toLowerCase().startsWith("partida") || nombreBruto.toLowerCase().startsWith("bloque")) return;
-
-        const jugadorOficial = obtenerNickOficialLocal(nombreBruto);
-
-        const valVictoriaCol = parsearNumeroSeguro(partes[1]);
-        const ptsVictoria = valVictoriaCol > 0 ? 3 : 0;
-        const vic = ptsVictoria > 0 ? 1 : 0;
-        const der = vic === 1 ? 0 : 1;
-
-        const e = parsearNumeroSeguro(partes[2]);
-        const r = parsearNumeroSeguro(partes[3]);
-        const m = parsearNumeroSeguro(partes[4]);
-        const o = parsearNumeroSeguro(partes[5]);
-        const s = parsearNumeroSeguro(partes[6]);
-        
-        const rch = BONO_RACHA_ACTIVO ? parsearNumeroSeguro(partes[7]) : 0;
-        const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
-        const rlp = parsearNumeroSeguro(partes[9]);
-        
-        const unidadesAsesinadas = partes.length >= 11 ? parsearNumeroSeguro(partes[10]) : 0;
-        const edificiosArrasados = partes.length >= 12 ? parsearNumeroSeguro(partes[11]) : 0;
-        const equipo = partes.length >= 13 ? partes[12] : "-";
-        const civ = partes.length >= 14 ? partes[13] : "-";
-
-        const totalPuntosPartida = ptsVictoria + e + r + m + o + s + rch + mg + rlp;
-
-        let sucesos = [];
-        if (vic === 1) sucesos.push("Victoria");
-        else if (der === 1) sucesos.push("Derrota");
-        
-        if (e === 1) sucesos.push("E");
-        if (r === 1) sucesos.push("R");
-        if (m === 1) sucesos.push("M");
-        if (o === 1) sucesos.push("O");
-        if (s === 1) sucesos.push("S");
-        if (rch === 1) sucesos.push("Rch");
-        if (mg === 1) sucesos.push("MG");
-        if (rlp === 1) sucesos.push("RLP");
-
-        registrosProcesados.push({
-            id: contadorId++,
-            periodo: periodo,
-            jornada: jornada,
-            partida: partidaSelect,
-            duracion: duracionExtraida,
-            jugador: jugadorOficial,
-            pts: totalPuntosPartida,
-            pg: vic,
-            pp: der,
-            unidadesAsesinadas: unidadesAsesinadas, 
-            edificiosArrasados: edificiosArrasados,
-            equipo: equipo,
-            civ: civ,
-            bonos: { e, r, m, o, s, rch, mg, rlp },
-            sucesoNota: sucesos.length > 0 ? sucesos.join(" + ") : "Sin participación",
-            fechaHora: fechaHoraActual
-        });
-    });
-
-    if (registrosProcesados.length === 0) {
-        alert("No se pudieron extraer datos válidos del texto plano.");
-        return;
-    }
-
-    const claveBD = `registros_${periodo}_${jornada}_${partidaSelect}`;
-    localStorage.removeItem(claveBD);
-    localStorage.setItem(claveBD, JSON.stringify(registrosProcesados));
-
-    actualizarAcumuladosRanking();
-
-    // Sincronizar automáticamente con la Nube
-    await sincronizarLocalStorageANube();
-
-    if (document.getElementById("gestion-anio")) document.getElementById("gestion-anio").value = anio;
-    if (document.getElementById("gestion-mes")) document.getElementById("gestion-mes").value = mesFormatted;
-    if (document.getElementById("gestion-jornada")) document.getElementById("gestion-jornada").value = jornada;
-    if (document.getElementById("gestion-partida")) document.getElementById("gestion-partida").value = partidaSelect;
-
-    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores correctamente y se guardaron en la nube!`);
-    renderTablaGestionRegistros();
-}
-
-function actualizarAcumuladosRanking() {
-    let acumuladoGlobal = {};
-
-    for (let i = 0; i < localStorage.length; i++) {
-        const clave = localStorage.key(i);
-        if (clave.startsWith("registros_")) {
-            const partidaDatos = JSON.parse(localStorage.getItem(clave));
-            partidaDatos.forEach(reg => {
-                if (!acumuladoGlobal[reg.jugador]) {
-                    acumuladoGlobal[reg.jugador] = {
-                        jugador: reg.jugador,
-                        pts: 0, pg: 0, pp: 0,
-                        e: 0, r: 0, m: 0, o: 0, s: 0, rch: 0, mg: 0, rlp: 0,
-                        ultimoSuceso: reg.sucesoNota
-                    };
+                            matchesMap[matchKey] = {
+                                anio: anio,
+                                mes: mesNum,
+                                fechaNum: fechaNum,
+                                partidaNum: partidaNum,
+                                duracion: duracionPartida,
+                                registros: registros
+                            };
+                        }
+                    } catch(e) {}
                 }
-                
-                acumuladoGlobal[reg.jugador].pts += reg.pts;
-                acumuladoGlobal[reg.jugador].pg += reg.pg;
-                acumuladoGlobal[reg.jugador].pp += reg.pp;
-                acumuladoGlobal[reg.jugador].e += reg.bonos.e;
-                acumuladoGlobal[reg.jugador].r += reg.bonos.r;
-                acumuladoGlobal[reg.jugador].m += reg.bonos.m;
-                acumuladoGlobal[reg.jugador].o += reg.bonos.o;
-                acumuladoGlobal[reg.jugador].s += reg.bonos.s;
-                acumuladoGlobal[reg.jugador].rch += reg.bonos.rch;
-                acumuladoGlobal[reg.jugador].mg += reg.bonos.mg;
-                acumuladoGlobal[reg.jugador].rlp += reg.bonos.rlp;
-                acumuladoGlobal[reg.jugador].ultimoSuceso = reg.sucesoNota;
+            }
+
+            let keys = Object.keys(matchesMap);
+            if (keys.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-folder-open fa-3x mb-3 text-secondary"></i>
+                        <p class="fs-5">No hay partidas registradas en el sistema todavía.</p>
+                    </div>`;
+                return;
+            }
+
+            let filtroA = document.getElementById('filtro-anio').value;
+            let filtroM = document.getElementById('filtro-mes').value;
+            let filtroF = document.getElementById('filtro-fecha').value;
+
+            let matchesFiltrados = keys.filter(k => {
+                let m = matchesMap[k];
+                let matchAnio = (filtroA === 'todos' || m.anio === filtroA);
+                let matchMes = (filtroM === 'todos' || m.mes === filtroM);
+                let matchFecha = (filtroF === 'todas' || `Fecha ${m.fechaNum}` === filtroF);
+                return matchAnio && matchMes && matchFecha;
+            });
+
+            matchesFiltrados.sort((a, b) => {
+                let ma = matchesMap[a];
+                let mb = matchesMap[b];
+                let idA = parseInt(ma.anio) * 10000 + parseInt(ma.mes) * 100 + parseInt(ma.fechaNum) * 10 + parseInt(ma.partidaNum);
+                let idB = parseInt(mb.anio) * 10000 + parseInt(mb.mes) * 100 + parseInt(mb.fechaNum) * 10 + parseInt(mb.partidaNum);
+                return idB - idA;
+            });
+
+            if (matchesFiltrados.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <p class="fs-5">No se encontraron partidas con los filtros seleccionados.</p>
+                    </div>`;
+                return;
+            }
+
+            // Intentar leer los datos de variación del ranking si están guardados en localStorage
+            let variacionesMap = {};
+            try {
+                let acumData = localStorage.getItem('ranking_acumulado_general');
+                if (acumData) {
+                    let acumObj = JSON.parse(acumData);
+                    // Si el objeto guarda variaciones o posiciones
+                    for (let [jug, datos] of Object.entries(acumObj)) {
+                        if (datos.var !== undefined) variacionesMap[jug] = parseInt(datos.var) || 0;
+                    }
+                }
+            } catch(e) {}
+
+            const nombresMeses = {
+                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+                "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+                "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+            };
+
+            matchesFiltrados.forEach(k => {
+                let m = matchesMap[k];
+                let nombreMes = nombresMeses[m.mes] || m.mes;
+
+                let filasJugadores = "";
+                m.registros.forEach(reg => {
+                    let nombreJugador = reg.jugador || reg.nombre || "-";
+                    
+                    // Leer la variación de posición (si existe en el registro o acumulado)
+                    let varValor = reg.var !== undefined ? parseInt(reg.var) : (variacionesMap[nombreJugador] !== undefined ? variacionesMap[nombreJugador] : 0);
+                    let varHtml = varValor > 0 ? `<span class="text-success fw-bold">+${varValor} <i class="fas fa-arrow-up"></i></span>` :
+                                  varValor < 0 ? `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>` :
+                                  `<span class="text-muted">0</span>`;
+
+                    // Determinar victoria (pg === 1) o derrota (pp === 1) para mostrar corona o calavera
+                    let esGanador = (reg.pg === 1 || reg.pts >= 3);
+                    let iconoResultado = esGanador ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
+
+                    filasJugadores += `
+                        <tr>
+                            <td class="fw-bold text-white">${iconoResultado} ${nombreJugador}</td>
+                            <td><span class="badge bg-secondary">${reg.equipo || "Sin Equipo"}</span></td>
+                            <td>${reg.civ || "-"}</td>
+                            <td class="text-center">${varHtml}</td>
+                        </tr>
+                    `;
+                });
+
+                let cardHTML = `
+                    <div class="match-card">
+                        <div class="match-header">
+                            <div class="match-title-group">
+                                <div class="match-map-icon">
+                                    <i class="fas fa-map"></i>
+                                </div>
+                                <div>
+                                    <div class="match-title">Michi - Fecha ${m.fechaNum}, Partida ${m.partidaNum}</div>
+                                    <div class="match-subtitle">Maratón DM (${nombreMes} ${m.anio})</div>
+                                </div>
+                            </div>
+                            <div class="match-duration"><i class="far fa-clock"></i> ${m.duracion}</div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-sm table-striped align-middle mb-0 table-dark-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Jugador</th>
+                                        <th>Equipo</th>
+                                        <th>Civilización</th>
+                                        <th class="text-center">Variación (Var)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${filasJugadores}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                contenedor.insertAdjacentHTML('beforeend', cardHTML);
             });
         }
-    }
 
-    localStorage.setItem("ranking_acumulado_general", JSON.stringify(acumuladoGlobal));
-}
+        document.getElementById('filtro-anio').addEventListener('change', cargarHistorialPartidas);
+        document.getElementById('filtro-mes').addEventListener('change', cargarHistorialPartidas);
+        document.getElementById('filtro-fecha').addEventListener('change', cargarHistorialPartidas);
 
-function renderTablaGestionRegistros() {
-    const anio = document.getElementById("gestion-anio") ? document.getElementById("gestion-anio").value : "2026";
-    const mesVal = document.getElementById("gestion-mes") ? document.getElementById("gestion-mes").value : "08";
-    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
-    const periodo = `${anio}-${mesFormatted}`;
-    
-    const jornada = document.getElementById("gestion-jornada") ? document.getElementById("gestion-jornada").value : "Fecha 01";
-    const partida = document.getElementById("gestion-partida") ? document.getElementById("gestion-partida").value : "Partida 1";
-
-    const claveBD = `registros_${periodo}_${jornada}_${partida}`;
-    const datosGuardados = localStorage.getItem(claveBD);
-    const tbody = document.getElementById("tabla-registros-guardados");
-
-    if (!tbody) return;
-    tbody.innerHTML = "";
-
-    if (!datosGuardados) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="10" style="text-align: center; color: #6c757d; padding: 15px;">
-                    No hay registros cargados aún para esta fecha/partida.
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    const registros = JSON.parse(datosGuardados);
-
-    registros.forEach(reg => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td><strong>${reg.id}</strong></td>
-            <td><strong>${reg.jugador}</strong></td>
-            <td><span style="color: #0d6efd; font-weight: bold;">${reg.pts}</span></td>
-            <td>${reg.pg}</td>
-            <td>${reg.pp}</td>
-            <td>${reg.unidadesAsesinadas || 0}</td>
-            <td>${reg.edificiosArrasados || 0}</td>
-            <td>${reg.equipo || "-"}</td>
-            <td>${reg.civ || "-"}</td>
-            <td>${reg.duracion}</td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-async function eliminarPartidaCompleta() {
-    const anio = document.getElementById("gestion-anio").value;
-    const mesVal = document.getElementById("gestion-mes").value;
-    const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
-    const periodo = `${anio}-${mesFormatted}`;
-    
-    const jornada = document.getElementById("gestion-jornada").value;
-    const partida = document.getElementById("gestion-partida").value;
-
-    const claveBD = `registros_${periodo}_${jornada}_${partida}`;
-    if (confirm(`¿Deseas eliminar todos los registros de ${periodo} - ${jornada} - ${partida}?`)) {
-        localStorage.removeItem(claveBD);
-        actualizarAcumuladosRanking();
-        
-        // Sincronizar cambios de borrado a la nube
-        await sincronizarLocalStorageANube();
-
-        renderTablaGestionRegistros();
-        alert("🗑️ Partida eliminada y nube actualizada correctamente.");
-    }
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Al abrir la página, intentamos descargar los datos más recientes de la nube
-    const datosNube = await cargarDatosNube();
-    if (datosNube) {
-        for (const [clave, valor] of Object.entries(datosNube)) {
-            localStorage.setItem(clave, valor);
-        }
-    }
-
-    cargarSelectoresFechaDinamicos();
-    renderTablaGestionRegistros();
-});
+        document.addEventListener("DOMContentLoaded", function() {
+            cargarHistorialPartidas();
+            const elFecha = document.getElementById('ultima-actualizacion');
+            if (elFecha) {
+                const ahora = new Date();
+                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                elFecha.textContent = `${ahora.toLocaleDateString('es-ES', opcionesFecha)}, ${ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase()}`;
+            }
+        });
+    </script>
+</body>
+</html>
