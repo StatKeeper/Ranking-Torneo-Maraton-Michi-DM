@@ -1,3 +1,48 @@
+// Credenciales y funciones de sincronización con la Nube (JSONBin.io)
+const JSONBIN_ID = "6aa25569ffd5d16053f50b5b";
+const JSONBIN_API_KEY = "$2a$10$CX4eQGnNUKp9i8TVe0.po09BYbaZ/Q64jH2ADLiUjxHtdxD8W5xwm";
+
+async function cargarDatosNube() {
+    try {
+        const respuesta = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+            headers: { "X-Master-Key": JSONBIN_API_KEY }
+        });
+        const resultado = await respuesta.json();
+        return resultado.record;
+    } catch (error) {
+        console.error("Error al cargar de la nube:", error);
+        return null;
+    }
+}
+
+async function guardarDatosNube(nuevosDatos) {
+    try {
+        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Master-Key": JSONBIN_API_KEY
+            },
+            body: JSON.stringify(nuevosDatos)
+        });
+    } catch (error) {
+        console.error("Error al guardar en la nube:", error);
+    }
+}
+
+// Sincroniza todo el localStorage actual hacia la nube
+async function sincronizarLocalStorageANube() {
+    let datosGlobales = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        const clave = localStorage.key(i);
+        // Guardamos todo lo relevante de registros y acumulados
+        if (clave.startsWith("registros_") || clave === "ranking_acumulado_general" || clave === "equivalencias_michi_dm") {
+            datosGlobales[clave] = localStorage.getItem(clave);
+        }
+    }
+    await guardarDatosNube(datosGlobales);
+}
+
 // Poblado dinámico de Años (2026-2035), Meses, Jornadas (1-31) y Partidas (1-10)
 function cargarSelectoresFechaDinamicos() {
     const anioInicio = 2026;
@@ -90,7 +135,7 @@ function parsearNumeroSeguro(texto) {
     return limpio ? parseInt(limpio, 10) : 0;
 }
 
-function procesarRegistroMasivo() {
+async function procesarRegistroMasivo() {
     const anio = document.getElementById("select-anio") ? document.getElementById("select-anio").value : "2026";
     const mesVal = document.getElementById("select-mes") ? document.getElementById("select-mes").value : "08";
     
@@ -163,11 +208,6 @@ function procesarRegistroMasivo() {
         const mg = BONO_MG_ACTIVO ? parsearNumeroSeguro(partes[8]) : 0;
         const rlp = parsearNumeroSeguro(partes[9]);
         
-        // CORRECCIÓN EXACTA DE LOS ÍNDICES:
-        // [10] -> Unidades Asesinadas
-        // [11] -> Edificios Arrasados
-        // [12] -> Equipo
-        // [13] -> Civilización
         const unidadesAsesinadas = partes.length >= 11 ? parsearNumeroSeguro(partes[10]) : 0;
         const edificiosArrasados = partes.length >= 12 ? parsearNumeroSeguro(partes[11]) : 0;
         const equipo = partes.length >= 13 ? partes[12] : "-";
@@ -219,12 +259,15 @@ function procesarRegistroMasivo() {
 
     actualizarAcumuladosRanking();
 
+    // Sincronizar automáticamente con la Nube
+    await sincronizarLocalStorageANube();
+
     if (document.getElementById("gestion-anio")) document.getElementById("gestion-anio").value = anio;
     if (document.getElementById("gestion-mes")) document.getElementById("gestion-mes").value = mesFormatted;
     if (document.getElementById("gestion-jornada")) document.getElementById("gestion-jornada").value = jornada;
     if (document.getElementById("gestion-partida")) document.getElementById("gestion-partida").value = partidaSelect;
 
-    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores correctamente!`);
+    alert(`✅ ¡Se registraron ${registrosProcesados.length} jugadores correctamente y se guardaron en la nube!`);
     renderTablaGestionRegistros();
 }
 
@@ -311,7 +354,7 @@ function renderTablaGestionRegistros() {
     });
 }
 
-function eliminarPartidaCompleta() {
+async function eliminarPartidaCompleta() {
     const anio = document.getElementById("gestion-anio").value;
     const mesVal = document.getElementById("gestion-mes").value;
     const mesFormatted = mesVal.length === 1 ? `0${mesVal}` : mesVal;
@@ -324,11 +367,24 @@ function eliminarPartidaCompleta() {
     if (confirm(`¿Deseas eliminar todos los registros de ${periodo} - ${jornada} - ${partida}?`)) {
         localStorage.removeItem(claveBD);
         actualizarAcumuladosRanking();
+        
+        // Sincronizar cambios de borrado a la nube
+        await sincronizarLocalStorageANube();
+
         renderTablaGestionRegistros();
+        alert("🗑️ Partida eliminada y nube actualizada correctamente.");
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Al abrir la página, intentamos descargar los datos más recientes de la nube
+    const datosNube = await cargarDatosNube();
+    if (datosNube) {
+        for (const [clave, valor] of Object.entries(datosNube)) {
+            localStorage.setItem(clave, valor);
+        }
+    }
+
     cargarSelectoresFechaDinamicos();
     renderTablaGestionRegistros();
 });
