@@ -351,12 +351,12 @@
                         let nombreJugador = reg.jugador || reg.nombre || "-";
                         
                         let varValor = 0;
-                        if (reg.var !== undefined && reg.var !== "") {
-                            varValor = parseInt(reg.var) || 0;
+                        if (reg.var !== undefined && reg.var !== "" && !isNaN(reg.var)) {
+                            varValor = parseInt(reg.var);
+                        } else if (reg.variacion !== undefined && reg.variacion !== "" && !isNaN(reg.variacion)) {
+                            varValor = parseInt(reg.variacion);
                         } else if (variacionesMap[nombreJugador] !== undefined) {
-                            varValor = variacionesMap[nombreJugador];
-                        } else if (reg.variacion !== undefined) {
-                            varValor = parseInt(reg.variacion) || 0;
+                            varValor = parseInt(variacionesMap[nombreJugador]) || 0;
                         }
 
                         let varHtml = "";
