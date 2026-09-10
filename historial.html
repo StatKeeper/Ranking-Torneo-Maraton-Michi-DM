@@ -214,7 +214,7 @@
                         <label class="fw-bold text-secondary mb-0">Mes:</label>
                         <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 120px;">
                             <option value="todos">Todos</option>
-                            <option value="01" selected>Enero</option>
+                            <option value="01">Enero</option>
                             <option value="02">Febrero</option>
                             <option value="03">Marzo</option>
                             <option value="04">Abril</option>
@@ -263,20 +263,17 @@
             contenedor.innerHTML = "";
             let matchesMap = {};
 
-            // Buscar en localStorage las llaves que empiezan con "registros_"
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
                 if (key && key.startsWith("registros_")) {
-                    // Ejemplo de key: registros_2026-08_Fecha 01_Partida 1
                     let val = localStorage.getItem(key);
                     try {
                         let registros = JSON.parse(val);
                         if (Array.isArray(registros) && registros.length > 0) {
-                            // Extraer año, mes, fecha y partida de la clave
                             let partes = key.split('_');
-                            let periodo = partes[1] || "2026-08"; // ej: 2026-08
-                            let fechaStr = partes[2] || "Fecha 01"; // ej: Fecha 01
-                            let partidaStr = partes[3] || "Partida 1"; // ej: Partida 1
+                            let periodo = partes[1] || "2026-08"; 
+                            let fechaStr = partes[2] || "Fecha 01"; 
+                            let partidaStr = partes[3] || "Partida 1"; 
 
                             let anio = periodo.split('-')[0] || "2026";
                             let mesNum = periodo.split('-')[1] || "08";
@@ -284,8 +281,6 @@
                             let partidaNum = partidaStr.replace(/\D/g, '') || "1";
 
                             let matchKey = `${anio}_${mesNum}_${fechaNum}_${partidaNum}`;
-
-                            // Buscar si hay duración guardada asociada en otra clave (ej: img o duracion)
                             let duracionPartida = registros[0].duracion || "01:07:08";
 
                             matchesMap[matchKey] = {
@@ -311,7 +306,6 @@
                 return;
             }
 
-            // Aplicar filtros seleccionados en pantalla
             let filtroA = document.getElementById('filtro-anio').value;
             let filtroM = document.getElementById('filtro-mes').value;
             let filtroF = document.getElementById('filtro-fecha').value;
@@ -324,7 +318,6 @@
                 return matchAnio && matchMes && matchFecha;
             });
 
-            // Ordenar de forma descendente (más recientes primero)
             matchesFiltrados.sort((a, b) => {
                 let ma = matchesMap[a];
                 let mb = matchesMap[b];
@@ -341,6 +334,19 @@
                 return;
             }
 
+            // Intentar leer los datos de variación del ranking si están guardados en localStorage
+            let variacionesMap = {};
+            try {
+                let acumData = localStorage.getItem('ranking_acumulado_general');
+                if (acumData) {
+                    let acumObj = JSON.parse(acumData);
+                    // Si el objeto guarda variaciones o posiciones
+                    for (let [jug, datos] of Object.entries(acumObj)) {
+                        if (datos.var !== undefined) variacionesMap[jug] = parseInt(datos.var) || 0;
+                    }
+                }
+            } catch(e) {}
+
             const nombresMeses = {
                 "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
                 "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
@@ -353,14 +359,21 @@
 
                 let filasJugadores = "";
                 m.registros.forEach(reg => {
-                    let varValor = reg.var !== undefined ? reg.var : 0;
+                    let nombreJugador = reg.jugador || reg.nombre || "-";
+                    
+                    // Leer la variación de posición (si existe en el registro o acumulado)
+                    let varValor = reg.var !== undefined ? parseInt(reg.var) : (variacionesMap[nombreJugador] !== undefined ? variacionesMap[nombreJugador] : 0);
                     let varHtml = varValor > 0 ? `<span class="text-success fw-bold">+${varValor} <i class="fas fa-arrow-up"></i></span>` :
                                   varValor < 0 ? `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>` :
                                   `<span class="text-muted">0</span>`;
 
+                    // Determinar victoria (pg === 1) o derrota (pp === 1) para mostrar corona o calavera
+                    let esGanador = (reg.pg === 1 || reg.pts >= 3);
+                    let iconoResultado = esGanador ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
+
                     filasJugadores += `
                         <tr>
-                            <td class="fw-bold text-white">${reg.jugador || reg.nombre || "-"}</td>
+                            <td class="fw-bold text-white">${iconoResultado} ${nombreJugador}</td>
                             <td><span class="badge bg-secondary">${reg.equipo || "Sin Equipo"}</span></td>
                             <td>${reg.civ || "-"}</td>
                             <td class="text-center">${varHtml}</td>
