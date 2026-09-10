@@ -31,6 +31,7 @@ async function guardarDatosNube(nuevosDatos) {
         console.error("Error al guardar en la nube:", error);
     }
 }
+
 // Obtener el nombre oficial corregido desde localStorage
 function obtenerNombreOficial(nombreOriginal) {
     if (!nombreOriginal) return "";
@@ -108,12 +109,10 @@ function renderTablaRankingGeneral() {
         if (clave) {
             const claveLower = clave.toLowerCase();
 
-            // FILTRO ESTRICTO: Ignorar de forma absoluta cualquier clave que comience con "img_"
             if (claveLower.startsWith("img_")) {
                 continue;
             }
 
-            // Validar estrictamente que la clave pertenezca al período y comience con "registros_"
             if (clave.includes(`_${periodoSeleccionado}_`) && clave.startsWith("registros_")) {
                 clavesPartidasMes.push(clave);
             }
@@ -134,7 +133,6 @@ function renderTablaRankingGeneral() {
 
     let clavesPartidasUnicas = new Set(clavesPartidasMes);
 
-    // Actualizar el contador de inmediato con el tamaño real de claves únicas encontradas
     if (elTotalPartidasMes) {
         elTotalPartidasMes.textContent = clavesPartidasUnicas.size > 0 ? clavesPartidasUnicas.size : 0;
     }
@@ -275,12 +273,15 @@ function renderTablaRankingGeneral() {
         const posActual = index + 1;
         
         let variacion = 0;
+        // REGLA: Si es la primera partida absoluta registrada en el mes, la variación es 0 para todos.
         if (clavesPartidasMes.length <= 1) {
             variacion = 0;
         } else if (posicionesAnterioresMap[jug.jugador] !== undefined) {
+            // El jugador ya tenía ranking previo registrado antes de esta última partida
             const posAnterior = posicionesAnterioresMap[jug.jugador];
             variacion = posAnterior - posActual;
         } else {
+            // Jugador nuevo (debutante): entra asumiendo que su posición previa virtual era el último puesto anterior + 1
             const posAnteriorVirtual = totalJugadoresAnteriores + 1;
             variacion = posAnteriorVirtual - posActual;
         }
@@ -374,6 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderTablaRankingGeneral();
 });
+
 // Blindaje definitivo para evitar que otro script altere el contador de partidas
 setInterval(() => {
     const elTotalPartidasMes = document.getElementById("total-partidas-mes");
