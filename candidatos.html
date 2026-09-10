@@ -10,6 +10,8 @@
     <style>
         body {
             box-sizing: border-box;
+            background-color: #121212;
+            color: #e0e0e0;
         }
         .header-top {
             display: flex;
@@ -17,7 +19,7 @@
             align-items: flex-start;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #333;
             position: relative;
             gap: 10px;
         }
@@ -26,6 +28,7 @@
             font-size: 1.4rem;
             line-height: 1.2;
             max-width: 65%;
+            color: #f8f9fa;
         }
         .header-info-container {
             display: flex;
@@ -33,8 +36,6 @@
             align-items: flex-end;
             gap: 5px;
         }
-
-        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
         .admin-toggle-btn {
             background: #b8860b;
             color: white;
@@ -46,74 +47,86 @@
             font-size: 0.85rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
         .tabs {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            background: #f4f1ea;
+            background: #1e1e1e;
             padding: 10px;
             border-radius: 8px;
             border: 2px solid #d4af37;
             margin-bottom: 20px;
         }
         .tab-btn {
-            background: #fff;
-            color: #333;
+            background: #2a2a2a;
+            color: #ddd;
             padding: 8px 12px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
             font-size: 0.9rem;
-            border: 1px solid #ccc;
+            border: 1px solid #444;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
         }
         .tab-btn:hover {
-            background: #fdf8ed;
-            color: #b8860b;
-            border-color: #b8860b;
+            background: #333;
+            color: #d4af37;
+            border-color: #d4af37;
         }
         .tab-btn.active {
             background: #b8860b;
             color: white;
             border-color: #996e05;
         }
-
-        /* --- PANEL LATERAL CORREGIDO PARA MÓVILES Y PC --- */
         #sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 260px;
             height: 100vh;
-            background: #fff;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            background: #1e1e1e;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
             z-index: 999;
             padding: 20px;
-            overflow-y: auto;
             box-sizing: border-box;
             transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
         }
         #main-content {
-            margin-left: 280px;
+            margin-left: 0;
             padding: 20px;
         }
-
-        @media (max-width: 768px) {
-            #sidebar {
-                transform: translateX(-100%); /* Oculto por defecto en celulares a la izquierda */
-            }
-            #sidebar.open {
-                transform: translateX(0); /* Se despliega al pulsar Admin */
-            }
-            #main-content {
-                margin-left: 0 !important;
-                padding: 10px !important;
-            }
+        .candidate-card {
+            background: #1a1c23;
+            border: 1px solid #2d3142;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
-
+        .candidate-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #2d3142;
+            padding-bottom: 10px;
+        }
+        .candidate-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 0;
+        }
+        .candidate-subtitle {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -140,19 +153,18 @@
 
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
-        <label>Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+        <label class="form-label mt-2">Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <!-- Encabezado superior con título, botón Admin seguro y fecha/hora -->
         <div class="header-top">
             <h1>🏆 Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
                 <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-                <div id="ultima-actualizacion" class="fecha-actualizacion text-muted fw-bold" style="font-size: 0.95rem;">
-                    08/09/2026, 03:31:45 p. m.
+                <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.90rem;">
+                    --/--/---- --:--:-- --
                 </div>
             </div>
         </div>
@@ -162,22 +174,23 @@
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
             <a href="candidatos.html" class="tab-btn active">⭐ Candidatos</a>
             <a href="historial.html" class="tab-btn">📜 Historial de Partidas</a>
-            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro Masivo</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro</a>
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2 class="mb-3">⭐ Candidatos al Jugador de la Fecha</h2>
+        <h2 class="mb-3 text-white"><i class="fas fa-crown text-warning"></i> Candidatos al Jugador de la Fecha</h2>
 
-        <!-- Barra de Controles -->
-        <div class="card shadow-sm p-3 mb-4 bg-white border-0" style="border-radius: 10px;">
+        <!-- Filtros -->
+        <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
             <div class="row align-items-center g-3">
                 <div class="col-md-3">
-                    <span id="label-fecha-partida" class="fw-bold text-dark fs-5">Fecha 01 &nbsp;&nbsp; Partida 1</span>
+                    <span class="fw-bold text-light fs-5"><i class="fas fa-filter text-warning"></i> Filtro de Infografías</span>
                 </div>
                 <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
                     <div class="d-flex align-items-center gap-2">
-                        <label for="select-año" class="fw-bold text-secondary mb-0">Año:</label>
-                        <select id="select-año" class="form-select form-select-sm" style="width: 100px;">
+                        <label class="fw-bold text-secondary mb-0">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 100px;" onchange="cargarCandidatos()">
+                            <option value="todos">Todos</option>
                             <option value="2026" selected>2026</option>
                             <option value="2027">2027</option>
                             <option value="2028">2028</option>
@@ -186,70 +199,32 @@
                         </select>
                     </div>
                     <div class="d-flex align-items-center gap-2">
-                        <label for="select-mes" class="fw-bold text-secondary mb-0">Mes:</label>
-                        <select id="select-mes" class="form-select form-select-sm" style="width: 120px;">
-                            <option value="Agosto" selected>Agosto</option>
-                            <option value="Septiembre">Septiembre</option>
-                            <option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option>
-                            <option value="Diciembre">Diciembre</option>
+                        <label class="fw-bold text-secondary mb-0">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 120px;" onchange="cargarCandidatos()">
+                            <option value="todos">Todos</option>
+                            <option value="enero">Enero</option>
+                            <option value="febrero">Febrero</option>
+                            <option value="marzo">Marzo</option>
+                            <option value="abril">Abril</option>
+                            <option value="mayo">Mayo</option>
+                            <option value="junio">Junio</option>
+                            <option value="julio">Julio</option>
+                            <option value="agosto" selected>Agosto</option>
+                            <option value="septiembre">Septiembre</option>
+                            <option value="octubre">Octubre</option>
+                            <option value="noviembre">Noviembre</option>
+                            <option value="diciembre">Diciembre</option>
                         </select>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <label for="select-fecha-num" class="fw-bold text-secondary mb-0">Fecha:</label>
-                        <select id="select-fecha-num" class="form-select form-select-sm" style="width: 110px;"></select>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <label for="select-partida-num" class="fw-bold text-secondary mb-0">Partida:</label>
-                        <select id="select-partida-num" class="form-select form-select-sm" style="width: 120px;"></select>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenedor Visual Vertical -->
-        <div class="row g-4 justify-content-center">
-            <!-- Tarjeta 1: Jugador de la Fecha -->
-            <div class="col-lg-5 col-md-6 d-flex justify-content-center">
-                <div class="card shadow-lg border-0 w-100" style="max-width: 450px; border-radius: 12px; overflow: hidden; background: #fff;">
-                    <div class="card-header bg-dark text-white text-center py-3">
-                        <h5 class="m-0" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">
-                            <i class="fas fa-crown text-warning"></i> Jugador de la Fecha
-                        </h5>
-                    </div>
-                    <div class="card-body text-center p-2 d-flex flex-column align-items-center justify-content-center bg-white" style="min-height: 550px;">
-                        <img id="img-galardon" src="" alt="Galardón No Disponible" class="img-fluid rounded shadow-sm" style="width: 100%; max-height: 700px; object-fit: contain;" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x700/f8f9fa/6c757d?text=Galardon+No+Disponible';">
-                    </div>
-                    <div class="card-footer bg-light text-center py-3">
-                        <a id="btn-download-galardon" href="#" download="Jugador_de_la_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
-                            <i class="fas fa-download"></i> Descargar Imagen (HD)
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tarjeta 2: Evaluación de Candidatos -->
-            <div class="col-lg-5 col-md-6 d-flex justify-content-center">
-                <div class="card shadow-lg border-0 w-100" style="max-width: 450px; border-radius: 12px; overflow: hidden; background: #fff;">
-                    <div class="card-header bg-dark text-white text-center py-3">
-                        <h5 class="m-0" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">
-                            <i class="fas fa-chart-bar text-warning"></i> Evaluación de Candidatos
-                        </h5>
-                    </div>
-                    <div class="card-body text-center p-2 d-flex flex-column align-items-center justify-content-center bg-white" style="min-height: 550px;">
-                        <img id="img-candidatos" src="" alt="Candidatos No Disponible" class="img-fluid rounded shadow-sm" style="width: 100%; max-height: 700px; object-fit: contain;" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x700/f8f9fa/6c757d?text=Candidatos+No+Disponible';">
-                    </div>
-                    <div class="card-footer bg-light text-center py-3">
-                        <a id="btn-download-candidatos" href="#" download="Candidatos_Ranking_Fecha.png" class="btn btn-warning fw-bold text-dark shadow-sm px-4">
-                            <i class="fas fa-download"></i> Descargar Imagen (HD)
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Contenedor dinámico de las infografías -->
+        <div id="lista-candidatos-container"></div>
     </div>
 
-    <!-- Modal para ver imágenes a pantalla completa (Lightbox) -->
+    <!-- Modal Lightbox para ampliar imagen -->
     <div id="modal-imagen" class="modal-overlay" onclick="cerrarModalImagen()">
         <img id="img-modal-contenido" src="" alt="Imagen Ampliada">
     </div>
@@ -258,99 +233,170 @@
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
+            if (sidebar) sidebar.classList.toggle('open');
         }
 
-        const selectFecha = document.getElementById('select-fecha-num');
-        const selectPartida = document.getElementById('select-partida-num');
-        const selectAnio = document.getElementById('select-año');
-        const selectMes = document.getElementById('select-mes');
-        
-        const labelFechaPartida = document.getElementById('label-fecha-partida');
-        const imgGalardon = document.getElementById('img-galardon');
-        const imgCandidatos = document.getElementById('img-candidatos');
-        const btnDownloadGalardon = document.getElementById('btn-download-galardon');
-        const btnDownloadCandidatos = document.getElementById('btn-download-candidatos');
+        function cargarCandidatos() {
+            const contenedor = document.getElementById('lista-candidatos-container');
+            if (!contenedor) return;
+            contenedor.innerHTML = "";
 
-        // Generar 31 fechas con formato idéntico (Fecha 01, Fecha 02...)
-        for (let i = 1; i <= 31; i++) {
-            let opt = document.createElement('option');
-            let numStr = i < 10 ? '0' + i : i;
-            opt.value = `Fecha ${numStr}`;
-            opt.textContent = `Fecha ${numStr}`;
-            if (i === 1) opt.selected = true; 
-            selectFecha.appendChild(opt);
-        }
+            const filtroAnio = document.getElementById('filtro-anio')?.value || "todos";
+            const filtroMes = document.getElementById('filtro-mes')?.value || "todos";
 
-        // Generar 10 partidas
-        for (let i = 1; i <= 10; i++) {
-            let opt = document.createElement('option');
-            opt.value = `Partida ${i}`;
-            opt.textContent = `Partida ${i}`;
-            if (i === 1) opt.selected = true; 
-            selectPartida.appendChild(opt);
-        }
-
-        function actualizarContenido() {
-            const anio = selectAnio.value;
-            const mes = selectMes.value;
-            const jornadaText = selectFecha.value;
-            const partidaText = selectPartida.value;
-            
-            labelFechaPartida.textContent = `${jornadaText}    ${partidaText}`;
-
-            const fNum = jornadaText.replace(/\D/g, '');
-            const pNum = partidaText.replace(/\D/g, '');
-            const fStr = fNum.padStart(2, '0');
-
-            const keyBase = `img_${anio}_${mes.toLowerCase()}_f${fStr}_p${pNum}`;
-            
-            const savedGalardon = localStorage.getItem(`${keyBase}_galardon`);
-            const savedCandidatos = localStorage.getItem(`${keyBase}_candidatos`);
-
-            if (savedGalardon) {
-                imgGalardon.src = savedGalardon;
-                btnDownloadGalardon.href = savedGalardon;
-            } else {
-                imgGalardon.src = ""; 
+            let llavesImagenes = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key && key.startsWith("img_")) {
+                    llavesImagenes.push(key);
+                }
             }
-            btnDownloadGalardon.download = `Galardon_${jornadaText}_${partidaText}.png`;
 
-            if (savedCandidatos) {
-                imgCandidatos.src = savedCandidatos;
-                btnDownloadCandidatos.href = savedCandidatos;
-            } else {
-                imgCandidatos.src = ""; 
+            if (llavesImagenes.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-image fa-3x mb-3 text-secondary"></i>
+                        <p class="fs-5">No hay infografías de candidatos subidas en el sistema.</p>
+                    </div>`;
+                return;
             }
-            btnDownloadCandidatos.download = `Candidatos_${jornadaText}_${partidaText}.png`;
+
+            // Agrupar por fecha/partida única (ej: img_2026_agosto_f01_p1)
+            let infografiasMap = {};
+            llavesImagenes.forEach(k => {
+                let sinSufijo = k.replace(/_galardon$/, '').replace(/_candidatos$/, '');
+                if (!infografiasMap[sinSufijo]) {
+                    infografiasMap[sinSufijo] = { baseKey: sinSufijo };
+                }
+                if (k.endsWith('_galardon')) {
+                    infografiasMap[sinSufijo].galardon = localStorage.getItem(k);
+                } else if (k.endsWith('_candidatos')) {
+                    infografiasMap[sinSufijo].candidatos = localStorage.getItem(k);
+                }
+            });
+
+            let listaItems = Object.values(infografiasMap);
+
+            // Filtrar según año y mes seleccionados
+            listaItems = listaItems.filter(item => {
+                // keyBase formato: img_2026_agosto_f01_p1
+                let partes = item.baseKey.split('_');
+                let anioItem = partes[1] || "2026";
+                let mesItem = partes[2] || "agosto";
+
+                let matchAnio = (filtroAnio === 'todos' || anioItem === filtroAnio);
+                let matchMes = (filtroMes === 'todos' || mesItem.toLowerCase() === filtroMes.toLowerCase());
+                return matchAnio && matchMes;
+            });
+
+            // Ordenar de más reciente a más antigua
+            listaItems.sort((a, b) => b.baseKey.localeCompare(a.baseKey));
+
+            // Limitar a las últimas 10 para vista rápida en móvil y PC
+            listaItems = listaItems.slice(0, 10);
+
+            if (listaItems.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <p class="fs-5">No se encontraron infografías con los filtros seleccionados.</p>
+                    </div>`;
+                return;
+            }
+
+            const nombresMeses = {
+                "enero": "Enero", "febrero": "Febrero", "marzo": "Marzo", "abril": "Abril",
+                "mayo": "Mayo", "junio": "Junio", "julio": "Julio", "agosto": "Agosto",
+                "septiembre": "Septiembre", "octubre": "Octubre", "noviembre": "Noviembre", "diciembre": "Diciembre"
+            };
+
+            listaItems.forEach(item => {
+                let partes = item.baseKey.split('_');
+                let anio = partes[1] || "2026";
+                let mesRaw = partes[2] || "agosto";
+                let mesNombre = nombresMeses[mesRaw.toLowerCase()] || mesRaw;
+                let fechaNum = partes[3] ? partes[3].replace('f', '') : "01";
+                let partidaNum = partes[4] ? partes[4].replace('p', '') : "1";
+
+                let galardonHTML = item.galardon ? `
+                    <div class="col-md-6 text-center mb-3">
+                        <h6 class="text-warning fw-bold mb-2"><i class="fas fa-crown"></i> Jugador de la Fecha</h6>
+                        <div class="bg-dark p-2 rounded border border-secondary" style="display: inline-block; max-width: 100%;">
+                            <img src="${item.galardon}" alt="Galardón" class="img-fluid rounded shadow-sm zoomable-img" style="max-height: 350px; object-fit: contain; cursor: zoom-in;">
+                        </div>
+                        <div class="mt-2">
+                            <a href="${item.galardon}" download="Galardon_Fecha${fechaNum}_Partida${partidaNum}.png" class="btn btn-sm btn-warning fw-bold text-dark">
+                                <i class="fas fa-download"></i> Descargar (HD)
+                            </a>
+                        </div>
+                    </div>
+                ` : ``;
+
+                let candidatosHTML = item.candidatos ? `
+                    <div class="col-md-6 text-center mb-3">
+                        <h6 class="text-warning fw-bold mb-2"><i class="fas fa-chart-bar"></i> Evaluación de Candidatos</h6>
+                        <div class="bg-dark p-2 rounded border border-secondary" style="display: inline-block; max-width: 100%;">
+                            <img src="${item.candidatos}" alt="Candidatos" class="img-fluid rounded shadow-sm zoomable-img" style="max-height: 350px; object-fit: contain; cursor: zoom-in;">
+                        </div>
+                        <div class="mt-2">
+                            <a href="${item.candidatos}" download="Candidatos_Fecha${fechaNum}_Partida${partidaNum}.png" class="btn btn-sm btn-warning fw-bold text-dark">
+                                <i class="fas fa-download"></i> Descargar (HD)
+                            </a>
+                        </div>
+                    </div>
+                ` : ``;
+
+                let cardHTML = `
+                    <div class="candidate-card">
+                        <div class="candidate-header">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width: 40px; height: 40px; background: rgba(212,175,55,0.1); border: 1px solid #d4af37; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #d4af37;">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div>
+                                    <div class="candidate-title">Michi - Fecha ${fechaNum}, Partida ${partidaNum}</div>
+                                    <div class="candidate-subtitle">Maratón DM (${mesNombre} ${anio})</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 justify-content-center">
+                            ${galardonHTML}
+                            ${candidatosHTML}
+                        </div>
+                    </div>
+                `;
+                contenedor.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            // Activar eventos de zoom en las nuevas imágenes cargadas
+            activarZoomImagenes();
         }
 
-        selectFecha.addEventListener('change', actualizarContenido);
-        selectPartida.addEventListener('change', actualizarContenido);
-        selectAnio.addEventListener('change', actualizarContenido);
-        selectMes.addEventListener('change', actualizarContenido);
-
-        // Cargar al iniciar
-        actualizarContenido();
-
-        // Funciones para el Visor de Zoom (Lightbox)
         function cerrarModalImagen() {
             document.getElementById('modal-imagen').style.display = 'none';
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('img').forEach(img => {
-                img.style.cursor = 'zoom-in';
+        function activarZoomImagenes() {
+            document.querySelectorAll('.zoomable-img').forEach(img => {
                 img.addEventListener('click', function(e) {
-                    if(this.src && !this.classList.contains('no-zoom')) {
-                        e.stopPropagation();
-                        const modal = document.getElementById('modal-imagen');
-                        const modalImg = document.getElementById('img-modal-contenido');
-                        modalImg.src = this.src;
-                        modal.style.display = 'flex';
-                    }
+                    e.stopPropagation();
+                    const modal = document.getElementById('modal-imagen');
+                    const modalImg = document.getElementById('img-modal-contenido');
+                    modalImg.src = this.src;
+                    modal.style.display = 'flex';
                 });
             });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            cargarCandidatos();
+
+            const elFecha = document.getElementById('ultima-actualizacion');
+            if (elFecha) {
+                const ahora = new Date();
+                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                elFecha.textContent = `${ahora.toLocaleDateString('es-ES', opcionesFecha)}, ${ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase()}`;
+            }
         });
     </script>
 </body>
