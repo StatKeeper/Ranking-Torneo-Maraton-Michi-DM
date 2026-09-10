@@ -49,8 +49,23 @@ function obtenerNombreOficial(nombreOriginal) {
     return mapaCorrecciones[nombreOriginal] || nombreOriginal;
 }
 
-// Función auxiliar para parsear y contabilizar bonos por unidad (+1)
-function procesarBonosPorUnidad(textoSuceso, objetoJugador) {
+// Función robusta para contabilizar bonos tanto por texto como por propiedades directas del registro
+function procesarBonosRegistro(reg, objetoJugador) {
+    // Si el registro ya trae los bonos guardados numéricamente, los sumamos de forma directa y segura
+    if (reg.e !== undefined || reg.bonoE !== undefined) {
+        objetoJugador.bonoE += parseInt(reg.e || reg.bonoE || 0);
+        objetoJugador.bonoR += parseInt(reg.r || reg.bonoR || 0);
+        objetoJugador.bonoM += parseInt(reg.m || reg.bonoM || 0);
+        objetoJugador.bonoO += parseInt(reg.o || reg.bonoO || 0);
+        objetoJugador.bonoS += parseInt(reg.s || reg.bonoS || 0);
+        objetoJugador.bonoRch += parseInt(reg.rch || reg.bonoRch || 0);
+        objetoJugador.bonoMG += parseInt(reg.mg || reg.bonoMG || 0);
+        objetoJugador.bonoRLP += parseInt(reg.rlp || reg.bonoRLP || 0);
+        return;
+    }
+
+    // Fallback: leer por texto de suceso si no vienen separados
+    const textoSuceso = reg.sucesoNota || reg.suceso || reg.ultimoSuceso || "";
     if (!textoSuceso || typeof textoSuceso !== "string") return;
 
     const texto = textoSuceso.toUpperCase();
@@ -232,7 +247,7 @@ function renderTablaRankingGeneral() {
                         acumuladoMap[nombre].vd = 0;
                     }
 
-                    procesarBonosPorUnidad(sucesoActual, acumuladoMap[nombre]);
+                    procesarBonosRegistro(reg, acumuladoMap[nombre]);
                 });
             }
         } catch (e) {
@@ -273,15 +288,12 @@ function renderTablaRankingGeneral() {
         const posActual = index + 1;
         
         let variacion = 0;
-        // REGLA: Si es la primera partida absoluta registrada en el mes, la variación es 0 para todos.
         if (clavesPartidasMes.length <= 1) {
             variacion = 0;
         } else if (posicionesAnterioresMap[jug.jugador] !== undefined) {
-            // El jugador ya tenía ranking previo registrado antes de esta última partida
             const posAnterior = posicionesAnterioresMap[jug.jugador];
             variacion = posAnterior - posActual;
         } else {
-            // Jugador nuevo (debutante): entra asumiendo que su posición previa virtual era el último puesto anterior + 1
             const posAnteriorVirtual = totalJugadoresAnteriores + 1;
             variacion = posAnteriorVirtual - posActual;
         }
