@@ -164,7 +164,6 @@
     <script src="js/equivalencias.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Poblar Años (2026 a 2030)
             const aniosOptions = `
                 <option value="2026" selected>2026</option>
                 <option value="2027">2027</option>
@@ -177,7 +176,6 @@
             const selectAnio = document.getElementById('select-anio');
             if (selectAnio) selectAnio.innerHTML = aniosOptions;
 
-            // Poblar Meses
             const mesesOptions = `
                 <option value="enero">Enero</option>
                 <option value="febrero">Febrero</option>
@@ -197,7 +195,6 @@
             const selectMes = document.getElementById('select-mes');
             if (selectMes) selectMes.innerHTML = mesesOptions;
 
-            // Poblar Jornadas (1 a 31)
             let jornadasHtml = "";
             for (let i = 1; i <= 31; i++) {
                 let numStr = i < 10 ? '0' + i : i;
@@ -209,7 +206,6 @@
             if (jornadaSelect) jornadaSelect.innerHTML = jornadasHtml;
             if (gestionJornada) gestionJornada.innerHTML = jornadasHtml;
 
-            // Poblar Partidas (1 a 10)
             let partidasHtml = "";
             for (let i = 1; i <= 10; i++) {
                 partidasHtml += `<option value="Partida ${i}">Partida ${i}</option>`;
@@ -220,7 +216,6 @@
             if (partidaSelect) partidaSelect.innerHTML = partidasHtml;
             if (gestionPartida) gestionPartida.innerHTML = partidasHtml;
 
-            // Renderizar tabla inicial de gestión
             renderTablaGestionRegistros();
         });
 
@@ -271,8 +266,8 @@
                     let pts = reg.pts !== undefined ? reg.pts : "-";
                     let pg = reg.pg !== undefined ? reg.pg : "-";
                     let pp = reg.pp !== undefined ? reg.pp : "-";
-                    let uAses = reg.uAses !== undefined ? reg.uAses : (reg.unidadesAsesinadas !== undefined ? reg.unidadesAsesinadas : "-");
-                    let eArr = reg.eArr !== undefined ? reg.eArr : (reg.edificiosArrasados !== undefined ? reg.edificiosArrasados : "-");
+                    let uAses = reg.uAses !== undefined ? reg.uAses : "-";
+                    let eArr = reg.eArr !== undefined ? reg.eArr : "-";
                     let equipo = reg.equipo || "-";
                     let civ = reg.civ || "-";
                     let duracion = reg.duracion || "-";
@@ -281,7 +276,7 @@
                         <tr>
                             <td style="padding: 6px; border: 1px solid #444; text-align: center;">${id}</td>
                             <td style="padding: 6px; border: 1px solid #444;">${jugador}</td>
-                            <td style="padding: 6px; border: 1px solid #444; text-align: center;">${pts}</td>
+                            <td style="padding: 6px; border: 1px solid #444; text-align: center;"><strong style="color: #0d6efd;">${pts}</strong></td>
                             <td style="padding: 6px; border: 1px solid #444; text-align: center;">${pg}</td>
                             <td style="padding: 6px; border: 1px solid #444; text-align: center;">${pp}</td>
                             <td style="padding: 6px; border: 1px solid #444; text-align: center;">${uAses}</td>
@@ -355,7 +350,7 @@
             } catch(e) {}
         }
 
-        // FUNCIÓN ACTUALIZADA: Sumatoria exacta de Victoria (3 pts si vd===1) + todos los bonos
+        // FUNCIÓN DE PROCESAMIENTO MASIVO ACTUALIZADA Y ROBUSTA
         function procesarRegistroMasivo() {
             const anio = document.getElementById('select-anio').value;
             const mes = document.getElementById('select-mes').value;
@@ -380,9 +375,9 @@
                 let lineaTrim = linea.trim();
                 if (!lineaTrim) return;
 
-                let partes = lineaTrim.split('|').map(p => p.trim());
-                if (partes.length < 10) {
-                    partes = lineaTrim.split(/\s{2,}|\t+/).map(p => p.trim());
+                let partes = lineaTrim.split('|').map(p => p.trim()).filter(p => p !== "");
+                if (partes.length < 3) {
+                    partes = lineaTrim.split(/\s{2,}|\t+/).map(p => p.trim()).filter(p => p !== "");
                 }
 
                 if (partes.length >= 2) {
@@ -394,8 +389,6 @@
                         }
                     }
 
-                    // Lectura de cada columna según el orden establecido:
-                    // [0] Jugador | [1] V/D | [2] Excelencia | [3] Resistencia | [4] Militar | [5] Oro | [6] Sociedad | [7] Racha | [8] Matagigantes | [9] Relámpago | [10] U. Ases. | [11] E. Arr. | [12] Equipo | [13] Civ
                     let vd = parseInt(partes[1]) || 0;
                     let e = parseInt(partes[2]) || 0;
                     let r = parseInt(partes[3]) || 0;
@@ -408,10 +401,10 @@
 
                     let uAses = partes[10] || "0";
                     let eArr = partes[11] || "0";
-                    let equipo = partes[12] || "Sin Equipo";
+                    let equipo = partes[12] || "Equipo 1";
                     let civ = partes[13] || "-";
 
-                    // Sumatoria estricta de Puntos: 3 si gana + la suma de todos los bonos
+                    // SUMATORIA ESTRICTA: 3 puntos si gana (vd === 1) + la suma de todos los bonos
                     let puntosBaseVictoria = (vd === 1) ? 3 : 0;
                     let totalBonos = e + r + m + o + s + rch + mg + rlp;
                     let ptsTotales = puntosBaseVictoria + totalBonos;
@@ -435,12 +428,21 @@
                         pts: ptsTotales,
                         pg: vd,
                         pp: vd === 0 ? 1 : 0,
+                        e: e,
+                        r: r,
+                        m: m,
+                        o: o,
+                        s: s,
+                        rch: rch,
+                        mg: mg,
+                        rlp: rlp,
                         uAses: uAses,
                         eArr: eArr,
                         equipo: equipo,
                         civ: civ,
                         duracion: duracion,
-                        sucesoNota: sucesoNotaStr
+                        sucesoNota: sucesoNotaStr,
+                        fechaHora: new Date().toLocaleString("es-PE")
                     });
                 }
             });
@@ -448,7 +450,7 @@
             if (registros.length > 0) {
                 const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
                 localStorage.setItem(storageKey, JSON.stringify(registros));
-                alert(`¡Se procesaron y guardaron ${registros.length} registros con éxito sumando los bonos!`);
+                alert(`¡Se procesaron y guardaron ${registros.length} registros sumando correctamente los puntos y bonos!`);
                 document.getElementById('bloque-datos').value = "";
                 
                 document.getElementById('gestion-anio').value = anio;
