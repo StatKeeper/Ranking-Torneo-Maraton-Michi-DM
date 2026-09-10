@@ -221,7 +221,7 @@
                             <option value="05">Mayo</option>
                             <option value="06">Junio</option>
                             <option value="07">Julio</option>
-                            <option value="08">Agosto</option>
+                            <option value="08" selected>Agosto</option>
                             <option value="09">Septiembre</option>
                             <option value="10">Octubre</option>
                             <option value="11">Noviembre</option>
@@ -310,9 +310,6 @@
             let filtroM = document.getElementById('filtro-mes').value;
             let filtroF = document.getElementById('filtro-fecha').value;
 
-            // Determinar si el usuario modificó manualmente algún filtro o si estamos en vista por defecto ("Todas")
-            let hayFiltroActivo = (filtroA !== 'todos' || filtroM !== 'todos' || filtroF !== 'todas');
-
             let matchesFiltrados = keys.filter(k => {
                 let m = matchesMap[k];
                 let matchAnio = (filtroA === 'todos' || m.anio === filtroA);
@@ -321,7 +318,6 @@
                 return matchAnio && matchMes && matchFecha;
             });
 
-            // Ordenar de forma descendente (más recientes primero)
             matchesFiltrados.sort((a, b) => {
                 let ma = matchesMap[a];
                 let mb = matchesMap[b];
@@ -330,11 +326,6 @@
                 return idB - idA;
             });
 
-            // Si no hay filtros manuales aplicados, limitar estrictamente a las 10 últimas partidas recientes
-            if (!hayFiltroActivo && matchesFiltrados.length > 10) {
-                matchesFiltrados = matchesFiltrados.slice(0, 10);
-            }
-
             if (matchesFiltrados.length === 0) {
                 contenedor.innerHTML = `
                     <div class="text-center py-5 text-muted">
@@ -342,6 +333,15 @@
                     </div>`;
                 return;
             }
+
+            // Intentar leer el acumulado general del ranking para obtener las variaciones reales de posiciones si están disponibles
+            let acumuladoGeneral = {};
+            try {
+                let acumData = localStorage.getItem('ranking_acumulado_general');
+                if (acumData) {
+                    acumuladoGeneral = JSON.parse(acumData);
+                }
+            } catch(e) {}
 
             const nombresMeses = {
                 "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
@@ -357,15 +357,21 @@
                 m.registros.forEach(reg => {
                     let nombreJugador = reg.jugador || reg.nombre || "-";
                     
-                    // Asignación correcta de la corona (si ganó puntos o partidas ganadas > 0) y calavera (si perdió)
-                    let esGanador = (reg.pg === 1 || reg.pts >= 3);
-                    let iconoResultado = esGanador ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
+                    // Obtener la variación buscando en el registro o en el acumulado general
+                    let varValor = 0;
+                    if (reg.var !== undefined) varValor = parseInt(reg.var) || 0;
+                    else if (reg.variacion !== undefined) varValor = parseInt(reg.variacion) || 0;
+                    else if (acumuladoGeneral[nombreJugador] && acumuladoGeneral[nombreJugador].var !== undefined) {
+                        varValor = parseInt(acumuladoGeneral[nombreJugador].var) || 0;
+                    }
 
-                    // Lógica para mostrar la variación numérica con flechas verde/roja idéntica a la clasificación general
-                    let varValor = reg.var !== undefined ? parseInt(reg.var) : 0;
                     let varHtml = varValor > 0 ? `<span class="text-success fw-bold">+${varValor} <i class="fas fa-arrow-up"></i></span>` :
                                   varValor < 0 ? `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>` :
                                   `<span class="text-muted">0</span>`;
+
+                    // Determinar victoria (1) o derrota (0) para la corona o calavera
+                    let vdVal = reg.vd !== undefined ? reg.vd : (reg.v_d !== undefined ? reg.v_d : (reg.resultado !== undefined ? reg.resultado : (reg.puntos > 0 ? 1 : 0)));
+                    let iconoResultado = (parseInt(vdVal) === 1) ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
 
                     filasJugadores += `
                         <tr>
