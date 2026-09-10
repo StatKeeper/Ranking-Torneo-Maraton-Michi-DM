@@ -2,7 +2,7 @@
 const JSONBIN_ID = "6aa25569ffd5d16053f50b5b";
 const JSONBIN_API_KEY = "$2a$10$CX4eQGnNUKp9i8TVe0.po09BYbaZ/Q64jH2ADLiUjxHtdxD8W5xwm";
 
-async function cargarDatosNube() {
+async function cargarDatosNubeYSincronizar() {
     try {
         const respuesta = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
             headers: {
@@ -10,10 +10,16 @@ async function cargarDatosNube() {
             }
         });
         const resultado = await respuesta.json();
-        return resultado.record;
+        if (resultado && resultado.record) {
+            const datosNube = resultado.record;
+            // Volcar los datos de la nube al localStorage del dispositivo actual (PC o Celular)
+            Object.keys(datosNube).forEach(key => {
+                localStorage.setItem(key, datosNube[key]);
+            });
+            console.log("¡Datos sincronizados desde la nube exitosamente!");
+        }
     } catch (error) {
-        console.error("Error al cargar de la nube:", error);
-        return null;
+        console.error("Error al cargar de la nube, usando almacenamiento local:", error);
     }
 }
 
@@ -51,7 +57,6 @@ function obtenerNombreOficial(nombreOriginal) {
 
 // Función robusta para contabilizar bonos tanto por texto como por propiedades directas del registro
 function procesarBonosRegistro(reg, objetoJugador) {
-    // Si el registro ya trae los bonos guardados numéricamente, los sumamos de forma directa y segura
     if (reg.e !== undefined || reg.bonoE !== undefined) {
         objetoJugador.bonoE += parseInt(reg.e || reg.bonoE || 0);
         objetoJugador.bonoR += parseInt(reg.r || reg.bonoR || 0);
@@ -64,7 +69,6 @@ function procesarBonosRegistro(reg, objetoJugador) {
         return;
     }
 
-    // Fallback: leer por texto de suceso si no vienen separados
     const textoSuceso = reg.sucesoNota || reg.suceso || reg.ultimoSuceso || "";
     if (!textoSuceso || typeof textoSuceso !== "string") return;
 
@@ -81,7 +85,6 @@ function procesarBonosRegistro(reg, objetoJugador) {
     if (texto.includes("RLP") || texto.includes("RELAMPAGO") || texto.includes("RELÁMPAGO")) objetoJugador.bonoRLP += 1;
 }
 
-// Inicializar selectores de año de forma dinámica al cargar
 function inicializarSelectoresAnioFiltro() {
     const selectAnio = document.getElementById("select-anio-filtro");
     if (!selectAnio) return;
@@ -118,15 +121,11 @@ function renderTablaRankingGeneral() {
     let ultimaPartida = "1";
     let ultimaFechaHora = "";
 
-    // 1. Recopilar y ordenar cronológicamente todas las claves de partidas del mes/año seleccionado
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
         if (clave) {
             const claveLower = clave.toLowerCase();
-
-            if (claveLower.startsWith("img_")) {
-                continue;
-            }
+            if (claveLower.startsWith("img_")) continue;
 
             if (clave.includes(`_${periodoSeleccionado}_`) && clave.startsWith("registros_")) {
                 clavesPartidasMes.push(clave);
@@ -147,12 +146,10 @@ function renderTablaRankingGeneral() {
     });
 
     let clavesPartidasUnicas = new Set(clavesPartidasMes);
-
     if (elTotalPartidasMes) {
         elTotalPartidasMes.textContent = clavesPartidasUnicas.size > 0 ? clavesPartidasUnicas.size : 0;
     }
 
-    // 2. Calcular el estado ANTERIOR (acumulado hasta antes de la última partida del conjunto)
     let posicionesAnterioresMap = {};
     let totalJugadoresAnteriores = 0;
 
@@ -175,9 +172,7 @@ function renderTablaRankingGeneral() {
                         acumuladoAnteriorMap[nombre].pts += parseInt(reg.pts || reg.Pts || 0);
                     });
                 }
-            } catch (e) {
-                console.error("Error procesando registro anterior:", e);
-            }
+            } catch (e) {}
         });
 
         let listaAnterior = Object.values(acumuladoAnteriorMap);
@@ -189,7 +184,6 @@ function renderTablaRankingGeneral() {
         });
     }
 
-    // 3. Calcular el estado ACTUAL (acumulado total del período seleccionado)
     let acumuladoMap = {};
 
     clavesPartidasMes.forEach(clave => {
@@ -203,9 +197,7 @@ function renderTablaRankingGeneral() {
             const registros = JSON.parse(localStorage.getItem(clave));
             if (Array.isArray(registros)) {
                 registros.forEach(reg => {
-                    if (reg.fechaHora) {
-                        ultimaFechaHora = reg.fechaHora;
-                    }
+                    if (reg.fechaHora) ultimaFechaHora = reg.fechaHora;
 
                     const nombreRaw = reg.jugador || reg.Jugador;
                     if (!nombreRaw) return;
@@ -215,18 +207,9 @@ function renderTablaRankingGeneral() {
                     if (!acumuladoMap[nombre]) {
                         acumuladoMap[nombre] = {
                             jugador: nombre,
-                            pts: 0,
-                            pg: 0,
-                            pp: 0,
-                            vd: null,
-                            bonoE: 0,
-                            bonoR: 0,
-                            bonoM: 0,
-                            bonoO: 0,
-                            bonoS: 0,
-                            bonoRch: 0,
-                            bonoMG: 0,
-                            bonoRLP: 0,
+                            pts: 0, pg: 0, pp: 0, vd: null,
+                            bonoE: 0, bonoR: 0, bonoM: 0, bonoO: 0, bonoS: 0,
+                            bonoRch: 0, bonoMG: 0, bonoRLP: 0,
                             ultimoSuceso: reg.sucesoNota || reg.suceso || reg.ultimoSuceso || 'Victoria'
                         };
                     }
@@ -241,18 +224,13 @@ function renderTablaRankingGeneral() {
                     acumuladoMap[nombre].pp += perdidos;
                     acumuladoMap[nombre].ultimoSuceso = sucesoActual || acumuladoMap[nombre].ultimoSuceso;
 
-                    if (ganados > 0) {
-                        acumuladoMap[nombre].vd = 1;
-                    } else if (perdidos > 0) {
-                        acumuladoMap[nombre].vd = 0;
-                    }
+                    if (ganados > 0) acumuladoMap[nombre].vd = 1;
+                    else if (perdidos > 0) acumuladoMap[nombre].vd = 0;
 
                     procesarBonosRegistro(reg, acumuladoMap[nombre]);
                 });
             }
-        } catch (e) {
-            console.error("Error procesando registro:", e);
-        }
+        } catch (e) {}
     });
 
     const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
@@ -299,10 +277,8 @@ function renderTablaRankingGeneral() {
         }
 
         const varTexto = variacion > 0 ? `+${variacion}` : `${variacion}`;
-
         const pj = jug.pg + jug.pp;
         const vPjStr = `${jug.pg}/${pj}`;
-
         const tbJugador = jug.bonoE + jug.bonoR + jug.bonoM + jug.bonoO + jug.bonoS + jug.bonoRch + jug.bonoMG + jug.bonoRLP;
 
         totalPts += jug.pts;
@@ -359,9 +335,7 @@ function renderTablaRankingGeneral() {
             <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
                 <td colspan="3" style="text-align: right; padding: 10px;">Sumatoria Total:</td>
                 <td style="color: #0d6efd;">${totalPts}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <td>-</td><td>-</td><td>-</td>
                 <td style="color: #dc3545;">${totalE}</td>
                 <td style="color: #dc3545;">${totalR}</td>
                 <td style="color: #dc3545;">${totalM}</td>
@@ -376,9 +350,12 @@ function renderTablaRankingGeneral() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     inicializarSelectoresAnioFiltro();
     
+    // Al cargar la página, descargamos los datos más recientes de la nube automáticamente
+    await cargarDatosNubeYSincronizar();
+
     const selectAnio = document.getElementById("select-anio-filtro");
     const selectMes = document.getElementById("select-mes-filtro");
 
@@ -387,20 +364,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderTablaRankingGeneral();
 });
-
-// Blindaje definitivo para evitar que otro script altere el contador de partidas
-setInterval(() => {
-    const elTotalPartidasMes = document.getElementById("total-partidas-mes");
-    if (elTotalPartidasMes) {
-        let contadorReal = 0;
-        for (let i = 0; i < localStorage.length; i++) {
-            const clave = localStorage.key(i);
-            if (clave && clave.startsWith("registros_2026-08")) {
-                contadorReal++;
-            }
-        }
-        if (elTotalPartidasMes.textContent != contadorReal) {
-            elTotalPartidasMes.textContent = contadorReal;
-        }
-    }
-}, 100);
