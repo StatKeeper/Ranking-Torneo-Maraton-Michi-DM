@@ -353,14 +353,20 @@ function renderTablaRankingGeneral() {
 document.addEventListener("DOMContentLoaded", async () => {
     inicializarSelectoresAnioFiltro();
     
-    // Al cargar la página, descargamos los datos más recientes de la nube automáticamente
-    await cargarDatosNubeYSincronizar();
+    // 1. Renderizar de inmediato con los datos guardados localmente
+    renderTablaRankingGeneral();
+
+    // 2. Intentar actualizar desde la nube en segundo plano de manera segura
+    try {
+        await cargarDatosNubeYSincronizar();
+        renderTablaRankingGeneral(); // Volver a pintar si descargó datos nuevos
+    } catch(e) {
+        console.log("Modo offline o sin conexión a nube.");
+    }
 
     const selectAnio = document.getElementById("select-anio-filtro");
     const selectMes = document.getElementById("select-mes-filtro");
 
     if (selectAnio) selectAnio.addEventListener("change", renderTablaRankingGeneral);
     if (selectMes) selectMes.addEventListener("change", renderTablaRankingGeneral);
-
-    renderTablaRankingGeneral();
 });
