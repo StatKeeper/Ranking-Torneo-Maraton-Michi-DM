@@ -350,7 +350,7 @@
             } catch(e) {}
         }
 
-        // FUNCIÓN DEFINITIVA: Lee directamente cualquier valor de puntos y bonos del texto plano
+        // PROCESAMIENTO MASIVO DIRECTO Y RESPETUOSO DE LOS PUNTOS INDICADOS
         function procesarRegistroMasivo() {
             const anio = document.getElementById('select-anio').value;
             const mes = document.getElementById('select-mes').value;
@@ -375,6 +375,10 @@
                 let lineaTrim = linea.trim();
                 if (!lineaTrim) return;
 
+                if (lineaTrim.toLowerCase().includes("partida") && lineaTrim.includes(":")) {
+                    return;
+                }
+
                 let partes = lineaTrim.split('|').map(p => p.trim()).filter(p => p !== "");
                 if (partes.length < 3) {
                     partes = lineaTrim.split(/\s{2,}|\t+/).map(p => p.trim()).filter(p => p !== "");
@@ -389,12 +393,9 @@
                         }
                     }
 
-                    // Extraemos todos los números que vengan en la línea para identificar los bonos y puntos
-                    let numeros = partes.slice(1).map(p => parseInt(p)).filter(n => !isNaN(n));
-
-                    let vd = numeros[0] === 1 ? 1 : 0;
+                    // Leemos el número exacto que pusiste en la columna 2 como Pts totales
+                    let ptsIndicados = parseInt(partes[1]) || 0;
                     
-                    // Leemos los bonos de las columnas individuales si están presentes
                     let e = parseInt(partes[2]) || 0;
                     let r = parseInt(partes[3]) || 0;
                     let m = parseInt(partes[4]) || 0;
@@ -404,20 +405,16 @@
                     let mg = parseInt(partes[8]) || 0;
                     let rlp = parseInt(partes[9]) || 0;
 
-                    let sumaBonos = e + r + m + o + s + rch + mg + rlp;
-                    let puntosBase = vd === 1 ? 3 : 0;
-
-                    // Si en la segunda columna o en los números hay un valor mayor que represente el total de puntos reales, lo usamos; de lo contrario sumamos base + bonos
-                    let ptsTotales = (numeros[1] > 3) ? numeros[1] : (puntosBase + sumaBonos);
-                    if (ptsTotales === 0 && vd === 1) ptsTotales = 3 + sumaBonos;
-
                     let uAses = partes[10] || "0";
                     let eArr = partes[11] || "0";
                     let equipo = partes[12] || "Equipo 1";
                     let civ = partes[13] || "-";
 
+                    let pg = ptsIndicados > 0 ? 1 : 0;
+                    let pp = ptsIndicados === 0 ? 1 : 0;
+
                     let sucesoNotas = [];
-                    if (vd === 1) sucesoNotas.push("Victoria");
+                    if (pg === 1) sucesoNotas.push("Victoria");
                     if (e > 0) sucesoNotas.push("E");
                     if (r > 0) sucesoNotas.push("R");
                     if (m > 0) sucesoNotas.push("M");
@@ -427,14 +424,14 @@
                     if (mg > 0) sucesoNotas.push("MG");
                     if (rlp > 0) sucesoNotas.push("RLP");
 
-                    let sucesoNotaStr = sucesoNotas.length > 0 ? sucesoNotas.join(" + ") : (vd === 1 ? "Victoria" : "Derrota");
+                    let sucesoNotaStr = sucesoNotas.length > 0 ? sucesoNotas.join(" + ") : (pg === 1 ? "Victoria" : "Derrota");
 
                     registros.push({
                         id: index + 1,
                         jugador: jugador,
-                        pts: ptsTotales,
-                        pg: vd,
-                        pp: vd === 0 ? 1 : 0,
+                        pts: ptsIndicados,
+                        pg: pg,
+                        pp: pp,
                         e: e,
                         r: r,
                         m: m,
@@ -457,7 +454,7 @@
             if (registros.length > 0) {
                 const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
                 localStorage.setItem(storageKey, JSON.stringify(registros));
-                alert(`¡Se procesaron y guardaron ${registros.length} registros con la sumatoria correcta!`);
+                alert(`¡Se procesaron y guardaron ${registros.length} registros respetando los puntos indicados!`);
                 document.getElementById('bloque-datos').value = "";
                 
                 document.getElementById('gestion-anio').value = anio;
