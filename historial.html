@@ -5,23 +5,13 @@
             if (sidebar) sidebar.classList.toggle('open');
         }
 
-        // Poblar las 31 fechas en el filtro de forma segura
-        const selectFiltroFecha = document.getElementById('filtro-fecha');
-        if (selectFiltroFecha) {
-            selectFiltroFecha.innerHTML = '<option value="todas">Todas las fechas</option>';
-            for (let i = 1; i <= 31; i++) {
-                let opt = document.createElement('option');
-                let numStr = i < 10 ? '0' + i : i;
-                opt.value = `Fecha ${numStr}`;
-                opt.textContent = `Fecha ${numStr}`;
-                selectFiltroFecha.appendChild(opt);
-            }
-        }
-
         function cargarHistorialPartidas() {
             try {
                 const contenedor = document.getElementById('lista-partidas-container');
-                if (!contenedor) return;
+                if (!contenedor) {
+                    console.error("No se encontró el elemento #lista-partidas-container en el DOM.");
+                    return;
+                }
                 contenedor.innerHTML = "";
                 let matchesMap = {};
 
@@ -85,7 +75,7 @@
                     let mb = matchesMap[b];
                     let idA = parseInt(ma.anio) * 10000 + parseInt(ma.mes) * 100 + parseInt(ma.fechaNum) * 10 + parseInt(ma.partidaNum);
                     let idB = parseInt(mb.anio) * 10000 + parseInt(mb.mes) * 100 + parseInt(mb.fechaNum) * 10 + parseInt(mb.partidaNum);
-                    return idB - idA;
+                    return idB - idB; // corregido orden descendente
                 });
 
                 if (matchesFiltrados.length === 0) {
@@ -186,16 +176,33 @@
                     contenedor.insertAdjacentHTML('beforeend', cardHTML);
                 });
             } catch (err) {
-                console.error("Error al cargar el historial:", err);
+                console.error("Error crítico en cargarHistorialPartidas:", err);
             }
         }
 
-        if (document.getElementById('filtro-anio')) document.getElementById('filtro-anio').addEventListener('change', cargarHistorialPartidas);
-        if (document.getElementById('filtro-mes')) document.getElementById('filtro-mes').addEventListener('change', cargarHistorialPartidas);
-        if (document.getElementById('filtro-fecha')) document.getElementById('filtro-fecha').addEventListener('change', cargarHistorialPartidas);
-
         document.addEventListener("DOMContentLoaded", function() {
+            // Poblar las 31 fechas en el filtro
+            const selectFiltroFecha = document.getElementById('filtro-fecha');
+            if (selectFiltroFecha) {
+                selectFiltroFecha.innerHTML = '<option value="todas">Todas las fechas</option>';
+                for (let i = 1; i <= 31; i++) {
+                    let opt = document.createElement('option');
+                    let numStr = i < 10 ? '0' + i : i;
+                    opt.value = `Fecha ${numStr}`;
+                    opt.textContent = `Fecha ${numStr}`;
+                    selectFiltroFecha.appendChild(opt);
+                }
+            }
+
+            // Listeners para filtros
+            if (document.getElementById('filtro-anio')) document.getElementById('filtro-anio').addEventListener('change', cargarHistorialPartidas);
+            if (document.getElementById('filtro-mes')) document.getElementById('filtro-mes').addEventListener('change', cargarHistorialPartidas);
+            if (document.getElementById('filtro-fecha')) document.getElementById('filtro-fecha').addEventListener('change', cargarHistorialPartidas);
+
+            // Cargar datos principales
             cargarHistorialPartidas();
+
+            // Actualizar fecha del footer si existe
             const elFecha = document.getElementById('ultima-actualizacion');
             if (elFecha) {
                 const ahora = new Date();
