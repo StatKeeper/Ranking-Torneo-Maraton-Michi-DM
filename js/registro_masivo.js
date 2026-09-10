@@ -37,7 +37,6 @@ function configurarEventosRegistroMasivo() {
     }
 }
 
-// Función principal de procesamiento de texto plano con la sumatoria correcta de bonos en Pts
 function procesarTextoPlanoRegistroMasivo() {
     const textarea = document.getElementById("texto-plano-input") || document.querySelector("textarea");
     if (!textarea || !textarea.value.trim()) {
@@ -57,10 +56,9 @@ function procesarTextoPlanoRegistroMasivo() {
     let fechaStr = selectFecha ? selectFecha.value : "Fecha 01";
     let partidaStr = selectPartida ? selectPartida.value : "Partida 1";
     let duracionPartida = inputDuracion ? inputDuracion.value.trim() : "01:07:08";
-
     let duracionDetectada = "01:07:08";
 
-    lineas.forEach(linea => {
+    lineas.forEach((linea, index) => {
         let lineaTrim = linea.trim();
         if (!lineaTrim) return;
 
@@ -73,12 +71,15 @@ function procesarTextoPlanoRegistroMasivo() {
             return;
         }
 
-        let partes = lineaTrim.split('|').map(p => p.trim());
-        if (partes.length < 12) {
-            partes = lineaTrim.split(/\s*\|\s*/);
+        // Dividir por barras verticales '|' o por múltiples espacios/tabulaciones si fuera necesario
+        let partes = lineaTrim.split('|').map(p => p.trim()).filter(p => p !== "");
+        if (partes.length < 10) {
+            partes = lineaTrim.split(/\s{2,}|\t+/).map(p => p.trim()).filter(p => p !== "");
         }
 
-        if (partes.length >= 12) {
+        console.log(`Línea ${index + 1} interpretada:`, partes);
+
+        if (partes.length >= 10) {
             let jugador = partes[0].replace(/^\[.*?\]\s*/, '').trim();
             if (partes[0].startsWith("[")) {
                 let matchClan = partes[0].match(/^(\[.*?\])\s*(.*)$/);
@@ -87,6 +88,7 @@ function procesarTextoPlanoRegistroMasivo() {
                 }
             }
 
+            // Si el formato trae la columna de jugador limpia y luego los números:
             let vd = parseInt(partes[1]) || 0;  // Victoria (1) / Derrota (0)
             let e = parseInt(partes[2]) || 0;   // Excelencia
             let r = parseInt(partes[3]) || 0;   // Resistencia
@@ -97,12 +99,12 @@ function procesarTextoPlanoRegistroMasivo() {
             let mg = parseInt(partes[8]) || 0;  // Matagigantes
             let rlp = parseInt(partes[9]) || 0; // Relámpago
 
-            let uAses = parseInt(partes[10]) || 0; // Unidades Asesinadas
-            let eArr = parseInt(partes[11]) || 0;  // Edificios Arrasados
+            let uAses = parseInt(partes[10]) || 0; 
+            let eArr = parseInt(partes[11]) || 0;  
             let equipo = partes[12] || "Equipo 1";
             let civ = partes[13] || "-";
 
-            // REGLA CLAVE: Pts suma la victoria (3 puntos si vd === 1) más todos los bonos obtenidos
+            // Sumatoria estricta: Puntos base por victoria (3 si gana) + la suma de todos los bonos indicados
             let puntosBaseVictoria = (vd === 1) ? 3 : 0;
             let totalBonos = e + r + m + o + s + rch + mg + rlp;
             let ptsTotales = puntosBaseVictoria + totalBonos;
@@ -137,7 +139,7 @@ function procesarTextoPlanoRegistroMasivo() {
     });
 
     if (registrosPartida.length === 0) {
-        alert("No se pudo interpretar el formato del texto plano. Verifica que siga la estructura de columnas establecida.");
+        alert("No se pudo interpretar el formato del texto plano. Revisa la estructura o presiona F12 para ver la consola.");
         return;
     }
 
