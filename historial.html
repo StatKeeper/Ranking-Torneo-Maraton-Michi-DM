@@ -240,10 +240,24 @@
         <div id="lista-partidas-container"></div>
     </div>
 
+    <script src="js/auth.js"></script>
+    <script src="js/equivalencias.js"></script>
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) sidebar.classList.toggle('open');
+        }
+
+        function obtenerNombreOficial(nombreOriginal) {
+            if (!nombreOriginal) return "";
+            let mapaCorrecciones = {};
+            const correccionesGuardadas = localStorage.getItem("mapa_correccion_nombres") || localStorage.getItem("correcciones_nombres");
+            if (correccionesGuardadas) {
+                try {
+                    mapaCorrecciones = JSON.parse(correccionesGuardadas);
+                } catch (e) {}
+            }
+            return mapaCorrecciones[nombreOriginal] || nombreOriginal;
         }
 
         function cargarHistorialPartidas() {
@@ -279,7 +293,8 @@
                                     fechaNum: fechaNum,
                                     partidaNum: partidaNum,
                                     duracion: duracionPartida,
-                                    registros: registros
+                                    registros: registros,
+                                    storageKey: key
                                 };
                             }
                         } catch(e) {}
@@ -296,6 +311,64 @@
                     return;
                 }
 
+                // Ordenar todas las claves cronológicamente (de más antiguo a más reciente) para el cálculo acumulativo exacto
+                keys.sort((a, b) => {
+                    let ma = matchesMap[a];
+                    let mb = matchesMap[b];
+                    let idA = parseInt(ma.anio) * 10000 + parseInt(ma.mes) * 100 + parseInt(ma.fechaNum) * 10 + parseInt(ma.partidaNum);
+                    let idB = parseInt(mb.anio) * 10000 + parseInt(mb.mes) * 100 + parseInt(mb.fechaNum) * 10 + parseInt(mb.partidaNum);
+                    return idA - idB;
+                });
+
+                // Cálculo acumulativo idéntico al de la Clasificación General para determinar las variaciones exactas por partida
+                let posicionesPorPartidaMap = {};
+                let rankingAcumuladoMap = {};
+
+                keys.forEach(k => {
+                    let m = matchesMap[k];
+                    let posicionesAnterioresMap = {};
+                    let listaAnterior = Object.values(rankingAcumuladoMap).sort((a, b) => b.pts - a.pts);
+                    listaAnterior.forEach((j, idx) => {
+                        posicionesAnterioresMap[j.jugador] = idx + 1;
+                    });
+                    let totalJugadoresAnteriores = listaAnterior.length;
+
+                    try {
+                        m.registros.forEach(r => {
+                            let nombreRaw = r.jugador || r.Jugador;
+                            if (!nombreRaw) return;
+                            let nombre = obtenerNombreOficial(nombreRaw);
+                            if (!rankingAcumuladoMap[nombre]) {
+                                rankingAcumuladoMap[nombre] = { jugador: nombre, pts: 0 };
+                            }
+                            rankingAcumuladoMap[nombre].pts += parseInt(r.pts || 0);
+                        });
+                    } catch(e) {}
+
+                    let listaActual = Object.values(rankingAcumuladoMap).sort((a, b) => b.pts - a.pts);
+                    let variacionesEstaPartida = {};
+
+                    // Detectar estrictamente si es la primera partida absoluta (Fecha 01, Partida 1)
+                    let esPrimeraPartidaTotal = (parseInt(m.fechaNum, 10) === 1 && parseInt(m.partidaNum, 10) === 1 && keys[0] === k);
+
+                    listaActual.forEach((j, idx) => {
+                        let posActual = idx + 1;
+                        let variacion = 0;
+                        if (esPrimeraPartidaTotal) {
+                            variacion = 0;
+                        } else if (posicionesAnterioresMap[j.jugador] !== undefined) {
+                            let posAnterior = posicionesAnterioresMap[j.jugador];
+                            variacion = posAnterior - posActual;
+                        } else {
+                            let posAnteriorVirtual = totalJugadoresAnteriores + 1;
+                            variacion = posAnteriorVirtual - posActual;
+                        }
+                        variacionesEstaPartida[j.jugador] = variacion;
+                    });
+
+                    posicionesPorPartidaMap[k] = variacionesEstaPartida;
+                });
+
                 let filtroA = document.getElementById('filtro-anio') ? document.getElementById('filtro-anio').value : 'todos';
                 let filtroM = document.getElementById('filtro-mes') ? document.getElementById('filtro-mes').value : 'todos';
                 let filtroF = document.getElementById('filtro-fecha') ? document.getElementById('filtro-fecha').value : 'todas';
@@ -308,6 +381,7 @@
                     return matchAnio && matchMes && matchFecha;
                 });
 
+                // Invertir para mostrar las más recientes arriba
                 matchesFiltrados.sort((a, b) => {
                     let ma = matchesMap[a];
                     let mb = matchesMap[b];
@@ -333,32 +407,13 @@
                 matchesFiltrados.forEach(k => {
                     let m = matchesMap[k];
                     let nombreMes = nombresMeses[m.mes] || m.mes;
+                    let varsMap = posicionesPorPartidaMap[k] || {};
 
                     let filasJugadores = "";
-                    
-                    // Detectar estrictamente si es la primera partida absoluta del torneo (Fecha 01, Partida 1)
-                    let esPrimeraPartidaTotal = (parseInt(m.fechaNum, 10) === 1 && parseInt(m.partidaNum, 10) === 1);
-
                     m.registros.forEach(reg => {
-                        let nombreJugador = reg.jugador || reg.nombre || "-";
-                        
-                        let varValor = 0;
-                        if (esPrimeraPartidaTotal) {
-                            varValor = 0; // REGLA: En la primera partida de todas, la variación es 0 para todos
-                        } else if (reg.var !== undefined && reg.var !== "" && !isNaN(reg.var)) {
-                            varValor = parseInt(reg.var);
-                        } else if (reg.variacion !== undefined && reg.variacion !== "" && !isNaN(reg.variacion)) {
-                            varValor = parseInt(reg.variacion);
-                        } else if (reg.dif !== undefined && reg.dif !== "" && !isNaN(reg.dif)) {
-                            varValor = parseInt(reg.dif);
-                        } else if (reg.diferencia !== undefined && reg.diferencia !== "" && !isNaN(reg.diferencia)) {
-                            varValor = parseInt(reg.diferencia);
-                        } else if (reg.cambio !== undefined && reg.cambio !== "" && !isNaN(reg.cambio)) {
-                            varValor = parseInt(reg.cambio);
-                        } else {
-                            let g = reg.pg === 1 || reg.pts >= 3 || reg.ganador === true;
-                            varValor = g ? 1 : (reg.pg === 0 || reg.pts === 0 ? -1 : 0);
-                        }
+                        let nombreRaw = reg.jugador || reg.nombre || "-";
+                        let nombreOficial = obtenerNombreOficial(nombreRaw);
+                        let varValor = varsMap[nombreOficial] !== undefined ? varsMap[nombreOficial] : 0;
 
                         let varHtml = "";
                         if (varValor > 0) {
@@ -366,7 +421,8 @@
                         } else if (varValor < 0) {
                             varHtml = `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>`;
                         } else {
-                            varHtml = `<span class="text-muted fw-bold">0</span>`;
+                            // Ceros estilizados con un azul marino fuerte y contrastado
+                            varHtml = `<span class="fw-bold" style="color: #4da6ff; background: rgba(0, 86, 179, 0.25); padding: 2px 8px; border-radius: 4px;">0</span>`;
                         }
 
                         let esGanador = (reg.pg === 1 || reg.pts >= 3 || reg.ganador === true);
@@ -374,7 +430,7 @@
 
                         filasJugadores += `
                             <tr>
-                                <td class="fw-bold text-white">${iconoResultado} ${nombreJugador}</td>
+                                <td class="fw-bold text-white">${iconoResultado} ${nombreRaw}</td>
                                 <td><span class="badge bg-secondary">${reg.equipo || "Sin Equipo"}</span></td>
                                 <td>${reg.civ || "-"}</td>
                                 <td class="text-center">${varHtml}</td>
@@ -416,7 +472,7 @@
                     contenedor.insertAdjacentHTML('beforeend', cardHTML);
                 });
             } catch (err) {
-                console.error("Error crítico:", err);
+                console.error("Error crítico en historial:", err);
             }
         }
 
