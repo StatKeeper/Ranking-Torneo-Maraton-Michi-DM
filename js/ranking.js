@@ -1,3 +1,36 @@
+// Funciones de sincronización con JSONBin.io (Nube)
+const JSONBIN_ID = "6aa25569ffd5d16053f50b5b";
+const JSONBIN_API_KEY = "$2a$10$CX4eQGnNUKp9i8TVe0.po09BYbaZ/Q64jH2ADLiUjxHtdxD8W5xwm";
+
+async function cargarDatosNube() {
+    try {
+        const respuesta = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+            headers: {
+                "X-Master-Key": JSONBIN_API_KEY
+            }
+        });
+        const resultado = await respuesta.json();
+        return resultado.record;
+    } catch (error) {
+        console.error("Error al cargar de la nube:", error);
+        return null;
+    }
+}
+
+async function guardarDatosNube(nuevosDatos) {
+    try {
+        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Master-Key": JSONBIN_API_KEY
+            },
+            body: JSON.stringify(nuevosDatos)
+        });
+    } catch (error) {
+        console.error("Error al guardar en la nube:", error);
+    }
+}
 // Obtener el nombre oficial corregido desde localStorage
 function obtenerNombreOficial(nombreOriginal) {
     if (!nombreOriginal) return "";
