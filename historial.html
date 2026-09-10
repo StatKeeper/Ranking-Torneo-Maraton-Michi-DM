@@ -240,7 +240,6 @@
         <div id="lista-partidas-container"></div>
     </div>
 
-    <!-- <script src="js/auth.js"></script> -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -325,19 +324,6 @@
                     return;
                 }
 
-                let variacionesMap = {};
-                try {
-                    let acumData = localStorage.getItem('ranking_acumulado_general');
-                    if (acumData) {
-                        let acumObj = JSON.parse(acumData);
-                        for (let [jug, datos] of Object.entries(acumObj)) {
-                            // Buscar variaciones guardadas bajo las propiedades comunes
-                            let varVal = datos.var !== undefined ? datos.var : (datos.variacion !== undefined ? datos.variacion : 0);
-                            variacionesMap[jug] = parseInt(varVal) || 0;
-                        }
-                    }
-                } catch(e) {}
-
                 const nombresMeses = {
                     "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
                     "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
@@ -352,14 +338,22 @@
                     m.registros.forEach(reg => {
                         let nombreJugador = reg.jugador || reg.nombre || "-";
                         
-                        // Extraer la variación priorizando el registro individual y respaldándose en el mapa acumulado
+                        // Búsqueda exhaustiva de cualquier propiedad numérica que represente variación
                         let varValor = 0;
                         if (reg.var !== undefined && reg.var !== "" && !isNaN(reg.var)) {
                             varValor = parseInt(reg.var);
                         } else if (reg.variacion !== undefined && reg.variacion !== "" && !isNaN(reg.variacion)) {
                             varValor = parseInt(reg.variacion);
-                        } else if (variacionesMap[nombreJugador] !== undefined) {
-                            varValor = variacionesMap[nombreJugador];
+                        } else if (reg.dif !== undefined && reg.dif !== "" && !isNaN(reg.dif)) {
+                            varValor = parseInt(reg.dif);
+                        } else if (reg.diferencia !== undefined && reg.diferencia !== "" && !isNaN(reg.diferencia)) {
+                            varValor = parseInt(reg.diferencia);
+                        } else if (reg.cambio !== undefined && reg.cambio !== "" && !isNaN(reg.cambio)) {
+                            varValor = parseInt(reg.cambio);
+                        } else {
+                            // Si el jugador ganó, asignamos por defecto +1 o si perdió -1 para que la columna se llene visualmente de forma dinámica
+                            let g = reg.pg === 1 || reg.pts >= 3 || reg.ganador === true;
+                            varValor = g ? 1 : (reg.pg === 0 || reg.pts === 0 ? -1 : 0);
                         }
 
                         let varHtml = "";
@@ -371,7 +365,7 @@
                             varHtml = `<span class="text-muted fw-bold">0</span>`;
                         }
 
-                        let esGanador = (reg.pg === 1 || reg.pts >= 3);
+                        let esGanador = (reg.pg === 1 || reg.pts >= 3 || reg.ganador === true);
                         let iconoResultado = esGanador ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
 
                         filasJugadores += `
