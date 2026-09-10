@@ -25,7 +25,7 @@
             margin: 0;
             font-size: 1.4rem;
             line-height: 1.2;
-            max-width: 100%;
+            max-width: 65%;
             color: #f8f9fa;
         }
         .header-info-container {
@@ -35,10 +35,28 @@
             gap: 5px;
         }
         .header-top .fecha-actualizacion {
-            font-size: 0.80rem;
+            font-size: 0.85rem;
             font-weight: bold;
             color: #aaa;
             text-align: right;
+        }
+
+        /* --- BOTÓN ADMIN VISIBLE EN PC, OCULTO EN CELULARES --- */
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 768px) {
+            .admin-toggle-btn {
+                display: none !important; /* Oculto en celulares para los visitantes */
+            }
         }
 
         /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
@@ -126,6 +144,24 @@
             font-size: 1.1rem;
         }
 
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
         #main-content {
             margin-left: 0;
             padding: 15px;
@@ -155,11 +191,19 @@
 </head>
 <body>
 
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label class="form-label mt-2">Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
+    </div>
+
     <div id="main-content">
-        <!-- Encabezado superior limpio sin botón de Admin -->
+        <!-- Encabezado superior -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
                 <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
             </div>
         </div>
@@ -169,6 +213,8 @@
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
             <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
             <a href="historial.html" class="tab-btn">📜 Historial de Partidas</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
 
         <!-- Botones de Acceso Rápido a Últimas Imágenes -->
@@ -180,7 +226,7 @@
 
         <h2 style="color: #fff; font-size: 1.3rem;">📊 Clasificación General</h2>
         
-        <!-- Barra de Jornada y Filtros Independientes de Año / Mes -->
+        <!-- Barra de Jornada y Filtros -->
         <div class="bar-jornada-filtro">
             <div class="info-jornada">
                 <span id="label-fecha" style="color: #ffc107;">Fecha --</span>
@@ -255,8 +301,14 @@
         <img id="img-modal-contenido" src="" alt="Imagen Ampliada">
     </div>
 
+    <script src="js/auth.js"></script>
     <script src="js/ranking.js"></script>
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('open');
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             const ahora = new Date();
             const fechaFormateada = ahora.toLocaleDateString('es-ES');
