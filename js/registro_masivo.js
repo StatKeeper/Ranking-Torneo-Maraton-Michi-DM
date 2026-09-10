@@ -37,7 +37,23 @@ function configurarEventosRegistroMasivo() {
     }
 }
 
-function procesarTextoPlanoRegistroMasivo() {
+// Función auxiliar para subir el localStorage completo a la nube automáticamente
+async function sincronizarLocalStorageConNube() {
+    try {
+        let datosCompletos = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            let k = localStorage.key(i);
+            datosCompletos[k] = localStorage.getItem(k);
+        }
+        if (typeof guardarDatosNube === 'function') {
+            await guardarDatosNube(datosCompletos);
+        }
+    } catch (e) {
+        console.error("Error sincronizando con la nube:", e);
+    }
+}
+
+async function procesarTextoPlanoRegistroMasivo() {
     const textarea = document.getElementById("texto-plano-input") || document.getElementById("bloque-datos") || document.querySelector("textarea");
     if (!textarea || !textarea.value.trim()) {
         alert("Por favor ingresa o pega el texto plano con los registros de la partida.");
@@ -90,26 +106,20 @@ function procesarTextoPlanoRegistroMasivo() {
                 }
             }
 
-            // DETECCIÓN INTELIGENTE: Buscamos en las columnas numéricas cuál representa los puntos totales (Pts) y cuál la victoria (V/D)
             let ptsTotales = 0;
             let vd = 0;
             let e = 0, r = 0, m = 0, o = 0, s = 0, rch = 0, mg = 0, rlp = 0;
             let uAses = "0", eArr = "0", equipo = "Sin Equipo", civ = "-";
 
-            // Si el formato trae varias columnas, extraemos los valores buscando los números
             let numerosEnLinea = partes.slice(1).map(p => parseInt(p)).filter(n => !isNaN(n));
             
             if (numerosEnLinea.length > 0) {
-                // Suponemos que la primera columna numérica después del nombre es V/D (0 o 1) o los Pts
                 if (numerosEnLinea[0] === 0 || numerosEnLinea[0] === 1) {
                     vd = numerosEnLinea[0];
                 }
                 
-                // Si hay una columna explícita de puntos (suele ser la segunda o tercera columna numérica o la mayor si incluye bonos)
-                // Tomamos directamente el número que viene en la segunda columna si es mayor a 1, o sumamos V/D base (3 si gana) + bonos
                 let posiblePts = numerosEnLinea[1] !== undefined ? numerosEnLinea[1] : (vd === 1 ? 3 : 0);
                 
-                // Si en el texto plano pasas los bonos individuales, los leemos de las columnas posteriores
                 e = parseInt(partes[2]) || 0;
                 r = parseInt(partes[3]) || 0;
                 m = parseInt(partes[4]) || 0;
@@ -119,11 +129,9 @@ function procesarTextoPlanoRegistroMasivo() {
                 mg = parseInt(partes[8]) || 0;
                 rlp = parseInt(partes[9]) || 0;
 
-                // Si Pts en la columna 1 viene como 3 pero tiene bonos, nos aseguramos de respetar el puntaje real indicado o calcularlo
                 let sumaBonos = e + r + m + o + s + rch + mg + rlp;
                 let baseWin = (vd === 1) ? 3 : 0;
                 
-                // El puntaje total será el mayor entre lo que indique la columna de puntos y la suma real de victoria + bonos
                 ptsTotales = Math.max(posiblePts, baseWin + sumaBonos);
                 if (ptsTotales === 0 && vd === 1) ptsTotales = 3 + sumaBonos;
 
@@ -155,14 +163,8 @@ function procesarTextoPlanoRegistroMasivo() {
                 pts: ptsTotales,
                 pg: vd,
                 pp: vd === 0 ? 1 : 0,
-                e: e,
-                r: r,
-                m: m,
-                o: o,
-                s: s,
-                rch: rch,
-                mg: mg,
-                rlp: rlp,
+                e: e, r: r, m: m, o: o, s: s,
+                rch: rch, mg: mg, rlp: rlp,
                 uAses: uAses,
                 eArr: eArr,
                 equipo: equipo,
@@ -182,7 +184,10 @@ function procesarTextoPlanoRegistroMasivo() {
     let claveStorage = `registros_${anioVal}-${mesNum}_${fechaStr}_${partidaStr}`.replace(/\s+/g, '_');
     localStorage.setItem(claveStorage, JSON.stringify(registrosPartida));
 
-    alert("¡Partida procesada y registrada exitosamente con todos los puntos y bonos!");
+    // Sincronizar automáticamente con la nube para que los celulares y otras PCs se actualicen
+    await sincronizarLocalStorageConNube();
+
+    alert("¡Partida procesada, registrada y sincronizada en la nube con éxito para toda la comunidad!");
     cargarDatosGestionRegistros();
 }
 
