@@ -224,7 +224,6 @@
             renderTablaGestionRegistros();
         });
 
-        // Función para leer el LocalStorage y pintar los registros en la tabla inferior
         function renderTablaGestionRegistros() {
             const anio = document.getElementById('gestion-anio').value || "2026";
             const mes = document.getElementById('gestion-mes').value || "agosto";
@@ -234,8 +233,6 @@
             const tbody = document.getElementById('tabla-registros-guardados');
             if (!tbody) return;
 
-            // Clave típica usada en los registros masivos: registros_YYYY-MM_Fecha XX_Partida X o similar
-            // Intentamos buscar variantes comunes en el localStorage
             let mesNum = "08";
             const mesesMap = {enero:"01", febrero:"02", marzo:"03", abril:"04", mayo:"05", junio:"06", julio:"07", agosto:"08", septiembre:"09", octubre:"10", noviembre:"11", diciembre:"12"};
             if (mesesMap[mes.toLowerCase()]) {
@@ -245,7 +242,6 @@
             const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
             let dataRaw = localStorage.getItem(storageKey);
 
-            // Búsqueda flexible si la clave difiere ligeramente en mayúsculas/minúsculas
             if (!dataRaw) {
                 for (let i = 0; i < localStorage.length; i++) {
                     let k = localStorage.key(i);
@@ -316,7 +312,6 @@
             
             if (confirm(`¿Estás seguro de eliminar todos los registros de ${jornada} - ${partida}?`)) {
                 localStorage.removeItem(storageKey);
-                // Buscar y borrar claves similares por seguridad
                 for (let i = localStorage.length - 1; i >= 0; i--) {
                     let k = localStorage.key(i);
                     if (k && k.includes(anio) && k.includes(jornada) && k.includes(partida)) {
@@ -360,7 +355,7 @@
             } catch(e) {}
         }
 
-        // Funciones de procesamiento masivo y guardado de imágenes
+        // FUNCIÓN ACTUALIZADA: Sumatoria exacta de Victoria (3 pts si vd===1) + todos los bonos
         function procesarRegistroMasivo() {
             const anio = document.getElementById('select-anio').value;
             const mes = document.getElementById('select-mes').value;
@@ -382,19 +377,70 @@
             let registros = [];
 
             lineas.forEach((linea, index) => {
-                let partes = linea.split('|').map(p => p.trim());
+                let lineaTrim = linea.trim();
+                if (!lineaTrim) return;
+
+                let partes = lineaTrim.split('|').map(p => p.trim());
+                if (partes.length < 10) {
+                    partes = lineaTrim.split(/\s{2,}|\t+/).map(p => p.trim());
+                }
+
                 if (partes.length >= 2) {
+                    let jugador = partes[0].replace(/^\[.*?\]\s*/, '').trim();
+                    if (partes[0].startsWith("[")) {
+                        let matchClan = partes[0].match(/^(\[.*?\])\s*(.*)$/);
+                        if (matchClan) {
+                            jugador = `${matchClan[1]} ${matchClan[2]}`.trim();
+                        }
+                    }
+
+                    // Lectura de cada columna según el orden establecido:
+                    // [0] Jugador | [1] V/D | [2] Excelencia | [3] Resistencia | [4] Militar | [5] Oro | [6] Sociedad | [7] Racha | [8] Matagigantes | [9] Relámpago | [10] U. Ases. | [11] E. Arr. | [12] Equipo | [13] Civ
+                    let vd = parseInt(partes[1]) || 0;
+                    let e = parseInt(partes[2]) || 0;
+                    let r = parseInt(partes[3]) || 0;
+                    let m = parseInt(partes[4]) || 0;
+                    let o = parseInt(partes[5]) || 0;
+                    let s = parseInt(partes[6]) || 0;
+                    let rch = parseInt(partes[7]) || 0;
+                    let mg = parseInt(partes[8]) || 0;
+                    let rlp = parseInt(partes[9]) || 0;
+
+                    let uAses = partes[10] || "0";
+                    let eArr = partes[11] || "0";
+                    let equipo = partes[12] || "Sin Equipo";
+                    let civ = partes[13] || "-";
+
+                    // Sumatoria estricta de Puntos: 3 si gana + la suma de todos los bonos
+                    let puntosBaseVictoria = (vd === 1) ? 3 : 0;
+                    let totalBonos = e + r + m + o + s + rch + mg + rlp;
+                    let ptsTotales = puntosBaseVictoria + totalBonos;
+
+                    let sucesoNotas = [];
+                    if (vd === 1) sucesoNotas.push("Victoria");
+                    if (e > 0) sucesoNotas.push("E");
+                    if (r > 0) sucesoNotas.push("R");
+                    if (m > 0) sucesoNotas.push("M");
+                    if (o > 0) sucesoNotas.push("O");
+                    if (s > 0) sucesoNotas.push("S");
+                    if (rch > 0) sucesoNotas.push("Rch");
+                    if (mg > 0) sucesoNotas.push("MG");
+                    if (rlp > 0) sucesoNotas.push("RLP");
+
+                    let sucesoNotaStr = sucesoNotas.length > 0 ? sucesoNotas.join(" + ") : (vd === 1 ? "Victoria" : "Derrota");
+
                     registros.push({
                         id: index + 1,
-                        jugador: partes[0] || "Desconocido",
-                        pts: parseInt(partes[1]) || 0,
-                        pg: partes[1] >= 3 ? 1 : 0,
-                        pp: partes[1] < 3 ? 1 : 0,
-                        uAses: partes[10] || "0",
-                        eArr: partes[11] || "0",
-                        equipo: partes[12] || "Sin Equipo",
-                        civ: partes[13] || "-",
-                        duracion: duracion
+                        jugador: jugador,
+                        pts: ptsTotales,
+                        pg: vd,
+                        pp: vd === 0 ? 1 : 0,
+                        uAses: uAses,
+                        eArr: eArr,
+                        equipo: equipo,
+                        civ: civ,
+                        duracion: duracion,
+                        sucesoNota: sucesoNotaStr
                     });
                 }
             });
@@ -402,16 +448,16 @@
             if (registros.length > 0) {
                 const storageKey = `registros_${anio}-${mesNum}_${jornada}_${partida}`;
                 localStorage.setItem(storageKey, JSON.stringify(registros));
-                alert(`¡Se procesaron y guardaron ${registros.length} registros con éxito!`);
+                alert(`¡Se procesaron y guardaron ${registros.length} registros con éxito sumando los bonos!`);
                 document.getElementById('bloque-datos').value = "";
-                // Actualizar selects de gestión para que coincidan y muestren los datos recién guardados
+                
                 document.getElementById('gestion-anio').value = anio;
                 document.getElementById('gestion-mes').value = mes;
                 document.getElementById('gestion-jornada').value = jornada;
                 document.getElementById('gestion-partida').value = partida;
                 renderTablaGestionRegistros();
             } else {
-                alert("No se pudieron parsear los datos. Revisa el formato.");
+                alert("No se pudieron parsear los datos. Revisa el formato de las columnas.");
             }
         }
 
