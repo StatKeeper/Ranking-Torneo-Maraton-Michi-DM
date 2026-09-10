@@ -36,8 +36,6 @@
                         <option value="2026" selected>2026</option>
                         <option value="2027">2027</option>
                         <option value="2028">2028</option>
-                        <option value="2029">2029</option>
-                        <option value="2030">2030</option>
                     </select>
                 </div>
                 <div>
@@ -164,63 +162,42 @@
     <script src="js/registro_masivo.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Poblar Años (2026 a 2030)
-            const aniosOptions = `
-                <option value="2026" selected>2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-                <option value="2030">2030</option>
-            `;
-            const gestionAnio = document.getElementById('gestion-anio');
-            if (gestionAnio) gestionAnio.innerHTML = aniosOptions;
-
-            // Poblar Meses
-            const mesesOptions = `
-                <option value="enero">Enero</option>
-                <option value="febrero">Febrero</option>
-                <option value="marzo">Marzo</option>
-                <option value="abril">Abril</option>
-                <option value="mayo">Mayo</option>
-                <option value="junio">Junio</option>
-                <option value="julio">Julio</option>
-                <option value="agosto" selected>Agosto</option>
-                <option value="septiembre">Septiembre</option>
-                <option value="octubre">Octubre</option>
-                <option value="noviembre">Noviembre</option>
-                <option value="diciembre">Diciembre</option>
-            `;
-            const gestionMes = document.getElementById('gestion-mes');
-            if (gestionMes) gestionMes.innerHTML = mesesOptions;
-
             // Poblar Jornadas (1 a 31)
             const jornadaSelect = document.getElementById('jornada-select');
             const gestionJornada = document.getElementById('gestion-jornada');
             
-            let jornadasHtml = "";
-            for (let i = 1; i <= 31; i++) {
-                let numStr = i < 10 ? '0' + i : i;
-                jornadasHtml += `<option value="Fecha ${numStr}">Fecha ${numStr}</option>`;
+            if (jornadaSelect && jornadaSelect.options.length <= 3) {
+                jornadaSelect.innerHTML = "";
+                for (let i = 1; i <= 31; i++) {
+                    let numStr = i < 10 ? '0' + i : i;
+                    jornadaSelect.innerHTML += `<option value="Fecha ${numStr}">Fecha ${numStr}</option>`;
+                }
             }
 
-            if (jornadaSelect) jornadaSelect.innerHTML = jornadasHtml;
-            if (gestionJornada) gestionJornada.innerHTML = jornadasHtml;
+            if (gestionJornada && gestionJornada.options.length <= 3) {
+                gestionJornada.innerHTML = "";
+                for (let i = 1; i <= 31; i++) {
+                    let numStr = i < 10 ? '0' + i : i;
+                    gestionJornada.innerHTML += `<option value="Fecha ${numStr}">Fecha ${numStr}</option>`;
+                }
+            }
 
             // Poblar Partidas (1 a 10)
             const partidaSelect = document.getElementById('partida-select');
             const gestionPartida = document.getElementById('gestion-partida');
 
-            let partidasHtml = "";
-            for (let i = 1; i <= 10; i++) {
-                partidasHtml += `<option value="Partida ${i}">Partida ${i}</option>`;
+            if (partidaSelect && partidaSelect.options.length <= 3) {
+                partidaSelect.innerHTML = "";
+                for (let i = 1; i <= 10; i++) {
+                    partidaSelect.innerHTML += `<option value="Partida ${i}">Partida ${i}</option>`;
+                }
             }
 
-            if (partidaSelect) partidaSelect.innerHTML = partidasHtml;
-            if (gestionPartida) gestionPartida.innerHTML = partidasHtml;
-
-            // Renderizar tabla inicial de gestión si existe la función
-            if (typeof renderTablaGestionRegistros === 'function') {
-                renderTablaGestionRegistros();
+            if (gestionPartida && gestionPartida.options.length <= 3) {
+                gestionPartida.innerHTML = "";
+                for (let i = 1; i <= 10; i++) {
+                    gestionPartida.innerHTML += `<option value="Partida ${i}">Partida ${i}</option>`;
+                }
             }
         });
 
@@ -234,6 +211,7 @@
                     let width = img.width;
                     let height = img.height;
 
+                    // Limitar dimensiones máximas para garantizar bajo peso sin perder legibilidad
                     const maxWidth = 1200;
                     const maxHeight = 1600;
 
@@ -255,6 +233,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
+                    // Convertir a formato JPG comprimido al 85% de calidad
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
                     try {
@@ -270,6 +249,7 @@
             reader.readAsDataURL(file);
         }
 
+        // Función para guardar las imágenes localmente con compresión automática
         function guardarImagenesCandidatos() {
             const anio = document.getElementById('select-anio').value || "2026";
             const mes = document.getElementById('select-mes').value || "agosto";
@@ -315,6 +295,7 @@
             }
         }
 
+        // Función para eliminar las imágenes guardadas si hubo un error
         function eliminarImagenesCandidatos() {
             const anio = document.getElementById('select-anio').value || "2026";
             const mes = document.getElementById('select-mes').value || "agosto";
