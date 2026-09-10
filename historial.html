@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Historial de Partidas</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            gap: 10px;
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            max-width: 65%;
+            color: #f8f9fa;
+        }
+        .header-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: #2a2a2a;
+            color: #ddd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #444;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover {
+            background: #333;
+            color: #d4af37;
+            border-color: #d4af37;
+        }
+        .tab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+
+        /* --- PANEL LATERAL --- */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
+        #main-content {
+            margin-left: 0;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+        @media (min-width: 992px) {
+            #main-content {
+                margin-left: 0; /* Ajustable si decides acoplar sidebar fijo */
+            }
+        }
+
+        /* --- ESTILO ESTILO AOE COMPANION (TARJETAS DE PARTIDAS) --- */
+        .match-card {
+            background: #1a1c23;
+            border: 1px solid #2d3142;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .match-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-2px);
+            background: #212431;
+        }
+        .match-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .match-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .match-map-icon {
+            width: 45px;
+            height: 45px;
+            background: #2e3a23;
+            border: 2px solid #5c832f;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #a3c26a;
+        }
+        .match-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 0;
+        }
+        .match-subtitle {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .match-duration {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .match-players {
+            font-size: 0.9rem;
+            color: #ccc;
+            border-top: 1px solid #2a2e3d;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        /* --- MODAL DETALLE DE PARTIDA (ESTILO SEGUNDA IMAGEN) --- */
+        .modal-match-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .modal-match-content {
+            background: #181a20;
+            border: 2px solid #333842;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-match-header {
+            background: #21252f;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333842;
+        }
+        .modal-match-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .match-info-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #121318;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #2a2e3d;
+        }
+        .team-box {
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+        .team-winner {
+            border: 1px solid #2b5c30;
+            background: rgba(43, 92, 48, 0.15);
+        }
+        .team-loser {
+            border: 1px solid #5c2b2b;
+            background: rgba(92, 43, 43, 0.15);
+        }
+        .player-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #1e222d;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        .player-row:last-child {
+            margin-bottom: 0;
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .civ-badge {
+            font-size: 0.8rem;
+            background: #2d3142;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #bbb;
+        }
+        .vs-divider {
+            text-align: center;
+            font-weight: bold;
+            color: #d4af37;
+            margin: 10px 0;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label class="form-label mt-2">Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
+    </div>
+
+    <div id="main-content" class="container-fluid p-4">
+        <!-- Encabezado superior -->
+        <div class="header-top">
+            <h1>🏆 Ranking Maratón Michi DM</h1>
+            <div class="header-info-container">
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
+                <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.90rem;">
+                    --/--/---- --:--:-- --
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas de navegación -->
+        <div class="tabs mb-4">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
+            <a href="historial.html" class="tab-btn active">📜 Historial de Partidas</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2 class="mb-3 text-white"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
+
+        <!-- Filtros del Historial -->
+        <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
+            <div class="row align-items-center g-3">
+                <div class="col-md-4">
+                    <span class="fw-bold text-light fs-5">Filtro de Encuentros</span>
+                </div>
+                <div class="col-md-8 d-flex flex-wrap justify-content-end gap-3 align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 90px;">
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
+                            <option value="agosto" selected>Agosto</option>
+                            <option value="septiembre">Septiembre</option>
+                            <option value="octubre">Octubre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Fecha:</label>
+                        <select id="filtro-fecha" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
+                            <option value="todos">Todas</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenedor dinámico donde se listarán las tarjetas de partidas estilo AoE Companion -->
+        <div id="lista-partidas-container">
+            <!-- Ejemplo estático de cómo se renderiza una tarjeta (se automatizará por script según datos guardados) -->
+            <div class="match-card" onclick="abrirDetallePartida('Michi 3v3', '52m 18s', 'Regmex, Euphory y Paco')">
+                <div class="match-header">
+                    <div class="match-title-group">
+                        <div class="match-map-icon">
+                            <i class="fas fa-map"></i>
+                        </div>
+                        <div>
+                            <div class="match-title">Michi</div>
+                            <div class="match-subtitle">3v3 - Maratón DM</div>
+                        </div>
+                    </div>
+                    <div class="match-duration"><i class="far fa-clock"></i> 52m 18s</div>
+                </div>
+                <div class="match-players">
+                    <i class="fas fa-users text-warning me-1"></i> <strong>Regmex, Euphory y Paco</strong> jugó
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalle de Partida (Estilo segunda imagen) -->
+    <div id="modal-detalle-partida" class="modal-match-overlay" onclick="cerrarDetallePartida(event)">
+        <div class="modal-match-content" onclick="event.stopPropagation()">
+            <div class="modal-match-header">
+                <h5 class="m-0 text-white"><i class="fas fa-chess-board text-warning"></i> <span id="modal-mapa-titulo">Michi</span></h5>
+                <button type="button" class="btn-close btn-close-white" onclick="cerrarDetallePartidaDirecto()"></button>
+            </div>
+            <div class="modal-match-body">
+                <!-- Barra superior de tiempos / datos -->
+                <div class="match-info-bar">
+                    <span><i class="far fa-clock text-warning"></i> <span id="modal-duracion">52m 18s</span></span>
+                    <span><i class="fas fa-bolt text-warning"></i> Rápida / DM</span>
+                    <span><i class="fas fa-hashtag text-warning"></i> ID: 5055914</span>
+                </div>
+
+                <!-- Equipo Ganador -->
+                <div class="team-box team-winner">
+                    <div class="text-success fw-bold mb-2 small"><i class="fas fa-shield-alt"></i> Equipo Vencedor</div>
+                    <div class="player-row">
+                        <div class="player-info">
+                            <span class="civ-badge">Españoles</span>
+                            <span class="text-white fw-bold">⬛ Y Y ...</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-success fw-bold"><i class="fas fa-arrow-up"></i> 1</span>
+                            <span class="fs-5">👑</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vs-divider">VS</div>
+
+                <!-- Equipo Perdedor -->
+                <div class="team-box team-loser">
+                    <div class="text-danger fw-bold mb-2 small"><i class="fas fa-shield-alt"></i> Equipo Derrotado</div>
+                    <div class="player-row">
+                        <div class="player-info">
+                            <span class="civ-badge">Teutones</span>
+                            <span class="text-light">ShierBo...</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-danger fw-bold"><i class="fas fa-arrow-down"></i> 1</span>
+                            <span class="fs-5">💀</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Poblar fechas en el filtro
+        const selectFiltroFecha = document.getElementById('filtro-fecha');
+        for (let i = 1; i <= 31; i++) {
+            let opt = document.createElement('option');
+            let numStr = i < 10 ? '0' + i : i;
+            opt.value = `Fecha ${numStr}`;
+            opt.textContent = `Fecha ${numStr}`;
+            selectFiltroFecha.appendChild(opt);
+        }
+
+        // Funciones para abrir y cerrar el detalle estilo AoE Companion
+        function abrirDetallePartida(mapa, duracion, jugadores) {
+            document.getElementById('modal-mapa-titulo').textContent = mapa;
+            document.getElementById('modal-duracion').textContent = duracion;
+            document.getElementById('modal-detalle-partida').style.display = 'flex';
+        }
+
+        function cerrarDetallePartida(event) {
+            document.getElementById('modal-detalle-partida').style.display = 'none';
+        }
+
+        function cerrarDetallePartidaDirecto() {
+            document.getElementById('modal-detalle-partida').style.display = 'none';
+        }
+
+        // Sincronizar fecha y hora con el sistema general
+        document.addEventListener("DOMContentLoaded", function() {
+            const elFecha = document.getElementById('ultima-actualizacion');
+            if (elFecha) {
+                const ahora = new Date();
+                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                elFecha.textContent = `${ahora.toLocaleDateString('es-ES', opcionesFecha)}, ${ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase()}`;
+            }
+        });
+    </script>
+</body>
+</html>
