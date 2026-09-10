@@ -1,326 +1,652 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Ranking Maratón Michi DM - Galería y Registro Masivo</title>
+
     <link rel="stylesheet" href="css/estilos.css">
+
 </head>
+
 <body>
 
+
+
     <div id="sidebar">
+
         <h3>🔐 Panel de Control</h3>
+
         <label>Contraseña de Admin:</label>
+
         <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+
         <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+
     </div>
 
+
+
     <div id="main-content">
+
         <h1>🏆 Ranking Maratón Michi DM</h1>
 
+
+
         <div class="tabs">
+
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+
             <a href="candidatos.html" class="tab-btn">⭐ Candidatos al Jugador de la Fecha</a>
+
             <a href="galeria.html" class="tab-btn active admin-only">🖼️ Galería y Registro Masivo</a>
+
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+
         </div>
+
+
 
         <h2>⚡ Registro Masivo por Texto Plano</h2>
 
+
+
         <div class="card">
+
             <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr;">
+
                 <div>
+
                     <label>Año:</label>
+
                     <select id="select-anio">
+
                         <option value="2026" selected>2026</option>
+
                         <option value="2027">2027</option>
+
                         <option value="2028">2028</option>
+
                     </select>
+
                 </div>
+
                 <div>
+
                     <label>Mes:</label>
+
                     <select id="select-mes">
+
                         <option value="enero">Enero</option>
+
                         <option value="febrero">Febrero</option>
+
                         <option value="marzo">Marzo</option>
+
                         <option value="abril">Abril</option>
+
                         <option value="mayo">Mayo</option>
+
                         <option value="junio">Junio</option>
+
                         <option value="julio">Julio</option>
+
                         <option value="agosto" selected>Agosto</option>
+
                         <option value="septiembre">Septiembre</option>
+
                         <option value="octubre">Octubre</option>
+
                         <option value="noviembre">Noviembre</option>
+
                         <option value="diciembre">Diciembre</option>
+
                     </select>
+
                 </div>
+
                 <div>
+
                     <label>Jornada:</label>
+
                     <select id="jornada-select"></select>
+
                 </div>
+
                 <div>
+
                     <label>Partida:</label>
+
                     <select id="partida-select"></select>
+
                 </div>
+
                 <div>
+
                     <label>Duración (HH:MM:SS):</label>
+
                     <input type="text" id="duracion-partida" placeholder="01:07:08">
+
                 </div>
+
             </div>
+
+
 
             <div style="margin-top: 15px;">
+
                 <label>Bloque de datos (JUGADOR | V/D | E | R | M | O | S | Rch | MG | RLP | [U. Ases.] | [E. Arr.] | [Equipo] | [Civ]):</label>
+
                 <textarea id="bloque-datos" rows="6" style="width: 100%; font-family: monospace; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+
             </div>
+
+
 
             <button class="btn-action" style="margin-top: 15px;" onclick="procesarRegistroMasivo()">🚀 Procesar y Registrar Todo</button>
+
         </div>
+
+
 
         <!-- SECCIÓN: Subida de Gráficos de Galardón y Candidatos -->
+
         <h2>🖼️ Subida de Gráficos (Galardón y Candidatos)</h2>
 
+
+
         <div class="card" style="border-left: 5px solid #b8860b;">
+
             <p style="color: #555; font-size: 0.95rem; margin-bottom: 15px;">
+
                 Sube las infografías oficiales para la fecha y partida seleccionada arriba. Estas imágenes se mostrarán automáticamente en la pestaña de Candidatos.
+
             </p>
+
             
+
             <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+
                 <div>
+
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">👑 Imagen de Galardón (Jugador de la Fecha):</label>
+
                     <input type="file" id="input-file-galardon" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #fafafa;">
+
                 </div>
+
                 <div>
+
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">📊 Imagen de Evaluación de Candidatos:</label>
+
                     <input type="file" id="input-file-candidatos" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #fafafa;">
+
                 </div>
+
             </div>
 
+
+
             <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+
                 <button class="btn-action" style="background-color: #b8860b;" onclick="guardarImagenesCandidatos()">💾 Guardar Imágenes para esta Fecha</button>
+
                 <button class="btn-action btn-delete" style="background-color: #d9534f;" onclick="eliminarImagenesCandidatos()">🗑️ Eliminar Imágenes de esta Fecha</button>
+
                 <span id="msg-exito-img" style="color: green; font-weight: bold; display: none;">¡Operación realizada correctamente!</span>
+
             </div>
+
         </div>
+
+
 
         <h2>🗑️ Gestión y Eliminación de Registros Guardados</h2>
 
+
+
         <div class="card">
+
             <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+
                 <div>
+
                     <label>Año:</label>
+
                     <select id="gestion-anio" onchange="renderTablaGestionRegistros()"></select>
+
                 </div>
+
                 <div>
+
                     <label>Mes:</label>
+
                     <select id="gestion-mes" onchange="renderTablaGestionRegistros()"></select>
+
                 </div>
+
                 <div>
+
                     <label>Jornada:</label>
+
                     <select id="gestion-jornada" onchange="renderTablaGestionRegistros()"></select>
+
                 </div>
+
                 <div>
+
                     <label>Partida:</label>
+
                     <select id="gestion-partida" onchange="renderTablaGestionRegistros()"></select>
+
                 </div>
+
             </div>
+
+
 
             <table style="margin-top: 20px;">
+
                 <thead>
+
                     <tr>
+
                         <th>ID</th>
+
                         <th>Jugador</th>
+
                         <th>Pts</th>
+
                         <th>PG</th>
+
                         <th>PP</th>
+
                         <th title="Unidades Asesinadas">U. Ases.</th>
+
                         <th title="Edificios Arrasados">E. Arr.</th>
+
                         <th>Equipo</th>
+
                         <th>Civ</th>
+
                         <th>Duración</th>
+
                     </tr>
+
                 </thead>
+
                 <tbody id="tabla-registros-guardados">
+
                     <tr>
+
                         <td colspan="10" style="text-align: center; color: #777;">No hay registros cargados aún para esta fecha/partida.</td>
+
                     </tr>
+
                 </tbody>
+
             </table>
 
+
+
             <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+
                 <button class="btn-action btn-delete" onclick="eliminarPartidaCompleta()">🚨 Eliminar toda esta Partida</button>
+
                 <div style="display: flex; gap: 10px; align-items: center;">
+
                     <label>ID individual a borrar:</label>
+
                     <input type="number" id="id-borrar-registro" style="width: 80px;" placeholder="1">
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
+
+
     <script src="js/auth.js"></script>
+
     <script src="js/equivalencias.js"></script>
+
     <script src="js/registro_masivo.js"></script>
+
     <script>
+
         document.addEventListener("DOMContentLoaded", function() {
+
             // Poblar Jornadas (1 a 31)
+
             const jornadaSelect = document.getElementById('jornada-select');
+
             const gestionJornada = document.getElementById('gestion-jornada');
+
             
+
             if (jornadaSelect && jornadaSelect.options.length <= 3) {
+
                 jornadaSelect.innerHTML = "";
+
                 for (let i = 1; i <= 31; i++) {
+
                     let numStr = i < 10 ? '0' + i : i;
+
                     jornadaSelect.innerHTML += `<option value="Fecha ${numStr}">Fecha ${numStr}</option>`;
+
                 }
+
             }
+
+
 
             if (gestionJornada && gestionJornada.options.length <= 3) {
+
                 gestionJornada.innerHTML = "";
+
                 for (let i = 1; i <= 31; i++) {
+
                     let numStr = i < 10 ? '0' + i : i;
+
                     gestionJornada.innerHTML += `<option value="Fecha ${numStr}">Fecha ${numStr}</option>`;
+
                 }
+
             }
+
+
 
             // Poblar Partidas (1 a 10)
+
             const partidaSelect = document.getElementById('partida-select');
+
             const gestionPartida = document.getElementById('gestion-partida');
 
+
+
             if (partidaSelect && partidaSelect.options.length <= 3) {
+
                 partidaSelect.innerHTML = "";
+
                 for (let i = 1; i <= 10; i++) {
+
                     partidaSelect.innerHTML += `<option value="Partida ${i}">Partida ${i}</option>`;
+
                 }
+
             }
+
+
 
             if (gestionPartida && gestionPartida.options.length <= 3) {
+
                 gestionPartida.innerHTML = "";
+
                 for (let i = 1; i <= 10; i++) {
+
                     gestionPartida.innerHTML += `<option value="Partida ${i}">Partida ${i}</option>`;
+
                 }
+
             }
+
         });
 
+
+
         // Función auxiliar para comprimir la imagen antes de guardarla en localStorage
+
         function comprimirYGuardarImagen(file, storageKey, callback) {
+
             const reader = new FileReader();
+
             reader.onload = function(event) {
+
                 const img = new Image();
+
                 img.onload = function() {
+
                     const canvas = document.createElement('canvas');
+
                     let width = img.width;
+
                     let height = img.height;
 
+
+
                     // Limitar dimensiones máximas para garantizar bajo peso sin perder legibilidad
+
                     const maxWidth = 1200;
+
                     const maxHeight = 1600;
 
+
+
                     if (width > height) {
+
                         if (width > maxWidth) {
+
                             height *= maxWidth / width;
+
                             width = maxWidth;
+
                         }
+
                     } else {
+
                         if (height > maxHeight) {
+
                             width *= maxHeight / height;
+
                             height = maxHeight;
+
                         }
+
                     }
+
+
 
                     canvas.width = width;
+
                     canvas.height = height;
 
+
+
                     const ctx = canvas.getContext('2d');
+
                     ctx.drawImage(img, 0, 0, width, height);
 
+
+
                     // Convertir a formato JPG comprimido al 85% de calidad
+
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
+
+
                     try {
+
                         localStorage.setItem(storageKey, dataUrl);
+
                         callback(true);
+
                     } catch (err) {
+
                         alert("La imagen sigue siendo demasiado grande incluso después de comprimirla. Intenta con una imagen más ligera.");
+
                         callback(false);
+
                     }
+
                 };
+
                 img.src = event.target.result;
+
             };
+
             reader.readAsDataURL(file);
+
         }
+
+
 
         // Función para guardar las imágenes localmente con compresión automática
+
         function guardarImagenesCandidatos() {
+
             const anio = document.getElementById('select-anio').value || "2026";
+
             const mes = document.getElementById('select-mes').value || "agosto";
+
             const jornadaText = document.getElementById('jornada-select').value || "Fecha 01";
+
             const partidaText = document.getElementById('partida-select').value || "Partida 1";
 
+
+
             const fNum = jornadaText.replace(/\D/g, '');
+
             const pNum = partidaText.replace(/\D/g, '');
+
             const fStr = fNum.padStart(2, '0');
+
+
 
             const fileGalardon = document.getElementById('input-file-galardon').files[0];
+
             const fileCandidatos = document.getElementById('input-file-candidatos').files[0];
 
+
+
             if (!fileGalardon && !fileCandidatos) {
+
                 alert("Por favor selecciona al menos una imagen (Galardón o Candidatos).");
+
                 return;
+
             }
 
+
+
             const keyBase = `img_${anio}_${mes.toLowerCase()}_f${fStr}_p${pNum}`;
+
             let completados = 0;
+
             const total = (fileGalardon ? 1 : 0) + (fileCandidatos ? 1 : 0);
 
+
+
             if (fileGalardon) {
+
                 comprimirYGuardarImagen(fileGalardon, `${keyBase}_galardon`, function(success) {
+
                     if (success) verificarFin();
+
                 });
+
             }
+
+
 
             if (fileCandidatos) {
+
                 comprimirYGuardarImagen(fileCandidatos, `${keyBase}_candidatos`, function(success) {
+
                     if (success) verificarFin();
+
                 });
+
             }
+
+
 
             function verificarFin() {
+
                 completados++;
+
                 if (completados === total) {
+
                     const msg = document.getElementById('msg-exito-img');
+
                     msg.textContent = "¡Imágenes comprimidas y guardadas correctamente!";
+
                     msg.style.display = "inline";
+
                     setTimeout(() => { msg.style.display = "none"; }, 4000);
+
                 }
+
             }
+
         }
 
+
+
         // Función para eliminar las imágenes guardadas si hubo un error
+
         function eliminarImagenesCandidatos() {
+
             const anio = document.getElementById('select-anio').value || "2026";
+
             const mes = document.getElementById('select-mes').value || "agosto";
+
             const jornadaText = document.getElementById('jornada-select').value || "Fecha 01";
+
             const partidaText = document.getElementById('partida-select').value || "Partida 1";
 
+
+
             const fNum = jornadaText.replace(/\D/g, '');
+
             const pNum = partidaText.replace(/\D/g, '');
+
             const fStr = fNum.padStart(2, '0');
+
+
 
             const keyBase = `img_${anio}_${mes.toLowerCase()}_f${fStr}_p${pNum}`;
 
+
+
             if (confirm(`¿Estás seguro de eliminar las imágenes de ${jornadaText} - ${partidaText}?`)) {
+
                 localStorage.removeItem(`${keyBase}_galardon`);
+
                 localStorage.removeItem(`${keyBase}_candidatos`);
+
                 
+
                 document.getElementById('input-file-galardon').value = "";
+
                 document.getElementById('input-file-candidatos').value = "";
 
+
+
                 const msg = document.getElementById('msg-exito-img');
+
                 msg.textContent = "¡Imágenes eliminadas correctamente!";
+
                 msg.style.display = "inline";
+
                 setTimeout(() => { msg.style.display = "none"; }, 4000);
+
             }
+
         }
+
     </script>
+
 </body>
-</html>
+
+</html> 
+
