@@ -335,12 +335,17 @@
                     let nombreMes = nombresMeses[m.mes] || m.mes;
 
                     let filasJugadores = "";
+                    
+                    // Detectar estrictamente si es la primera partida absoluta del torneo (Fecha 01, Partida 1)
+                    let esPrimeraPartidaTotal = (parseInt(m.fechaNum, 10) === 1 && parseInt(m.partidaNum, 10) === 1);
+
                     m.registros.forEach(reg => {
                         let nombreJugador = reg.jugador || reg.nombre || "-";
                         
-                        // Búsqueda exhaustiva de cualquier propiedad numérica que represente variación
                         let varValor = 0;
-                        if (reg.var !== undefined && reg.var !== "" && !isNaN(reg.var)) {
+                        if (esPrimeraPartidaTotal) {
+                            varValor = 0; // REGLA: En la primera partida de todas, la variación es 0 para todos
+                        } else if (reg.var !== undefined && reg.var !== "" && !isNaN(reg.var)) {
                             varValor = parseInt(reg.var);
                         } else if (reg.variacion !== undefined && reg.variacion !== "" && !isNaN(reg.variacion)) {
                             varValor = parseInt(reg.variacion);
@@ -351,7 +356,6 @@
                         } else if (reg.cambio !== undefined && reg.cambio !== "" && !isNaN(reg.cambio)) {
                             varValor = parseInt(reg.cambio);
                         } else {
-                            // Si el jugador ganó, asignamos por defecto +1 o si perdió -1 para que la columna se llene visualmente de forma dinámica
                             let g = reg.pg === 1 || reg.pts >= 3 || reg.ganador === true;
                             varValor = g ? 1 : (reg.pg === 0 || reg.pts === 0 ? -1 : 0);
                         }
