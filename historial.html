@@ -1,4 +1,246 @@
-<script src="js/auth.js"></script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Maratón Michi DM - Historial de Partidas</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            gap: 10px;
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            max-width: 65%;
+            color: #f8f9fa;
+        }
+        .header-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: #2a2a2a;
+            color: #ddd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #444;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover {
+            background: #333;
+            color: #d4af37;
+            border-color: #d4af37;
+        }
+        .tab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
+        #main-content {
+            margin-left: 0;
+            padding: 20px;
+        }
+        .match-card {
+            background: #1a1c23;
+            border: 1px solid #2d3142;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .match-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #2d3142;
+            padding-bottom: 8px;
+        }
+        .match-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .match-map-icon {
+            width: 45px;
+            height: 45px;
+            background: #2e3a23;
+            border: 2px solid #5c832f;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #a3c26a;
+        }
+        .match-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 0;
+        }
+        .match-subtitle {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .match-duration {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .table-dark-custom {
+            background-color: #16181f;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label class="form-label mt-2">Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
+    </div>
+
+    <div id="main-content" class="container-fluid p-4">
+        <div class="header-top">
+            <h1>🏆 Ranking Maratón Michi DM</h1>
+            <div class="header-info-container">
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
+                <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.90rem;">
+                    --/--/---- --:--:-- --
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs mb-4">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
+            <a href="historial.html" class="tab-btn active">📜 Historial de Partidas</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2 class="mb-3 text-white"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
+
+        <!-- Filtros del Historial -->
+        <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
+            <div class="row align-items-center g-3">
+                <div class="col-md-3">
+                    <span class="fw-bold text-light fs-5"><i class="fas fa-filter text-warning"></i> Filtro de Encuentros</span>
+                </div>
+                <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 100px;">
+                            <option value="todos">Todos</option>
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 120px;">
+                            <option value="todos">Todos</option>
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08" selected>Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Fecha:</label>
+                        <select id="filtro-fecha" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
+                            <option value="todas">Todas</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lista-partidas-container"></div>
+    </div>
+
+    <script src="js/auth.js"></script>
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -8,10 +250,7 @@
         function cargarHistorialPartidas() {
             try {
                 const contenedor = document.getElementById('lista-partidas-container');
-                if (!contenedor) {
-                    console.error("No se encontró el elemento #lista-partidas-container en el DOM.");
-                    return;
-                }
+                if (!contenedor) return;
                 contenedor.innerHTML = "";
                 let matchesMap = {};
 
@@ -75,7 +314,7 @@
                     let mb = matchesMap[b];
                     let idA = parseInt(ma.anio) * 10000 + parseInt(ma.mes) * 100 + parseInt(ma.fechaNum) * 10 + parseInt(ma.partidaNum);
                     let idB = parseInt(mb.anio) * 10000 + parseInt(mb.mes) * 100 + parseInt(mb.fechaNum) * 10 + parseInt(mb.partidaNum);
-                    return idB - idB; // corregido orden descendente
+                    return idB - idA;
                 });
 
                 if (matchesFiltrados.length === 0) {
@@ -176,15 +415,14 @@
                     contenedor.insertAdjacentHTML('beforeend', cardHTML);
                 });
             } catch (err) {
-                console.error("Error crítico en cargarHistorialPartidas:", err);
+                console.error("Error crítico:", err);
             }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Poblar las 31 fechas en el filtro
             const selectFiltroFecha = document.getElementById('filtro-fecha');
             if (selectFiltroFecha) {
-                selectFiltroFecha.innerHTML = '<option value="todas">Todas las fechas</option>';
+                selectFiltroFecha.innerHTML = '<option value="todas">Todas</option>';
                 for (let i = 1; i <= 31; i++) {
                     let opt = document.createElement('option');
                     let numStr = i < 10 ? '0' + i : i;
@@ -194,15 +432,12 @@
                 }
             }
 
-            // Listeners para filtros
             if (document.getElementById('filtro-anio')) document.getElementById('filtro-anio').addEventListener('change', cargarHistorialPartidas);
             if (document.getElementById('filtro-mes')) document.getElementById('filtro-mes').addEventListener('change', cargarHistorialPartidas);
             if (document.getElementById('filtro-fecha')) document.getElementById('filtro-fecha').addEventListener('change', cargarHistorialPartidas);
 
-            // Cargar datos principales
             cargarHistorialPartidas();
 
-            // Actualizar fecha del footer si existe
             const elFecha = document.getElementById('ultima-actualizacion');
             if (elFecha) {
                 const ahora = new Date();
@@ -212,3 +447,5 @@
             }
         });
     </script>
+</body>
+</html>
