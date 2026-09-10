@@ -331,7 +331,9 @@
                     if (acumData) {
                         let acumObj = JSON.parse(acumData);
                         for (let [jug, datos] of Object.entries(acumObj)) {
-                            if (datos.var !== undefined) variacionesMap[jug] = parseInt(datos.var) || 0;
+                            // Buscar variaciones guardadas bajo las propiedades comunes
+                            let varVal = datos.var !== undefined ? datos.var : (datos.variacion !== undefined ? datos.variacion : 0);
+                            variacionesMap[jug] = parseInt(varVal) || 0;
                         }
                     }
                 } catch(e) {}
@@ -350,13 +352,14 @@
                     m.registros.forEach(reg => {
                         let nombreJugador = reg.jugador || reg.nombre || "-";
                         
+                        // Extraer la variación priorizando el registro individual y respaldándose en el mapa acumulado
                         let varValor = 0;
                         if (reg.var !== undefined && reg.var !== "" && !isNaN(reg.var)) {
                             varValor = parseInt(reg.var);
                         } else if (reg.variacion !== undefined && reg.variacion !== "" && !isNaN(reg.variacion)) {
                             varValor = parseInt(reg.variacion);
                         } else if (variacionesMap[nombreJugador] !== undefined) {
-                            varValor = parseInt(variacionesMap[nombreJugador]) || 0;
+                            varValor = variacionesMap[nombreJugador];
                         }
 
                         let varHtml = "";
