@@ -25,7 +25,7 @@
             margin: 0;
             font-size: 1.4rem;
             line-height: 1.2;
-            max-width: 65%;
+            max-width: 100%;
             color: #f8f9fa;
         }
         .header-info-container {
@@ -35,23 +35,10 @@
             gap: 5px;
         }
         .header-top .fecha-actualizacion {
-            font-size: 0.85rem;
+            font-size: 0.80rem;
             font-weight: bold;
             color: #aaa;
             text-align: right;
-        }
-
-        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
-        .admin-toggle-btn {
-            background: #b8860b;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
@@ -139,28 +126,9 @@
             font-size: 1.1rem;
         }
 
-        /* --- ESTILOS PARA PANEL MÓVIL Y MODAL (LIGHTBOX) --- */
-        #sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 260px;
-            height: 100vh;
-            background: #1e1e1e;
-            color: #fff;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
-            z-index: 999;
-            padding: 20px;
-            box-sizing: border-box;
-            transition: transform 0.3s ease;
-            transform: translateX(-100%);
-        }
-        #sidebar.open {
-            transform: translateX(0);
-        }
         #main-content {
             margin-left: 0;
-            padding: 20px;
+            padding: 15px;
         }
 
         .modal-overlay {
@@ -187,26 +155,11 @@
 </head>
 <body>
 
-    <div id="sidebar">
-        <h3>🔐 Panel de Control</h3>
-        <label class="form-label mt-2">Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
-        
-        <hr style="border-color: #444; margin: 20px 0;">
-        <h6 class="text-warning">📱 Sincronización Celular</h6>
-        <p style="font-size: 0.8rem; color: #aaa;">Exporta los datos de tu PC e impórtalos en el celular para ver el torneo allá.</p>
-        <button onclick="exportarDatos()" style="background: #28a745; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; width: 100%; margin-bottom: 8px; font-weight: bold;">💾 Exportar Datos</button>
-        <input type="file" id="input-importar" style="display:none" onchange="importarDatos(event)">
-        <button onclick="document.getElementById('input-importar').click()" style="background: #0d6efd; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; width: 100%; font-weight: bold;">📂 Importar Datos</button>
-    </div>
-
     <div id="main-content">
-        <!-- Encabezado superior con título y fecha/hora -->
+        <!-- Encabezado superior limpio sin botón de Admin -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
-                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
                 <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
             </div>
         </div>
@@ -216,8 +169,6 @@
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
             <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
             <a href="historial.html" class="tab-btn">📜 Historial de Partidas</a>
-            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería</a>
-            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
 
         <!-- Botones de Acceso Rápido a Últimas Imágenes -->
@@ -227,7 +178,7 @@
             <button type="button" style="background-color: #4682b4; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem;" onclick="verUltimaImagen('candidatos')">📊 Ver Evaluación</button>
         </div>
 
-        <h2 style="color: #fff;">📊 Clasificación General</h2>
+        <h2 style="color: #fff; font-size: 1.3rem;">📊 Clasificación General</h2>
         
         <!-- Barra de Jornada y Filtros Independientes de Año / Mes -->
         <div class="bar-jornada-filtro">
@@ -262,7 +213,7 @@
 
         <!-- Recuadro informativo del Total de Partidas Jugadas -->
         <div class="box-resumen-partidas">
-            🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">1</span>
+            🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">0</span>
         </div>
         
         <div class="card" style="background: #1a1c23; border: 1px solid #2d3142; border-radius: 10px; padding: 15px;">
@@ -304,48 +255,8 @@
         <img id="img-modal-contenido" src="" alt="Imagen Ampliada">
     </div>
 
-    <script src="js/auth.js"></script>
     <script src="js/ranking.js"></script>
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
-
-        // Funciones de Respaldo y Sincronización para Celular
-        function exportarDatos() {
-            let datos = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                let k = localStorage.key(i);
-                datos[k] = localStorage.getItem(k);
-            }
-            let blob = new Blob([JSON.stringify(datos, null, 2)], {type: "application/json"});
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = `backup_michi_dm_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-        }
-
-        function importarDatos(event) {
-            let archivo = event.target.files[0];
-            if (!archivo) return;
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    let datos = JSON.parse(e.target.result);
-                    Object.keys(datos).forEach(k => {
-                        localStorage.setItem(k, datos[k]);
-                    });
-                    alert("¡Datos importados correctamente! Recargando página...");
-                    location.reload();
-                } catch(err) {
-                    alert("Error al leer el archivo de respaldo.");
-                }
-            };
-            reader.readAsText(archivo);
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
             const ahora = new Date();
             const fechaFormateada = ahora.toLocaleDateString('es-ES');
@@ -354,26 +265,6 @@
             if (elementoFecha) {
                 elementoFecha.textContent = `${fechaFormateada}, ${horaFormateada}`;
             }
-
-            setTimeout(() => {
-                if (typeof actualizarContadorPartidasMes === 'function') {
-                    actualizarContadorPartidasMes();
-                } else {
-                    let mesSelect = document.getElementById('select-mes-filtro');
-                    let anioSel = document.getElementById('select-anio-filtro').value;
-                    let mesNum = mesSelect.value;
-                    let mesTexto = mesSelect.options[mesSelect.selectedIndex].text.toLowerCase();
-                    
-                    let count = 0;
-                    for (let i = 0; i < localStorage.length; i++) {
-                        let key = localStorage.key(i);
-                        if (key && key.includes(`_${anioSel}_`) && (key.includes(`_${mesNum}`) || key.includes(`_${mesTexto}`))) {
-                            count++;
-                        }
-                    }
-                    document.getElementById('total-partidas-mes').textContent = count > 0 ? count : 1;
-                }
-            }, 300);
         });
 
         function verUltimaImagen(tipo) {
