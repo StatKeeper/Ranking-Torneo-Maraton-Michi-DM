@@ -8,6 +8,8 @@
     <style>
         body {
             box-sizing: border-box;
+            background-color: #121212;
+            color: #e0e0e0;
         }
         .header-top {
             display: flex;
@@ -15,7 +17,7 @@
             align-items: flex-start;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #333;
             position: relative;
             gap: 10px;
         }
@@ -24,6 +26,7 @@
             font-size: 1.4rem;
             line-height: 1.2;
             max-width: 65%;
+            color: #f8f9fa;
         }
         .header-info-container {
             display: flex;
@@ -34,7 +37,7 @@
         .header-top .fecha-actualizacion {
             font-size: 0.85rem;
             font-weight: bold;
-            color: #444;
+            color: #aaa;
             text-align: right;
         }
 
@@ -56,28 +59,28 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            background: #f4f1ea;
+            background: #1e1e1e;
             padding: 10px;
             border-radius: 8px;
             border: 2px solid #d4af37;
             margin-bottom: 20px;
         }
         .tab-btn {
-            background: #fff;
-            color: #333;
+            background: #2a2a2a;
+            color: #ddd;
             padding: 8px 12px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
             font-size: 0.9rem;
-            border: 1px solid #ccc;
+            border: 1px solid #444;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
         }
         .tab-btn:hover {
-            background: #fdf8ed;
-            color: #b8860b;
-            border-color: #b8860b;
+            background: #333;
+            color: #d4af37;
+            border-color: #d4af37;
         }
         .tab-btn.active {
             background: #b8860b;
@@ -99,7 +102,7 @@
             gap: 20px;
             font-size: 1.05rem;
             font-weight: bold;
-            color: #222;
+            color: #fff;
         }
         .filtro-historico {
             display: flex;
@@ -108,21 +111,23 @@
             font-weight: bold;
             font-size: 0.9rem;
             flex-wrap: wrap;
+            color: #ccc;
         }
         .filtro-historico select {
             padding: 6px 10px;
             font-size: 0.9rem;
             border-radius: 6px;
-            border: 1px solid #ccc;
-            background-color: #fff;
+            border: 1px solid #444;
+            background-color: #222;
+            color: #fff;
             cursor: pointer;
         }
 
         /* Recuadro de Total de Partidas Jugadas */
         .box-resumen-partidas {
-            background-color: #e7f1ff;
-            border: 1px solid #b6d4fe;
-            color: #084298;
+            background-color: rgba(13, 110, 253, 0.15);
+            border: 1px solid #0d6efd;
+            color: #6ea8fe;
             padding: 10px 18px;
             border-radius: 8px;
             font-size: 0.95rem;
@@ -135,28 +140,29 @@
         }
 
         /* --- ESTILOS PARA PANEL MÓVIL Y MODAL (LIGHTBOX) --- */
-        @media (max-width: 768px) {
-            #sidebar {
-                position: fixed;
-                top: 0;
-                right: -280px;
-                width: 260px;
-                height: 100%;
-                background: #fff;
-                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-                z-index: 999;
-                padding: 20px;
-                box-sizing: border-box;
-                transition: transform 0.3s ease;
-            }
-            #sidebar.open {
-                transform: translateX(-280px);
-            }
-            #main-content {
-                margin-left: 0 !important;
-                padding: 10px !important;
-            }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
         }
+        #sidebar.open {
+            transform: translateX(0);
+        }
+        #main-content {
+            margin-left: 0;
+            padding: 20px;
+        }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -183,12 +189,19 @@
 
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
-        <label>Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+        <label class="form-label mt-2">Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
+        
+        <hr style="border-color: #444; margin: 20px 0;">
+        <h6 class="text-warning">📱 Sincronización Celular</h6>
+        <p style="font-size: 0.8rem; color: #aaa;">Exporta los datos de tu PC e impórtalos en el celular para ver el torneo allá.</p>
+        <button onclick="exportarDatos()" style="background: #28a745; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; width: 100%; margin-bottom: 8px; font-weight: bold;">💾 Exportar Datos</button>
+        <input type="file" id="input-importar" style="display:none" onchange="importarDatos(event)">
+        <button onclick="document.getElementById('input-importar').click()" style="background: #0d6efd; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; width: 100%; font-weight: bold;">📂 Importar Datos</button>
     </div>
 
-    <div id="main-content" style="margin-left: 280px; padding: 20px;">
+    <div id="main-content">
         <!-- Encabezado superior con título y fecha/hora -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
@@ -208,19 +221,19 @@
         </div>
 
         <!-- Botones de Acceso Rápido a Últimas Imágenes -->
-        <div class="card" style="background: #fdfcf7; border-left: 5px solid #b8860b; padding: 12px 15px; margin: 15px 0; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-            <span style="font-weight: bold; color: #333; font-size: 0.9rem;">🖼️ Accesos Rápidos:</span>
+        <div class="card" style="background: #1e1e1e; border: 1px solid #444; border-left: 5px solid #b8860b; padding: 12px 15px; margin: 15px 0; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; border-radius: 8px;">
+            <span style="font-weight: bold; color: #fff; font-size: 0.9rem;">🖼️ Accesos Rápidos:</span>
             <button type="button" style="background-color: #b8860b; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem;" onclick="verUltimaImagen('galardon')">👑 Ver Galardón</button>
             <button type="button" style="background-color: #4682b4; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem;" onclick="verUltimaImagen('candidatos')">📊 Ver Evaluación</button>
         </div>
 
-        <h2>📊 Clasificación General</h2>
+        <h2 style="color: #fff;">📊 Clasificación General</h2>
         
         <!-- Barra de Jornada y Filtros Independientes de Año / Mes -->
         <div class="bar-jornada-filtro">
             <div class="info-jornada">
-                <span id="label-fecha">Fecha --</span>
-                <span id="label-partida">Partida --</span>
+                <span id="label-fecha" style="color: #ffc107;">Fecha --</span>
+                <span id="label-partida" style="color: #ffc107;">Partida --</span>
             </div>
             
             <div class="filtro-historico">
@@ -252,33 +265,33 @@
             🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">1</span>
         </div>
         
-        <div class="card">
-            <h3>Tabla de Posiciones</h3>
+        <div class="card" style="background: #1a1c23; border: 1px solid #2d3142; border-radius: 10px; padding: 15px;">
+            <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 15px;">Tabla de Posiciones</h3>
             <div style="overflow-x: auto;">
-                <table>
+                <table style="width: 100%; border-collapse: collapse; color: #e0e0e0; font-size: 0.9rem;">
                     <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th>Var</th>
-                            <th>Jugador</th>
-                            <th>Pts</th>
-                            <th>V/PJ</th>
-                            <th>Ultimo Suceso</th>
-                            <th>V/D</th>
-                            <th>E</th>
-                            <th>R</th>
-                            <th>M</th>
-                            <th>O</th>
-                            <th>S</th>
-                            <th>Rch</th>
-                            <th>MG</th>
-                            <th>RLP</th>
-                            <th>TB</th>
+                        <tr style="background: #16181f; color: #ccc;">
+                            <th style="padding: 8px; border: 1px solid #444;">Pos</th>
+                            <th style="padding: 8px; border: 1px solid #444;">Var</th>
+                            <th style="padding: 8px; border: 1px solid #444; text-align: left;">Jugador</th>
+                            <th style="padding: 8px; border: 1px solid #444;">Pts</th>
+                            <th style="padding: 8px; border: 1px solid #444;">V/PJ</th>
+                            <th style="padding: 8px; border: 1px solid #444; text-align: left;">Ultimo Suceso</th>
+                            <th style="padding: 8px; border: 1px solid #444;">V/D</th>
+                            <th style="padding: 8px; border: 1px solid #444;">E</th>
+                            <th style="padding: 8px; border: 1px solid #444;">R</th>
+                            <th style="padding: 8px; border: 1px solid #444;">M</th>
+                            <th style="padding: 8px; border: 1px solid #444;">O</th>
+                            <th style="padding: 8px; border: 1px solid #444;">S</th>
+                            <th style="padding: 8px; border: 1px solid #444;">Rch</th>
+                            <th style="padding: 8px; border: 1px solid #444;">MG</th>
+                            <th style="padding: 8px; border: 1px solid #444;">RLP</th>
+                            <th style="padding: 8px; border: 1px solid #444;">TB</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-clasificacion">
                         <tr>
-                            <td colspan="16" style="text-align: center;">Cargando datos del torneo...</td>
+                            <td colspan="16" style="text-align: center; padding: 20px; color: #777;">Cargando datos del torneo...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -299,9 +312,41 @@
             sidebar.classList.toggle('open');
         }
 
-        // Sincronización robusta al cargar la página
+        // Funciones de Respaldo y Sincronización para Celular
+        function exportarDatos() {
+            let datos = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                let k = localStorage.key(i);
+                datos[k] = localStorage.getItem(k);
+            }
+            let blob = new Blob([JSON.stringify(datos, null, 2)], {type: "application/json"});
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_michi_dm_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+        }
+
+        function importarDatos(event) {
+            let archivo = event.target.files[0];
+            if (!archivo) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let datos = JSON.parse(e.target.result);
+                    Object.keys(datos).forEach(k => {
+                        localStorage.setItem(k, datos[k]);
+                    });
+                    alert("¡Datos importados correctamente! Recargando página...");
+                    location.reload();
+                } catch(err) {
+                    alert("Error al leer el archivo de respaldo.");
+                }
+            };
+            reader.readAsText(archivo);
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
-            // Cargar fecha y hora actual superior
             const ahora = new Date();
             const fechaFormateada = ahora.toLocaleDateString('es-ES');
             const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -326,7 +371,6 @@
                             count++;
                         }
                     }
-                    
                     document.getElementById('total-partidas-mes').textContent = count > 0 ? count : 1;
                 }
             }, 300);
