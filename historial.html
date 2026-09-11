@@ -129,13 +129,12 @@
             white-space: nowrap;
         }
         
-        /* Tabla compacta optimizada para móviles */
         .table-light-custom {
             background-color: #ffffff;
             color: #212529;
             font-size: 0.82rem;
             width: 100%;
-            table-layout: fixed; /* Distribuye las columnas de forma estricta y equitativa */
+            table-layout: fixed;
         }
         .table-light-custom th, .table-light-custom td {
             padding: 6px 4px;
@@ -144,11 +143,10 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        /* Asignación de anchos porcentuales para evitar desbordamientos */
-        .table-light-custom th:nth-child(1), .table-light-custom td:nth-child(1) { width: 38%; } /* Jugador */
-        .table-light-custom th:nth-child(2), .table-light-custom td:nth-child(2) { width: 18%; text-align: center; } /* Equipo */
-        .table-light-custom th:nth-child(3), .table-light-custom td:nth-child(3) { width: 28%; } /* Civi */
-        .table-light-custom th:nth-child(4), .table-light-custom td:nth-child(4) { width: 16%; text-align: center; } /* Var */
+        .table-light-custom th:nth-child(1), .table-light-custom td:nth-child(1) { width: 38%; }
+        .table-light-custom th:nth-child(2), .table-light-custom td:nth-child(2) { width: 18%; text-align: center; }
+        .table-light-custom th:nth-child(3), .table-light-custom td:nth-child(3) { width: 28%; }
+        .table-light-custom th:nth-child(4), .table-light-custom td:nth-child(4) { width: 16%; text-align: center; }
 
         .table-light-custom th {
             background-color: #f1f3f5 !important;
@@ -157,7 +155,6 @@
             font-size: 0.78rem;
         }
 
-        /* Modal Lightbox para vista previa de imagen generada */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -189,7 +186,7 @@
             margin-bottom: 15px;
         }
 
-        /* 📱 ESTILOS RESPONSIVOS MÓVIL Y BARRA INFERIOR */
+        /* 📱 5 PESTAÑAS EN LA BARRA INFERIOR MÓVIL */
         @media (max-width: 768px) {
             body {
                 padding-bottom: 70px;
@@ -225,15 +222,15 @@
                 align-items: center;
                 text-decoration: none;
                 color: #6c757d;
-                font-size: 0.75rem;
+                font-size: 0.68rem;
                 font-weight: 600;
                 flex-grow: 1;
-                padding: 6px 0;
+                padding: 4px 0;
                 transition: color 0.2s;
             }
             .mobile-nav-item i {
-                font-size: 20px;
-                margin-bottom: 3px;
+                font-size: 18px;
+                margin-bottom: 2px;
             }
             .mobile-nav-item:hover, 
             .mobile-nav-item.active {
@@ -257,7 +254,9 @@
     </div>
 
     <div id="main-content" class="container-fluid p-4">
+        <!-- Pestañas de Escritorio con "Inicio" al inicio -->
         <div class="tabs mb-4">
+            <a href="inicio.html" class="tab-btn">🏠 Inicio</a>
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
             <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
@@ -331,8 +330,12 @@
         </div>
     </div>
 
-    <!-- Barra de Navegación Inferior Móvil -->
+    <!-- Barra de Navegación Inferior Móvil (5 Pestañas) -->
     <nav class="mobile-bottom-nav">
+        <a href="inicio.html" class="mobile-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
+        </a>
         <a href="index.html" class="mobile-nav-item">
             <i class="fas fa-chart-bar"></i>
             <span>General</span>
@@ -378,7 +381,6 @@
             const btnReporte = cardElement.querySelector('.btn-reporte-partida');
             if (btnReporte) btnReporte.style.display = 'none';
 
-            // Forzar ancho fijo temporal en la tarjeta para la captura limpia y evitar recortes
             let originalWidth = cardElement.style.width;
             cardElement.style.width = '450px';
 
@@ -538,7 +540,6 @@
                     return idB - idA;
                 });
 
-                // Límite máximo de 10 partidas recientes
                 matchesFiltrados = matchesFiltrados.slice(0, 10);
 
                 if (matchesFiltrados.length === 0) {
