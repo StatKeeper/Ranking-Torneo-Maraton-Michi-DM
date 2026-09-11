@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadísticas y Tiempos - Ranking Maratón Michi DM</title>
+    <title>Ranking Maratón Michi DM - Estadísticas y Tiempos</title>
     <link rel="stylesheet" href="css/estilos.css">
     <style>
         body {
@@ -128,30 +128,36 @@
             }
         }
 
-        /* Contenedores de contenido y filtros */
-        .bar-jornada-filtro {
+        /* Estilos para subpestañas y filtros originales */
+        .subtabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 10px;
             margin: 15px 20px;
             flex-wrap: wrap;
-            gap: 15px;
         }
-        .filtro-historico {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .subtab-btn {
+            background: #e9ecef;
+            border: 1px solid #ced4da;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
             font-weight: bold;
             font-size: 0.9rem;
-            color: #555555;
+            color: #495057;
+            transition: all 0.2s;
         }
-        .filtro-historico select {
-            padding: 6px 10px;
-            font-size: 0.9rem;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            color: #333;
+        .subtab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         #sidebar {
@@ -172,9 +178,6 @@
         #sidebar.open {
             transform: translateX(0);
         }
-        #main-content {
-            padding: 0 10px;
-        }
     </style>
 </head>
 <body>
@@ -189,7 +192,7 @@
     </div>
 
     <div id="main-content">
-        <!-- Cabecera Superior (Se muestra en PC, se oculta limpiamente en móviles) -->
+        <!-- Cabecera Superior (Visible en PC, oculta en móviles) -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
@@ -198,7 +201,7 @@
             </div>
         </div>
 
-        <!-- Pestañas Superiores (Se muestran en PC, se ocultan en móviles) -->
+        <!-- Pestañas Superiores (Visible en PC, oculta en móviles) -->
         <div class="tabs">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
@@ -207,21 +210,18 @@
             <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería</a>
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
-        
-        <!-- Barra de Filtros de Periodo -->
-        <div class="bar-jornada-filtro">
-            <div style="font-weight: bold; color: #b8860b; font-size: 1.05rem;">
-                📈 Estadísticas Generales del Torneo
-            </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin: 15px 20px 10px 20px;">
+            <h2 style="margin: 0; color: #222;">📈 Estadísticas Generales del Torneo</h2>
             
-            <div class="filtro-historico">
-                <label for="select-anio-filtro">Año:</label>
-                <select id="select-anio-filtro">
+            <!-- Selectores de Año y Mes con los IDs originales que el script lee -->
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="select-anio-filtro" style="font-weight: bold;">Año:</label>
+                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
                     <option value="2026" selected>2026</option>
                 </select>
-
-                <label for="select-mes-filtro" style="margin-left: 5px;">Mes:</label>
-                <select id="select-mes-filtro">
+                <label for="select-mes-filtro" style="font-weight: bold; margin-left: 10px;">Mes:</label>
+                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
                     <option value="01">Enero</option>
                     <option value="02">Febrero</option>
                     <option value="03">Marzo</option>
@@ -238,10 +238,17 @@
             </div>
         </div>
 
-        <!-- CONTENEDORES VITALES DONDE `estadisticas.js` CARGA LOS DATOS -->
-        <div id="sec-tiempos" style="margin-bottom: 30px; padding: 0 10px;"></div>
-        <div id="sec-civilizaciones" style="margin-bottom: 30px; padding: 0 10px;"></div>
-        <div id="sec-enfrentamientos" style="margin-bottom: 30px; padding: 0 10px;"></div>
+        <!-- Subpestañas Secundarias Originales -->
+        <div class="subtabs">
+            <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')">⏱️ Tiempos de partida</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')">🏛️ Civilizaciones y Win Rate</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')">🤝 Sinergia y Enfrentamientos</button>
+        </div>
+
+        <!-- Vistas que `estadisticas.js` llena con los datos reales -->
+        <div id="sec-tiempos" class="card subtab-content"></div>
+        <div id="sec-civilizaciones" class="card subtab-content" style="display: none;"></div>
+        <div id="sec-enfrentamientos" class="card subtab-content" style="display: none;"></div>
     </div>
 
     <!-- BARRA DE NAVEGACIÓN INFERIOR (Solo móviles) -->
@@ -255,7 +262,7 @@
             <span>Estadísticas</span>
         </a>
         <a href="candidatos.html" class="mobile-nav-item">
-            <span class="icon5">⭐</span>
+            <span class="icon">⭐</span>
             <span>Candidatos</span>
         </a>
         <a href="historial.html" class="mobile-nav-item">
@@ -270,6 +277,17 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) sidebar.classList.toggle('open');
+        }
+
+        function cambiarSubtab(seccion) {
+            document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
+
+            const target = document.getElementById('sec-' + seccion);
+            if (target) target.style.display = 'block';
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
