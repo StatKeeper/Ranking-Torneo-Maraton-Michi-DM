@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[cLm] Ranking Maratón Michi DM - Clasificación General</title>
+    <!-- REDIRECCIÓN AUTOMÁTICA: Si se entra por primera vez a la raíz, redirige a Inicio -->
+    <script>
+        if (!sessionStorage.getItem('visitado_general')) {
+            sessionStorage.setItem('visitado_general', 'true');
+            window.location.replace('inicio.html');
+        }
+    </script>
     <!-- Esto evita el error 404 del favicon -->
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/estilos.css">
@@ -376,7 +383,7 @@
         </div>
     </div>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA MÓVILES -->
+    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA MÓVILES (Unificada) -->
     <nav class="mobile-bottom-nav">
         <a href="inicio.html" class="mobile-nav-item">
             <span class="icon">🏠</span>
