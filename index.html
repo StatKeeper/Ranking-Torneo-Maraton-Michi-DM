@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[cLm] Ranking Maratón Michi DM - Clasificación General</title>
+    <!-- Esto evita el error 404 del favicon -->
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/estilos.css">
     <script>
-        // Redirige automáticamente a inicio.html al abrir la app en móvil si es una nueva sesión o entrada raíz
+        // Redirige automáticamente a inicio.html al abrir la app en móvil si es una nueva sesión
         (function() {
             const esMovil = window.innerWidth <= 768;
             const sessionStorageKey = 'michi_iniciado_sesion';
@@ -23,7 +25,7 @@
             background-color: #ffffff;
             color: #333333;
             margin: 0;
-            padding-bottom: 70px; /* Espacio para que la barra inferior no tape el contenido */
+            padding-bottom: 70px; /* Espacio para que la barra inferior móvil no tape contenido */
             font-family: Arial, sans-serif;
         }
 
@@ -73,7 +75,6 @@
             text-align: right;
         }
 
-        /* --- BOTÓN ADMIN Y FECHA: VISIBLE EN PC, OCULTO EN CELULARES --- */
         .admin-toggle-btn {
             background: #b8860b;
             color: white;
@@ -94,7 +95,7 @@
                 display: none !important; /* Oculta la cabecera de PC en móvil */
             }
             .mobile-header-bar {
-                display: flex; /* Muestra la barra superior optimizada en móviles */
+                display: flex; /* Muestra la barra superior con el título en móviles */
             }
         }
 
@@ -111,7 +112,7 @@
         }
         @media (max-width: 768px) {
             .tabs {
-                display: none; /* Oculta las pestañas arriba en móvil, usaremos la barra inferior */
+                display: none; /* Oculta las pestañas de arriba en móvil */
             }
         }
 
@@ -138,7 +139,7 @@
             border-color: #996e05;
         }
 
-        /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL (TIPO APP CON 5 PESTAÑAS) --- */
+        /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
         .mobile-bottom-nav {
             display: none;
         }
@@ -177,7 +178,6 @@
             }
         }
 
-        /* Subencabezado con filtro de año/mes y contador de partidas */
         .bar-jornada-filtro {
             display: flex;
             justify-content: space-between;
@@ -212,7 +212,6 @@
             cursor: pointer;
         }
 
-        /* Recuadro de Total de Partidas Jugadas */
         .box-resumen-partidas {
             background-color: rgba(13, 110, 253, 0.08);
             border: 1px solid #0d6efd;
@@ -275,7 +274,7 @@
 </head>
 <body>
 
-    <!-- Barra Superior Móvil con el tag [cLm] -->
+    <!-- BARRA SUPERIOR MÓVIL: Muestra [cLm] Ranking Maratón Michi DM en celulares -->
     <div class="mobile-header-bar">
         <h1>[cLm] Ranking Maratón Michi DM</h1>
     </div>
@@ -292,7 +291,7 @@
     </div>
 
     <div id="main-content">
-        <!-- Encabezado superior (Visible en PC) -->
+        <!-- ENCABEZADO DE PC: Muestra [cLm] Ranking Maratón Michi DM en computadoras -->
         <div class="header-top">
             <h1>[cLm] Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
@@ -301,7 +300,7 @@
             </div>
         </div>
 
-        <!-- Pestañas Superiores con Inicio al extremo izquierdo (Visible en PC) -->
+        <!-- Pestañas Superiores (Visible en PC) -->
         <div class="tabs">
             <a href="inicio.html" class="tab-btn">🏠 Inicio</a>
             <a href="index.html" class="tab-btn active">📊 Clasificación general</a>
@@ -312,7 +311,7 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
 
-        <!-- Botones de Acceso Rápido a Últimas Imágenes -->
+        <!-- Accesos Rápidos -->
         <div class="card" style="background: #fdf8ed; border: 1px solid #d4af37; border-left: 5px solid #b8860b; padding: 12px 15px; margin: 15px 0; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; border-radius: 8px;">
             <span style="font-weight: bold; color: #333; font-size: 0.9rem;">🖼️ Accesos Rápidos:</span>
             <button type="button" style="background-color: #b8860b; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem;" onclick="verUltimaImagen('galardon')">👑 Ver Galardón</button>
@@ -321,7 +320,6 @@
 
         <h2 style="color: #222; font-size: 1.3rem;">📊 Clasificación General</h2>
         
-        <!-- Barra de Jornada y Filtros -->
         <div class="bar-jornada-filtro">
             <div class="info-jornada">
                 <span id="label-fecha" style="color: #b8860b;">Fecha --</span>
@@ -352,7 +350,6 @@
             </div>
         </div>
 
-        <!-- Recuadro informativo del Total de Partidas Jugadas -->
         <div class="box-resumen-partidas">
             🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">0</span>
         </div>
@@ -391,7 +388,7 @@
         </div>
     </div>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA MÓVILES (5 Pestañas) -->
+    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA MÓVILES -->
     <nav class="mobile-bottom-nav">
         <a href="inicio.html" class="mobile-nav-item">
             <span class="icon">🏠</span>
@@ -415,12 +412,11 @@
         </a>
     </nav>
 
-    <!-- Modal para ver imágenes a pantalla completa (Lightbox) -->
+    <!-- Modal de Imágenes -->
     <div id="modal-imagen" class="modal-overlay" onclick="cerrarModalImagen()">
         <img id="img-modal-contenido" src="" alt="Imagen Ampliada">
     </div>
 
-    <!-- Scripts con control de caché automático (v=20260910) -->
     <script src="js/auth.js?v=202609102243"></script>
     <script src="js/ranking.js?v=202609102243"></script>
     <script>
@@ -440,7 +436,6 @@
             enlace.href = URL.createObjectURL(blob);
             enlace.download = "datos_torneo.json";
             enlace.click();
-            console.log("¡Archivo datos_torneo.json generado con éxito!");
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -479,21 +474,6 @@
         function cerrarModalImagen() {
             document.getElementById('modal-imagen').style.display = 'none';
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('img').forEach(img => {
-                img.style.cursor = 'zoom-in';
-                img.addEventListener('click', function(e) {
-                    if(this.src && !this.classList.contains('no-zoom')) {
-                        e.stopPropagation();
-                        const modal = document.getElementById('modal-imagen');
-                        const modalImg = document.getElementById('img-modal-contenido');
-                        modalImg.src = this.src;
-                        modal.style.display = 'flex';
-                    }
-                });
-            });
-        });
     </script>
 </body>
 </html>
