@@ -10,6 +10,8 @@
             box-sizing: border-box;
             background-color: #121212;
             color: #e0e0e0;
+            margin: 0;
+            padding-bottom: 70px; /* Espacio para que la barra inferior no tape el contenido */
         }
         .header-top {
             display: flex;
@@ -41,7 +43,7 @@
             text-align: right;
         }
 
-        /* --- BOTÓN ADMIN VISIBLE EN PC, OCULTO EN CELULARES --- */
+        /* --- BOTÓN ADMIN Y FECHA: VISIBLE EN PC, OCULTO EN CELULARES --- */
         .admin-toggle-btn {
             background: #b8860b;
             color: white;
@@ -54,12 +56,15 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         @media (max-width: 768px) {
-            .admin-toggle-btn {
+            .admin-toggle-btn, .fecha-actualizacion {
                 display: none !important;
+            }
+            .header-top {
+                display: none; /* Oculta la cabecera superior innecesaria en móviles para ganar espacio */
             }
         }
 
-        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
+        /* --- PESTAÑAS SUPERIORES (SOLO PC) --- */
         .tabs {
             display: flex;
             gap: 8px;
@@ -70,6 +75,12 @@
             border: 2px solid #d4af37;
             margin-bottom: 20px;
         }
+        @media (max-width: 768px) {
+            .tabs {
+                display: none; /* Oculta las pestañas arriba en móvil, usaremos la barra inferior */
+            }
+        }
+
         .tab-btn {
             background: #2a2a2a;
             color: #ddd;
@@ -91,6 +102,44 @@
             background: #b8860b;
             color: white;
             border-color: #996e05;
+        }
+
+        /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL (TIPO APP) --- */
+        .mobile-bottom-nav {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #16181f;
+                border-top: 2px solid #d4af37;
+                justify-content: space-around;
+                align-items: center;
+                padding: 8px 0;
+                z-index: 1500;
+                box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+            }
+            .mobile-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: #aaa;
+                text-decoration: none;
+                font-size: 0.7rem;
+                font-weight: bold;
+                transition: color 0.2s;
+            }
+            .mobile-nav-item span.icon {
+                font-size: 1.2rem;
+                margin-bottom: 2px;
+            }
+            .mobile-nav-item:hover, .mobile-nav-item.active {
+                color: #d4af37;
+            }
         }
 
         /* Subencabezado con filtro de año/mes y contador de partidas */
@@ -203,7 +252,7 @@
     </div>
 
     <div id="main-content">
-        <!-- Encabezado superior -->
+        <!-- Encabezado superior (Visible en PC) -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
@@ -212,6 +261,7 @@
             </div>
         </div>
 
+        <!-- Pestañas Superiores (Visible en PC) -->
         <div class="tabs">
             <a href="index.html" class="tab-btn active">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
@@ -300,6 +350,26 @@
         </div>
     </div>
 
+    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA MÓVILES -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item active">
+            <span class="icon">📊</span>
+            <span>Clasificación</span>
+        </a>
+        <a href="estadisticas.html" class="mobile-nav-item">
+            <span class="icon">📈</span>
+            <span>Estadísticas</span>
+        </a>
+        <a href="candidatos.html" class="mobile-nav-item">
+            <span class="icon">⭐</span>
+            <span>Candidatos</span>
+        </a>
+        <a href="historial.html" class="mobile-nav-item">
+            <span class="icon">📜</span>
+            <span>Historial</span>
+        </a>
+    </nav>
+
     <!-- Modal para ver imágenes a pantalla completa (Lightbox) -->
     <div id="modal-imagen" class="modal-overlay" onclick="cerrarModalImagen()">
         <img id="img-modal-contenido" src="" alt="Imagen Ampliada">
@@ -313,7 +383,6 @@
             if (sidebar) sidebar.classList.toggle('open');
         }
 
-        // Función para descargar el archivo JSON empaquetado desde localStorage
         function descargarJsonGitHub() {
             let todosLosDatos = {};
             for (let i = 0; i < localStorage.length; i++) {
