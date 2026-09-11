@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[cLm] Ranking Maratón Michi DM - Clasificación General</title>
-    <!-- REDIRECCIÓN AUTOMÁTICA: Si se entra por primera vez a la raíz, redirige a Inicio -->
+    <!-- REDIRECCIÓN FORZADA A INICIO -->
     <script>
-        if (!sessionStorage.getItem('visitado_general')) {
-            sessionStorage.setItem('visitado_general', 'true');
+        // Si el usuario entra directamente a la raíz y no viene navegando desde otra pestaña interna
+        if (!document.referrer.includes('inicio.html') && !document.referrer.includes('estadisticas.html') && !document.referrer.includes('candidatos.html') && !document.referrer.includes('historial.html')) {
             window.location.replace('inicio.html');
         }
     </script>
@@ -439,7 +439,7 @@
             const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             const elementoFecha = document.getElementById('fecha-actualizacion');
             if (elementoFecha) {
-                elementoFecha.textContent = `${fechaFormateada}, ${horaFormateada}`;
+                elementoFecha.textContent = `${fechaFormateada}, ${horaFormateダada}`;
             }
         });
 
