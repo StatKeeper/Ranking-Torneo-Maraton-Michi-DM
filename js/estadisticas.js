@@ -188,10 +188,12 @@ function renderizarEstadisticasTiempos() {
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
 
-    // 1. Render Tiempos
+    // ==========================================
+    // 1. SUBPESTAÑA TIEMPOS
+    // ==========================================
     secTiempos.innerHTML = `
         <h3>⏱️ Consulta Interactiva de Tiempos (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus tiempos y estadísticas lado a lado.</p>
+        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus tiempos y estadísticas en pantalla completa.</p>
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
@@ -214,15 +216,22 @@ function renderizarEstadisticasTiempos() {
             <datalist id="lista-jugadores-sug-t">
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
-            <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Tiempos</button>
+            <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos (Pantalla Completa)</button>
         </div>
-        <div id="resultado-tiempos-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
+        <div id="modal-tiempos-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 15px; box-sizing: border-box;">
+            <div style="background: white; max-width: 600px; margin: 20px auto; border-radius: 8px; padding: 20px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <button id="cerrar-modal-tiempos" style="position: absolute; top: 15px; right: 15px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-weight: bold; cursor: pointer; font-size: 1.1em;">×</button>
+                <div id="resultado-tiempos-container"></div>
+            </div>
+        </div>
     `;
 
-    // 2. Render Civilizaciones
+    // ==========================================
+    // 2. SUBPESTAÑA CIVILIZACIONES
+    // ==========================================
     secCivilizaciones.innerHTML = `
         <h3>🏛️ Consulta Interactiva de Civilizaciones (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar las civilizaciones que han utilizado y su rendimiento.</p>
+        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus civilizaciones en pantalla completa.</p>
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
@@ -245,13 +254,25 @@ function renderizarEstadisticasTiempos() {
             <datalist id="lista-jugadores-sug-c">
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
-            <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Civilizaciones</button>
+            <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones (Pantalla Completa)</button>
         </div>
-        <div id="resultado-civs-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
+        <div id="modal-civs-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 15px; box-sizing: border-box;">
+            <div style="background: white; max-width: 600px; margin: 20px auto; border-radius: 8px; padding: 20px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <button id="cerrar-modal-civs" style="position: absolute; top: 15px; right: 15px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-weight: bold; cursor: pointer; font-size: 1.1em;">×</button>
+                <div id="resultado-civs-container"></div>
+            </div>
+        </div>
     `;
+
+    // ==========================================
+    // EVENTOS Y MODALES (PANTALLA COMPLETA)
+    // ==========================================
 
     // Evento Tiempos
     const btnConsultarTiempos = document.getElementById("btn-consultar-tiempos");
+    const modalTiemposOverlay = document.getElementById("modal-tiempos-overlay");
+    const cerrarModalTiempos = document.getElementById("cerrar-modal-tiempos");
+
     if (btnConsultarTiempos) {
         btnConsultarTiempos.addEventListener("click", () => {
             const j1 = document.getElementById("input-tiempo-1").value.trim();
@@ -269,49 +290,58 @@ function renderizarEstadisticasTiempos() {
             }
 
             let htmlTablaComparativa = `
-                <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Comparativa de Tiempos</h4>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 8px; font-size: 1.1em;">📊 Comparativa de Tiempos</h3>
                 <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table style="width: 100%; min-width: ${seleccionados.length * 150}px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
+                    <table style="width: 100%; min-width: ${seleccionados.length * 130}px; border-collapse: collapse; background: #fff; font-size: 0.8em;">
                         <thead>
                             <tr style="background-color: #343a40; color: #fff;">
-                                <th style="padding: 10px 8px; text-align: left;">Métrica</th>
+                                <th style="padding: 8px 6px; text-align: left;">Métrica</th>
             `;
             seleccionados.forEach(sel => {
-                htmlTablaComparativa += `<th style="padding: 10px 8px; text-align: center; white-space: nowrap;">${sel}</th>`;
+                htmlTablaComparativa += `<th style="padding: 8px 6px; text-align: center; white-space: nowrap;">${sel}</th>`;
             });
             htmlTablaComparativa += `</tr></thead><tbody>`;
 
             const metricasT = [
-                { label: "Partidas", fn: j => j.totalPartidas },
-                { label: "Dur. Acumulada", fn: j => convertirSegundosADuracion(j.segundosTotales) },
-                { label: "Prom. Duración", fn: j => convertirSegundosADuracion(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
-                { label: "Total Unidades", fn: j => j.unidadesTotales },
-                { label: "Prom. Unidades", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
-                { label: "Total Edificios", fn: j => j.edificiosTotales },
-                { label: "Prom. Edificios", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
+                { label: "Part.", fn: j => j.totalPartidas },
+                { label: "Dur. Acum.", fn: j => convertirSegundosADuracion(j.segundosTotales) },
+                { label: "Prom. Dur.", fn: j => convertirSegundosADuracion(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
+                { label: "Tot. Unid.", fn: j => j.unidadesTotales },
+                { label: "Prom. Unid.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
+                { label: "Tot. Edif.", fn: j => j.edificiosTotales },
+                { label: "Prom. Edif.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
             ];
 
             metricasT.forEach((metrica, idx) => {
                 const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                 htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                htmlTablaComparativa += `<td style="padding: 9px 8px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
+                htmlTablaComparativa += `<td style="padding: 8px 6px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
                 
                 seleccionados.forEach(sel => {
                     const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase());
                     const valor = jData ? metrica.fn(jData) : "-";
-                    htmlTablaComparativa += `<td style="padding: 9px 8px; text-align: center; white-space: nowrap;">${valor}</td>`;
+                    htmlTablaComparativa += `<td style="padding: 8px 6px; text-align: center; white-space: nowrap;">${valor}</td>`;
                 });
                 htmlTablaComparativa += `</tr>`;
             });
 
             htmlTablaComparativa += `</tbody></table></div>`;
-            contenedorResultado.style.display = "block";
             contenedorResultado.innerHTML = htmlTablaComparativa;
+            modalTiemposOverlay.style.display = "block";
+        });
+    }
+
+    if (cerrarModalTiempos) {
+        cerrarModalTiempos.addEventListener("click", () => {
+            modalTiemposOverlay.style.display = "none";
         });
     }
 
     // Evento Civilizaciones
     const btnConsultarCivs = document.getElementById("btn-consultar-civs");
+    const modalCivsOverlay = document.getElementById("modal-civs-overlay");
+    const cerrarModalCivs = document.getElementById("cerrar-modal-civs");
+
     if (btnConsultarCivs) {
         btnConsultarCivs.addEventListener("click", () => {
             const j1 = document.getElementById("input-civ-1").value.trim();
@@ -338,36 +368,36 @@ function renderizarEstadisticasTiempos() {
             let listaCivsComparativa = Array.from(civsSet);
 
             let htmlTablaCivs = `
-                <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Comparativa de Civilizaciones</h4>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 8px; font-size: 1.1em;">📊 Comparativa de Civilizaciones</h3>
             `;
 
             if (listaCivsComparativa.length === 0) {
-                htmlTablaCivs += `<p style="color: #dc3545; font-weight: bold;">⚠️ No se encontraron civilizaciones registradas para los jugadores seleccionados en este periodo.</p>`;
+                htmlTablaCivs += `<p style="color: #dc3545; font-weight: bold; font-size: 0.9em;">⚠️ No se encontraron civilizaciones registradas para los jugadores seleccionados.</p>`;
             } else {
                 htmlTablaCivs += `
                     <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        <table style="width: 100%; min-width: ${seleccionados.length * 160 + 120}px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
+                        <table style="width: 100%; min-width: ${seleccionados.length * 140 + 100}px; border-collapse: collapse; background: #fff; font-size: 0.8em;">
                             <thead>
                                 <tr style="background-color: #343a40; color: #fff;">
-                                    <th style="padding: 10px 8px; text-align: left;">Civilización</th>
+                                    <th style="padding: 8px 6px; text-align: left;">Civ</th>
                 `;
                 seleccionados.forEach(sel => {
-                    htmlTablaCivs += `<th style="padding: 10px 8px; text-align: center; white-space: nowrap;">${sel} (Part. / WR)</th>`;
+                    htmlTablaCivs += `<th style="padding: 8px 6px; text-align: center; white-space: nowrap;">${sel}</th>`;
                 });
                 htmlTablaCivs += `</tr></thead><tbody>`;
 
                 listaCivsComparativa.forEach((civ, idx) => {
                     const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                     htmlTablaCivs += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                    htmlTablaCivs += `<td style="padding: 9px 8px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
+                    htmlTablaCivs += `<td style="padding: 8px 6px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
 
                     seleccionados.forEach(sel => {
                         const datosJugCiv = estadisticasJugadorCiv[sel] && estadisticasJugadorCiv[sel][civ];
                         if (datosJugCiv && datosJugCiv.jugadas > 0) {
                             const wr = ((datosJugCiv.victorias / datosJugCiv.jugadas) * 100).toFixed(0);
-                            htmlTablaCivs += `<td style="padding: 9px 8px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas} jug. (${wr}%)</td>`;
+                            htmlTablaCivs += `<td style="padding: 8px 6px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
                         } else {
-                            htmlTablaCivs += `<td style="padding: 9px 8px; text-align: center; color: #adb5bd; white-space: nowrap;">-</td>`;
+                            htmlTablaCivs += `<td style="padding: 8px 6px; text-align: center; color: #adb5bd; white-space: nowrap;">-</td>`;
                         }
                     });
                     htmlTablaCivs += `</tr>`;
@@ -376,12 +406,21 @@ function renderizarEstadisticasTiempos() {
                 htmlTablaCivs += `</tbody></table></div>`;
             }
 
-            contenedorResultado.style.display = "block";
             contenedorResultado.innerHTML = htmlTablaCivs;
+            modalCivsOverlay.style.display = "block";
         });
     }
 
-    // 3. Sinergia / Equipos
+    if (cerrarModalCivs) {
+        cerrarModalCivs.addEventListener("click", () => {
+            modalCivsOverlay.style.display = "none";
+        });
+    }
+
+
+    // ==========================================
+    // 3. SUBPESTAÑA SINERGIA / EQUIPOS
+    // ==========================================
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
         <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
