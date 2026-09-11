@@ -14,6 +14,8 @@
     <!-- Esto evita el error 404 del favicon -->
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/estilos.css">
+    <!-- Librería html2canvas para la descarga de imágenes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             box-sizing: border-box;
@@ -256,14 +258,24 @@
             z-index: 2000;
             justify-content: center;
             align-items: center;
-            cursor: zoom-out;
+            flex-direction: column;
+            padding: 15px;
         }
-        .modal-overlay img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 6px;
+        .modal-content-container {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 95%;
+            max-height: 85vh;
+            overflow: auto;
+            text-align: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            cursor: default;
+        }
+        .modal-content-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -313,72 +325,94 @@
             <button type="button" style="background-color: #4682b4; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem;" onclick="verUltimaImagen('candidatos')">📊 Ver Evaluación</button>
         </div>
 
-        <h2 style="color: #222; font-size: 1.3rem;">📊 Clasificación General</h2>
-        
-        <div class="bar-jornada-filtro">
-            <div class="info-jornada">
-                <span id="label-fecha" style="color: #b8860b;">Fecha --</span>
-                <span id="label-partida" style="color: #b8860b;">Partida --</span>
+        <!-- Contenedor principal que se convertirá en imagen -->
+        <div id="captura-clasificacion-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 15px; gap: 10px;">
+                <h2 style="color: #222; font-size: 1.3rem; margin: 0;">📊 Clasificación General</h2>
+                <button type="button" class="btn-reporte-general" onclick="generarReporteClasificacion()" style="background-color: #b8860b; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    📷 Descargar Imagen
+                </button>
             </div>
             
-            <div class="filtro-historico">
-                <label for="select-anio-filtro">Año:</label>
-                <select id="select-anio-filtro" onchange="renderTablaRankingGeneral()">
-                    <option value="2026" selected>2026</option>
-                </select>
+            <div class="bar-jornada-filtro">
+                <div class="info-jornada">
+                    <span id="label-fecha" style="color: #b8860b;">Fecha --</span>
+                    <span id="label-partida" style="color: #b8860b;">Partida --</span>
+                </div>
+                
+                <div class="filtro-historico">
+                    <label for="select-anio-filtro">Año:</label>
+                    <select id="select-anio-filtro" onchange="renderTablaRankingGeneral()">
+                        <option value="2026" selected>2026</option>
+                    </select>
 
-                <label for="select-mes-filtro" style="margin-left: 5px;">Mes:</label>
-                <select id="select-mes-filtro" onchange="renderTablaRankingGeneral()">
-                    <option value="01">Enero</option>
-                    <option value="02">Febrero</option>
-                    <option value="03">Marzo</option>
-                    <option value="04">Abril</option>
-                    <option value="05">Mayo</option>
-                    <option value="06">Junio</option>
-                    <option value="07">Julio</option>
-                    <option value="08" selected>Agosto</option>
-                    <option value="09">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
+                    <label for="select-mes-filtro" style="margin-left: 5px;">Mes:</label>
+                    <select id="select-mes-filtro" onchange="renderTablaRankingGeneral()">
+                        <option value="01">Enero</option>
+                        <option value="02">Febrero</option>
+                        <option value="03">Marzo</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Mayo</option>
+                        <option value="06">Junio</option>
+                        <option value="07">Julio</option>
+                        <option value="08" selected>Agosto</option>
+                        <option value="09">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="box-resumen-partidas">
+                🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">0</span>
+            </div>
+            
+            <div class="card" style="background: #ffffff; border: 1px solid #dddddd; border-radius: 10px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <h3 style="color: #333333; font-size: 1.1rem; margin-bottom: 15px;">Tabla de Posiciones</h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; color: #333333; font-size: 0.9rem;">
+                        <thead>
+                            <tr style="background: #f4f1ea; color: #444;">
+                                <th style="padding: 8px; border: 1px solid #ccc;">Pos</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">Var</th>
+                                <th style="padding: 8px; border: 1px solid #ccc; text-align: left;">Jugador</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">Pts</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">V/PJ</th>
+                                <th style="padding: 8px; border: 1px solid #ccc; text-align: left;">Ultimo Suceso</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">V/D</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">E</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">R</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">M</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">O</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">S</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">Rch</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">MG</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">RLP</th>
+                                <th style="padding: 8px; border: 1px solid #ccc;">TB</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-clasificacion">
+                            <tr>
+                                <td colspan="16" style="text-align: center; padding: 20px; color: #777;">Cargando datos del torneo...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="box-resumen-partidas">
-            🎮 Total de partidas jugadas en este periodo: <span id="total-partidas-mes">0</span>
-        </div>
-        
-        <div class="card" style="background: #ffffff; border: 1px solid #dddddd; border-radius: 10px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-            <h3 style="color: #333333; font-size: 1.1rem; margin-bottom: 15px;">Tabla de Posiciones</h3>
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; color: #333333; font-size: 0.9rem;">
-                    <thead>
-                        <tr style="background: #f4f1ea; color: #444;">
-                            <th style="padding: 8px; border: 1px solid #ccc;">Pos</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">Var</th>
-                            <th style="padding: 8px; border: 1px solid #ccc; text-align: left;">Jugador</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">Pts</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">V/PJ</th>
-                            <th style="padding: 8px; border: 1px solid #ccc; text-align: left;">Ultimo Suceso</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">V/D</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">E</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">R</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">M</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">O</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">S</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">Rch</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">MG</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">RLP</th>
-                            <th style="padding: 8px; border: 1px solid #ccc;">TB</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-clasificacion">
-                        <tr>
-                            <td colspan="16" style="text-align: center; padding: 20px; color: #777;">Cargando datos del torneo...</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <!-- Modal Lightbox para Reporte Generado -->
+    <div id="modal-reporte" class="modal-overlay">
+        <div class="modal-content-container">
+            <h5 style="color: #222; font-weight: bold; margin-bottom: 15px;">🖼️ Reporte de Clasificación Generado</h5>
+            <div id="modal-img-container"></div>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                <a id="btn-descargar-modal" href="#" style="background-color: #b8860b; color: white; padding: 8px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                    📥 Descargar Imagen
+                </a>
+                <button onclick="cerrarModalReporte()" style="background-color: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;">Cerrar</button>
             </div>
         </div>
     </div>
@@ -439,9 +473,38 @@
             const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             const elementoFecha = document.getElementById('fecha-actualizacion');
             if (elementoFecha) {
-                elementoFecha.textContent = `${fechaFormateada}, ${horaFormateダada}`;
+                elementoFecha.textContent = `${fechaFormateada}, ${horaFormateada}`;
             }
         });
+
+        function generarReporteClasificacion() {
+            const cardElement = document.getElementById('captura-clasificacion-container');
+            if (!cardElement) return;
+
+            const btnReporte = cardElement.querySelector('.btn-reporte-general');
+            if (btnReporte) btnReporte.style.display = 'none';
+
+            html2canvas(cardElement, { scale: 2, backgroundColor: '#ffffff', scrollY: -window.scrollY }).then(canvas => {
+                if (btnReporte) btnReporte.style.display = 'inline-block';
+                let dataUrl = canvas.toDataURL('image/png');
+                
+                const modal = document.getElementById('modal-reporte');
+                const imgContainer = document.getElementById('modal-img-container');
+                const btnDescargar = document.getElementById('btn-descargar-modal');
+
+                imgContainer.innerHTML = `<img src="${dataUrl}" style="max-width:100%; height:auto; border-radius:6px;" alt="Reporte Clasificación General">`;
+                btnDescargar.href = dataUrl;
+                btnDescargar.download = `Clasificacion_General.png`;
+                modal.style.display = 'flex';
+            }).catch(err => {
+                if (btnReporte) btnReporte.style.display = 'inline-block';
+                console.error("Error al generar la imagen de clasificación:", err);
+            });
+        }
+
+        function cerrarModalReporte() {
+            document.getElementById('modal-reporte').style.display = 'none';
+        }
 
         function verUltimaImagen(tipo) {
             let keys = Object.keys(localStorage);
