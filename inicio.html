@@ -88,7 +88,7 @@
                 align-items: center;
                 padding: 6px 0;
                 z-index: 1500;
-                box-shadow: -4px 10px rgba(0,0,0,0.15);
+                box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
             }
             .mobile-nav-item {
                 display: flex;
@@ -103,17 +103,30 @@
             .mobile-nav-item span.icon { font-size: 1.1rem; margin-bottom: 2px; }
             .mobile-nav-item.active { color: #b8860b; }
         }
-        /* Estilo para la revista/galardón */
-        .revista-galardon-container {
+        /* Estilo elegante tipo revista para la portada */
+        .portada-container {
             text-align: center;
-            margin-top: 15px;
+            padding: 10px 5px;
+        }
+        .titulo-principal {
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #111111;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .subtitulo-bienvenida {
+            font-size: 0.95rem;
+            color: #555555;
+            margin-bottom: 20px;
         }
         .revista-galardon-container img {
-            max-width: 100%;
+            width: 100%;
+            max-width: 600px;
             height: auto;
             border-radius: 8px;
             border: 2px solid #d4af37;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             cursor: zoom-in;
         }
     </style>
@@ -139,17 +152,16 @@
             <a href="historial.html" class="tab-btn">📜 Historial de Partidas</a>
         </div>
 
-        <!-- Mensaje de bienvenida limpio -->
-        <div style="background: #fdf8ed; border-left: 4px solid #b8860b; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px;">
-            <p style="margin: 0; font-size: 0.95rem; color: #444; font-weight: bold;">Bienvenido al portal oficial del torneo.</p>
-        </div>
+        <!-- Portada grande y limpia estilo revista -->
+        <div class="portada-container">
+            <div class="titulo-principal">[cLm] Ranking Maratón<br>Michi DM</div>
+            <div class="subtitulo-bienvenida">Bienvenido al portal oficial del torneo.</div>
 
-        <!-- Contenedor de la Revista / Último Galardón -->
-        <div class="revista-galardon-container">
-            <h3 style="color: #b8860b; margin-bottom: 10px; font-size: 1.1rem;">👑 Último Galardón del Torneo</h3>
-            <img id="img-galardon-portada" src="" alt="Galardón del Torneo" style="display:none;">
-            <div id="sin-galardon" style="padding: 30px; background: #f9f9f9; border: 1px dashed #ccc; border-radius: 8px; color: #777; font-size: 0.9rem;">
-                No hay ninguna imagen de galardón registrada todavía en el sistema.
+            <div class="revista-galardon-container">
+                <img id="img-galardon-portada" src="" alt="Galardón del Torneo" style="display:none;">
+                <div id="sin-galardon" style="padding: 40px 20px; background: #fdf8ed; border: 1px dashed #d4af37; border-radius: 8px; color: #777; font-size: 0.9rem;">
+                    No hay ninguna imagen de galardón registrada todavía en el sistema.
+                </div>
             </div>
         </div>
     </div>
@@ -202,7 +214,7 @@
                         imgElement.style.display = 'block';
                         msgElement.style.display = 'none';
                         
-                        // Permitir ampliar al hacer clic
+                        // Permitir ampliar al hacer clic (modo revista interactivo)
                         imgElement.addEventListener('click', () => {
                             const modal = document.getElementById('modal-imagen');
                             const modalImg = document.getElementById('img-modal-contenido');
