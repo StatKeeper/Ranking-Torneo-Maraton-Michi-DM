@@ -17,17 +17,6 @@
             -webkit-text-size-adjust: 100%;
             font-family: sans-serif;
         }
-        .admin-toggle-btn {
-            background: #b8860b;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
         .tabs {
             display: flex;
             gap: 8px;
@@ -216,11 +205,6 @@
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <!-- Botón de admin flotante para móviles -->
-        <div class="d-flex justify-content-end mb-3">
-            <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-        </div>
-
         <div class="tabs mb-4">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
@@ -324,7 +308,6 @@
         function descargarPartidaCard(cardId) {
             const cardElement = document.getElementById(cardId);
             if (!cardElement) return;
-            // Ocultar temporalmente el botón de descarga para la captura
             const btnDescarga = cardElement.querySelector('.btn-descargar-partida');
             if (btnDescarga) btnDescarga.style.display = 'none';
 
@@ -472,6 +455,9 @@
                     return idB - idA;
                 });
 
+                // Limitado estrictamente a un máximo de 10 partidas recientes
+                matchesFiltrados = matchesFiltrados.slice(0, 10);
+
                 if (matchesFiltrados.length === 0) {
                     contenedor.innerHTML = `
                         <div class="text-center py-5 text-muted">
@@ -509,7 +495,6 @@
                         let esGanador = (reg.pg === 1 || reg.pts >= 3 || reg.ganador === true);
                         let iconoResultado = esGanador ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
 
-                        // Limpiar formato de equipo para que muestre E1 o E2 limpiamente
                         let eqRaw = reg.equipo || "E1";
                         let eqLimpio = eqRaw.replace(/[^0-9]/g, '');
                         let eqTexto = eqLimpio ? `E${eqLimpio}` : eqRaw;
