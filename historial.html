@@ -12,7 +12,7 @@
     <style>
         body {
             box-sizing: border-box;
-            background-color: #f8f9fa; /* Fondo claro institucional */
+            background-color: #f8f9fa;
             color: #333333;
             -webkit-text-size-adjust: 100%;
             font-family: sans-serif;
@@ -135,6 +135,43 @@
             background-color: #f1f3f5 !important;
             color: #212529 !important;
             border-bottom: 2px solid #dee2e6;
+            padding: 10px;
+        }
+        .table-light-custom td {
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        /* Modal Lightbox para vista previa de imagen generada */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 15px;
+        }
+        .modal-content-container {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 95%;
+            max-height: 85vh;
+            overflow: auto;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .modal-content-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin-bottom: 15px;
         }
 
         /* 📱 ESTILOS RESPONSIVOS MÓVIL Y BARRA INFERIOR */
@@ -265,6 +302,20 @@
         <div id="lista-partidas-container"></div>
     </div>
 
+    <!-- Modal Lightbox para Reporte Generado -->
+    <div id="modal-reporte" class="modal-overlay">
+        <div class="modal-content-container">
+            <h5 class="text-dark fw-bold mb-3"><i class="fas fa-file-image text-warning"></i> Reporte de Partida Generado</h5>
+            <div id="modal-img-container"></div>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <a id="btn-descargar-modal" href="#" class="btn btn-warning fw-bold text-dark px-4">
+                    <i class="fas fa-download"></i> Descargar Imagen
+                </a>
+                <button class="btn btn-secondary px-3" onclick="cerrarModalReporte()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Barra de Navegación Inferior Móvil -->
     <nav class="mobile-bottom-nav">
         <a href="index.html" class="mobile-nav-item">
@@ -305,22 +356,35 @@
             return mapaCorrecciones[nombreOriginal] || nombreOriginal;
         }
 
-        function descargarPartidaCard(cardId) {
+        function generarReportePartida(cardId) {
             const cardElement = document.getElementById(cardId);
             if (!cardElement) return;
-            const btnDescarga = cardElement.querySelector('.btn-descargar-partida');
-            if (btnDescarga) btnDescarga.style.display = 'none';
 
-            html2canvas(cardElement, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
-                if (btnDescarga) btnDescarga.style.display = 'inline-block';
-                let link = document.createElement('a');
-                link.download = `${cardId}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
+            // Ocultar temporalmente el botón de reporte dentro de la tarjeta antes de capturar
+            const btnReporte = cardElement.querySelector('.btn-reporte-partida');
+            if (btnReporte) btnReporte.style.display = 'none';
+
+            html2canvas(cardElement, { scale: 2, backgroundColor: '#ffffff', scrollY: -window.scrollY }).then(canvas => {
+                if (btnReporte) btnReporte.style.display = 'inline-block';
+                let dataUrl = canvas.toDataURL('image/png');
+                
+                // Mostrar en el Modal
+                const modal = document.getElementById('modal-reporte');
+                const imgContainer = document.getElementById('modal-img-container');
+                const btnDescargar = document.getElementById('btn-descargar-modal');
+
+                imgContainer.innerHTML = `<img src="${dataUrl}" class="img-fluid rounded border" alt="Reporte de Partida">`;
+                btnDescargar.href = dataUrl;
+                btnDescargar.download = `${cardId}.png`;
+                modal.style.display = 'flex';
             }).catch(err => {
-                if (btnDescarga) btnDescarga.style.display = 'inline-block';
-                console.error("Error al generar la imagen de la partida:", err);
+                if (btnReporte) btnReporte.style.display = 'inline-block';
+                console.error("Error al generar el reporte de la partida:", err);
             });
+        }
+
+        function cerrarModalReporte() {
+            document.getElementById('modal-reporte').style.display = 'none';
         }
 
         function cargarHistorialPartidas() {
@@ -455,7 +519,7 @@
                     return idB - idA;
                 });
 
-                // Limitado estrictamente a un máximo de 10 partidas recientes
+                // Límite máximo de 10 partidas recientes
                 matchesFiltrados = matchesFiltrados.slice(0, 10);
 
                 if (matchesFiltrados.length === 0) {
@@ -524,8 +588,8 @@
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="match-duration"><i class="far fa-clock"></i> ${m.duracion}</div>
-                                    <button class="btn btn-sm btn-warning fw-bold text-dark btn-descargar-partida" onclick="descargarPartidaCard('${cardId}')" title="Descargar reporte de partida">
-                                        <i class="fas fa-download"></i>
+                                    <button class="btn btn-sm btn-warning fw-bold text-dark btn-reporte-partida" onclick="generarReportePartida('${cardId}')" title="Ver reporte en grande y descargar">
+                                        <i class="fas fa-file-image"></i>
                                     </button>
                                 </div>
                             </div>
