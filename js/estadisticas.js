@@ -376,6 +376,95 @@ function renderizarEstadisticasTiempos() {
             });
             seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
+            // Cálculo acumulado de unidades y edificios desde partidasDetalleGlobal
+            let estadisticasPartidasJugadores = {};
+            seleccionadosNombres.forEach(nombre => {
+                estadisticasPartidasJugadores[nombre] = { units: 0, edificios: 0 };
+            });
+
+            if (typeof partidasDetalleGlobal !== 'undefined' && Array.isArray(partidasDetalleGlobal)) {
+                partidasDetalleGlobal.forEach(partida => {
+                    partida.forEach(p => {
+                        seleccionadosNombres.forEach(sel => {
+                            if (p.nombre && p.nombre.toLowerCase() === sel.toLowerCase()) {
+                                estadisticasPartidasJugadores[sel].units += Number(p.unidades || p.unidadesAsesinadas || p.kills || 0);
+                                estadisticasPartidasJugadores[sel].edificios += Number(p.edificios || p.edificiosArrasados || p.buildings || 0);
+                            }
+                        });
+                    });
+                });
+            }
+
+            let htmlTablaComparativa = `
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos y Estadísticas</h3>
+                
+                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
+                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>T.A.</strong>: Tiempo Acumulado | <strong>P.T.A.</strong>: Promedio Tiempo Acumulado | <strong>U.Ases.</strong>: Unidades Asesinadas | <strong>P.U.Ases.</strong>: Promedio Unidades | <strong>E.Arr.</strong>: Edificios Arrasados | <strong>P.E.Arr.</strong>: Promedio Edificios
+                </div>
+
+                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <table style="width: 100%; min-width: ${seleccionadosNombres.length * 95 + 50}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
+                        <thead>
+                            <tr style="background-color: #343a40; color: #fff;">
+                                <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Métrica</th>
+            `;
+            seleccionadosNombres.forEach(sel => {
+                htmlTablaComparativa += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel}</th>`;
+            });
+            htmlTablaComparativa += `</tr></thead><tbody>`;
+
+            const metricasT = [
+                { label: "P.", fn: j => j.totalPartidas || 0 },
+                { label: "T.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales || 0) },
+                { label: "P.T.A.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
+                { label: "U.Ases.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.units;
+                    return (calc !== undefined && calc > 0) ? calc : (j.unidadesTotales ?? j.unidades ?? j.unidadesAsesinadas ?? 0);
+                }},
+                { label: "P.U.Ases.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.units ?? (j.unidadesTotales ?? j.unidades ?? j.unidadesAsesinadas ?? 0);
+                    return j.totalPartidas > 0 ? (calc / j.totalPartidas).toFixed(1) : "0.0";
+                }},
+                { label: "E.Arr.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.edificios;
+                    return (calc !== undefined && calc > 0) ? calc : (j.edificiosTotales ?? j.edificios ?? j.edificiosArrasados ?? 0);
+                }},
+                { label: "P.E.Arr.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.edificios ?? (j.edificiosTotales ?? j.edificios ?? j.edificiosArrasados ?? 0);
+                    return j.totalPartidas > 0 ? (calc / j.totalPartidas).toFixed(1) : "0.0";
+                }}
+            ];
+
+            metricasT.forEach((metrica, idx) => {
+                const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
+                htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
+                htmlTablaComparativa += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
+                
+                seleccionadosNombres.forEach(sel => {
+                    const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase() || j.nombre.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(j.nombre.toLowerCase()));
+                    const valor = jData ? metrica.fn(jData) : "-";
+                    htmlTablaComparativa += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${valor}</td>`;
+                });
+                htmlTablaComparativa += `</tr>`;
+            });
+
+            htmlTablaComparativa += `</tbody></table></div>`;
+            contenedorResultado.innerHTML = htmlTablaComparativa;
+            modalTiemposOverlay.style.display = "block";
+        });
+    }
+
+            let seleccionadosNombres = [];
+            inputsRaw.forEach(inp => {
+                const encontrado = buscarJugadorFlexible(inp);
+                if (encontrado) {
+                    seleccionadosNombres.push(encontrado.nombre);
+                } else {
+                    seleccionadosNombres.push(inp.trim());
+                }
+            });
+            seleccionadosNombres = [...new Set(seleccionadosNombres)];
+
             let htmlTablaComparativa = `
                 <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos y Estadísticas</h3>
                 
