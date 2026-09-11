@@ -66,43 +66,36 @@
             font-size: 1.8rem;
             margin-bottom: 15px;
         }
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .menu-item-card {
+
+        /* Estilo Revista / Portada sin botones */
+        .magazine-cover-container {
             background: #ffffff;
-            border: 1px solid #dee2e6;
+            border: 2px solid #d4af37;
             border-radius: 10px;
-            padding: 20px;
-            text-decoration: none;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            padding: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            display: inline-block;
+            max-width: 100%;
+            margin-top: 15px;
         }
-        .menu-item-card:hover {
-            transform: translateY(-3px);
-            border-color: #b8860b;
+        .magazine-cover-container img {
+            width: 100%;
+            height: auto;
+            max-height: 550px;
+            object-fit: contain;
+            border-radius: 6px;
+            pointer-events: none; /* Evita interacciones o arrastres molestos */
+        }
+        .magazine-title-badge {
+            background: rgba(212, 175, 55, 0.15);
             color: #b8860b;
-        }
-        .menu-item-icon {
-            font-size: 2rem;
-            color: #b8860b;
-        }
-        .menu-item-text h3 {
-            font-size: 1.1rem;
-            margin: 0;
             font-weight: bold;
-        }
-        .menu-item-text p {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin: 0;
+            font-size: 0.95rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
         }
 
         /* 📱 5 PESTAÑAS EN LA BARRA INFERIOR MÓVIL */
@@ -174,37 +167,10 @@
 
         <div class="welcome-card">
             <h1>🏆 Ranking Maratón Michi DM</h1>
-            <p class="text-secondary">Bienvenido al portal oficial del torneo. Selecciona una sección para consultar las tablas, estadísticas, candidatos y el historial detallado de los encuentros.</p>
+            <p class="text-secondary">Bienvenido al portal oficial del torneo.</p>
             
-            <div class="menu-grid">
-                <a href="index.html" class="menu-item-card">
-                    <div class="menu-item-icon"><i class="fas fa-chart-bar"></i></div>
-                    <div class="menu-item-text text-start">
-                        <h3>Clasificación</h3>
-                        <p>Tabla general de posiciones</p>
-                    </div>
-                </a>
-                <a href="estadisticas.html" class="menu-item-card">
-                    <div class="menu-item-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="menu-item-text text-start">
-                        <h3>Estadísticas</h3>
-                        <p>Tiempos, civs y sinergia</p>
-                    </div>
-                </a>
-                <a href="candidatos.html" class="menu-item-card">
-                    <div class="menu-item-icon"><i class="fas fa-star"></i></div>
-                    <div class="menu-item-text text-start">
-                        <h3>Candidatos</h3>
-                        <p>Jugadores de la fecha</p>
-                    </div>
-                </a>
-                <a href="historial.html" class="menu-item-card">
-                    <div class="menu-item-icon"><i class="fas fa-history"></i></div>
-                    <div class="menu-item-text text-start">
-                        <h3>Historial</h3>
-                        <p>Registro de partidas y reportes</p>
-                    </div>
-                </a>
+            <div id="portada-galardon-container">
+                <!-- Se cargará automáticamente la última infografía en formato revista -->
             </div>
         </div>
     </div>
@@ -234,5 +200,48 @@
     </nav>
 
     <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const contenedor = document.getElementById('portada-galardon-container');
+            if (!contenedor) return;
+
+            // Buscar la última imagen con sufijo _galardon en el localStorage
+            let llavesGalardon = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key && key.startsWith("img_") && key.endsWith("_galardon")) {
+                    llavesGalardon.push(key);
+                }
+            }
+
+            if (llavesGalardon.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="text-muted py-4">
+                        <i class="fas fa-image fa-2x mb-2 text-secondary"></i>
+                        <p class="small mb-0">Próximamente la portada del último galardón del torneo.</p>
+                    </div>`;
+                return;
+            }
+
+            // Ordenar alfabéticamente para obtener la más reciente
+            llavesGalardon.sort();
+            let ultimaLlave = llavesGalardon[llavesGalardon.length - 1];
+            let dataUrl = localStorage.getItem(ultimaLlave);
+
+            // Extraer datos de la llave (ej: img_2026_agosto_f02_p01_galardon)
+            let partes = ultimaLlave.replace('_galardon', '').split('_');
+            let fechaNum = partes[3] ? partes[3].replace('f', '') : "02";
+            let partidaNum = partes[4] ? partes[4].replace('p', '') : "1";
+
+            contenedor.innerHTML = `
+                <div class="magazine-title-badge">
+                    <i class="fas fa-crown"></i> Jugador de la Michi Fecha ${fechaNum} Partida ${partidaNum}
+                </div>
+                <div class="magazine-cover-container">
+                    <img src="${dataUrl}" alt="Portada Galardón del Torneo">
+                </div>
+            `;
+        });
+    </script>
 </body>
 </html>
