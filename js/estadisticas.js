@@ -196,24 +196,27 @@ function renderizarEstadisticasTiempos() {
 
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
-    const optionsDatalist = Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("");
+    
+    // Datalist universal y ordenado alfabéticamente para que despliegue todos los nicks correctamente
+    const arrayNombresUnicos = Array.from(listaGlobalJugadores).sort();
+    const optionsDatalist = arrayNombresUnicos.map(j => `<option value="${j}">`).join("");
 
-    // Función auxiliar flexible para buscar coincidencias de nombres (parciales o con corchetes)
+    // Función de búsqueda flexible mejorada para ignorar corchetes, mayúsculas o acentos al escribir parte del nombre
     function buscarJugadorFlexible(nombreBusqueda) {
         if (!nombreBusqueda) return null;
         const query = nombreBusqueda.toLowerCase().trim();
-        return listaJugadores.find(j => {
+        
+        // 1. Coincidencia exacta o parcial directa
+        let encontrado = listaJugadores.find(j => {
             const n = j.nombre.toLowerCase();
             return n === query || n.includes(query) || query.includes(n);
         });
-    }
+        if (encontrado) return encontrado;
 
-    function buscarJugadorCivFlexible(nombreBusqueda) {
-        if (!nombreBusqueda) return null;
-        const query = nombreBusqueda.toLowerCase().trim();
-        return Object.keys(estadisticasJugadorCiv).find(k => {
-            const n = k.toLowerCase();
-            return n === query || n.includes(query) || query.includes(n);
+        // 2. Búsqueda limpiando corchetes y símbolos comunes si el usuario escribe el nombre base
+        return listaJugadores.find(j => {
+            const limpio = j.nombre.toLowerCase().replace(/\[.*?\]|\{.*?\}|\*|_/g, "").trim();
+            return limpio === query || limpio.includes(query) || query.includes(limpio);
         });
     }
 
@@ -227,22 +230,21 @@ function renderizarEstadisticasTiempos() {
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-tiempo-1" list="lista-jugadores-sug-t" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-tiempo-1" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-tiempo-2" list="lista-jugadores-sug-t" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-tiempo-2" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-tiempo-3" list="lista-jugadores-sug-t" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-tiempo-3" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-tiempo-4" list="lista-jugadores-sug-t" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-tiempo-4" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            <datalist id="lista-jugadores-sug-t">${optionsDatalist}</datalist>
             <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos</button>
         </div>
         
@@ -267,22 +269,21 @@ function renderizarEstadisticasTiempos() {
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-civ-1" list="lista-jugadores-sug-c" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-civ-1" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-civ-2" list="lista-jugadores-sug-c" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-civ-2" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-civ-3" list="lista-jugadores-sug-c" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-civ-3" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-civ-4" list="lista-jugadores-sug-c" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-civ-4" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            <datalist id="lista-jugadores-sug-c">${optionsDatalist}</datalist>
             <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones</button>
         </div>
         
@@ -298,9 +299,8 @@ function renderizarEstadisticasTiempos() {
     `;
 
     // ==========================================
-    // 3. SUBPESTAÑA SINERGIA / EQUIPOS
+    // 3. SUBPESTAÑA SINERGIA (SIN TABLA INNECESARIA)
     // ==========================================
-    const listaEquipos = Object.values(estadisticasEquipos);
     secEnfrentamientos.innerHTML = `
         <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
         <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en pantalla completa.</p>
@@ -308,22 +308,21 @@ function renderizarEstadisticasTiempos() {
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-sinergia-1" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-sinergia-2" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-sinergia-3" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
                     <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                    <input type="text" id="input-sinergia-4" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            <datalist id="lista-jugadores-sug">${optionsDatalist}</datalist>
             <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Sinergia</button>
         </div>
 
@@ -336,46 +335,16 @@ function renderizarEstadisticasTiempos() {
                 <div id="resultado-sinergia-container"></div>
             </div>
         </div>
-
-        <h3 style="margin-top: 20px;">🤝 Rendimiento por Equipos</h3>
-        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 10px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
-            <table style="width: 100%; min-width: 600px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
-                <thead>
-                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 10px 8px; white-space: nowrap;">Equipo / Bando</th>
-                        <th style="padding: 10px 8px; white-space: nowrap;">Miembros Integrantes</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Partidas</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Victorias</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Derrotas</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Efectividad</th>
-                    </tr>
-                </thead>
-                <tbody>
     `;
 
-    if (listaEquipos.length === 0) {
-        htmlEnfrentamientos += `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">No hay equipos registrados en las partidas.</td></tr>`;
-    } else {
-        listaEquipos.forEach((eq, index) => {
-            const totalP = eq.victorias + eq.derrotas;
-            const ef = totalP > 0 ? ((eq.victorias / totalP) * 100).toFixed(0) : 0;
-            const miembrosArr = Array.from(eq.miembros).join(", ");
-            const nombreSimplificado = `E${index + 1}`;
-            htmlEnfrentamientos += `
-                <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${nombreSimplificado}</strong></td>
-                    <td style="padding: 10px 8px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
-                    <td style="padding: 10px 8px; text-align: center;">${totalP}</td>
-                    <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${eq.victorias}</td>
-                    <td style="padding: 10px 8px; text-align: center; color: #dc3545; font-weight: bold;">${eq.derrotas}</td>
-                    <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: ${eq.victorias > 0 && eq.derrotas === 0 ? '#198754' : '#0d6efd'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
-                </tr>
-            `;
-        });
+    // Inyectamos un único <datalist> global en el documento para que todos los inputs lo utilicen sin fallos en móviles
+    let contenedorDatalistGlobal = document.getElementById("lista-jugadores-global");
+    if (!contenedorDatalistGlobal) {
+        contenedorDatalistGlobal = document.createElement("datalist");
+        contenedorDatalistGlobal.id = "lista-jugadores-global";
+        document.body.appendChild(contenedorDatalistGlobal);
     }
-
-    htmlEnfrentamientos += `</tbody></table></div>`;
-    secEnfrentamientos.innerHTML = htmlEnfrentamientos;
+    contenedorDatalistGlobal.innerHTML = optionsDatalist;
 
     // ==========================================
     // EVENTOS Y MODALES
