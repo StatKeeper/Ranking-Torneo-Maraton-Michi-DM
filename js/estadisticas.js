@@ -179,7 +179,7 @@ function renderizarEstadisticasTiempos() {
                         }
                     }
                 } catch (e) {
-                    console.error("Error al procesar registros para estadísticas:", e);
+                    console.error("Error al procesar registros:", e);
                 }
             }
         }
@@ -188,14 +188,10 @@ function renderizarEstadisticasTiempos() {
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
 
-
-    // ==========================================
-    // 1. SUBPESTAÑA TIEMPOS (INTERACTIVA 2 A 4 JUGADORES)
-    // ==========================================
-    let htmlTiempos = `
+    // 1. Render Tiempos
+    secTiempos.innerHTML = `
         <h3>⏱️ Consulta Interactiva de Tiempos (2 a 4 Jugadores)</h3>
         <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus tiempos y estadísticas lado a lado.</p>
-        
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
@@ -215,26 +211,18 @@ function renderizarEstadisticasTiempos() {
                     <input type="text" id="input-tiempo-4" list="lista-jugadores-sug-t" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            
             <datalist id="lista-jugadores-sug-t">
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
-
             <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Tiempos</button>
         </div>
-
         <div id="resultado-tiempos-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
     `;
-    secTiempos.innerHTML = htmlTiempos;
 
-
-    // ==========================================
-    // 2. SUBPESTAÑA CIVILIZACIONES (INTERACTIVA 2 A 4 JUGADORES)
-    // ==========================================
-    let htmlCivs = `
+    // 2. Render Civilizaciones
+    secCivilizaciones.innerHTML = `
         <h3>🏛️ Consulta Interactiva de Civilizaciones (2 a 4 Jugadores)</h3>
         <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar las civilizaciones que han utilizado y su rendimiento.</p>
-        
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
@@ -254,22 +242,13 @@ function renderizarEstadisticasTiempos() {
                     <input type="text" id="input-civ-4" list="lista-jugadores-sug-c" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            
             <datalist id="lista-jugadores-sug-c">
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
-
             <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Civilizaciones</button>
         </div>
-
         <div id="resultado-civs-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
     `;
-    secCivilizaciones.innerHTML = htmlCivs;
-
-
-    // ==========================================
-    // 3. EVENTOS DE CONSULTA INTERACTIVA (TIEMPOS Y CIVS)
-    // ==========================================
 
     // Evento Tiempos
     const btnConsultarTiempos = document.getElementById("btn-consultar-tiempos");
@@ -402,15 +381,11 @@ function renderizarEstadisticasTiempos() {
         });
     }
 
-
-    // ==========================================
-    // 4. SUBPESTAÑA SINERGIA / EQUIPOS
-    // ==========================================
+    // 3. Sinergia / Equipos
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
         <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
         <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en el mismo equipo.</p>
-        
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
@@ -430,16 +405,12 @@ function renderizarEstadisticasTiempos() {
                     <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            
             <datalist id="lista-jugadores-sug">
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
-
             <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Sinergia</button>
         </div>
-
         <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
-
         <h3 style="margin-top: 20px;">🤝 Rendimiento por Equipos</h3>
         <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 10px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
             <table style="width: 100%; min-width: 600px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
