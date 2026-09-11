@@ -43,7 +43,7 @@ function convertirDuracionASegundos(duracionStr) {
     return 0;
 }
 
-// Formato HH:MM (sin segundos para ahorrar espacio horizontal en móviles)
+// Formato HH:MM sin segundos para ahorrar espacio horizontal
 function convertirSegundosADuracionCorto(segundosTotales) {
     if (!segundosTotales || segundosTotales <= 0) return "00:00";
     const h = Math.floor(segundosTotales / 3600);
@@ -219,7 +219,6 @@ function renderizarEstadisticasTiempos() {
             <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos</button>
         </div>
         
-        <!-- Modal Pantalla Completa con Botón de Descarga -->
         <div id="modal-tiempos-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
             <div id="modal-tiempos-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
@@ -262,7 +261,6 @@ function renderizarEstadisticasTiempos() {
             <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones</button>
         </div>
         
-        <!-- Modal Civilizaciones con Botón de Descarga -->
         <div id="modal-civs-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
             <div id="modal-civs-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
@@ -275,10 +273,91 @@ function renderizarEstadisticasTiempos() {
     `;
 
     // ==========================================
-    // EVENTOS Y MODALES
+    // 3. SUBPESTAÑA SINERGIA / EQUIPOS (CON MODAL Y DESCARGA)
+    // ==========================================
+    const listaEquipos = Object.values(estadisticasEquipos);
+    secEnfrentamientos.innerHTML = `
+        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
+        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en pantalla completa.</p>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
+                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
+                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
+                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
+                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                </div>
+            </div>
+            <datalist id="lista-jugadores-sug">
+                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
+            </datalist>
+            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Sinergia</button>
+        </div>
+
+        <div id="modal-sinergia-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
+            <div id="modal-sinergia-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
+                    <button id="btn-descargar-sinergia" title="Descargar como Imagen" style="background: #198754; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center;">📥</button>
+                    <button id="cerrar-modal-sinergia" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
+                </div>
+                <div id="resultado-sinergia-container"></div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 20px;">🤝 Rendimiento por Equipos</h3>
+        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 10px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
+            <table style="width: 100%; min-width: 600px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
+                <thead>
+                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
+                        <th style="padding: 10px 8px; white-space: nowrap;">Equipo / Bando</th>
+                        <th style="padding: 10px 8px; white-space: nowrap;">Miembros Integrantes</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Partidas</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Victorias</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Derrotas</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Efectividad</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    if (listaEquipos.length === 0) {
+        htmlEnfrentamientos += `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">No hay equipos registrados en las partidas.</td></tr>`;
+    } else {
+        listaEquipos.forEach(eq => {
+            const totalP = eq.victorias + eq.derrotas;
+            const ef = totalP > 0 ? ((eq.victorias / totalP) * 100).toFixed(0) : 0;
+            const miembrosArr = Array.from(eq.miembros).join(", ");
+            htmlEnfrentamientos += `
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${eq.nombreEquipo}</strong></td>
+                    <td style="padding: 10px 8px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
+                    <td style="padding: 10px 8px; text-align: center;">${totalP}</td>
+                    <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${eq.victorias}</td>
+                    <td style="padding: 10px 8px; text-align: center; color: #dc3545; font-weight: bold;">${eq.derrotas}</td>
+                    <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: ${eq.victorias > 0 && eq.derrotas === 0 ? '#198754' : '#0d6efd'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
+                </tr>
+            `;
+        });
+    }
+
+    htmlEnfrentamientos += `</tbody></table></div>`;
+    secEnfrentamientos.innerHTML = htmlEnfrentamientos;
+
+    // ==========================================
+    // EVENTOS Y MODALES (CON DESCARGA 📥)
     // ==========================================
 
-    // Evento Tiempos
+    // 1. Evento Tiempos
     const btnConsultarTiempos = document.getElementById("btn-consultar-tiempos");
     const modalTiemposOverlay = document.getElementById("modal-tiempos-overlay");
     const cerrarModalTiempos = document.getElementById("cerrar-modal-tiempos");
@@ -303,7 +382,6 @@ function renderizarEstadisticasTiempos() {
             let htmlTablaComparativa = `
                 <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos</h3>
                 
-                <!-- Leyenda de Diminutivos -->
                 <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
                     <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Duración Acumulada | <strong>P.Dur.</strong>: Promedio Duración | <strong>T.Un.</strong>: Total Unidades | <strong>P.Un.</strong>: Promedio Unidades | <strong>T.Ed.</strong>: Total Edificios | <strong>P.Ed.</strong>: Promedio Edificios
                 </div>
@@ -349,40 +427,17 @@ function renderizarEstadisticasTiempos() {
     }
 
     if (cerrarModalTiempos) {
-        cerrarModalTiempos.addEventListener("click", () => {
-            modalTiemposOverlay.style.display = "none";
-        });
+        cerrarModalTiempos.addEventListener("click", () => { modalTiemposOverlay.style.display = "none"; });
     }
 
-    // Descarga de Tiempos como Imagen usando html2canvas (si está disponible) o fallback limpio
     if (btnDescargarTiempos) {
         btnDescargarTiempos.addEventListener("click", () => {
             const card = document.getElementById("modal-tiempos-card");
-            if (typeof html2canvas !== 'undefined') {
-                html2canvas(card, { scale: 2 }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'comparativa_tiempos_michi.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                });
-            } else {
-                // Cargar dinámicamente html2canvas si no está cargado en el proyecto
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-                script.onload = () => {
-                    html2canvas(card, { scale: 2 }).then(canvas => {
-                        const link = document.createElement('a');
-                        link.download = 'comparativa_tiempos_michi.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                    });
-                };
-                document.head.appendChild(script);
-            }
+            ejecutarCapturaHtml2Canvas(card, 'comparativa_tiempos_michi.png');
         });
     }
 
-    // Evento Civilizaciones
+    // 2. Evento Civilizaciones
     const btnConsultarCivs = document.getElementById("btn-consultar-civs");
     const modalCivsOverlay = document.getElementById("modal-civs-overlay");
     const cerrarModalCivs = document.getElementById("cerrar-modal-civs");
@@ -439,7 +494,7 @@ function renderizarEstadisticasTiempos() {
 
                     seleccionados.forEach(sel => {
                         const datosJugCiv = estadisticasJugadorCiv[sel] && estadisticasJugadorCiv[sel][civ];
-                        if (datosJug_civ = datosJugCiv && datosJugCiv.jugadas > 0) {
+                        if (datosJugCiv && datosJugCiv.jugadas > 0) {
                             const wr = ((datosJugCiv.victorias / datosJugCiv.jugadas) * 100).toFixed(0);
                             htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
                         } else {
@@ -458,112 +513,22 @@ function renderizarEstadisticasTiempos() {
     }
 
     if (cerrarModalCivs) {
-        cerrarModalCivs.addEventListener("click", () => {
-            modalCivsOverlay.style.display = "none";
-        });
+        cerrarModalCivs.addEventListener("click", () => { modalCivsOverlay.style.display = "none"; });
     }
 
-    // Descarga de Civilizaciones como Imagen
     if (btnDescargarCivs) {
         btnDescargarCivs.addEventListener("click", () => {
             const card = document.getElementById("modal-civs-card");
-            if (typeof html2canvas !== 'undefined') {
-                html2canvas(card, { scale: 2 }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'comparativa_civs_michi.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                });
-            } else {
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-                script.onload = () => {
-                    html2canvas(card, { scale: 2 }).then(canvas => {
-                        const link = document.createElement('a');
-                        link.download = 'comparativa_civs_michi.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                    });
-                };
-                document.head.appendChild(script);
-            }
+            ejecutarCapturaHtml2Canvas(card, 'comparativa_civs_michi.png');
         });
     }
 
-
-    // ==========================================
-    // 3. SUBPESTAÑA SINERGIA / EQUIPOS
-    // ==========================================
-    const listaEquipos = Object.values(estadisticasEquipos);
-    let htmlEnfrentamientos = `
-        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en el mismo equipo.</p>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-            </div>
-            <datalist id="lista-jugadores-sug">
-                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
-            </datalist>
-            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Sinergia</button>
-        </div>
-        <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
-        <h3 style="margin-top: 20px;">🤝 Rendimiento por Equipos</h3>
-        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 10px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
-            <table style="width: 100%; min-width: 600px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
-                <thead>
-                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 10px 8px; white-space: nowrap;">Equipo / Bando</th>
-                        <th style="padding: 10px 8px; white-space: nowrap;">Miembros Integrantes</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Partidas</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Victorias</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Derrotas</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Efectividad</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-
-    if (listaEquipos.length === 0) {
-        htmlEnfrentamientos += `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">No hay equipos registrados en las partidas.</td></tr>`;
-    } else {
-        listaEquipos.forEach(eq => {
-            const totalP = eq.victorias + eq.derrotas;
-            const ef = totalP > 0 ? ((eq.victorias / totalP) * 100).toFixed(0) : 0;
-            const miembrosArr = Array.from(eq.miembros).join(", ");
-            htmlEnfrentamientos += `
-                <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${eq.nombreEquipo}</strong></td>
-                    <td style="padding: 10px 8px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
-                    <td style="padding: 10px 8px; text-align: center;">${totalP}</td>
-                    <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${eq.victorias}</td>
-                    <td style="padding: 10px 8px; text-align: center; color: #dc3545; font-weight: bold;">${eq.derrotas}</td>
-                    <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: ${eq.victorias > 0 && eq.derrotas === 0 ? '#198754' : '#0d6efd'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
-                </tr>
-            `;
-        });
-    }
-
-    htmlEnfrentamientos += `</tbody></table></div>`;
-    secEnfrentamientos.innerHTML = htmlEnfrentamientos;
-
-    // Evento Sinergia
+    // 3. Evento Sinergia
     const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
+    const modalSinergiaOverlay = document.getElementById("modal-sinergia-overlay");
+    const cerrarModalSinergia = document.getElementById("cerrar-modal-sinergia");
+    const btnDescargarSinergia = document.getElementById("btn-descargar-sinergia");
+
     if (btnConsultarSinergia) {
         btnConsultarSinergia.addEventListener("click", () => {
             const j1 = document.getElementById("input-sinergia-1").value.trim();
@@ -616,11 +581,10 @@ function renderizarEstadisticasTiempos() {
                 });
             });
 
-            contenedorResultado.style.display = "block";
             if (partidasJuntos === 0) {
                 contenedorResultado.innerHTML = `
-                    <h4 style="color: #343a40; margin-bottom: 10px;">📊 Sinergia para: ${seleccionados.join(" , ")}</h4>
-                    <p style="color: #dc3545; margin: 0; font-weight: bold;">⚠️ Partida no existente: Estos jugadores no han participado juntos en el mismo equipo/bando en ninguna partida registrada.</p>
+                    <h3 style="color: #343a40; margin-top: 0; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal</h3>
+                    <p style="color: #dc3545; margin: 10px 0; font-weight: bold; font-size: 0.85em;">⚠️ Partida no existente: Estos jugadores no han participado juntos en el mismo equipo/bando en ninguna partida registrada.</p>
                 `;
             } else {
                 const efSinergia = ((victoriasJuntos / partidasJuntos) * 100).toFixed(0);
@@ -629,15 +593,50 @@ function renderizarEstadisticasTiempos() {
                 else if (derrotasJuntos > 0 && victoriasJuntos === 0) badgeEstado = `<span style="color: #dc3545; font-weight: bold;">⚠️ Sin victorias conjuntas</span>`;
 
                 contenedorResultado.innerHTML = `
-                    <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta (Mismo Equipo): ${seleccionados.join(" , ")}</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; text-align: center;">
-                        <div style="background: #f8f9fa; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #6c757d;">Partidas Juntos</div><div style="font-size: 1.3em; font-weight: bold; color: #343a40;">${partidasJuntos}</div></div>
-                        <div style="background: #e8f5e9; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #198754;">Victorias</div><div style="font-size: 1.3em; font-weight: bold; color: #198754;">${victoriasJuntos}</div></div>
-                        <div style="background: #ffebee; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #dc3545;">Derrotas</div><div style="font-size: 1.3em; font-weight: bold; color: #dc3545;">${derrotasJuntos}</div></div>
-                        <div style="background: #e7f1ff; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #0d6efd;">Estado Sinergia</div><div style="font-size: 1em; margin-top: 4px;">${badgeEstado}</div></div>
+                    <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia: ${seleccionados.join(" , ")}</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; text-align: center; font-size: 0.8em;">
+                        <div style="background: #f8f9fa; padding: 6px; border-radius: 6px;"><div style="color: #6c757d;">Partidas Juntos</div><div style="font-size: 1.2em; font-weight: bold; color: #343a40;">${partidasJuntos}</div></div>
+                        <div style="background: #e8f5e9; padding: 6px; border-radius: 6px;"><div style="color: #198754;">Victorias</div><div style="font-size: 1.2em; font-weight: bold; color: #198754;">${victoriasJuntos}</div></div>
+                        <div style="background: #ffebee; padding: 6px; border-radius: 6px;"><div style="color: #dc3545;">Derrotas</div><div style="font-size: 1.2em; font-weight: bold; color: #dc3545;">${derrotasJuntos}</div></div>
+                        <div style="background: #e7f1ff; padding: 6px; border-radius: 6px;"><div style="color: #0d6efd;">Estado</div><div style="font-size: 0.9em; margin-top: 2px;">${badgeEstado}</div></div>
                     </div>
                 `;
             }
+            modalSinergiaOverlay.style.display = "block";
         });
+    }
+
+    if (cerrarModalSinergia) {
+        cerrarModalSinergia.addEventListener("click", () => { modalSinergiaOverlay.style.display = "none"; });
+    }
+
+    if (btnDescargarSinergia) {
+        btnDescargarSinergia.addEventListener("click", () => {
+            const card = document.getElementById("modal-sinergia-card");
+            ejecutarCapturaHtml2Canvas(card, 'comparativa_sinergia_michi.png');
+        });
+    }
+}
+
+function ejecutarCapturaHtml2Canvas(elementoCard, nombreArchivo) {
+    if (typeof html2canvas !== 'undefined') {
+        html2canvas(elementoCard, { scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = nombreArchivo;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    } else {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script.onload = () => {
+            html2canvas(elementoCard, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = nombreArchivo;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        };
+        document.head.appendChild(script);
     }
 }
