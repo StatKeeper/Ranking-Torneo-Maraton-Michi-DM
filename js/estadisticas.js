@@ -8,26 +8,22 @@
     <style>
         body {
             box-sizing: border-box;
-            background-color: #ffffff;
-            color: #333333;
-            margin: 0;
-            padding-bottom: 70px;
-            font-family: Arial, sans-serif;
         }
-
-        /* --- CABECERA SUPERIOR (Visible solo en PC) --- */
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 15px;
-            padding: 15px 20px 10px 20px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
+            position: relative;
+            gap: 10px;
         }
         .header-top h1 {
             margin: 0;
             font-size: 1.4rem;
-            color: #222222;
+            line-height: 1.2;
+            max-width: 65%;
         }
         .header-info-container {
             display: flex;
@@ -35,6 +31,14 @@
             align-items: flex-end;
             gap: 5px;
         }
+        .header-top .fecha-actualizacion {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #444;
+            text-align: right;
+        }
+
+        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
         .admin-toggle-btn {
             background: #b8860b;
             color: white;
@@ -44,33 +48,30 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.85rem;
-        }
-        .fecha-actualizacion {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #555555;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* --- PESTAÑAS SUPERIORES (Visible solo en PC) --- */
+        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
         .tabs {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             background: #f4f1ea;
-            padding: 10px 20px;
+            padding: 10px;
             border-radius: 8px;
             border: 2px solid #d4af37;
-            margin: 0 20px 20px 20px;
+            margin-bottom: 20px;
         }
         .tab-btn {
-            background: #ffffff;
-            color: #333333;
+            background: #fff;
+            color: #333;
             padding: 8px 12px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
             font-size: 0.9rem;
             border: 1px solid #ccc;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
         }
         .tab-btn:hover {
@@ -84,124 +85,59 @@
             border-color: #996e05;
         }
 
-        /* --- EN MÓVILES: OCULTAR CABECERA Y PESTAÑAS SUPERIORES --- */
-        @media (max-width: 768px) {
-            .header-top, .tabs {
-                display: none !important;
-            }
-        }
-
-        /* --- BARRA DE NAVEGACIÓN INFERIOR (Visible solo en Móviles) --- */
-        .mobile-bottom-nav {
-            display: none;
-        }
-        @media (max-width: 768px) {
-            .mobile-bottom-nav {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background: #ffffff;
-                border-top: 2px solid #d4af37;
-                justify-content: space-around;
-                align-items: center;
-                padding: 8px 0;
-                z-index: 1500;
-                box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
-            }
-            .mobile-nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                color: #666666;
-                text-decoration: none;
-                font-size: 0.7rem;
-                font-weight: bold;
-            }
-            .mobile-nav-item span.icon {
-                font-size: 1.2rem;
-                margin-bottom: 2px;
-            }
-            .mobile-nav-item.active {
-                color: #b8860b;
-            }
-        }
-
-        /* Estilos para subpestañas y filtros originales */
-        .subtabs {
-            display: flex;
-            gap: 10px;
-            margin: 15px 20px;
-            flex-wrap: wrap;
-        }
-        .subtab-btn {
-            background: #e9ecef;
-            border: 1px solid #ced4da;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #495057;
-            transition: all 0.2s;
-        }
-        .subtab-btn.active {
-            background: #b8860b;
-            color: white;
-            border-color: #996e05;
-        }
-        .card {
-            background: #ffffff;
-            border: 1px solid #dddddd;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 15px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
+        /* --- PANEL LATERAL CORREGIDO PARA MÓVILES Y PC --- */
         #sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 260px;
-            height: 100vh;
-            background: #ffffff;
-            color: #333333;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.15);
+            height: 100%;
+            background: #fff;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
             z-index: 999;
             padding: 20px;
             box-sizing: border-box;
             transition: transform 0.3s ease;
-            transform: translateX(-100%);
         }
-        #sidebar.open {
-            transform: translateX(0);
+        #main-content {
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%); /* Oculto por defecto en celulares a la izquierda */
+            }
+            #sidebar.open {
+                transform: translateX(0); /* Se despliega al pulsar el botón Admin */
+            }
+            #main-content {
+                margin-left: 0 !important;
+                padding: 10px !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Panel Lateral de Admin -->
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
-        <label class="form-label mt-2">Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" class="form-control form-control-sm border-secondary" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="badge bg-secondary mt-3 mb-3">Modo Espectador</div>
-        <button class="btn btn-sm btn-secondary w-100 mt-3" onclick="toggleSidebar()">Cerrar</button>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
     </div>
 
     <div id="main-content">
-        <!-- Cabecera Superior (Visible en PC, oculta en móviles) -->
+        <!-- Encabezado superior con título, fecha/hora y botón Admin seguro corregido con id="ultima-actualizacion" -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
                 <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-                <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:--</div>
+                <div id="ultima-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
             </div>
         </div>
 
-        <!-- Pestañas Superiores (Visible en PC, oculta en móviles) -->
+        <!-- Pestañas Principales -->
         <div class="tabs">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
@@ -211,17 +147,16 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin: 15px 20px 10px 20px;">
-            <h2 style="margin: 0; color: #222;">📈 Estadísticas Generales del Torneo</h2>
-            
-            <!-- Selectores de Año y Mes con los IDs originales que el script lee -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; margin-bottom: 10px;">
+            <h2 style="margin: 0;">📈 Estadísticas Generales del Torneo</h2>
+            <!-- Selectores de Año y Mes idénticos a los de index.html para que el filtrado funcione perfecto -->
             <div style="display: flex; gap: 10px; align-items: center;">
                 <label for="select-anio-filtro" style="font-weight: bold;">Año:</label>
-                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
+                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
                     <option value="2026" selected>2026</option>
                 </select>
                 <label for="select-mes-filtro" style="font-weight: bold; margin-left: 10px;">Mes:</label>
-                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
+                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
                     <option value="01">Enero</option>
                     <option value="02">Febrero</option>
                     <option value="03">Marzo</option>
@@ -229,8 +164,8 @@
                     <option value="05">Mayo</option>
                     <option value="06">Junio</option>
                     <option value="07">Julio</option>
-                    <option value="08">Agosto</option>
-                    <option value="09" selected>Septiembre</option>
+                    <option value="08" selected>Agosto</option>
+                    <option value="09">Septiembre</option>
                     <option value="10">Octubre</option>
                     <option value="11">Noviembre</option>
                     <option value="12">Diciembre</option>
@@ -238,65 +173,59 @@
             </div>
         </div>
 
-        <!-- Subpestañas Secundarias Originales -->
+        <!-- Subpestañas Secundarias -->
         <div class="subtabs">
             <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')">⏱️ Tiempos de partida</button>
             <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')">🏛️ Civilizaciones y Win Rate</button>
             <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')">🤝 Sinergia y Enfrentamientos</button>
         </div>
 
-        <!-- Vistas que `estadisticas.js` llena con los datos reales -->
-        <div id="sec-tiempos" class="card subtab-content"></div>
-        <div id="sec-civilizaciones" class="card subtab-content" style="display: none;"></div>
-        <div id="sec-enfrentamientos" class="card subtab-content" style="display: none;"></div>
-    </div>
+        <!-- Vista 1: Tiempos de partida -->
+        <div id="sec-tiempos" class="card subtab-content">
+            <h3>⏱️ Tiempos de Partida</h3>
+            <div class="info-box">Aquí se mostrarán los registros de duración de partidas y promedios por jugador.</div>
+        </div>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR (Solo móviles) -->
-    <nav class="mobile-bottom-nav">
-        <a href="index.html" class="mobile-nav-item">
-            <span class="icon">📊</span>
-            <span>Clasificación</span>
-        </a>
-        <a href="estadisticas.html" class="mobile-nav-item active">
-            <span class="icon">📈</span>
-            <span>Estadísticas</span>
-        </a>
-        <a href="candidatos.html" class="mobile-nav-item">
-            <span class="icon">⭐</span>
-            <span>Candidatos</span>
-        </a>
-        <a href="historial.html" class="mobile-nav-item">
-            <span class="icon">📜</span>
-            <span>Historial</span>
-        </a>
-    </nav>
+        <!-- Vista 2: Civilizaciones y Win Rate -->
+        <div id="sec-civilizaciones" class="card subtab-content" style="display: none;">
+            <h3>🏛️ Civilizaciones y Win Rate</h3>
+            <div class="info-box">Aquí se desplegará el porcentaje de victorias por civilización y elecciones más frecuentes.</div>
+        </div>
+
+        <!-- Vista 3: Sinergia y Enfrentamientos -->
+        <div id="sec-enfrentamientos" class="card subtab-content" style="display: none;">
+            <h3>🤝 Sinergia y Enfrentamientos Directos</h3>
+            <div class="info-box">Aquí podrás revisar el historial cara a cara (Head to Head) entre jugadores.</div>
+        </div>
+
+    </div>
 
     <script src="js/auth.js"></script>
     <script src="js/estadisticas.js"></script>
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            if (sidebar) sidebar.classList.toggle('open');
+            sidebar.classList.toggle('open');
         }
 
         function cambiarSubtab(seccion) {
             document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
 
-            const target = document.getElementById('sec-' + seccion);
-            if (target) target.style.display = 'block';
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
+            document.getElementById('sec-' + seccion).style.display = 'block';
+            event.currentTarget.classList.add('active');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const ahora = new Date();
-            const fechaFormateada = ahora.toLocaleDateString('es-ES');
-            const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const elementoFecha = document.getElementById('fecha-actualizacion');
-            if (elementoFecha) {
-                elementoFecha.textContent = `${fechaFormateada}, ${horaFormateada}`;
+        // Script de sincronización para actualizar la fecha y hora idéntico al resto de pestañas
+        document.addEventListener("DOMContentLoaded", function() {
+            const elFecha = document.getElementById('ultima-actualizacion');
+            if (elFecha) {
+                const ahora = new Date();
+                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
+                const horaStr = ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase();
+                elFecha.textContent = `${fechaStr}, ${horaStr}`;
             }
         });
     </script>
