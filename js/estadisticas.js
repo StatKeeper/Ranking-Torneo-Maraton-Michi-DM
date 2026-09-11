@@ -569,10 +569,8 @@ function renderizarEstadisticasTiempos() {
                 const todosEstan = seleccionadosNombres.every(sel => nombresEnPartida.includes(sel.toLowerCase()));
 
                 if (todosEstan) {
-                    // Verificamos si ganaron juntos (mismo equipo o victoria general de todos los seleccionados en la partida)
                     const registrosSeleccionados = partida.filter(p => seleccionadosNombres.some(sel => sel.toLowerCase() === p.nombre.toLowerCase()));
                     
-                    // Comprobamos si todos tienen victoria en esta partida o pertenecen al mismo equipo ganador
                     const primerEquipo = registrosSeleccionados[0] ? registrosSeleccionados[0].equipo : null;
                     const mismoEquipo = primerEquipo && primerEquipo !== "Sin Equipo" && registrosSeleccionados.every(p => p.equipo === primerEquipo);
                     
@@ -602,35 +600,47 @@ function renderizarEstadisticasTiempos() {
             let htmlTablaSinergia = `
                 <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal</h3>
                 
-                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
+                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 8px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
                     <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Efec. Conjunta</strong>: Efectividad Conjunta
                 </div>
 
-                <div style="font-weight: bold; color: #343a40; font-size: 0.8em; margin-bottom: 8px;">
+                <div style="font-weight: bold; color: #343a40; font-size: 0.78em; margin-bottom: 12px; line-height: 1.3;">
                     ${listaNombresStr}
                 </div>
-
-                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table style="width: 100%; border-collapse: collapse; background: #fff; font-size: 0.7em;">
-                        <thead>
-                            <tr style="background-color: #343a40; color: #fff;">
-                                <th style="padding: 5px 3px; text-align: center; font-size: 0.85em;">P.</th>
-                                <th style="padding: 5px 3px; text-align: center; font-size: 0.85em;">V.</th>
-                                <th style="padding: 5px 3px; text-align: center; font-size: 0.85em;">D.</th>
-                                <th style="padding: 5px 3px; text-align: center; font-size: 0.85em;">Efec. Conjunta</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #dee2e6; background-color: #f8f9fa;">
-                                <td style="padding: 6px 3px; text-align: center; font-weight: bold;">${partidasJuntos}</td>
-                                <td style="padding: 6px 3px; text-align: center; font-weight: bold; color: #198754;">${victoriasConjuntas}</td>
-                                <td style="padding: 6px 3px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasConjuntas}</td>
-                                <td style="padding: 6px 3px; text-align: center; font-weight: bold;">${textoEfectividad}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             `;
+
+            if (partidasJuntos === 0) {
+                htmlTablaSinergia += `
+                    <div style="width: 100%; text-align: center; padding: 15px 10px; background: #fff5f5; border: 1px dashed #dc3545; border-radius: 6px; margin-top: 10px;">
+                        <span style="color: #dc3545; font-weight: bold; font-size: 0.75em; line-height: 1.4; display: inline-block;">
+                            ⚠️ Estos jugadores nunca jugaron en conjunto, nunca formaron un equipo como para tener estadísticas.
+                        </span>
+                    </div>
+                `;
+            } else {
+                htmlTablaSinergia += `
+                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 6px;">
+                        <table style="width: 100%; border-collapse: collapse; background: #fff; font-size: 0.7em;">
+                            <thead>
+                                <tr style="background-color: #343a40; color: #fff;">
+                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">P.</th>
+                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">V.</th>
+                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">D.</th>
+                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">Efec. Conjunta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #dee2e6; background-color: #f8f9fa;">
+                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold;">${partidasJuntos}</td>
+                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasConjuntas}</td>
+                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasConjuntas}</td>
+                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold;">${textoEfectividad}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
 
             contenedorResultado.innerHTML = htmlTablaSinergia;
             modalSinergiaOverlay.style.display = "block";
