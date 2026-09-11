@@ -12,6 +12,7 @@
             box-sizing: border-box;
             background-color: #121212;
             color: #e0e0e0;
+            -webkit-text-size-adjust: 100%;
         }
         .header-top {
             display: flex;
@@ -152,11 +153,60 @@
             padding: 4px 10px;
             border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.3);
+            white-space: nowrap;
         }
         .table-dark-custom {
             background-color: #16181f;
             color: #e0e0e0;
             font-size: 0.9rem;
+        }
+
+        /* 📱 ESTILOS ESPECÍFICOS Y ADAPTATIVOS PARA CELULARES */
+        @media (max-width: 768px) {
+            #main-content {
+                padding: 10px !important;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .header-top h1 {
+                max-width: 100%;
+                font-size: 1.2rem;
+            }
+            .header-info-container {
+                align-items: flex-start;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .match-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .match-duration {
+                align-self: flex-start;
+            }
+            .match-card {
+                padding: 10px 12px;
+            }
+            .table-dark-custom th, .table-dark-custom td {
+                padding: 6px 8px;
+                font-size: 0.82rem;
+            }
+            .tabs {
+                gap: 5px;
+                padding: 6px;
+            }
+            .tab-btn {
+                padding: 6px 9px;
+                font-size: 0.8rem;
+            }
+            .card.bg-dark {
+                padding: 10px !important;
+            }
         }
     </style>
 </head>
@@ -189,18 +239,18 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2 class="mb-3 text-white"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
+        <h2 class="mb-3 text-white fs-5"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
 
         <!-- Filtros del Historial -->
         <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
-            <div class="row align-items-center g-3">
-                <div class="col-md-3">
-                    <span class="fw-bold text-light fs-5"><i class="fas fa-filter text-warning"></i> Filtro de Encuentros</span>
+            <div class="row align-items-center g-2">
+                <div class="col-12 col-md-3">
+                    <span class="fw-bold text-light fs-6"><i class="fas fa-filter text-warning"></i> Filtros</span>
                 </div>
-                <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="fw-bold text-secondary mb-0">Año:</label>
-                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 100px;">
+                <div class="col-12 col-md-9 d-flex flex-wrap justify-content-md-end gap-2 align-items-center">
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 90px;">
                             <option value="todos">Todos</option>
                             <option value="2026" selected>2026</option>
                             <option value="2027">2027</option>
@@ -209,9 +259,9 @@
                             <option value="2030">2030</option>
                         </select>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="fw-bold text-secondary mb-0">Mes:</label>
-                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 120px;">
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
                             <option value="todos">Todos</option>
                             <option value="01">Enero</option>
                             <option value="02">Febrero</option>
@@ -227,9 +277,9 @@
                             <option value="12">Diciembre</option>
                         </select>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="fw-bold text-secondary mb-0">Fecha:</label>
-                        <select id="filtro-fecha" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Fecha:</label>
+                        <select id="filtro-fecha" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 100px;">
                             <option value="todas">Todas</option>
                         </select>
                     </div>
@@ -462,7 +512,7 @@
                                             <th>Jugador</th>
                                             <th>Equipo</th>
                                             <th>Civilización</th>
-                                            <th class="text-center">Variación (Var)</th>
+                                            <th class="text-center">Var</th>
                                         </tr>
                                     </thead>
                                     <tbody>
