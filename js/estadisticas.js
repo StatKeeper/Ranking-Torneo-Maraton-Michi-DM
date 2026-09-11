@@ -395,15 +395,20 @@ function renderizarEstadisticasTiempos() {
             htmlTablaComparativa += `</tr></thead><tbody>`;
 
             const metricasT = [
-                { label: "P.", fn: j => j.totalPartidas },
-                { label: "T.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales) },
-                { label: "P.T.A.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
-                { label: "U.Ases.", fn: j => j.unidadesTotales },
-                { label: "P.U.Ases.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
-                { label: "E.Arr.", fn: j => j.edificiosTotales },
-                { label: "P.E.Arr.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
-            ];
-
+    { label: "P.", fn: j => j.totalPartidas || 0 },
+    { label: "T.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales || 0) },
+    { label: "P.T.A.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
+    { label: "U.Ases.", fn: j => j.unidadesTotales ?? j.unidades ?? j.unidadesAsesinadas ?? 0 },
+    { label: "P.U.Ases.", fn: j => {
+        const u = j.unidadesTotales ?? j.unidades ?? j.unidadesAsesinadas ?? 0;
+        return j.totalPartidas > 0 ? (u / j.totalPartidas).toFixed(1) : "0.0";
+    }},
+    { label: "E.Arr.", fn: j => j.edificiosTotales ?? j.edificios ?? j.edificiosArrasados ?? 0 },
+    { label: "P.E.Arr.", fn: j => {
+        const e = j.edificiosTotales ?? j.edificios ?? j.edificiosArrasados ?? 0;
+        return j.totalPartidas > 0 ? (e / j.totalPartidas).toFixed(1) : "0.0";
+    }}
+];
             metricasT.forEach((metrica, idx) => {
                 const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                 htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
