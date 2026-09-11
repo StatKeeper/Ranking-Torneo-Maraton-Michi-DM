@@ -43,7 +43,6 @@ function convertirDuracionASegundos(duracionStr) {
     return 0;
 }
 
-// Formato HH:MM sin segundos para ahorrar espacio horizontal
 function convertirSegundosADuracionCorto(segundosTotales) {
     if (!segundosTotales || segundosTotales <= 0) return "00:00";
     const h = Math.floor(segundosTotales / 3600);
@@ -304,6 +303,7 @@ function renderizarEstadisticasTiempos() {
             <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Sinergia</button>
         </div>
 
+        <!-- Modal Sinergia con Descarga y Tabla Compacta -->
         <div id="modal-sinergia-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
             <div id="modal-sinergia-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
@@ -333,13 +333,15 @@ function renderizarEstadisticasTiempos() {
     if (listaEquipos.length === 0) {
         htmlEnfrentamientos += `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">No hay equipos registrados en las partidas.</td></tr>`;
     } else {
-        listaEquipos.forEach(eq => {
+        listaEquipos.forEach((eq, index) => {
             const totalP = eq.victorias + eq.derrotas;
             const ef = totalP > 0 ? ((eq.victorias / totalP) * 100).toFixed(0) : 0;
             const miembrosArr = Array.from(eq.miembros).join(", ");
+            // Simplificación del nombre del equipo a E1, E2, E3, E4...
+            const nombreSimplificado = `E${index + 1}`;
             htmlEnfrentamientos += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${eq.nombreEquipo}</strong></td>
+                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${nombreSimplificado}</strong></td>
                     <td style="padding: 10px 8px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
                     <td style="padding: 10px 8px; text-align: center;">${totalP}</td>
                     <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${eq.victorias}</td>
@@ -523,7 +525,7 @@ function renderizarEstadisticasTiempos() {
         });
     }
 
-    // 3. Evento Sinergia
+    // 3. Evento Sinergia (Actualizado a formato Tabla Compacta con Diminutivos y Leyenda)
     const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
     const modalSinergiaOverlay = document.getElementById("modal-sinergia-overlay");
     const cerrarModalSinergia = document.getElementById("cerrar-modal-sinergia");
@@ -581,27 +583,47 @@ function renderizarEstadisticasTiempos() {
                 });
             });
 
+            let htmlSinergiaModal = `
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal: ${seleccionados.join(", ")}</h3>
+            `;
+
             if (partidasJuntos === 0) {
-                contenedorResultado.innerHTML = `
-                    <h3 style="color: #343a40; margin-top: 0; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal</h3>
-                    <p style="color: #dc3545; margin: 10px 0; font-weight: bold; font-size: 0.85em;">⚠️ Partida no existente: Estos jugadores no han participado juntos en el mismo equipo/bando en ninguna partida registrada.</p>
-                `;
+                htmlSinergiaModal += `<p style="color: #dc3545; font-weight: bold; font-size: 0.8em; margin: 10px 0;">⚠️ Partida no existente: Estos jugadores no han participado juntos en el mismo equipo/bando en ninguna partida registrada.</p>`;
             } else {
                 const efSinergia = ((victoriasJuntos / partidasJuntos) * 100).toFixed(0);
-                let badgeEstado = `<span style="color: #0d6efd; font-weight: bold;">${efSinergia}% Efectividad</span>`;
-                if (victoriasJuntos > 0 && derrotasJuntos === 0) badgeEstado = `<span style="color: #198754; font-weight: bold;">🔥 ¡Grupo Invicto!</span>`;
-                else if (derrotasJuntos > 0 && victoriasJuntos === 0) badgeEstado = `<span style="color: #dc3545; font-weight: bold;">⚠️ Sin victorias conjuntas</span>`;
+                let estadoTxt = `${efSinergia}%`;
+                if (victoriasJuntos > 0 && derrotasJuntos === 0) estadoTxt = `🔥 Invictos (${efSinergia}%)`;
 
-                contenedorResultado.innerHTML = `
-                    <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia: ${seleccionados.join(" , ")}</h3>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; text-align: center; font-size: 0.8em;">
-                        <div style="background: #f8f9fa; padding: 6px; border-radius: 6px;"><div style="color: #6c757d;">Partidas Juntos</div><div style="font-size: 1.2em; font-weight: bold; color: #343a40;">${partidasJuntos}</div></div>
-                        <div style="background: #e8f5e9; padding: 6px; border-radius: 6px;"><div style="color: #198754;">Victorias</div><div style="font-size: 1.2em; font-weight: bold; color: #198754;">${victoriasJuntos}</div></div>
-                        <div style="background: #ffebee; padding: 6px; border-radius: 6px;"><div style="color: #dc3545;">Derrotas</div><div style="font-size: 1.2em; font-weight: bold; color: #dc3545;">${derrotasJuntos}</div></div>
-                        <div style="background: #e7f1ff; padding: 6px; border-radius: 6px;"><div style="color: #0d6efd;">Estado</div><div style="font-size: 0.9em; margin-top: 2px;">${badgeEstado}</div></div>
+                htmlSinergiaModal += `
+                    <!-- Leyenda de Diminutivos -->
+                    <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
+                        <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Ef.</strong>: Efectividad Conjunta
+                    </div>
+
+                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                        <table style="width: 100%; border-collapse: collapse; background: #fff; font-size: 0.7em;">
+                            <thead>
+                                <tr style="background-color: #343a40; color: #fff;">
+                                    <th style="padding: 5px 4px; text-align: center;">P.</th>
+                                    <th style="padding: 5px 4px; text-align: center;">V.</th>
+                                    <th style="padding: 5px 4px; text-align: center;">D.</th>
+                                    <th style="padding: 5px 4px; text-align: center;">Ef.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #343a40;">${partidasJuntos}</td>
+                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasJuntos}</td>
+                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasJuntos}</td>
+                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #0d6efd;">${estadoTxt}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 `;
             }
+
+            contenedorResultado.innerHTML = htmlSinergiaModal;
             modalSinergiaOverlay.style.display = "block";
         });
     }
