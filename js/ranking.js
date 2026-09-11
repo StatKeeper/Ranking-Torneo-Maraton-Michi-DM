@@ -1,41 +1,37 @@
-// Funciones de sincronización con JSONBin.io (Nube)
-const JSONBIN_ID = "6aa25569ffd5d16053f50b5b";
-const JSONBIN_API_KEY = "$2a$10$CX4eQGnNUKp9i8TVe0.po09BYbaZ/Q64jH2ADLiUjxHtdxD8W5xwm";
+// Sincronización limpia mediante archivo JSON en el repositorio de GitHub (Sin errores 401)
+const ARCHIVO_DATOS_URL = "./datos_torneo.json";
 
 async function cargarDatosNubeYSincronizar() {
     try {
-        const respuesta = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-            headers: {
-                "X-Master-Key": JSONBIN_API_KEY
-            }
-        });
-        const resultado = await respuesta.json();
-        if (resultado && resultado.record) {
-            const datosNube = resultado.record;
-            // Volcar los datos de la nube al localStorage del dispositivo actual (PC o Celular)
+        const respuesta = await fetch(ARCHIVO_DATOS_URL + "?t=" + new Date().getTime()); // Evita caché antigua
+        if (!respuesta.ok) throw new Error("No se pudo cargar el archivo de datos del torneo.");
+        
+        const datosNube = await respuesta.json();
+        if (datosNube && typeof datosNube === "object") {
+            // Volcar los datos del archivo JSON al localStorage del dispositivo actual (PC o Celular)
             Object.keys(datosNube).forEach(key => {
                 localStorage.setItem(key, datosNube[key]);
             });
-            console.log("¡Datos sincronizados desde la nube exitosamente!");
+            console.log("¡Datos sincronizados desde GitHub exitosamente!");
         }
     } catch (error) {
-        console.error("Error al cargar de la nube, usando almacenamiento local:", error);
+        console.warn("Aviso: Usando almacenamiento local actual (modo offline o archivo inicial pendiente):", error);
     }
 }
 
-async function guardarDatosNube(nuevosDatos) {
-    try {
-        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Master-Key": JSONBIN_API_KEY
-            },
-            body: JSON.stringify(nuevosDatos)
-        });
-    } catch (error) {
-        console.error("Error al guardar en la nube:", error);
+// Función auxiliar para exportar tus datos actuales a un archivo y subirlos a GitHub fácilmente
+function generarArchivoDatosTorneoParaGitHub() {
+    let todosLosDatos = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        todosLosDatos[key] = localStorage.getItem(key);
     }
+    const blob = new Blob([JSON.stringify(todosLosDatos, null, 2)], {type: "application/json"});
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = "datos_torneo.json";
+    enlace.click();
+    console.log("¡Archivo datos_torneo.json generado con éxito para subir a GitHub!");
 }
 
 // Obtener el nombre oficial corregido desde localStorage
@@ -353,16 +349,11 @@ function renderTablaRankingGeneral() {
 document.addEventListener("DOMContentLoaded", async () => {
     inicializarSelectoresAnioFiltro();
     
-    // 1. Renderizar de inmediato con los datos guardados localmente para que la tabla nunca aparezca vacía
-    renderTablaRankingGeneral();
+    // 1. Cargar primero los datos sincronizados del archivo JSON en GitHub para celulares y PC
+    await cargarDatosNubeYSincronizar();
 
-    // 2. Intentar actualizar desde la nube en segundo plano de manera segura (no bloqueante)
-    try {
-        await cargarDatosNubeYSincronizar();
-        renderTablaRankingGeneral(); // Volver a pintar si descargó datos nuevos de la nube
-    } catch(e) {
-        console.log("Modo offline o sin conexión a nube.");
-    }
+    // 2. Renderizar la tabla con los datos actualizados
+    renderTablaRankingGeneral();
 
     const selectAnio = document.getElementById("select-anio-filtro");
     const selectMes = document.getElementById("select-mes-filtro");
