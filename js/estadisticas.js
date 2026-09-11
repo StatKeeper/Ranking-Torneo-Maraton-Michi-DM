@@ -43,12 +43,12 @@ function convertirDuracionASegundos(duracionStr) {
     return 0;
 }
 
-function convertirSegundosADuracion(segundosTotales) {
-    if (!segundosTotales || segundosTotales <= 0) return "00:00:00";
+// Formato HH:MM (sin segundos para ahorrar espacio horizontal en móviles)
+function convertirSegundosADuracionCorto(segundosTotales) {
+    if (!segundosTotales || segundosTotales <= 0) return "00:00";
     const h = Math.floor(segundosTotales / 3600);
     const m = Math.floor((segundosTotales % 3600) / 60);
-    const s = segundosTotales % 60;
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
 function renderizarEstadisticasTiempos() {
@@ -218,9 +218,14 @@ function renderizarEstadisticasTiempos() {
             </datalist>
             <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos</button>
         </div>
+        
+        <!-- Modal Pantalla Completa con Botón de Descarga -->
         <div id="modal-tiempos-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
-            <div style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <button id="cerrar-modal-tiempos" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
+            <div id="modal-tiempos-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
+                    <button id="btn-descargar-tiempos" title="Descargar como Imagen" style="background: #198754; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center;">📥</button>
+                    <button id="cerrar-modal-tiempos" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
+                </div>
                 <div id="resultado-tiempos-container"></div>
             </div>
         </div>
@@ -256,9 +261,14 @@ function renderizarEstadisticasTiempos() {
             </datalist>
             <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones</button>
         </div>
+        
+        <!-- Modal Civilizaciones con Botón de Descarga -->
         <div id="modal-civs-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
-            <div style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <button id="cerrar-modal-civs" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
+            <div id="modal-civs-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
+                    <button id="btn-descargar-civs" title="Descargar como Imagen" style="background: #198754; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center;">📥</button>
+                    <button id="cerrar-modal-civs" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
+                </div>
                 <div id="resultado-civs-container"></div>
             </div>
         </div>
@@ -272,6 +282,7 @@ function renderizarEstadisticasTiempos() {
     const btnConsultarTiempos = document.getElementById("btn-consultar-tiempos");
     const modalTiemposOverlay = document.getElementById("modal-tiempos-overlay");
     const cerrarModalTiempos = document.getElementById("cerrar-modal-tiempos");
+    const btnDescargarTiempos = document.getElementById("btn-descargar-tiempos");
 
     if (btnConsultarTiempos) {
         btnConsultarTiempos.addEventListener("click", () => {
@@ -290,28 +301,28 @@ function renderizarEstadisticasTiempos() {
             }
 
             let htmlTablaComparativa = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px;">📊 Comparativa de Tiempos</h3>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos</h3>
                 
                 <!-- Leyenda de Diminutivos -->
-                <div style="background: #f8f9fa; padding: 6px 8px; border-radius: 4px; margin-bottom: 8px; font-size: 0.68em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.3;">
+                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
                     <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Duración Acumulada | <strong>P.Dur.</strong>: Promedio Duración | <strong>T.Un.</strong>: Total Unidades | <strong>P.Un.</strong>: Promedio Unidades | <strong>T.Ed.</strong>: Total Edificios | <strong>P.Ed.</strong>: Promedio Edificios
                 </div>
 
                 <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table style="width: 100%; min-width: ${seleccionados.length * 110 + 60}px; border-collapse: collapse; background: #fff; font-size: 0.75em;">
+                    <table style="width: 100%; min-width: ${seleccionados.length * 95 + 50}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
                         <thead>
                             <tr style="background-color: #343a40; color: #fff;">
-                                <th style="padding: 6px 4px; text-align: left; font-size: 0.9em;">Métrica</th>
+                                <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Métrica</th>
             `;
             seleccionados.forEach(sel => {
-                htmlTablaComparativa += `<th style="padding: 6px 4px; text-align: center; white-space: nowrap; font-size: 0.9em;">${sel}</th>`;
+                htmlTablaComparativa += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel}</th>`;
             });
             htmlTablaComparativa += `</tr></thead><tbody>`;
 
             const metricasT = [
                 { label: "P.", fn: j => j.totalPartidas },
-                { label: "Dur.A.", fn: j => convertirSegundosADuracion(j.segundosTotales) },
-                { label: "P.Dur.", fn: j => convertirSegundosADuracion(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
+                { label: "Dur.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales) },
+                { label: "P.Dur.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
                 { label: "T.Un.", fn: j => j.unidadesTotales },
                 { label: "P.Un.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
                 { label: "T.Ed.", fn: j => j.edificiosTotales },
@@ -321,12 +332,12 @@ function renderizarEstadisticasTiempos() {
             metricasT.forEach((metrica, idx) => {
                 const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                 htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                htmlTablaComparativa += `<td style="padding: 6px 4px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
+                htmlTablaComparativa += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
                 
                 seleccionados.forEach(sel => {
                     const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase());
                     const valor = jData ? metrica.fn(jData) : "-";
-                    htmlTablaComparativa += `<td style="padding: 6px 4px; text-align: center; white-space: nowrap;">${valor}</td>`;
+                    htmlTablaComparativa += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${valor}</td>`;
                 });
                 htmlTablaComparativa += `</tr>`;
             });
@@ -343,10 +354,39 @@ function renderizarEstadisticasTiempos() {
         });
     }
 
+    // Descarga de Tiempos como Imagen usando html2canvas (si está disponible) o fallback limpio
+    if (btnDescargarTiempos) {
+        btnDescargarTiempos.addEventListener("click", () => {
+            const card = document.getElementById("modal-tiempos-card");
+            if (typeof html2canvas !== 'undefined') {
+                html2canvas(card, { scale: 2 }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'comparativa_tiempos_michi.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            } else {
+                // Cargar dinámicamente html2canvas si no está cargado en el proyecto
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                script.onload = () => {
+                    html2canvas(card, { scale: 2 }).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = 'comparativa_tiempos_michi.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    });
+                };
+                document.head.appendChild(script);
+            }
+        });
+    }
+
     // Evento Civilizaciones
     const btnConsultarCivs = document.getElementById("btn-consultar-civs");
     const modalCivsOverlay = document.getElementById("modal-civs-overlay");
     const cerrarModalCivs = document.getElementById("cerrar-modal-civs");
+    const btnDescargarCivs = document.getElementById("btn-descargar-civs");
 
     if (btnConsultarCivs) {
         btnConsultarCivs.addEventListener("click", () => {
@@ -374,36 +414,36 @@ function renderizarEstadisticasTiempos() {
             let listaCivsComparativa = Array.from(civsSet);
 
             let htmlTablaCivs = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px;">📊 Comparativa de Civilizaciones</h3>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Civilizaciones</h3>
             `;
 
             if (listaCivsComparativa.length === 0) {
-                htmlTablaCivs += `<p style="color: #dc3545; font-weight: bold; font-size: 0.85em;">⚠️ No se encontraron civilizaciones registradas para los jugadores seleccionados.</p>`;
+                htmlTablaCivs += `<p style="color: #dc3545; font-weight: bold; font-size: 0.8em;">⚠️ No se encontraron civilizaciones registradas para los jugadores seleccionados.</p>`;
             } else {
                 htmlTablaCivs += `
                     <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        <table style="width: 100%; min-width: ${seleccionados.length * 110 + 80}px; border-collapse: collapse; background: #fff; font-size: 0.75em;">
+                        <table style="width: 100%; min-width: ${seleccionados.length * 100 + 70}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
                             <thead>
                                 <tr style="background-color: #343a40; color: #fff;">
-                                    <th style="padding: 6px 4px; text-align: left; font-size: 0.9em;">Civ</th>
+                                    <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Civ</th>
                 `;
                 seleccionados.forEach(sel => {
-                    htmlTablaCivs += `<th style="padding: 6px 4px; text-align: center; white-space: nowrap; font-size: 0.9em;">${sel} (Part/WR)</th>`;
+                    htmlTablaCivs += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel} (Part/WR)</th>`;
                 });
                 htmlTablaCivs += `</tr></thead><tbody>`;
 
                 listaCivsComparativa.forEach((civ, idx) => {
                     const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                     htmlTablaCivs += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                    htmlTablaCivs += `<td style="padding: 6px 4px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
+                    htmlTablaCivs += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
 
                     seleccionados.forEach(sel => {
                         const datosJugCiv = estadisticasJugadorCiv[sel] && estadisticasJugadorCiv[sel][civ];
-                        if (datosJugCiv && datosJugCiv.jugadas > 0) {
+                        if (datosJug_civ = datosJugCiv && datosJugCiv.jugadas > 0) {
                             const wr = ((datosJugCiv.victorias / datosJugCiv.jugadas) * 100).toFixed(0);
-                            htmlTablaCivs += `<td style="padding: 6px 4px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
+                            htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
                         } else {
-                            htmlTablaCivs += `<td style="padding: 6px 4px; text-align: center; color: #adb5bd; white-space: nowrap;">-</td>`;
+                            htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; color: #adb5bd; white-space: nowrap;">-</td>`;
                         }
                     });
                     htmlTablaCivs += `</tr>`;
@@ -420,6 +460,33 @@ function renderizarEstadisticasTiempos() {
     if (cerrarModalCivs) {
         cerrarModalCivs.addEventListener("click", () => {
             modalCivsOverlay.style.display = "none";
+        });
+    }
+
+    // Descarga de Civilizaciones como Imagen
+    if (btnDescargarCivs) {
+        btnDescargarCivs.addEventListener("click", () => {
+            const card = document.getElementById("modal-civs-card");
+            if (typeof html2canvas !== 'undefined') {
+                html2canvas(card, { scale: 2 }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'comparativa_civs_michi.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            } else {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                script.onload = () => {
+                    html2canvas(card, { scale: 2 }).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = 'comparativa_civs_michi.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    });
+                };
+                document.head.appendChild(script);
+            }
         });
     }
 
