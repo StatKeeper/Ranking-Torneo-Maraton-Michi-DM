@@ -175,7 +175,6 @@ function renderizarEstadisticasTiempos() {
 
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     
-    // HTML mejorado con contenedor responsivo forzado para scroll horizontal fluido en móviles
     let htmlTiempos = `
         <h3>⏱️ Tiempos de Partida y Promedios por Jugador</h3>
         <div style="background: #f8f9fa; padding: 10px 12px; border-radius: 6px; margin-top: 8px; margin-bottom: 12px; font-size: 0.82em; border-left: 4px solid #0d6efd;">
