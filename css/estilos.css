@@ -1,3 +1,4 @@
+CSS
 * {
     box-sizing: border-box;
     margin: 0;
@@ -278,5 +279,10 @@ th {
     /* Tarjetas con padding más compacto en celular */
     .card {
         padding: 12px;
+    }
+
+    /* Ocultar el botón de descargar imagen en celulares y tablets */
+    .btn-reporte-general {
+        display: none !important;
     }
 }
