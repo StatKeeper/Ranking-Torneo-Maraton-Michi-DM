@@ -26,6 +26,23 @@
             padding-bottom: 70px; /* Espacio para que la barra inferior no tape el contenido */
             font-family: Arial, sans-serif;
         }
+
+        /* --- TÍTULO MÓVIL SUPERIOR (Visible solo en celulares) --- */
+        .mobile-header-bar {
+            display: none;
+            background: #f4f1ea;
+            border-bottom: 2px solid #d4af37;
+            padding: 10px 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .mobile-header-bar h1 {
+            margin: 0;
+            font-size: 1.05rem;
+            color: #222222;
+            font-weight: bold;
+        }
+
         .header-top {
             display: flex;
             justify-content: space-between;
@@ -68,12 +85,16 @@
             font-size: 0.85rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+
         @media (max-width: 768px) {
             .admin-toggle-btn, .fecha-actualizacion {
                 display: none !important;
             }
             .header-top {
-                display: none; /* Oculta la cabecera superior innecesaria en móviles para ganar espacio */
+                display: none !important; /* Oculta la cabecera de PC en móvil */
+            }
+            .mobile-header-bar {
+                display: flex; /* Muestra la barra superior optimizada en móviles */
             }
         }
 
@@ -253,6 +274,11 @@
     </style>
 </head>
 <body>
+
+    <!-- Barra Superior Móvil con el tag [cLm] -->
+    <div class="mobile-header-bar">
+        <h1>[cLm] Ranking Maratón Michi DM</h1>
+    </div>
 
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
