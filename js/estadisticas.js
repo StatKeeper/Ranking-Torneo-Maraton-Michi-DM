@@ -1,661 +1,444 @@
-document.addEventListener("DOMContentLoaded", () => {
-    renderizarEstadisticasTiempos();
+// Sincronización limpia mediante archivo JSON en el repositorio de GitHub (Sin errores 401)
+const ARCHIVO_DATOS_URL = "./datos_torneo.json";
 
-    const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
-    const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
-
-    if (selectAnio) {
-        selectAnio.addEventListener("change", renderizarEstadisticasTiempos);
+async function cargarDatosNubeYSincronizar() {
+    try {
+        const respuesta = await fetch(ARCHIVO_DATOS_URL + "?t=" + new Date().getTime()); // Evita caché antigua
+        if (!respuesta.ok) throw new Error("No se pudo cargar el archivo de datos del torneo.");
+        
+        const datosNube = await respuesta.json();
+        if (datosNube && typeof datosNube === "object") {
+            // Volcar los datos del archivo JSON al localStorage del dispositivo actual (PC o Celular)
+            Object.keys(datosNube).forEach(key => {
+                localStorage.setItem(key, datosNube[key]);
+            });
+            console.log("¡Datos sincronizados desde GitHub exitosamente!");
+        }
+    } catch (error) {
+        console.warn("Aviso: Usando almacenamiento local actual (modo offline o archivo inicial pendiente):", error);
     }
-    if (selectMes) {
-        selectMes.addEventListener("change", renderizarEstadisticasTiempos);
-    }
-});
+}
 
-function obtenerNickOficialEstadisticas(nombreIngresado) {
-    if (!nombreIngresado) return "";
-    let limpioIngresado = nombreIngresado.toLowerCase().trim();
-    
+// Función auxiliar para exportar tus datos actuales a un archivo y subirlos a GitHub fácilmente
+function generarArchivoDatosTorneoParaGitHub() {
+    let todosLosDatos = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        todosLosDatos[key] = localStorage.getItem(key);
+    }
+    const blob = new Blob([JSON.stringify(todosLosDatos, null, 2)], {type: "application/json"});
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = "datos_torneo.json";
+    enlace.click();
+    console.log("¡Archivo datos_torneo.json generado con éxito para subir a GitHub!");
+}
+
+// Obtener el nombre oficial corregido desde localStorage
+function obtenerNombreOficial(nombreOriginal) {
+    if (!nombreOriginal) return "";
     let mapaCorrecciones = {};
+    
     const correccionesGuardadas = localStorage.getItem("mapa_correccion_nombres") || localStorage.getItem("correcciones_nombres");
     if (correccionesGuardadas) {
         try {
             mapaCorrecciones = JSON.parse(correccionesGuardadas);
         } catch (e) {
-            console.error("Error parseando correcciones:", e);
+            console.error("Error parseando mapa de corrección de nombres:", e);
         }
     }
-
-    if (typeof equivalencias !== 'undefined') {
-        const guardadas = localStorage.getItem("equivalencias_michi_dm");
-        const lista = guardadas ? JSON.parse(guardadas) : equivalencias;
-        const buscado = lista.find(e => e.antiguo.toLowerCase().includes(limpioIngresado) || limpioIngresado.includes(e.antiguo.toLowerCase()));
-        if (buscado) return buscado.oficial;
-    }
-
-    for (let key in mapaCorrecciones) {
-        if (key.toLowerCase().includes(limpioIngresado) || limpioIngresado.includes(key.toLowerCase())) {
-            return mapaCorrecciones[key];
-        }
-    }
-
-    return nombreIngresado.trim();
-}
-
-function convertirDuracionASegundos(duracionStr) {
-    if (!duracionStr || typeof duracionStr !== 'string') return 0;
-    const partes = duracionStr.split(':').map(p => parseInt(p, 10) || 0);
-    if (partes.length === 3) {
-        return partes[0] * 3600 + partes[1] * 60 + partes[2];
-    } else if (partes.length === 2) {
-        return partes[0] * 60 + partes[1];
-    }
-    return 0;
-}
-
-function convertirSegundosADuracionCorto(segundosTotales) {
-    if (!segundosTotales || segundosTotales <= 0) return "00:00";
-    const h = Math.floor(segundosTotales / 3600);
-    const m = Math.floor((segundosTotales % 3600) / 60);
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-}
-
-function renderizarEstadisticasTiempos() {
-    const secTiempos = document.getElementById("sec-tiempos");
-    const secCivilizaciones = document.getElementById("sec-civilizaciones");
-    const secEnfrentamientos = document.getElementById("sec-enfrentamientos");
-
-    if (!secTiempos || !secCivilizaciones || !secEnfrentamientos) return;
-
-    let estadisticasJugadores = {};
-    let estadisticasCivilizaciones = {};
-    let estadisticasJugadorCiv = {};
-    let estadisticasEquipos = {};
-    let listaGlobalJugadores = new Set();
-    let partidasDetalleGlobal = [];
-
-    const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
-    const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
     
-    const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
-    const mesSeleccionado = selectMes ? selectMes.value : "08";
+    return mapaCorrecciones[nombreOriginal] || nombreOriginal;
+}
 
-    const mesesMapInverso = {
-        "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
-        "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
-        "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
-    };
+// Función robusta para contabilizar bonos tanto por texto como por propiedades directas del registro
+function procesarBonosRegistro(reg, objetoJugador) {
+    if (reg.e !== undefined || reg.bonoE !== undefined) {
+        objetoJugador.bonoE += parseInt(reg.e || reg.bonoE || 0);
+        objetoJugador.bonoR += parseInt(reg.r || reg.bonoR || 0);
+        objetoJugador.bonoM += parseInt(reg.m || reg.bonoM || 0);
+        objetoJugador.bonoO += parseInt(reg.o || reg.bonoO || 0);
+        objetoJugador.bonoS += parseInt(reg.s || reg.bonoS || 0);
+        objetoJugador.bonoRch += parseInt(reg.rch || reg.bonoRch || 0);
+        objetoJugador.bonoMG += parseInt(reg.mg || reg.bonoMG || 0);
+        objetoJugador.bonoRLP += parseInt(reg.rlp || reg.bonoRLP || 0);
+        return;
+    }
 
-    const mesesMapTexto = {
-        "enero": "01", "febrero": "02", "marzo": "03", "abril": "04",
-        "mayo": "05", "junio": "06", "julio": "07", "agosto": "08",
-        "septiembre": "09", "octubre": "10", "noviembre": "11", "diciembre": "12",
-        "Agosto": "08", "Septiembre": "09", "Octubre": "10", "Noviembre": "11", "Diciembre": "12"
-    };
+    const textoSuceso = reg.sucesoNota || reg.suceso || reg.ultimoSuceso || "";
+    if (!textoSuceso || typeof textoSuceso !== "string") return;
 
-    const mesFormatoNum = mesesMapTexto[mesSeleccionado] || mesSeleccionado;
-    const mesFormatoTexto = mesesMapInverso[mesSeleccionado] || mesSeleccionado;
+    const texto = textoSuceso.toUpperCase();
+
+    if (/\bE\b/.test(texto) || texto.includes("EXCELENCIA")) objetoJugador.bonoE += 1;
+    if (/\bR\b/.test(texto) || texto.includes("RESISTENCIA")) objetoJugador.bonoR += 1;
+    if (/\bM\b/.test(texto) || texto.includes("MILITAR")) objetoJugador.bonoM += 1;
+    if (/\bO\b/.test(texto) || texto.includes("ORO")) objetoJugador.bonoO += 1;
+    if (/\bS\b/.test(texto) || texto.includes("SOCIEDAD")) objetoJugador.bonoS += 1;
+
+    if (texto.includes("RCH") || texto.includes("RACHA")) objetoJugador.bonoRch += 1;
+    if (texto.includes("MG") || texto.includes("MATAGIGANTES")) objetoJugador.bonoMG += 1;
+    if (texto.includes("RLP") || texto.includes("RELAMPAGO") || texto.includes("RELÁMPAGO")) objetoJugador.bonoRLP += 1;
+}
+
+function inicializarSelectoresAnioFiltro() {
+    const selectAnio = document.getElementById("select-anio-filtro");
+    if (!selectAnio) return;
+    selectAnio.innerHTML = "";
+    for (let a = 2026; a <= 2035; a++) {
+        const opt = document.createElement("option");
+        opt.value = a;
+        opt.textContent = a;
+        if (a === 2026) opt.selected = true;
+        selectAnio.appendChild(opt);
+    }
+}
+
+// Renderiza el Ranking Acumulado General filtrado correctamente por Año y Mes
+function renderTablaRankingGeneral() {
+    const tbody = document.getElementById("tabla-clasificacion");
+    const elFechaAct = document.getElementById("fecha-actualizacion");
+    const elLabelFecha = document.getElementById("label-fecha");
+    const elLabelPartida = document.getElementById("label-partida");
+    const elTotalPartidasMes = document.getElementById("total-partidas-mes");
+    
+    const selectAnioFiltro = document.getElementById("select-anio-filtro");
+    const selectMesFiltro = document.getElementById("select-mes-filtro");
+    const tableElement = tbody ? tbody.closest("table") : null;
+
+    if (!tbody) return;
+
+    const anioSel = selectAnioFiltro ? selectAnioFiltro.value : "2026";
+    const mesSel = selectMesFiltro ? selectMesFiltro.value : "08";
+    const periodoSeleccionado = `${anioSel}-${mesSel}`;
+
+    let clavesPartidasMes = [];
+    let ultimaJornada = "01";
+    let ultimaPartida = "1";
+    let ultimaFechaHora = "";
+
+    // 1. Recopilar todas las partidas del mes y también la lista global de jugadores conocidos en el almacenamiento
+    let todosLosJugadoresConocidos = new Set();
 
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
-        
-        if (clave && clave.startsWith("registros_") && !clave.includes("img_")) {
-            if (clave.includes(anioSeleccionado) && (clave.includes(mesFormatoNum) || clave.toLowerCase().includes(mesFormatoTexto.toLowerCase()))) {
+        if (clave) {
+            const claveLower = clave.toLowerCase();
+            if (claveLower.startsWith("img_")) continue;
+
+            if (clave.includes(`_${periodoSeleccionado}_`) && clave.startsWith("registros_")) {
+                clavesPartidasMes.push(clave);
+                // Extraer jugadores de cada registro para asegurar que los 12 (o más) aparezcan
                 try {
-                    const registros = JSON.parse(localStorage.getItem(clave));
-                    if (Array.isArray(registros) && registros.length > 0) {
-                        let jugadoresEnPartida = [];
-                        let partidaYaProcesadaEnEstaClave = new Set();
-
-                        registros.forEach(reg => {
-                            const nombreRaw = reg.jugador || reg.Jugador;
-                            if (!nombreRaw) return;
-                            const nombre = obtenerNickOficialEstadisticas(nombreRaw);
-                            
-                            if (partidaYaProcesadaEnEstaClave.has(nombre)) return;
-                            partidaYaProcesadaEnEstaClave.add(nombre);
-
-                            listaGlobalJugadores.add(nombre);
-
-                            const pg = (reg.pg === 1 || reg.PG === 1) ? 1 : 0;
-                            const pp = (reg.pp === 1 || reg.PP === 1) ? 1 : 0;
-                            const equipoReg = (reg.equipo || reg.Equipo || "Sin Equipo").trim();
-
-                            jugadoresEnPartida.push({ nombre, pg, pp, equipo: equipoReg });
-
-                            if (!estadisticasJugadores[nombre]) {
-                                estadisticasJugadores[nombre] = {
-                                    nombre: nombre,
-                                    totalPartidas: 0,
-                                    victorias: 0,
-                                    derrotas: 0,
-                                    unidadesTotales: 0,
-                                    edificiosTotales: 0,
-                                    segundosTotales: 0
-                                };
-                            }
-
-                            const stats = estadisticasJugadores[nombre];
-                            stats.totalPartidas++;
-                            if (pg === 1) stats.victorias++;
-                            if (pp === 1) stats.derrotas++;
-
-                            // FIX: se agregaron reg.uAses y reg.eArr, que son los nombres
-                            // reales que usa registro_masivo.js al guardar cada partida.
-                            stats.unidadesTotales += parseInt(reg.uAses || reg.unidadesAsesinadas || reg.UnidadesAsesinadas || reg["U. Ases."] || 0, 10);
-                            stats.edificiosTotales += parseInt(reg.eArr || reg.edificiosArrasados || reg.EdificiosArrasados || reg["E. Arr."] || 0, 10);
-                            stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
-
-                            const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
-                            if (civRaw && civRaw !== "-" && String(civRaw).trim() !== "") {
-                                const civ = String(civRaw).trim();
-                                
-                                if (!estadisticasCivilizaciones[civ]) {
-                                    estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
-                                }
-                                estadisticasCivilizaciones[civ].jugadas++;
-                                if (pg === 1) estadisticasCivilizaciones[civ].victorias++;
-                                if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
-
-                                if (!estadisticasJugadorCiv[nombre]) {
-                                    estadisticasJugadorCiv[nombre] = {};
-                                }
-                                if (!estadisticasJugadorCiv[nombre][civ]) {
-                                    estadisticasJugadorCiv[nombre][civ] = { jugadas: 0, victorias: 0, derrotas: 0 };
-                                }
-                                estadisticasJugadorCiv[nombre][civ].jugadas++;
-                                if (pg === 1) estadisticasJugadorCiv[nombre][civ].victorias++;
-                                if (pp === 1) estadisticasJugadorCiv[nombre][civ].derrotas++;
-                            }
-
-                            if (equipoReg && equipoReg !== "-") {
-                                const claveEquipo = `${clave} - ${equipoReg}`;
-                                if (!estadisticasEquipos[claveEquipo]) {
-                                    estadisticasEquipos[claveEquipo] = {
-                                        nombreEquipo: equipoReg,
-                                        partidaKey: clave,
-                                        victorias: 0,
-                                        derrotas: 0,
-                                        miembros: new Set()
-                                    };
-                                }
-                                estadisticasEquipos[claveEquipo].miembros.add(nombre);
-                                if (pg === 1) estadisticasEquipos[claveEquipo].victorias = 1;
-                                if (pp === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
-                            }
+                    const regs = JSON.parse(localStorage.getItem(clave));
+                    if (Array.isArray(regs)) {
+                        regs.forEach(r => {
+                            const nRaw = r.jugador || r.Jugador;
+                            if (nRaw) todosLosJugadoresConocidos.add(obtenerNombreOficial(nRaw));
                         });
-
-                        if (jugadoresEnPartida.length > 0) {
-                            partidasDetalleGlobal.push(jugadoresEnPartida);
-                        }
                     }
-                } catch (e) {
-                    console.error("Error al procesar registros:", e);
-                }
+                } catch(e) {}
             }
         }
     }
 
-    const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
-    listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
-    
-    const arrayNombresUnicos = Array.from(listaGlobalJugadores).sort();
-    const optionsDatalist = arrayNombresUnicos.map(j => `<option value="${j}">`).join("");
-
-    function buscarJugadorFlexible(nombreBusqueda) {
-        if (!nombreBusqueda) return null;
-        const query = nombreBusqueda.toLowerCase().trim();
-        
-        let encontrado = listaJugadores.find(j => {
-            const n = j.nombre.toLowerCase();
-            return n === query || n.includes(query) || query.includes(n);
-        });
-        if (encontrado) return encontrado;
-
-        return listaJugadores.find(j => {
-            const limpio = j.nombre.toLowerCase().replace(/\[.*?\]|\{.*?\}|\*|_/g, "").trim();
-            return limpio === query || limpio.includes(query) || query.includes(limpio);
-        });
-    }
-
-    // ==========================================
-    // 1. SUBPESTAÑA TIEMPOS
-    // ==========================================
-    secTiempos.innerHTML = `
-        <h3>⏱️ Consulta Interactiva de Tiempos (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus estadísticas en pantalla completa.</p>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-tiempo-1" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-tiempo-2" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-tiempo-3" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-tiempo-4" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-            </div>
-            <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos</button>
-        </div>
-        
-        <div id="modal-tiempos-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
-            <div id="modal-tiempos-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
-                    <button id="btn-descargar-tiempos" title="Descargar como Imagen" style="background: #198754; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center;">📥</button>
-                    <button id="cerrar-modal-tiempos" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
-                </div>
-                <div id="resultado-tiempos-container"></div>
-            </div>
-        </div>
-    `;
-
-    // ==========================================
-    // 2. SUBPESTAÑA CIVILIZACIONES
-    // ==========================================
-    secCivilizaciones.innerHTML = `
-        <h3>🏛️ Consulta Interactiva de Civilizaciones (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus civilizaciones en pantalla completa.</p>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-civ-1" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-civ-2" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-civ-3" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-civ-4" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-            </div>
-            <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones</button>
-        </div>
-        
-        <div id="modal-civs-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
-            <div id="modal-civs-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
-                    <button id="btn-descargar-civs" title="Descargar como Imagen" style="background: #198754; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center;">📥</button>
-                    <button id="cerrar-modal-civs" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
-                </div>
-                <div id="resultado-civs-container"></div>
-            </div>
-        </div>
-    `;
-
-    // ==========================================
-    // 3. SUBPESTAÑA SINERGIA
-    // ==========================================
-    secEnfrentamientos.innerHTML = `
-        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en pantalla completa.</p>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-sinergia-1" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-sinergia-2" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-sinergia-3" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-sinergia-4" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-            </div>
-            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Sinergia</button>
-        </div>
-
-        <div id="modal-sinergia-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
-            <div id="modal-sinergia-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
-                    <button id="btn-descargar-sinergia" title="Descargar como Imagen" style="background: #198754; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center;">📥</button>
-                    <button id="cerrar-modal-sinergia" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
-                </div>
-                <div id="resultado-sinergia-container"></div>
-            </div>
-        </div>
-    `;
-
-    let contenedorDatalistGlobal = document.getElementById("lista-jugadores-global");
-    if (!contenedorDatalistGlobal) {
-        contenedorDatalistGlobal = document.createElement("datalist");
-        contenedorDatalistGlobal.id = "lista-jugadores-global";
-        document.body.appendChild(contenedorDatalistGlobal);
-    }
-    contenedorDatalistGlobal.innerHTML = optionsDatalist;
-
-    // ==========================================
-    // EVENTOS Y MODALES
-    // ==========================================
-
-    // 1. Tiempos
-    const btnConsultarTiempos = document.getElementById("btn-consultar-tiempos");
-    const modalTiemposOverlay = document.getElementById("modal-tiempos-overlay");
-    const cerrarModalTiempos = document.getElementById("cerrar-modal-tiempos");
-    const btnDescargarTiempos = document.getElementById("btn-descargar-tiempos");
-
-    if (btnConsultarTiempos) {
-        btnConsultarTiempos.addEventListener("click", () => {
-            const val1 = document.getElementById("input-tiempo-1").value;
-            const val2 = document.getElementById("input-tiempo-2").value;
-            const val3 = document.getElementById("input-tiempo-3").value;
-            const val4 = document.getElementById("input-tiempo-4").value;
-            const contenedorResultado = document.getElementById("resultado-tiempos-container");
-
-            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
-            if (inputsRaw.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores para comparar.");
-                return;
+    // Por seguridad, si hay una lista maestra de jugadores guardada en localStorage, la incorporamos también
+    const listaMaestraGuardada = localStorage.getItem("lista_jugadores") || localStorage.getItem("jugadores_torneo");
+    if (listaMaestraGuardada) {
+        try {
+            const parsedLista = JSON.parse(listaMaestraGuardada);
+            if (Array.isArray(parsedLista)) {
+                parsedLista.forEach(j => todosLosJugadoresConocidos.add(obtenerNombreOficial(j)));
             }
-
-            let seleccionadosNombres = [];
-            inputsRaw.forEach(inp => {
-                const encontrado = buscarJugadorFlexible(inp);
-                if (encontrado) {
-                    seleccionadosNombres.push(encontrado.nombre);
-                } else {
-                    seleccionadosNombres.push(inp.trim());
-                }
-            });
-            seleccionadosNombres = [...new Set(seleccionadosNombres)];
-
-            let htmlTablaComparativa = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos y Estadísticas</h3>
-                
-                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>T.A.</strong>: Tiempo Acumulado | <strong>P.T.A.</strong>: Promedio Tiempo Acumulado | <strong>U.Ases.</strong>: Unidades Asesinadas | <strong>P.U.Ases.</strong>: Promedio Unidades | <strong>E.Arr.</strong>: Edificios Arrasados | <strong>P.E.Arr.</strong>: Promedio Edificios
-                </div>
-
-                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table style="width: 100%; min-width: ${seleccionadosNombres.length * 95 + 50}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
-                        <thead>
-                            <tr style="background-color: #343a40; color: #fff;">
-                                <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Métrica</th>
-            `;
-            seleccionadosNombres.forEach(sel => {
-                htmlTablaComparativa += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel}</th>`;
-            });
-            htmlTablaComparativa += `</tr></thead><tbody>`;
-
-            const metricasT = [
-                { label: "P.", fn: j => j.totalPartidas },
-                { label: "T.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales) },
-                { label: "P.T.A.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
-                { label: "U.Ases.", fn: j => j.unidadesTotales },
-                { label: "P.U.Ases.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
-                { label: "E.Arr.", fn: j => j.edificiosTotales },
-                { label: "P.E.Arr.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
-            ];
-
-            metricasT.forEach((metrica, idx) => {
-                const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
-                htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                htmlTablaComparativa += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
-                
-                seleccionadosNombres.forEach(sel => {
-                    const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase() || j.nombre.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(j.nombre.toLowerCase()));
-                    const valor = jData ? metrica.fn(jData) : "-";
-                    htmlTablaComparativa += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${valor}</td>`;
-                });
-                htmlTablaComparativa += `</tr>`;
-            });
-
-            htmlTablaComparativa += `</tbody></table></div>`;
-            contenedorResultado.innerHTML = htmlTablaComparativa;
-            modalTiemposOverlay.style.display = "block";
-        });
+        } catch(e) {}
     }
 
-    if (cerrarModalTiempos) {
-        cerrarModalTiempos.addEventListener("click", () => { modalTiemposOverlay.style.display = "none"; });
+    clavesPartidasMes.sort((a, b) => {
+        const matchA = a.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || a.match(/(\d+)_(\d+)$/);
+        const matchB = b.match(/Fecha_?(\d+).*?Partida_?(\d+)/i) || b.match(/(\d+)_(\d+)$/);
+        if (matchA && matchB) {
+            const jA = parseInt(matchA[1], 10);
+            const jB = parseInt(matchB[1], 10);
+            if (jA !== jB) return jA - jB;
+            return parseInt(matchA[2], 10) - parseInt(matchB[2], 10);
+        }
+        return a.localeCompare(b);
+    });
+
+    let clavesPartidasUnicas = new Set(clavesPartidasMes);
+    if (elTotalPartidasMes) {
+        elTotalPartidasMes.textContent = clavesPartidasUnicas.size > 0 ? clavesPartidasUnicas.size : 0;
     }
 
-    if (btnDescargarTiempos) {
-        btnDescargarTiempos.addEventListener("click", () => {
-            ejecutarCapturaHtml2Canvas(document.getElementById("modal-tiempos-card"), 'comparativa_tiempos_michi.png');
-        });
-    }
+    let posicionesAnterioresMap = {};
+    let totalJugadoresAnteriores = 0;
 
-    // 2. Civilizaciones
-    const btnConsultarCivs = document.getElementById("btn-consultar-civs");
-    const modalCivsOverlay = document.getElementById("modal-civs-overlay");
-    const cerrarModalCivs = document.getElementById("cerrar-modal-civs");
-    const btnDescargarCivs = document.getElementById("btn-descargar-civs");
+    if (clavesPartidasMes.length > 0) {
+        const clavesAnteriores = clavesPartidasMes.slice(0, clavesPartidasMes.length - 1);
+        let acumuladoAnteriorMap = {};
 
-    if (btnConsultarCivs) {
-        btnConsultarCivs.addEventListener("click", () => {
-            const val1 = document.getElementById("input-civ-1").value;
-            const val2 = document.getElementById("input-civ-2").value;
-            const val3 = document.getElementById("input-civ-3").value;
-            const val4 = document.getElementById("input-civ-4").value;
-            const contenedorResultado = document.getElementById("resultado-civs-container");
+        clavesAnteriores.forEach(clave => {
+            try {
+                const registros = JSON.parse(localStorage.getItem(clave));
+                if (Array.isArray(registros)) {
+                    registros.forEach(reg => {
+                        const nombreRaw = reg.jugador || reg.Jugador;
+                        if (!nombreRaw) return;
+                        const nombre = obtenerNombreOficial(nombreRaw);
 
-            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
-            if (inputsRaw.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores para comparar civilizaciones.");
-                return;
-            }
-
-            let seleccionadosNombres = [];
-            inputsRaw.forEach(inp => {
-                const encontrado = buscarJugadorFlexible(inp);
-                if (encontrado) {
-                    seleccionadosNombres.push(encontrado.nombre);
-                } else {
-                    seleccionadosNombres.push(inp.trim());
-                }
-            });
-            seleccionadosNombres = [...new Set(seleccionadosNombres)];
-
-            let civsSet = new Set();
-            seleccionadosNombres.forEach(sel => {
-                const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(k.toLowerCase()));
-                if (realKey && estadisticasJugadorCiv[realKey]) {
-                    Object.keys(estadisticasJugadorCiv[realKey]).forEach(c => civsSet.add(c));
-                }
-            });
-
-            let listaCivsComparativa = Array.from(civsSet);
-
-            let htmlTablaCivs = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Civilizaciones</h3>
-            `;
-
-            if (listaCivsComparativa.length === 0) {
-                htmlTablaCivs += `<p style="color: #dc3545; font-weight: bold; font-size: 0.8em;">⚠️ No se encontraron civilizaciones registradas para los jugadores seleccionados.</p>`;
-            } else {
-                htmlTablaCivs += `
-                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        <table style="width: 100%; min-width: ${seleccionadosNombres.length * 100 + 70}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
-                            <thead>
-                                <tr style="background-color: #343a40; color: #fff;">
-                                    <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Civ</th>
-                `;
-                seleccionadosNombres.forEach(sel => {
-                    htmlTablaCivs += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel}</th>`;
-                });
-                htmlTablaCivs += `</tr></thead><tbody>`;
-
-                listaCivsComparativa.forEach((civ, idx) => {
-                    const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
-                    htmlTablaCivs += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                    htmlTablaCivs += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${civ}</td>`;
-
-                    seleccionadosNombres.forEach(sel => {
-                        const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(k.toLowerCase()));
-                        let textoCelda = "-";
-                        if (realKey && estadisticasJugadorCiv[realKey] && estadisticasJugadorCiv[realKey][civ]) {
-                            const datosCiv = estadisticasJugadorCiv[realKey][civ];
-                            const winRate = datosCiv.jugadas > 0 ? Math.round((datosCiv.victorias / datosCiv.jugadas) * 100) : 0;
-                            textoCelda = `${datosCiv.jugadas}p (${winRate}%)`;
+                        if (!acumuladoAnteriorMap[nombre]) {
+                            acumuladoAnteriorMap[nombre] = { jugador: nombre, pts: 0 };
                         }
-                        htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${textoCelda}</td>`;
+                        acumuladoAnteriorMap[nombre].pts += parseInt(reg.pts || reg.Pts || 0);
                     });
-                    htmlTablaCivs += `</tr>`;
+                }
+            } catch (e) {}
+        });
+
+        let listaAnterior = Object.values(acumuladoAnteriorMap);
+        listaAnterior.sort((a, b) => b.pts - a.pts);
+        totalJugadoresAnteriores = listaAnterior.length;
+
+        listaAnterior.forEach((jug, idx) => {
+            posicionesAnterioresMap[jug.jugador] = idx + 1;
+        });
+    }
+
+    let acumuladoMap = {};
+
+    // Inicializar la estructura para TODOS los jugadores conocidos con estado por defecto "Sin participación"
+    todosLosJugadoresConocidos.forEach(nombre => {
+        acumuladoMap[nombre] = {
+            jugador: nombre,
+            pts: 0, pg: 0, pp: 0, vd: null,
+            bonoE: 0, bonoR: 0, bonoM: 0, bonoO: 0, bonoS: 0,
+            bonoRch: 0, bonoMG: 0, bonoRLP: 0,
+            ultimoSuceso: 'Sin participación',
+            tieneParticipacionEnMes: false
+        };
+    });
+
+    // Identificar cuál es la última clave exacta de partida de todo el mes para extraer el suceso estricto de esa última partida
+    const ultimaClaveDelMes = clavesPartidasMes.length > 0 ? clavesPartidasMes[clavesPartidasMes.length - 1] : null;
+    let jugadoresEnUltimaPartida = new Set();
+    if (ultimaClaveDelMes) {
+        try {
+            const regsUltima = JSON.parse(localStorage.getItem(ultimaClaveDelMes));
+            if (Array.isArray(regsUltima)) {
+                regsUltima.forEach(r => {
+                    const n = obtenerNombreOficial(r.jugador || r.Jugador);
+                    if (n) jugadoresEnUltimaPartida.add(n);
                 });
-                htmlTablaCivs += `</tbody></table></div>`;
             }
-
-            contenedorResultado.innerHTML = htmlTablaCivs;
-            modalCivsOverlay.style.display = "block";
-        });
+        } catch(e) {}
     }
 
-    if (cerrarModalCivs) {
-        cerrarModalCivs.addEventListener("click", () => { modalCivsOverlay.style.display = "none"; });
-    }
+    clavesPartidasMes.forEach(clave => {
+        const partesClave = clave.split("_");
+        if (partesClave.length >= 4) {
+            ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
+            ultimaPartida = partesClave[partesClave.length - 1] || ultimaPartida;
+        }
 
-    if (btnDescargarCivs) {
-        btnDescargarCivs.addEventListener("click", () => {
-            ejecutarCapturaHtml2Canvas(document.getElementById("modal-civs-card"), 'comparativa_civilizaciones_michi.png');
-        });
-    }
+        const esLaUltimaPartida = (clave === ultimaClaveDelMes);
 
-    // 3. Sinergia
-    const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
-    const modalSinergiaOverlay = document.getElementById("modal-sinergia-overlay");
-    const cerrarModalSinergia = document.getElementById("cerrar-modal-sinergia");
-    const btnDescargarSinergia = document.getElementById("btn-descargar-sinergia");
+        try {
+            const registros = JSON.parse(localStorage.getItem(clave));
+            if (Array.isArray(registros)) {
+                registros.forEach(reg => {
+                    if (reg.fechaHora) ultimaFechaHora = reg.fechaHora;
 
-    if (btnConsultarSinergia) {
-        btnConsultarSinergia.addEventListener("click", () => {
-            const val1 = document.getElementById("input-sinergia-1").value;
-            const val2 = document.getElementById("input-sinergia-2").value;
-            const val3 = document.getElementById("input-sinergia-3").value;
-            const val4 = document.getElementById("input-sinergia-4").value;
-            const contenedorResultado = document.getElementById("resultado-sinergia-container");
+                    const nombreRaw = reg.jugador || reg.Jugador;
+                    if (!nombreRaw) return;
 
-            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
-            if (inputsRaw.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores para calcular la sinergia.");
-                return;
-            }
+                    const nombre = obtenerNombreOficial(nombreRaw);
+                    todosLosJugadoresConocidos.add(nombre);
 
-            let seleccionadosNombres = [];
-            inputsRaw.forEach(inp => {
-                const encontrado = buscarJugadorFlexible(inp);
-                if (encontrado) {
-                    seleccionadosNombres.push(encontrado.nombre);
-                } else {
-                    seleccionadosNombres.push(inp.trim());
-                }
-            });
-            seleccionadosNombres = [...new Set(seleccionadosNombres)];
-
-            // Cálculo de partidas conjuntas
-            let partidasJuntos = 0;
-            let victoriasConjuntas = 0;
-            let derrotasConjuntas = 0;
-
-            partidasDetalleGlobal.forEach(partida => {
-                const nombresEnPartida = partida.map(p => p.nombre.toLowerCase());
-                const todosEstan = seleccionadosNombres.every(sel => nombresEnPartida.includes(sel.toLowerCase()));
-
-                if (todosEstan) {
-                    const registrosSeleccionados = partida.filter(p => seleccionadosNombres.some(sel => sel.toLowerCase() === p.nombre.toLowerCase()));
-                    
-                    const primerEquipo = registrosSeleccionados[0] ? registrosSeleccionados[0].equipo : null;
-                    const mismoEquipo = primerEquipo && primerEquipo !== "Sin Equipo" && registrosSeleccionados.every(p => p.equipo === primerEquipo);
-                    
-                    const todosGanaron = registrosSeleccionados.every(p => p.pg === 1);
-                    const todosPerdieron = registrosSeleccionados.every(p => p.pp === 1);
-
-                    if (mismoEquipo || todosGanaron) {
-                        partidasJuntos++;
-                        victoriasConjuntas++;
-                    } else if (todosPerdieron) {
-                        partidasJuntos++;
-                        derrotasConjuntas++;
+                    if (!acumuladoMap[nombre]) {
+                        acumuladoMap[nombre] = {
+                            jugador: nombre,
+                            pts: 0, pg: 0, pp: 0, vd: null,
+                            bonoE: 0, bonoR: 0, bonoM: 0, bonoO: 0, bonoS: 0,
+                            bonoRch: 0, bonoMG: 0, bonoRLP: 0,
+                            ultimoSuceso: 'Sin participación',
+                            tieneParticipacionEnMes: false
+                        };
                     }
-                }
-            });
 
-            const efectividad = partidasJuntos > 0 ? Math.round((victoriasConjuntas / partidasJuntos) * 100) : 0;
-            let textoEfectividad = `${efectividad}%`;
-            if (partidasJuntos > 0 && victoriasConjuntas === partidasJuntos) {
-                textoEfectividad = `🔥 Invictos (100%)`;
-            } else if (partidasJuntos > 0 && derrotasConjuntas === partidasJuntos) {
-                textoEfectividad = `❌ 0%`;
+                    const puntos = parseInt(reg.pts || reg.Pts || 0);
+                    const ganados = parseInt(reg.pg || reg.PG || 0);
+                    const perdidos = parseInt(reg.pp || reg.PP || 0);
+                    const sucesoActual = reg.sucesoNota || reg.suceso || reg.ultimoSuceso || '';
+
+                    acumuladoMap[nombre].pts += puntos;
+                    acumuladoMap[nombre].pg += ganados;
+                    acumuladoMap[nombre].pp += perdidos;
+                    acumuladoMap[nombre].tieneParticipacionEnMes = true;
+
+                    // Si es la última partida registrada, su suceso mandatorio es el de esta última partida. 
+                    // Si el jugador no jugó en esta última partida pero sí en anteriores del mes, conservamos su último suceso de cuando participó o indicamos su estado.
+                    if (esLaUltimaPartida) {
+                        acumuladoMap[nombre].ultimoSuceso = sucesoActual || (ganados > 0 ? 'Victoria' : (perdidos > 0 ? 'Derrota' : 'Sin participación'));
+                    } else if (!jugadoresEnUltimaPartida.has(nombre) && acumuladoMap[nombre].ultimoSuceso === 'Sin participación') {
+                        if (sucesoActual) {
+                            acumuladoMap[nombre].ultimoSuceso = sucesoActual;
+                        }
+                    }
+
+                    if (ganados > 0) acumuladoMap[nombre].vd = 1;
+                    else if (perdidos > 0 && acumuladoMap[nombre].vd === null) acumuladoMap[nombre].vd = 0;
+
+                    procesarBonosRegistro(reg, acumuladoMap[nombre]);
+                });
             }
+        } catch (e) {}
+    });
 
-            const listaNombresStr = seleccionadosNombres.join(", ");
+    const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
+    const numPartida = ultimaPartida.replace(/\D/g, "") || "1";
 
-            let htmlTablaSinergia = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal</h3>
-                
-                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 8px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Efec. Conjunta</strong>: Efectividad Conjunta
-                </div>
+    if (elFechaAct) elFechaAct.textContent = ultimaFechaHora || new Date().toLocaleString("es-PE");
+    if (elLabelFecha) elLabelFecha.textContent = `Fecha ${numFecha}`;
+    if (elLabelPartida) elLabelPartida.textContent = `Partida ${numPartida}`;
 
-                <div style="font-weight: bold; color: #343a40; font-size: 0.78em; margin-bottom: 12px; line-height: 1.3;">
-                    ${listaNombresStr}
-                </div>
-            `;
+    let jugadores = Object.values(acumuladoMap);
+    
+    // Criterio corregido: Mostrar todos los jugadores que pertenecen al torneo / lista general 
+    // (es decir, aquellos con participación en el mes O aquellos configurados en la lista general para ver quiénes no jugaron con "Sin participación")
+    jugadores = jugadores.filter(jug => {
+        const pj = jug.pg + jug.pp;
+        // Si tienen participación o puntos, o si queremos mostrar toda la lista base de jugadores del mes:
+        // Mostramos a todos los que tengan al menos una participación o estén en la lista general de 12 jugadores.
+        return true; 
+    });
 
-            if (partidasJuntos === 0) {
-                htmlTablaSinergia += `
-                    <div style="width: 100%; text-align: center; padding: 15px 10px; background: #fff5f5; border: 1px dashed #dc3545; border-radius: 6px; margin-top: 10px;">
-                        <span style="color: #dc3545; font-weight: bold; font-size: 0.75em; line-height: 1.4; display: inline-block;">
-                            ⚠️ Estos jugadores nunca jugaron en conjunto, nunca formaron un equipo como para tener estadísticas.
-                        </span>
-                    </div>
-                `;
-            } else {
-                htmlTablaSinergia += `
-                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 6px;">
-                        <table style="width: 100%; border-collapse: collapse; background: #fff; font-size: 0.7em;">
-                            <thead>
-                                <tr style="background-color: #343a40; color: #fff;">
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">P.</th>
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">V.</th>
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">D.</th>
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">Efec. Conjunta</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #dee2e6; background-color: #f8f9fa;">
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold;">${partidasJuntos}</td>
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasConjuntas}</td>
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasConjuntas}</td>
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold;">${textoEfectividad}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
+    // Ordenar: primero por puntos descendentemente, luego por nombre para estabilidad
+    jugadores.sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        return a.jugador.localeCompare(b.jugador);
+    });
 
-            contenedorResultado.innerHTML = htmlTablaSinergia;
-            modalSinergiaOverlay.style.display = "block";
-        });
+    // Tomar el límite de jugadores (por ejemplo, top 25 o todos los disponibles)
+    jugadores = jugadores.slice(0, 25);
+
+    if (jugadores.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="16" style="text-align: center; color: #6c757d; padding: 20px;">
+                    No hay partidas registradas para el período seleccionado.
+                </td>
+            </tr>
+        `;
+        if (tableElement) {
+            let tfoot = tableElement.querySelector("tfoot");
+            if (tfoot) tfoot.innerHTML = "";
+        }
+        return;
     }
 
-    if (cerrarModalSinergia) {
-        cerrarModalSinergia.addEventListener("click", () => { modalSinergiaOverlay.style.display = "none"; });
-    }
+    let totalPts = 0, totalE = 0, totalR = 0, totalM = 0, totalO = 0, totalS = 0, totalRch = 0, totalMG = 0, totalRLP = 0, totalTB = 0;
 
-    if (btnDescargarSinergia) {
-        btnDescargarSinergia.addEventListener("click", () => {
-            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'sinergia_grupal_michi.png');
-        });
+    tbody.innerHTML = "";
+    jugadores.forEach((jug, index) => {
+        const posActual = index + 1;
+        
+        let variacion = 0;
+        if (clavesPartidasMes.length <= 1) {
+            variacion = 0;
+        } else if (posicionesAnterioresMap[jug.jugador] !== undefined) {
+            const posAnterior = posicionesAnterioresMap[jug.jugador];
+            variacion = posAnterior - posActual;
+        } else {
+            const posAnteriorVirtual = totalJugadoresAnteriores + 1;
+            variacion = posAnteriorVirtual - posActual;
+        }
+
+        const varTexto = variacion > 0 ? `+${variacion}` : `${variacion}`;
+        const pj = jug.pg + jug.pp;
+        const vPjStr = `${jug.pg}/${pj}`;
+        const tbJugador = jug.bonoE + jug.bonoR + jug.bonoM + jug.bonoO + jug.bonoS + jug.bonoRch + jug.bonoMG + jug.bonoRLP;
+
+        totalPts += jug.pts;
+        totalE += jug.bonoE;
+        totalR += jug.bonoR;
+        totalM += jug.bonoM;
+        totalO += jug.bonoO;
+        totalS += jug.bonoS;
+        totalRch += jug.bonoRch;
+        totalMG += jug.bonoMG;
+        totalRLP += jug.bonoRLP;
+        totalTB += tbJugador;
+
+        let colorCirculo = "#6c757d";
+        if (posActual <= 5) colorCirculo = "#198754";
+        else if (posActual <= 10) colorCirculo = "#ffc107";
+        else if (posActual <= 15) colorCirculo = "#fd7e14";
+
+        const fmtBono = (val) => val > 0 ? `<strong style="color: #dc3545;">${val}</strong>` : `<span style="color: #6c757d;">0</span>`;
+        const vdTexto = jug.vd !== null ? jug.vd : 0;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorCirculo}; margin-right:5px;"></span>
+                <strong>${posActual}</strong>
+            </td>
+            <td>${varTexto}</td>
+            <td><strong>${jug.jugador}</strong></td>
+            <td><span style="color: #0d6efd; font-weight: bold;">${jug.pts}</span></td>
+            <td><strong>${vPjStr}</strong></td>
+            <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
+            <td><strong>${vdTexto}</strong></td>
+            <td>${fmtBono(jug.bonoE)}</td>
+            <td>${fmtBono(jug.bonoR)}</td>
+            <td>${fmtBono(jug.bonoM)}</td>
+            <td>${fmtBono(jug.bonoO)}</td>
+            <td>${fmtBono(jug.bonoS)}</td>
+            <td>${fmtBono(jug.bonoRch)}</td>
+            <td>${fmtBono(jug.bonoMG)}</td>
+            <td>${fmtBono(jug.bonoRLP)}</td>
+            <td><strong style="color: #198754;">${tbJugador}</strong></td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    if (tableElement) {
+        let tfoot = tableElement.querySelector("tfoot");
+        if (!tfoot) {
+            tfoot = document.createElement("tfoot");
+            tableElement.appendChild(tfoot);
+        }
+        tfoot.innerHTML = `
+            <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
+                <td colspan="3" style="text-align: right; padding: 10px;">Sumatoria Total:</td>
+                <td style="color: #0d6efd;">${totalPts}</td>
+                <td>-</td><td>-</td><td>-</td>
+                <td style="color: #dc3545;">${totalE}</td>
+                <td style="color: #dc3545;">${totalR}</td>
+                <td style="color: #dc3545;">${totalM}</td>
+                <td style="color: #dc3545;">${totalO}</td>
+                <td style="color: #dc3545;">${totalS}</td>
+                <td style="color: #dc3545;">${totalRch}</td>
+                <td style="color: #dc3545;">${totalMG}</td>
+                <td style="color: #dc3545;">${totalRLP}</td>
+                <td style="color: #198754;">${totalTB}</td>
+            </tr>
+        `;
     }
 }
+
+document.addEventListener("DOMContentLoaded", async () => {
+    inicializarSelectoresAnioFiltro();
+    
+    // 1. Cargar primero los datos sincronizados del archivo JSON en GitHub para celulares y PC
+    await cargarDatosNubeYSincronizar();
+
+    // 2. Renderizar la tabla con los datos actualizados
+    renderTablaRankingGeneral();
+
+    const selectAnio = document.getElementById("select-anio-filtro");
+    const selectMes = document.getElementById("select-mes-filtro");
+
+    if (selectAnio) selectAnio.addEventListener("change", renderTablaRankingGeneral);
+    if (selectMes) selectMes.addEventListener("change", renderTablaRankingGeneral);
+});
