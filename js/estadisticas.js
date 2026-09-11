@@ -380,7 +380,7 @@ function renderizarEstadisticasTiempos() {
                 <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos y Estadísticas</h3>
                 
                 <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Tiempo Acumulado | <strong>P.Dur.</strong>: Promedio Duración | <strong>U.Ases.</strong>: Unidades Asesinadas | <strong>P.U.Ases.</strong>: Promedio Unidades | <strong>E.Arr.</strong>: Edificios Arrasados | <strong>P.E.Arr.</strong>: Promedio Edificios
+                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Tiempo Acumulado | <strong>P.Dur.</strong>: Promedio Tiempo | <strong>U.Ases.</strong>: Unidades Asesinadas | <strong>P.U.Ases.</strong>: Promedio Unidades | <strong>E.Arr.</strong>: Edificios Arrasados | <strong>P.E.Arr.</strong>: Promedio Edificios
                 </div>
 
                 <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
