@@ -1,20 +1,26 @@
-// Sincronización limpia mediante archivo JSON en el repositorio de GitHub (Sin errores 401)
+// Sincronización limpia con control anti-caché agresivo para celulares
 const ARCHIVO_DATOS_URL = "./datos_torneo.json";
 
 async function cargarDatosNubeYSincronizar() {
     try {
-        const respuesta = await fetch(ARCHIVO_DATOS_URL + "?t=" + new Date().getTime()); // Evita caché antigua
+        // Añadimos una marca de tiempo basada en minutos para vencer la caché del navegador móvil automáticamente
+        const timestampUnico = Math.floor(new Date().getTime() / 60000); 
+        const respuesta = await fetch(`${ARCHIVO_DATOS_URL}?v=${timestampUnico}`, {
+            cache: "no-store" // Forzar al navegador a no usar caché estática
+        });
+        
         if (!respuesta.ok) throw new Error("No se pudo cargar el archivo de datos del torneo.");
         
         const datosNube = await respuesta.json();
         if (datosNube && typeof datosNube === "object") {
+            // Guardamos un identificador de versión en el localStorage si existe
             Object.keys(datosNube).forEach(key => {
                 localStorage.setItem(key, datosNube[key]);
             });
-            console.log("¡Datos sincronizados desde GitHub exitosamente!");
+            console.log("¡Datos sincronizados automáticamente desde GitHub!");
         }
     } catch (error) {
-        console.warn("Aviso: Usando almacenamiento local actual (modo offline o archivo inicial pendiente):", error);
+        console.warn("Aviso: Usando almacenamiento local actual (modo offline):", error);
     }
 }
 
@@ -283,10 +289,8 @@ function renderTablaRankingGeneral() {
         } catch (e) {}
     });
 
-    // Validar de forma definitiva la última partida para los que no figuraron en ella
     Object.keys(acumuladoMap).forEach(nombre => {
         if (ultimaClaveDelMes && !jugadoresEnUltimaPartida.has(nombre)) {
-            // Si el jugador no estuvo en la última partida del período, su último suceso actual debe ser "Sin participación"
             acumuladoMap[nombre].ultimoSuceso = "Sin participación";
         }
     });
@@ -363,7 +367,6 @@ function renderTablaRankingGeneral() {
         const fmtBono = (val) => val > 0 ? `<strong style="color: #dc3545;">${val}</strong>` : `<span style="color: #6c757d;">0</span>`;
         const vdTexto = jug.vd !== null ? jug.vd : 0;
 
-        // Renderizar en rojo si es "Sin participación"
         let sucesoHtml = `<em>${jug.ultimoSuceso || 'Sin participación'}</em>`;
         if (jug.ultimoSuceso === 'Sin participación') {
             sucesoHtml = `<em style="color: #dc3545; font-weight: bold;">Sin participación</em>`;
