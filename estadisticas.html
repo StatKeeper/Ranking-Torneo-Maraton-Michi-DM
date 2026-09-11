@@ -8,49 +8,11 @@
     <style>
         body {
             box-sizing: border-box;
+            background-color: #ffffff;
+            color: #333333;
             margin: 0;
-            padding: 0;
-        }
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-            position: relative;
-            gap: 10px;
-        }
-        .header-top h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            line-height: 1.2;
-            max-width: 65%;
-        }
-        .header-info-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-        .header-top .fecha-actualizacion {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #444;
-            text-align: right;
-        }
-
-        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
-        .admin-toggle-btn {
-            background: #b8860b;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding-bottom: 70px; /* Espacio para la barra inferior en móviles */
+            font-family: Arial, sans-serif;
         }
 
         /* --- PESTAÑAS SUPERIORES (Escritorio) --- */
@@ -82,6 +44,35 @@
             border-color: #b8860b;
         }
         .tab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+
+        /* --- SUBPESTAÑAS COMPACTAS (ICONOS + TEXTO CORTO) --- */
+        .subtabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 15px;
+            justify-content: space-between;
+        }
+        .subtab-btn {
+            flex: 1;
+            background: #f8f9fa;
+            color: #333;
+            padding: 8px 4px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.2s;
+        }
+        .subtab-btn.active {
             background: #b8860b;
             color: white;
             border-color: #996e05;
@@ -120,7 +111,7 @@
             color: #b8860b;
         }
 
-        /* --- PANEL LATERAL CORREGIDO PARA MÓVILES Y PC --- */
+        /* --- PANEL LATERAL --- */
         #sidebar {
             position: fixed;
             top: 0;
@@ -139,8 +130,8 @@
             transform: translateX(0);
         }
         #main-content {
-            margin-left: 280px;
-            padding: 20px;
+            margin-left: 0;
+            padding: 15px;
         }
 
         @media (max-width: 768px) {
@@ -152,9 +143,9 @@
             }
             #main-content {
                 margin-left: 0 !important;
-                padding: 10px 10px 70px 10px !important; /* Espacio extra abajo para que la barra móvil no tape contenido */
+                padding: 10px 10px 70px 10px !important;
             }
-            /* Ocultar las pestañas superiores en celulares ya que se usa la barra inferior */
+            /* Ocultar las pestañas superiores en celulares */
             .tabs {
                 display: none !important;
             }
@@ -167,7 +158,7 @@
 </head>
 <body>
 
-    <div id="sidebar">
+    <div id="sidebar" style="display:none;">
         <h3>🔐 Panel de Control</h3>
         <label>Contraseña de Admin:</label>
         <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
@@ -175,15 +166,6 @@
     </div>
 
     <div id="main-content">
-        <!-- Encabezado superior con título, fecha/hora y botón Admin seguro corregido con id="ultima-actualizacion" -->
-        <div class="header-top">
-            <h1>Ranking Maratón Michi DM</h1>
-            <div class="header-info-container">
-                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-                <div id="ultima-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
-            </div>
-        </div>
-
         <!-- Pestañas Principales (Escritorio) -->
         <div class="tabs">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
@@ -194,16 +176,16 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; margin-bottom: 10px;">
-            <h2 style="margin: 0;">📈 Estadísticas Generales del Torneo</h2>
-            <!-- Selectores de Año y Mes idénticos a los de index.html para que el filtrado funcione perfecto -->
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <label for="select-anio-filtro" style="font-weight: bold;">Año:</label>
-                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 5px; margin-bottom: 15px;">
+            <h2 style="margin: 0; font-size: 1.2rem;">📈 Estadísticas Generales del Torneo</h2>
+            <!-- Selectores de Año y Mes -->
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <label for="select-anio-filtro" style="font-weight: bold; font-size: 0.85rem;">Año:</label>
+                <select id="select-anio-filtro" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333; font-size: 0.85rem;">
                     <option value="2026" selected>2026</option>
                 </select>
-                <label for="select-mes-filtro" style="font-weight: bold; margin-left: 10px;">Mes:</label>
-                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
+                <label for="select-mes-filtro" style="font-weight: bold; margin-left: 4px; font-size: 0.85rem;">Mes:</label>
+                <select id="select-mes-filtro" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333; font-size: 0.85rem;">
                     <option value="01">Enero</option>
                     <option value="02">Febrero</option>
                     <option value="03">Marzo</option>
@@ -211,8 +193,8 @@
                     <option value="05">Mayo</option>
                     <option value="06">Junio</option>
                     <option value="07">Julio</option>
-                    <option value="08" selected>Agosto</option>
-                    <option value="09">Septiembre</option>
+                    <option value="08">Agosto</option>
+                    <option value="09" selected>Septiembre</option>
                     <option value="10">Octubre</option>
                     <option value="11">Noviembre</option>
                     <option value="12">Diciembre</option>
@@ -220,11 +202,11 @@
             </div>
         </div>
 
-        <!-- Subpestañas Secundarias -->
+        <!-- Subpestañas Secundarias Compactas con Iconos -->
         <div class="subtabs">
-            <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')">⏱️ Tiempos de partida</button>
-            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')">🏛️ Civilizaciones y Win Rate</button>
-            <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')">🤝 Sinergia y Enfrentamientos</button>
+            <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')" title="Tiempos de Partida">⏱️ Tiempos</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')" title="Civilizaciones y Win Rate">🏛️ Civs / WR</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')" title="Sinergia y Enfrentamientos">🤝 Sinergia</button>
         </div>
 
         <!-- Vista 1: Tiempos de partida -->
@@ -270,11 +252,6 @@
     <script src="js/auth.js"></script>
     <script src="js/estadisticas.js"></script>
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
-
         function cambiarSubtab(seccion) {
             document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
@@ -282,19 +259,6 @@
             document.getElementById('sec-' + seccion).style.display = 'block';
             event.currentTarget.classList.add('active');
         }
-
-        // Script de sincronización para actualizar la fecha y hora idéntico al resto de pestañas
-        document.addEventListener("DOMContentLoaded", function() {
-            const elFecha = document.getElementById('ultima-actualizacion');
-            if (elFecha) {
-                const ahora = new Date();
-                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
-                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
-                const horaStr = ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase();
-                elFecha.textContent = `${fechaStr}, ${horaStr}`;
-            }
-        });
     </script>
 </body>
 </html>
