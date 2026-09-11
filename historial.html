@@ -77,69 +77,84 @@
             background: #ffffff;
             border: 1px solid #dee2e6;
             border-radius: 10px;
-            padding: 15px 20px;
+            padding: 12px 15px;
             margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            width: 100%;
+            box-sizing: border-box;
         }
         .match-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-bottom: 1px solid #f1f3f5;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
         .match-title-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         .match-map-icon {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: rgba(92, 131, 47, 0.1);
             border: 2px solid #5c832f;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #5c832f;
         }
         .match-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #212529;
             margin: 0;
         }
         .match-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             color: #6c757d;
         }
         .match-duration {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             color: #b8860b;
             background: rgba(212, 175, 55, 0.1);
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.3);
             white-space: nowrap;
         }
+        
+        /* Tabla compacta optimizada para móviles */
         .table-light-custom {
             background-color: #ffffff;
             color: #212529;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
+            width: 100%;
+            table-layout: fixed; /* Distribuye las columnas de forma estricta y equitativa */
         }
+        .table-light-custom th, .table-light-custom td {
+            padding: 6px 4px;
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        /* Asignación de anchos porcentuales para evitar desbordamientos */
+        .table-light-custom th:nth-child(1), .table-light-custom td:nth-child(1) { width: 38%; } /* Jugador */
+        .table-light-custom th:nth-child(2), .table-light-custom td:nth-child(2) { width: 18%; text-align: center; } /* Equipo */
+        .table-light-custom th:nth-child(3), .table-light-custom td:nth-child(3) { width: 28%; } /* Civi */
+        .table-light-custom th:nth-child(4), .table-light-custom td:nth-child(4) { width: 16%; text-align: center; } /* Var */
+
         .table-light-custom th {
             background-color: #f1f3f5 !important;
             color: #212529 !important;
             border-bottom: 2px solid #dee2e6;
-            padding: 10px;
-        }
-        .table-light-custom td {
-            padding: 10px;
-            vertical-align: middle;
+            font-size: 0.78rem;
         }
 
         /* Modal Lightbox para vista previa de imagen generada */
@@ -185,7 +200,7 @@
                 display: none;
             }
             #main-content {
-                padding: 15px 15px 30px 15px;
+                padding: 10px 10px 30px 10px;
             }
             .tabs {
                 display: none;
@@ -251,18 +266,18 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2 class="mb-3 text-dark"><i class="fas fa-history text-warning"></i> Historial de Partidas</h2>
+        <h2 class="mb-3 text-dark fs-5"><i class="fas fa-history text-warning"></i> Historial de Partidas</h2>
 
         <!-- Filtros del Historial -->
         <div class="card shadow-sm p-3 mb-4 bg-white border-secondary" style="border-radius: 10px;">
-            <div class="row align-items-center g-3">
-                <div class="col-md-3">
-                    <span class="fw-bold text-dark fs-5"><i class="fas fa-filter text-warning"></i> Filtro de Encuentros</span>
+            <div class="row align-items-center g-2">
+                <div class="col-12 col-md-3">
+                    <span class="fw-bold text-dark fs-6"><i class="fas fa-filter text-warning"></i> Filtros</span>
                 </div>
-                <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="fw-bold text-secondary mb-0">Año:</label>
-                        <select id="filtro-anio" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 100px;">
+                <div class="col-12 col-md-9 d-flex flex-wrap justify-content-md-end gap-2 align-items-center">
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 90px;">
                             <option value="todos">Todos</option>
                             <option value="2026" selected>2026</option>
                             <option value="2027">2027</option>
@@ -271,9 +286,9 @@
                             <option value="2030">2030</option>
                         </select>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="fw-bold text-secondary mb-0">Mes:</label>
-                        <select id="filtro-mes" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 120px;">
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 110px;">
                             <option value="todos">Todos</option>
                             <option value="01">Enero</option>
                             <option value="02">Febrero</option>
@@ -289,9 +304,9 @@
                             <option value="12">Diciembre</option>
                         </select>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="fw-bold text-secondary mb-0">Fecha:</label>
-                        <select id="filtro-fecha" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 110px;">
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Fecha:</label>
+                        <select id="filtro-fecha" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 100px;">
                             <option value="todas">Todas</option>
                         </select>
                     </div>
@@ -360,15 +375,18 @@
             const cardElement = document.getElementById(cardId);
             if (!cardElement) return;
 
-            // Ocultar temporalmente el botón de reporte dentro de la tarjeta antes de capturar
             const btnReporte = cardElement.querySelector('.btn-reporte-partida');
             if (btnReporte) btnReporte.style.display = 'none';
 
+            // Forzar ancho fijo temporal en la tarjeta para la captura limpia y evitar recortes
+            let originalWidth = cardElement.style.width;
+            cardElement.style.width = '450px';
+
             html2canvas(cardElement, { scale: 2, backgroundColor: '#ffffff', scrollY: -window.scrollY }).then(canvas => {
+                cardElement.style.width = originalWidth;
                 if (btnReporte) btnReporte.style.display = 'inline-block';
                 let dataUrl = canvas.toDataURL('image/png');
                 
-                // Mostrar en el Modal
                 const modal = document.getElementById('modal-reporte');
                 const imgContainer = document.getElementById('modal-img-container');
                 const btnDescargar = document.getElementById('btn-descargar-modal');
@@ -378,6 +396,7 @@
                 btnDescargar.download = `${cardId}.png`;
                 modal.style.display = 'flex';
             }).catch(err => {
+                cardElement.style.width = originalWidth;
                 if (btnReporte) btnReporte.style.display = 'inline-block';
                 console.error("Error al generar el reporte de la partida:", err);
             });
@@ -553,7 +572,7 @@
                         } else if (varValor < 0) {
                             varHtml = `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>`;
                         } else {
-                            varHtml = `<span class="fw-bold" style="color: #0d6efd; background: rgba(13, 110, 253, 0.1); padding: 2px 8px; border-radius: 4px;">0</span>`;
+                            varHtml = `<span class="fw-bold" style="color: #0d6efd; background: rgba(13, 110, 253, 0.1); padding: 2px 6px; border-radius: 4px;">0</span>`;
                         }
 
                         let esGanador = (reg.pg === 1 || reg.pts >= 3 || reg.ganador === true);
@@ -565,9 +584,9 @@
 
                         filasJugadores += `
                             <tr>
-                                <td class="fw-bold text-dark">${iconoResultado} ${nombreRaw}</td>
-                                <td><span class="badge bg-secondary">${eqTexto}</span></td>
-                                <td>${reg.civ || "-"}</td>
+                                <td class="fw-bold text-dark text-truncate" title="${nombreRaw}">${iconoResultado} ${nombreRaw}</td>
+                                <td class="text-center"><span class="badge bg-secondary">${eqTexto}</span></td>
+                                <td class="text-truncate" title="${reg.civ || "-"}">${reg.civ || "-"}</td>
                                 <td class="text-center">${varHtml}</td>
                             </tr>
                         `;
@@ -598,7 +617,7 @@
                                     <thead>
                                         <tr>
                                             <th>Jugador</th>
-                                            <th>Equipo</th>
+                                            <th class="text-center">Equipo</th>
                                             <th>Civi</th>
                                             <th class="text-center">Var</th>
                                         </tr>
