@@ -88,7 +88,7 @@
                 align-items: center;
                 padding: 6px 0;
                 z-index: 1500;
-                box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
+                box-shadow: -4px 10px rgba(0,0,0,0.15);
             }
             .mobile-nav-item {
                 display: flex;
@@ -102,6 +102,19 @@
             }
             .mobile-nav-item span.icon { font-size: 1.1rem; margin-bottom: 2px; }
             .mobile-nav-item.active { color: #b8860b; }
+        }
+        /* Estilo para la revista/galardón */
+        .revista-galardon-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .revista-galardon-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: zoom-in;
         }
     </style>
 </head>
@@ -126,10 +139,18 @@
             <a href="historial.html" class="tab-btn">📜 Historial de Partidas</a>
         </div>
 
-        <div class="card" style="background: #fdf8ed; border: 1px solid #d4af37; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px;">
-            <h2 style="color: #b8860b; margin-top: 0;">¡Bienvenido a la Comunidad [cLm]!</h2>
-            <p style="font-size: 1.05rem; color: #444;">Sistema oficial de gestión, estadísticas y seguimiento del torneo <b>Maratón Michi DM</b>.</p>
-            <p style="color: #666; font-size: 0.9rem;">Usa la barra inferior en tu celular o las pestañas superiores en tu PC para navegar por las secciones.</p>
+        <!-- Mensaje de bienvenida limpio -->
+        <div style="background: #fdf8ed; border-left: 4px solid #b8860b; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px;">
+            <p style="margin: 0; font-size: 0.95rem; color: #444; font-weight: bold;">Bienvenido al portal oficial del torneo.</p>
+        </div>
+
+        <!-- Contenedor de la Revista / Último Galardón -->
+        <div class="revista-galardon-container">
+            <h3 style="color: #b8860b; margin-bottom: 10px; font-size: 1.1rem;">👑 Último Galardón del Torneo</h3>
+            <img id="img-galardon-portada" src="" alt="Galardón del Torneo" style="display:none;">
+            <div id="sin-galardon" style="padding: 30px; background: #f9f9f9; border: 1px dashed #ccc; border-radius: 8px; color: #777; font-size: 0.9rem;">
+                No hay ninguna imagen de galardón registrada todavía en el sistema.
+            </div>
         </div>
     </div>
 
@@ -157,5 +178,41 @@
         </a>
     </nav>
 
+    <!-- Modal para ver la imagen en grande -->
+    <div id="modal-imagen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:2000; justify-content:center; align-items:center; cursor:zoom-out;" onclick="this.style.display='none'">
+        <img id="img-modal-contenido" src="" alt="Imagen Ampliada" style="max-width:90%; max-height:90%; border-radius:6px;">
+    </div>
+
+    <script>
+        // Carga automática de la última imagen de galardón guardada en el almacenamiento local
+        window.addEventListener('DOMContentLoaded', () => {
+            let keys = Object.keys(localStorage);
+            let filtradas = keys.filter(k => k.startsWith('img_') && k.endsWith('_galardon'));
+            
+            if (filtradas.length > 0) {
+                filtradas.sort();
+                let ultimaKey = filtradas[filtradas.length - 1];
+                let dataUrl = localStorage.getItem(ultimaKey);
+                
+                if (dataUrl) {
+                    const imgElement = document.getElementById('img-galardon-portada');
+                    const msgElement = document.getElementById('sin-galardon');
+                    if (imgElement && msgElement) {
+                        imgElement.src = dataUrl;
+                        imgElement.style.display = 'block';
+                        msgElement.style.display = 'none';
+                        
+                        // Permitir ampliar al hacer clic
+                        imgElement.addEventListener('click', () => {
+                            const modal = document.getElementById('modal-imagen');
+                            const modalImg = document.getElementById('img-modal-contenido');
+                            modalImg.src = dataUrl;
+                            modal.style.display = 'flex';
+                        });
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
