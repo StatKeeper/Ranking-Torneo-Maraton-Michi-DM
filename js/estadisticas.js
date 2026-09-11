@@ -140,8 +140,10 @@ function renderizarEstadisticasTiempos() {
                             if (pg === 1) stats.victorias++;
                             if (pp === 1) stats.derrotas++;
 
-                            stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || reg.UnidadesAsesinadas || reg["U. Ases."] || 0, 10);
-                            stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || reg["E. Arr."] || 0, 10);
+                            // FIX: se agregaron reg.uAses y reg.eArr, que son los nombres
+                            // reales que usa registro_masivo.js al guardar cada partida.
+                            stats.unidadesTotales += parseInt(reg.uAses || reg.unidadesAsesinadas || reg.UnidadesAsesinadas || reg["U. Ases."] || 0, 10);
+                            stats.edificiosTotales += parseInt(reg.eArr || reg.edificiosArrasados || reg.EdificiosArrasados || reg["E. Arr."] || 0, 10);
                             stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
 
                             const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
