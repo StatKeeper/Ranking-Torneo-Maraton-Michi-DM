@@ -131,10 +131,12 @@
 </head>
 <body>
 
-    <!-- Panel lateral oculto pero presente para que auth.js no falle al buscar sus IDs -->
-    <div id="sidebar" style="display:none;">
-        <input type="password" id="admin-pass">
-        <div id="status-mode" class="status-badge"></div>
+    <!-- Panel lateral oculto con la estructura exacta que auth.js requiere para no detenerse -->
+    <div id="sidebar" style="display: none;">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
     </div>
 
     <div id="main-content">
