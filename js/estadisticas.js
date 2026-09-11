@@ -60,7 +60,7 @@ function renderizarEstadisticasTiempos() {
 
     let estadisticasJugadores = {};
     let estadisticasCivilizaciones = {};
-    let estadisticasJugadorCiv = {}; // Para el filtro interactivo de civs por jugador
+    let estadisticasJugadorCiv = {};
     let estadisticasEquipos = {};
     let listaGlobalJugadores = new Set();
     let partidasDetalleGlobal = [];
@@ -139,7 +139,6 @@ function renderizarEstadisticasTiempos() {
                             if (civRaw && civRaw !== "-" && String(civRaw).trim() !== "") {
                                 const civ = String(civRaw).trim();
                                 
-                                // Estadísticas generales de civilizaciones
                                 if (!estadisticasCivilizaciones[civ]) {
                                     estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
                                 }
@@ -147,7 +146,6 @@ function renderizarEstadisticasTiempos() {
                                 if (pg === 1) estadisticasCivilizaciones[civ].victorias++;
                                 if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
 
-                                // Estadísticas por jugador y civilización
                                 if (!estadisticasJugadorCiv[nombre]) {
                                     estadisticasJugadorCiv[nombre] = {};
                                 }
@@ -190,12 +188,13 @@ function renderizarEstadisticasTiempos() {
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
 
+
     // ==========================================
-    // 1. SUBPESTAÑA TIEMPOS (COMPARATIVA 2 A 4 JUGADORES)
+    // 1. SUBPESTAÑA TIEMPOS (INTERACTIVA 2 A 4 JUGADORES)
     // ==========================================
     let htmlTiempos = `
         <h3>⏱️ Consulta Interactiva de Tiempos (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus tiempos y estadísticas lado a lado en formato vertical.</p>
+        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus tiempos y estadísticas lado a lado.</p>
         
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
@@ -225,48 +224,16 @@ function renderizarEstadisticasTiempos() {
         </div>
 
         <div id="resultado-tiempos-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
-
-        <h3 style="margin-top: 20px;">📋 Listado General Completo</h3>
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
     `;
-
-    if (listaJugadores.length === 0) {
-        htmlTiempos += `<div style="background: white; padding: 20px; text-align: center; border-radius: 8px; color: #6c757d; border: 1px solid #dee2e6;">No hay registros de tiempos disponibles para este periodo.</div>`;
-    } else {
-        listaJugadores.forEach(j => {
-            const promedioSeg = j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0;
-            const promedioUnidades = j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0;
-            const promedioEdificios = j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0;
-
-            htmlTiempos += `
-                <div style="background: white; border-radius: 8px; padding: 12px 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
-                    <div style="font-weight: bold; color: #0d6efd; font-size: 1.05em; border-bottom: 1px solid #e9ecef; padding-bottom: 6px; margin-bottom: 8px;">
-                        👤 ${j.nombre}
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.88em;">
-                        <div><span style="color: #6c757d;">Partidas:</span> <strong>${j.totalPartidas}</strong></div>
-                        <div><span style="color: #6c757d;">Dur. Acum.:</span> <strong>${convertirSegundosADuracion(j.segundosTotales)}</strong></div>
-                        <div><span style="color: #6c757d;">Prom. Dur.:</span> <strong style="color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</strong></div>
-                        <div><span style="color: #6c757d;">Tot. Unid.:</span> <strong>${j.unidadesTotales}</strong></div>
-                        <div><span style="color: #6c757d;">Prom. Unid.:</span> <strong>${promedioUnidades}</strong></div>
-                        <div><span style="color: #6c757d;">Tot. Edif.:</span> <strong>${j.edificiosTotales}</strong></div>
-                        <div style="grid-column: span 2;"><span style="color: #6c757d;">Prom. Edif.:</span> <strong>${promedioEdificios}</strong></div>
-                    </div>
-                </div>
-            `;
-        });
-    }
-    htmlTiempos += `</div>`;
     secTiempos.innerHTML = htmlTiempos;
 
 
     // ==========================================
-    // 2. SUBPESTAÑA CIVILIZACIONES (COMPARATIVA 2 A 4 JUGADORES)
+    // 2. SUBPESTAÑA CIVILIZACIONES (INTERACTIVA 2 A 4 JUGADORES)
     // ==========================================
-    const listaCivs = Object.values(estadisticasCivilizaciones);
     let htmlCivs = `
         <h3>🏛️ Consulta Interactiva de Civilizaciones (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar las civilizaciones que han utilizado y su rendimiento lado a lado.</p>
+        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar las civilizaciones que han utilizado y su rendimiento.</p>
         
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
@@ -296,40 +263,7 @@ function renderizarEstadisticasTiempos() {
         </div>
 
         <div id="resultado-civs-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
-
-        <h3 style="margin-top: 20px;">🏛️ Rendimiento Global por Civilización</h3>
-        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
-            <table style="width: 100%; min-width: 500px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
-                <thead>
-                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 10px 8px; white-space: nowrap;">Civilización</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Veces Jugada</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Victorias</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Derrotas</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Win Rate (%)</th>
-                    </tr>
-                </thead>
-                <tbody>
     `;
-
-    if (listaCivs.length === 0) {
-        htmlCivs += `<tr><td colspan="5" style="text-align: center; padding: 25px; color: #6c757d;">No hay civilizaciones registradas aún.</td></tr>`;
-    } else {
-        listaCivs.sort((a, b) => b.jugadas - a.jugadas);
-        listaCivs.forEach(c => {
-            const winRate = c.jugadas > 0 ? ((c.victorias / c.jugadas) * 100).toFixed(1) : 0;
-            htmlCivs += `
-                <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${c.civ}</strong></td>
-                    <td style="padding: 10px 8px; text-align: center;">${c.jugadas}</td>
-                    <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${c.victorias}</td>
-                    <td style="padding: 10px 8px; text-align: center; color: #dc3545; font-weight: bold;">${c.derrotas}</td>
-                    <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: ${winRate >= 50 ? '#198754' : '#dc3545'};">${winRate}%</td>
-                </tr>
-            `;
-        });
-    }
-    htmlCivs += `</tbody></table></div>`;
     secCivilizaciones.innerHTML = htmlCivs;
 
 
@@ -415,7 +349,6 @@ function renderizarEstadisticasTiempos() {
                 return;
             }
 
-            // Recopilar todas las civilizaciones usadas por los jugadores seleccionados
             let civsSet = new Set();
             seleccionados.forEach(sel => {
                 if (estadisticasJugadorCiv[sel]) {
@@ -471,7 +404,7 @@ function renderizarEstadisticasTiempos() {
 
 
     // ==========================================
-    // 4. SUBPESTAÑA SINERGIA / EQUIPOS (MANTIENE SU ESTRUCTURA)
+    // 4. SUBPESTAÑA SINERGIA / EQUIPOS
     // ==========================================
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
