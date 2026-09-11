@@ -193,7 +193,7 @@ function renderizarEstadisticasTiempos() {
     // ==========================================
     secTiempos.innerHTML = `
         <h3>⏱️ Consulta Interactiva de Tiempos (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus tiempos y estadísticas en pantalla completa.</p>
+        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para comparar sus estadísticas en pantalla completa.</p>
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
@@ -216,11 +216,11 @@ function renderizarEstadisticasTiempos() {
             <datalist id="lista-jugadores-sug-t">
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
-            <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos (Pantalla Completa)</button>
+            <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos</button>
         </div>
-        <div id="modal-tiempos-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 15px; box-sizing: border-box;">
-            <div style="background: white; max-width: 600px; margin: 20px auto; border-radius: 8px; padding: 20px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <button id="cerrar-modal-tiempos" style="position: absolute; top: 15px; right: 15px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-weight: bold; cursor: pointer; font-size: 1.1em;">×</button>
+        <div id="modal-tiempos-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
+            <div style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <button id="cerrar-modal-tiempos" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
                 <div id="resultado-tiempos-container"></div>
             </div>
         </div>
@@ -254,18 +254,18 @@ function renderizarEstadisticasTiempos() {
             <datalist id="lista-jugadores-sug-c">
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
-            <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones (Pantalla Completa)</button>
+            <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones</button>
         </div>
-        <div id="modal-civs-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 15px; box-sizing: border-box;">
-            <div style="background: white; max-width: 600px; margin: 20px auto; border-radius: 8px; padding: 20px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <button id="cerrar-modal-civs" style="position: absolute; top: 15px; right: 15px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-weight: bold; cursor: pointer; font-size: 1.1em;">×</button>
+        <div id="modal-civs-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
+            <div style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <button id="cerrar-modal-civs" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
                 <div id="resultado-civs-container"></div>
             </div>
         </div>
     `;
 
     // ==========================================
-    // EVENTOS Y MODALES (PANTALLA COMPLETA)
+    // EVENTOS Y MODALES
     // ==========================================
 
     // Evento Tiempos
@@ -290,37 +290,43 @@ function renderizarEstadisticasTiempos() {
             }
 
             let htmlTablaComparativa = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 8px; font-size: 1.1em;">📊 Comparativa de Tiempos</h3>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px;">📊 Comparativa de Tiempos</h3>
+                
+                <!-- Leyenda de Diminutivos -->
+                <div style="background: #f8f9fa; padding: 6px 8px; border-radius: 4px; margin-bottom: 8px; font-size: 0.68em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.3;">
+                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Duración Acumulada | <strong>P.Dur.</strong>: Promedio Duración | <strong>T.Un.</strong>: Total Unidades | <strong>P.Un.</strong>: Promedio Unidades | <strong>T.Ed.</strong>: Total Edificios | <strong>P.Ed.</strong>: Promedio Edificios
+                </div>
+
                 <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table style="width: 100%; min-width: ${seleccionados.length * 130}px; border-collapse: collapse; background: #fff; font-size: 0.8em;">
+                    <table style="width: 100%; min-width: ${seleccionados.length * 110 + 60}px; border-collapse: collapse; background: #fff; font-size: 0.75em;">
                         <thead>
                             <tr style="background-color: #343a40; color: #fff;">
-                                <th style="padding: 8px 6px; text-align: left;">Métrica</th>
+                                <th style="padding: 6px 4px; text-align: left; font-size: 0.9em;">Métrica</th>
             `;
             seleccionados.forEach(sel => {
-                htmlTablaComparativa += `<th style="padding: 8px 6px; text-align: center; white-space: nowrap;">${sel}</th>`;
+                htmlTablaComparativa += `<th style="padding: 6px 4px; text-align: center; white-space: nowrap; font-size: 0.9em;">${sel}</th>`;
             });
             htmlTablaComparativa += `</tr></thead><tbody>`;
 
             const metricasT = [
-                { label: "Part.", fn: j => j.totalPartidas },
-                { label: "Dur. Acum.", fn: j => convertirSegundosADuracion(j.segundosTotales) },
-                { label: "Prom. Dur.", fn: j => convertirSegundosADuracion(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
-                { label: "Tot. Unid.", fn: j => j.unidadesTotales },
-                { label: "Prom. Unid.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
-                { label: "Tot. Edif.", fn: j => j.edificiosTotales },
-                { label: "Prom. Edif.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
+                { label: "P.", fn: j => j.totalPartidas },
+                { label: "Dur.A.", fn: j => convertirSegundosADuracion(j.segundosTotales) },
+                { label: "P.Dur.", fn: j => convertirSegundosADuracion(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
+                { label: "T.Un.", fn: j => j.unidadesTotales },
+                { label: "P.Un.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
+                { label: "T.Ed.", fn: j => j.edificiosTotales },
+                { label: "P.Ed.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
             ];
 
             metricasT.forEach((metrica, idx) => {
                 const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                 htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                htmlTablaComparativa += `<td style="padding: 8px 6px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
+                htmlTablaComparativa += `<td style="padding: 6px 4px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
                 
                 seleccionados.forEach(sel => {
                     const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase());
                     const valor = jData ? metrica.fn(jData) : "-";
-                    htmlTablaComparativa += `<td style="padding: 8px 6px; text-align: center; white-space: nowrap;">${valor}</td>`;
+                    htmlTablaComparativa += `<td style="padding: 6px 4px; text-align: center; white-space: nowrap;">${valor}</td>`;
                 });
                 htmlTablaComparativa += `</tr>`;
             });
@@ -368,36 +374,36 @@ function renderizarEstadisticasTiempos() {
             let listaCivsComparativa = Array.from(civsSet);
 
             let htmlTablaCivs = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 8px; font-size: 1.1em;">📊 Comparativa de Civilizaciones</h3>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px;">📊 Comparativa de Civilizaciones</h3>
             `;
 
             if (listaCivsComparativa.length === 0) {
-                htmlTablaCivs += `<p style="color: #dc3545; font-weight: bold; font-size: 0.9em;">⚠️ No se encontraron civilizaciones registradas para los jugadores seleccionados.</p>`;
+                htmlTablaCivs += `<p style="color: #dc3545; font-weight: bold; font-size: 0.85em;">⚠️ No se encontraron civilizaciones registradas para los jugadores seleccionados.</p>`;
             } else {
                 htmlTablaCivs += `
                     <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        <table style="width: 100%; min-width: ${seleccionados.length * 140 + 100}px; border-collapse: collapse; background: #fff; font-size: 0.8em;">
+                        <table style="width: 100%; min-width: ${seleccionados.length * 110 + 80}px; border-collapse: collapse; background: #fff; font-size: 0.75em;">
                             <thead>
                                 <tr style="background-color: #343a40; color: #fff;">
-                                    <th style="padding: 8px 6px; text-align: left;">Civ</th>
+                                    <th style="padding: 6px 4px; text-align: left; font-size: 0.9em;">Civ</th>
                 `;
                 seleccionados.forEach(sel => {
-                    htmlTablaCivs += `<th style="padding: 8px 6px; text-align: center; white-space: nowrap;">${sel}</th>`;
+                    htmlTablaCivs += `<th style="padding: 6px 4px; text-align: center; white-space: nowrap; font-size: 0.9em;">${sel} (Part/WR)</th>`;
                 });
                 htmlTablaCivs += `</tr></thead><tbody>`;
 
                 listaCivsComparativa.forEach((civ, idx) => {
                     const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                     htmlTablaCivs += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                    htmlTablaCivs += `<td style="padding: 8px 6px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
+                    htmlTablaCivs += `<td style="padding: 6px 4px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
 
                     seleccionados.forEach(sel => {
                         const datosJugCiv = estadisticasJugadorCiv[sel] && estadisticasJugadorCiv[sel][civ];
                         if (datosJugCiv && datosJugCiv.jugadas > 0) {
                             const wr = ((datosJugCiv.victorias / datosJugCiv.jugadas) * 100).toFixed(0);
-                            htmlTablaCivs += `<td style="padding: 8px 6px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
+                            htmlTablaCivs += `<td style="padding: 6px 4px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
                         } else {
-                            htmlTablaCivs += `<td style="padding: 8px 6px; text-align: center; color: #adb5bd; white-space: nowrap;">-</td>`;
+                            htmlTablaCivs += `<td style="padding: 6px 4px; text-align: center; color: #adb5bd; white-space: nowrap;">-</td>`;
                         }
                     });
                     htmlTablaCivs += `</tr>`;
