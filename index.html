@@ -195,7 +195,11 @@
         <h3>🔐 Panel de Control</h3>
         <label class="form-label mt-2">Contraseña de Admin:</label>
         <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
+        <div id="status-mode" class="badge bg-secondary mt-3 mb-3">Modo Espectador</div>
+        
+        <hr style="border-color: #444; margin: 15px 0;">
+        <label class="form-label" style="font-size: 0.85rem; color: #d4af37; font-weight: bold;">Sincronización Cloud:</label>
+        <button type="button" onclick="descargarJsonGitHub()" style="width: 100%; background-color: #b8860b; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; margin-top: 5px;">📥 Descargar datos_torneo.json</button>
     </div>
 
     <div id="main-content">
@@ -307,6 +311,21 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) sidebar.classList.toggle('open');
+        }
+
+        // Función para descargar el archivo JSON empaquetado desde localStorage
+        function descargarJsonGitHub() {
+            let todosLosDatos = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                todosLosDatos[key] = localStorage.getItem(key);
+            }
+            const blob = new Blob([JSON.stringify(todosLosDatos, null, 2)], {type: "application/json"});
+            const enlace = document.createElement("a");
+            enlace.href = URL.createObjectURL(blob);
+            enlace.download = "datos_torneo.json";
+            enlace.click();
+            console.log("¡Archivo datos_torneo.json generado con éxito!");
         }
 
         window.addEventListener('DOMContentLoaded', () => {
