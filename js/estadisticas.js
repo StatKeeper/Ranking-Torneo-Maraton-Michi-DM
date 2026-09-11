@@ -11,17 +11,17 @@
             background-color: #ffffff;
             color: #333333;
             margin: 0;
-            padding-bottom: 70px; /* Espacio para la barra inferior móvil */
+            padding-bottom: 70px;
             font-family: Arial, sans-serif;
         }
 
-        /* --- CABECERA OCULTA EN MÓVIL PARA GANAR ESPACIO --- */
+        /* --- CABECERA SUPERIOR (Visible solo en PC) --- */
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 15px;
-            padding-bottom: 10px;
+            padding: 15px 20px 10px 20px;
             border-bottom: 1px solid #ddd;
         }
         .header-top h1 {
@@ -29,29 +29,39 @@
             font-size: 1.4rem;
             color: #222222;
         }
-        @media (max-width: 768px) {
-            .header-top {
-                display: none !important; /* Elimina por completo el título grande, hora y admin superior en celulares */
-            }
+        .header-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .fecha-actualizacion {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #555555;
         }
 
-        /* --- PESTAÑAS SUPERIORES (SOLO PC) --- */
+        /* --- PESTAÑAS SUPERIORES (Visible solo en PC) --- */
         .tabs {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             background: #f4f1ea;
-            padding: 10px;
+            padding: 10px 20px;
             border-radius: 8px;
             border: 2px solid #d4af37;
-            margin-bottom: 20px;
+            margin: 0 20px 20px 20px;
         }
-        @media (max-width: 768px) {
-            .tabs {
-                display: none;
-            }
-        }
-
         .tab-btn {
             background: #ffffff;
             color: #333333;
@@ -74,7 +84,14 @@
             border-color: #996e05;
         }
 
-        /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
+        /* --- EN MÓVILES: OCULTAR CABECERA Y PESTAÑAS SUPERIORES --- */
+        @media (max-width: 768px) {
+            .header-top, .tabs {
+                display: none !important;
+            }
+        }
+
+        /* --- BARRA DE NAVEGACIÓN INFERIOR (Visible solo en Móviles) --- */
         .mobile-bottom-nav {
             display: none;
         }
@@ -106,17 +123,17 @@
                 font-size: 1.2rem;
                 margin-bottom: 2px;
             }
-            .mobile-nav-item:hover, .mobile-nav-item.active {
+            .mobile-nav-item.active {
                 color: #b8860b;
             }
         }
 
-        /* Filtros y contenido */
+        /* Contenedores de contenido y filtros */
         .bar-jornada-filtro {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 10px 0 15px 0;
+            margin: 15px 20px;
             flex-wrap: wrap;
             gap: 15px;
         }
@@ -156,14 +173,13 @@
             transform: translateX(0);
         }
         #main-content {
-            margin-left: 0;
-            padding: 15px;
+            padding: 0 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Panel Lateral Oculto para Admin -->
+    <!-- Panel Lateral de Admin -->
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
         <label class="form-label mt-2">Contraseña de Admin:</label>
@@ -173,26 +189,29 @@
     </div>
 
     <div id="main-content">
-        <!-- Cabecera para PC -->
+        <!-- Cabecera Superior (Se muestra en PC, se oculta limpiamente en móviles) -->
         <div class="header-top">
-            <h1>Estadísticas y Tiempos - Maratón Michi DM</h1>
+            <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
-                <button class="admin-toggle-btn" onclick="toggleSidebar()" style="background:#b8860b; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🔐 Admin</button>
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
+                <div id="fecha-actualizacion" class="fecha-actualizacion">--/--/---- --:--:--</div>
             </div>
         </div>
 
-        <!-- Pestañas Superiores PC -->
+        <!-- Pestañas Superiores (Se muestran en PC, se ocultan en móviles) -->
         <div class="tabs">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
             <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
             <a href="historial.html" class="tab-btn">📜 Historial de Partidas</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
         </div>
         
         <!-- Barra de Filtros de Periodo -->
         <div class="bar-jornada-filtro">
             <div style="font-weight: bold; color: #b8860b; font-size: 1.05rem;">
-                📈 Analítica General
+                📈 Estadísticas Generales del Torneo
             </div>
             
             <div class="filtro-historico">
@@ -219,13 +238,13 @@
             </div>
         </div>
 
-        <!-- Contenedores clave donde tu script `estadisticas.js` carga los datos reales -->
-        <div id="sec-tiempos" style="margin-bottom: 25px;"></div>
-        <div id="sec-civilizaciones" style="margin-bottom: 25px;"></div>
-        <div id="sec-enfrentamientos" style="margin-bottom: 25px;"></div>
+        <!-- CONTENEDORES VITALES DONDE `estadisticas.js` CARGA LOS DATOS -->
+        <div id="sec-tiempos" style="margin-bottom: 30px; padding: 0 10px;"></div>
+        <div id="sec-civilizaciones" style="margin-bottom: 30px; padding: 0 10px;"></div>
+        <div id="sec-enfrentamientos" style="margin-bottom: 30px; padding: 0 10px;"></div>
     </div>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR MÓVIL -->
+    <!-- BARRA DE NAVEGACIÓN INFERIOR (Solo móviles) -->
     <nav class="mobile-bottom-nav">
         <a href="index.html" class="mobile-nav-item">
             <span class="icon">📊</span>
@@ -236,7 +255,7 @@
             <span>Estadísticas</span>
         </a>
         <a href="candidatos.html" class="mobile-nav-item">
-            <span class="icon">⭐</span>
+            <span class="icon5">⭐</span>
             <span>Candidatos</span>
         </a>
         <a href="historial.html" class="mobile-nav-item">
@@ -252,6 +271,16 @@
             const sidebar = document.getElementById('sidebar');
             if (sidebar) sidebar.classList.toggle('open');
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const ahora = new Date();
+            const fechaFormateada = ahora.toLocaleDateString('es-ES');
+            const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const elementoFecha = document.getElementById('fecha-actualizacion');
+            if (elementoFecha) {
+                elementoFecha.textContent = `${fechaFormateada}, ${horaFormateada}`;
+            }
+        });
     </script>
 </body>
 </html>
