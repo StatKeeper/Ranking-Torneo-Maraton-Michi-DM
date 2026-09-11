@@ -140,8 +140,8 @@ function renderizarEstadisticasTiempos() {
                             if (pg === 1) stats.victorias++;
                             if (pp === 1) stats.derrotas++;
 
-                            stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || reg.UnidadesAsesinadas || 0, 10);
-                            stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || 0, 10);
+                            stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || reg.UnidadesAsesinadas || reg["U. Ases."] || 0, 10);
+                            stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || reg["E. Arr."] || 0, 10);
                             stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
 
                             const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
@@ -197,23 +197,19 @@ function renderizarEstadisticasTiempos() {
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
     
-    // Datalist universal y ordenado alfabéticamente para que despliegue todos los nicks correctamente
     const arrayNombresUnicos = Array.from(listaGlobalJugadores).sort();
     const optionsDatalist = arrayNombresUnicos.map(j => `<option value="${j}">`).join("");
 
-    // Función de búsqueda flexible mejorada para ignorar corchetes, mayúsculas o acentos al escribir parte del nombre
     function buscarJugadorFlexible(nombreBusqueda) {
         if (!nombreBusqueda) return null;
         const query = nombreBusqueda.toLowerCase().trim();
         
-        // 1. Coincidencia exacta o parcial directa
         let encontrado = listaJugadores.find(j => {
             const n = j.nombre.toLowerCase();
             return n === query || n.includes(query) || query.includes(n);
         });
         if (encontrado) return encontrado;
 
-        // 2. Búsqueda limpiando corchetes y símbolos comunes si el usuario escribe el nombre base
         return listaJugadores.find(j => {
             const limpio = j.nombre.toLowerCase().replace(/\[.*?\]|\{.*?\}|\*|_/g, "").trim();
             return limpio === query || limpio.includes(query) || query.includes(limpio);
@@ -299,7 +295,7 @@ function renderizarEstadisticasTiempos() {
     `;
 
     // ==========================================
-    // 3. SUBPESTAÑA SINERGIA (SIN TABLA INNECESARIA)
+    // 3. SUBPESTAÑA SINERGIA
     // ==========================================
     secEnfrentamientos.innerHTML = `
         <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
@@ -337,7 +333,6 @@ function renderizarEstadisticasTiempos() {
         </div>
     `;
 
-    // Inyectamos un único <datalist> global en el documento para que todos los inputs lo utilicen sin fallos en móviles
     let contenedorDatalistGlobal = document.getElementById("lista-jugadores-global");
     if (!contenedorDatalistGlobal) {
         contenedorDatalistGlobal = document.createElement("datalist");
@@ -382,10 +377,10 @@ function renderizarEstadisticasTiempos() {
             seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
             let htmlTablaComparativa = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos</h3>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos y Estadísticas</h3>
                 
                 <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Duración Acumulada | <strong>P.Dur.</strong>: Promedio Duración | <strong>T.Un.</strong>: Total Unidades | <strong>P.Un.</strong>: Promedio Unidades | <strong>T.Ed.</strong>: Total Edificios | <strong>P.Ed.</strong>: Promedio Edificios
+                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Duración Acumulada | <strong>P.Dur.</strong>: Promedio Duración | <strong>UACS</strong>: Unidades Asesinadas | <strong>P.Un.</strong>: Promedio Unidades | <strong>E.ARR</strong>: Edificios Arrasados | <strong>P.Ed.</strong>: Promedio Edificios
                 </div>
 
                 <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
@@ -403,9 +398,9 @@ function renderizarEstadisticasTiempos() {
                 { label: "P.", fn: j => j.totalPartidas },
                 { label: "Dur.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales) },
                 { label: "P.Dur.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
-                { label: "T.Un.", fn: j => j.unidadesTotales },
+                { label: "UACS", fn: j => j.unidadesTotales },
                 { label: "P.Un.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
-                { label: "T.Ed.", fn: j => j.edificiosTotales },
+                { label: "E.ARR", fn: j => j.edificiosTotales },
                 { label: "P.Ed.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
             ];
 
@@ -494,31 +489,28 @@ function renderizarEstadisticasTiempos() {
                                     <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Civ</th>
                 `;
                 seleccionadosNombres.forEach(sel => {
-                    htmlTablaCivs += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel} (Part/WR)</th>`;
+                    htmlTablaCivs += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel}</th>`;
                 });
                 htmlTablaCivs += `</tr></thead><tbody>`;
 
                 listaCivsComparativa.forEach((civ, idx) => {
                     const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
                     htmlTablaCivs += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
-                    htmlTablaCivs += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
+                    htmlTablaCivs += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${civ}</td>`;
 
                     seleccionadosNombres.forEach(sel => {
                         const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(k.toLowerCase()));
-                        const datosJugCiv = realKey && estadisticasJugadorCiv[realKey] && estadisticasJugadorCiv[realKey][civ];
-                        if (datosJugCiv && datosJugCiv.jugadas > 0) {
-                            const wr = ((datosJugCiv.victorias / datosJugCiv.jugadas) * 100).toFixed(0);
-                            htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
-                        } else {
-                            htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; color: #adb5bd; white-space: nowrap;">-</td>`;
+                        let textoCelda = "-";
+                        if (realKey && estadisticasJugadorCiv[realKey] && estadisticasJugadorCiv[realKey][civ]) {
+                            const cData = estadisticasJugadorCiv[realKey][civ];
+                            textoCelda = `${cData.victorias}/${cData.jugadas}`;
                         }
+                        htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${textoCelda}</td>`;
                     });
                     htmlTablaCivs += `</tr>`;
                 });
-
                 htmlTablaCivs += `</tbody></table></div>`;
             }
-
             contenedorResultado.innerHTML = htmlTablaCivs;
             modalCivsOverlay.style.display = "block";
         });
@@ -550,7 +542,7 @@ function renderizarEstadisticasTiempos() {
 
             let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
             if (inputsRaw.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores diferentes para calcular la sinergia.");
+                alert("Debes ingresar al menos 2 jugadores para consultar la sinergia.");
                 return;
             }
 
@@ -565,84 +557,34 @@ function renderizarEstadisticasTiempos() {
             });
             seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
-            let partidasJuntos = 0;
-            let victoriasJuntos = 0;
-            let derrotasJuntos = 0;
+            let partidasEnComun = 0;
+            let victoriasEnComun = 0;
+            let derrotasEnComun = 0;
 
-            partidasDetalleGlobal.forEach(jugadoresPartida => {
-                let equiposEnPartida = {};
-                jugadoresPartida.forEach(jp => {
-                    if (!equiposEnPartida[jp.equipo]) {
-                        equiposEnPartida[jp.equipo] = [];
+            partidasDetalleGlobal.forEach(partidaJugadores => {
+                let nombresEnPartida = partidaJugadores.map(p => p.nombre.toLowerCase());
+                let todosPresentes = seleccionadosNombres.every(sel => nombresEnPartida.includes(sel.toLowerCase()));
+
+                if (todosPresentes) {
+                    partidasEnComun++;
+                    let primerMiembro = partidaJugadores.find(p => p.nombre.toLowerCase() === seleccionadosNombres[0].toLowerCase());
+                    if (primerMiembro) {
+                        if (primerMiembro.pg === 1) victoriasEnComun++;
+                        if (primerMiembro.pp === 1) derrotasEnComun++;
                     }
-                    equiposEnPartida[jp.equipo].push(jp);
-                });
-
-                Object.values(equiposEnPartida).forEach(miembrosEquipo => {
-                    const nombresEnEquipo = miembrosEquipo.map(me => me.nombre);
-                    const todosEnEsteEquipo = seleccionadosNombres.every(sel => 
-                        nombresEnEquipo.some(ne => ne.toLowerCase() === sel.toLowerCase() || ne.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(ne.toLowerCase()))
-                    );
-
-                    if (todosEnEsteEquipo) {
-                        partidasJuntos++;
-                        let todosGanaron = true;
-                        let algunoPerdio = false;
-
-                        seleccionadosNombres.forEach(sel => {
-                            const datosJugador = miembrosEquipo.find(me => me.nombre.toLowerCase() === sel.toLowerCase() || me.nombre.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(me.nombre.toLowerCase()));
-                            if (datosJugador) {
-                                if (datosJugador.pg !== 1) todosGanaron = false;
-                                if (datosJugador.pp === 1) algunoPerdio = true;
-                            }
-                        });
-
-                        if (todosGanaron) victoriasJuntos++;
-                        else if (algunoPerdio) derrotasJuntos++;
-                    }
-                });
+                }
             });
 
-            let htmlSinergiaModal = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal: ${seleccionadosNombres.join(", ")}</h3>
+            let htmlSinergia = `
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🔍 Sinergia de Grupo</h3>
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 0.8em; color: #333;">
+                    <p style="margin-bottom: 6px;"><strong>Integrantes:</strong> ${seleccionadosNombres.join(", ")}</p>
+                    <p style="margin-bottom: 6px;"><strong>Partidas juntos:</strong> ${partidasEnComun}</p>
+                    <p style="margin-bottom: 6px;"><strong>Victorias en equipo:</strong> <span style="color: #198754; font-weight: bold;">${victoriasEnComun}</span></p>
+                    <p style="margin-bottom: 0;"><strong>Derrotas en equipo:</strong> <span style="color: #dc3545; font-weight: bold;">${derrotasEnComun}</span></p>
+                </div>
             `;
-
-            if (partidasJuntos === 0) {
-                htmlSinergiaModal += `<p style="color: #dc3545; font-weight: bold; font-size: 0.8em; margin: 10px 0;">⚠️ Partida no existente: Estos jugadores no han participado juntos en el mismo equipo/bando en ninguna partida registrada.</p>`;
-            } else {
-                const efSinergia = ((victoriasJuntos / partidasJuntos) * 100).toFixed(0);
-                let estadoTxt = `${efSinergia}%`;
-                if (victoriasJuntos > 0 && derrotasJuntos === 0) estadoTxt = `🔥 Invictos (${efSinergia}%)`;
-
-                htmlSinergiaModal += `
-                    <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                        <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Ef.</strong>: Efectividad Conjunta
-                    </div>
-
-                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        <table style="width: 100%; border-collapse: collapse; background: #fff; font-size: 0.7em;">
-                            <thead>
-                                <tr style="background-color: #343a40; color: #fff;">
-                                    <th style="padding: 5px 4px; text-align: center;">P.</th>
-                                    <th style="padding: 5px 4px; text-align: center;">V.</th>
-                                    <th style="padding: 5px 4px; text-align: center;">D.</th>
-                                    <th style="padding: 5px 4px; text-align: center;">Ef.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #343a40;">${partidasJuntos}</td>
-                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasJuntos}</td>
-                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasJuntos}</td>
-                                    <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #0d6efd;">${estadoTxt}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
-
-            contenedorResultado.innerHTML = htmlSinergiaModal;
+            contenedorResultado.innerHTML = htmlSinergia;
             modalSinergiaOverlay.style.display = "block";
         });
     }
@@ -653,30 +595,23 @@ function renderizarEstadisticasTiempos() {
 
     if (btnDescargarSinergia) {
         btnDescargarSinergia.addEventListener("click", () => {
-            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'comparativa_sinergia_michi.png');
+            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'sinergia_grupo_michi.png');
         });
     }
 }
 
-function ejecutarCapturaHtml2Canvas(elementoCard, nombreArchivo) {
-    if (typeof html2canvas !== 'undefined') {
-        html2canvas(elementoCard, { scale: 2 }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = nombreArchivo;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    } else {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-        script.onload = () => {
-            html2canvas(elementoCard, { scale: 2 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = nombreArchivo;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        };
-        document.head.appendChild(script);
+function ejecutarCapturaHtml2Canvas(elementoDOM, nombreArchivo) {
+    if (!elementoDOM) return;
+    if (typeof html2canvas === 'undefined') {
+        alert("La librería html2canvas no está cargada.");
+        return;
     }
+    html2canvas(elementoDOM, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+        const enlace = document.createElement("a");
+        enlace.download = nombreArchivo;
+        enlace.href = canvas.toDataURL("image/png");
+        enlace.click();
+    }).catch(err => {
+        console.error("Error al generar la imagen:", err);
+    });
 }
