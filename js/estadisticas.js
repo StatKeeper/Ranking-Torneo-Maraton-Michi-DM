@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function obtenerNickOficialEstadisticas(nombreIngresado) {
     if (!nombreIngresado) return "";
+    let limpioIngresado = nombreIngresado.toLowerCase().trim();
+    
     let mapaCorrecciones = {};
     const correccionesGuardadas = localStorage.getItem("mapa_correccion_nombres") || localStorage.getItem("correcciones_nombres");
     if (correccionesGuardadas) {
@@ -23,13 +25,23 @@ function obtenerNickOficialEstadisticas(nombreIngresado) {
             console.error("Error parseando correcciones:", e);
         }
     }
+
+    // Revisar equivalencias guardadas o globales
     if (typeof equivalencias !== 'undefined') {
         const guardadas = localStorage.getItem("equivalencias_michi_dm");
         const lista = guardadas ? JSON.parse(guardadas) : equivalencias;
-        const buscado = lista.find(e => e.antiguo.toLowerCase() === nombreIngresado.toLowerCase().trim());
+        const buscado = lista.find(e => e.antiguo.toLowerCase().includes(limpioIngresado) || limpioIngresado.includes(e.antiguo.toLowerCase()));
         if (buscado) return buscado.oficial;
     }
-    return mapaCorrecciones[nombreIngresado] || nombreIngresado.trim();
+
+    // Revisar mapa de correcciones exacto o parcial
+    for (let key in mapaCorrecciones) {
+        if (key.toLowerCase().includes(limpioIngresado) || limpioIngresado.includes(key.toLowerCase())) {
+            return mapaCorrecciones[key];
+        }
+    }
+
+    return nombreIngresado.trim();
 }
 
 function convertirDuracionASegundos(duracionStr) {
@@ -68,7 +80,7 @@ function renderizarEstadisticasTiempos() {
     const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
     
     const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
-    const mesSeleccionado = selectMes ? selectMes.value : "09";
+    const mesSeleccionado = selectMes ? selectMes.value : "08";
 
     const mesesMapInverso = {
         "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
@@ -80,7 +92,7 @@ function renderizarEstadisticasTiempos() {
         "enero": "01", "febrero": "02", "marzo": "03", "abril": "04",
         "mayo": "05", "junio": "06", "julio": "07", "agosto": "08",
         "septiembre": "09", "octubre": "10", "noviembre": "11", "diciembre": "12",
-        "Septiembre": "09", "Agosto": "08", "Octubre": "10", "Noviembre": "11", "Diciembre": "12"
+        "Agosto": "08", "Septiembre": "09", "Octubre": "10", "Noviembre": "11", "Diciembre": "12"
     };
 
     const mesFormatoNum = mesesMapTexto[mesSeleccionado] || mesSeleccionado;
@@ -186,6 +198,7 @@ function renderizarEstadisticasTiempos() {
 
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
+    const optionsDatalist = Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("");
 
     // ==========================================
     // 1. SUBPESTAÑA TIEMPOS
@@ -212,9 +225,7 @@ function renderizarEstadisticasTiempos() {
                     <input type="text" id="input-tiempo-4" list="lista-jugadores-sug-t" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            <datalist id="lista-jugadores-sug-t">
-                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
-            </datalist>
+            <datalist id="lista-jugadores-sug-t">${optionsDatalist}</datalist>
             <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Tiempos</button>
         </div>
         
@@ -254,9 +265,7 @@ function renderizarEstadisticasTiempos() {
                     <input type="text" id="input-civ-4" list="lista-jugadores-sug-c" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            <datalist id="lista-jugadores-sug-c">
-                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
-            </datalist>
+            <datalist id="lista-jugadores-sug-c">${optionsDatalist}</datalist>
             <button id="btn-consultar-civs" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Civilizaciones</button>
         </div>
         
@@ -272,7 +281,7 @@ function renderizarEstadisticasTiempos() {
     `;
 
     // ==========================================
-    // 3. SUBPESTAÑA SINERGIA / EQUIPOS (CON MODAL Y DESCARGA)
+    // 3. SUBPESTAÑA SINERGIA / EQUIPOS
     // ==========================================
     const listaEquipos = Object.values(estadisticasEquipos);
     secEnfrentamientos.innerHTML = `
@@ -297,13 +306,10 @@ function renderizarEstadisticasTiempos() {
                     <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
-            <datalist id="lista-jugadores-sug">
-                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
-            </datalist>
+            <datalist id="lista-jugadores-sug">${optionsDatalist}</datalist>
             <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Sinergia</button>
         </div>
 
-        <!-- Modal Sinergia con Descarga y Tabla Compacta -->
         <div id="modal-sinergia-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
             <div id="modal-sinergia-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
@@ -337,7 +343,6 @@ function renderizarEstadisticasTiempos() {
             const totalP = eq.victorias + eq.derrotas;
             const ef = totalP > 0 ? ((eq.victorias / totalP) * 100).toFixed(0) : 0;
             const miembrosArr = Array.from(eq.miembros).join(", ");
-            // Simplificación del nombre del equipo a E1, E2, E3, E4...
             const nombreSimplificado = `E${index + 1}`;
             htmlEnfrentamientos += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
@@ -356,10 +361,10 @@ function renderizarEstadisticasTiempos() {
     secEnfrentamientos.innerHTML = htmlEnfrentamientos;
 
     // ==========================================
-    // EVENTOS Y MODALES (CON DESCARGA 📥)
+    // EVENTOS Y MODALES
     // ==========================================
 
-    // 1. Evento Tiempos
+    // 1. Tiempos
     const btnConsultarTiempos = document.getElementById("btn-consultar-tiempos");
     const modalTiemposOverlay = document.getElementById("modal-tiempos-overlay");
     const cerrarModalTiempos = document.getElementById("cerrar-modal-tiempos");
@@ -367,17 +372,17 @@ function renderizarEstadisticasTiempos() {
 
     if (btnConsultarTiempos) {
         btnConsultarTiempos.addEventListener("click", () => {
-            const j1 = document.getElementById("input-tiempo-1").value.trim();
-            const j2 = document.getElementById("input-tiempo-2").value.trim();
-            const j3 = document.getElementById("input-tiempo-3").value.trim();
-            const j4 = document.getElementById("input-tiempo-4").value.trim();
+            const j1 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-1").value);
+            const j2 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-2").value);
+            const j3 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-3").value);
+            const j4 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-4").value);
             const contenedorResultado = document.getElementById("resultado-tiempos-container");
 
             let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
-            seleccionados = [...new Set(seleccionados.map(j => obtenerNickOficialEstadisticas(j)))];
+            seleccionados = [...new Set(seleccionados)];
 
             if (seleccionados.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores para comparar.");
+                alert("Debes ingresar al menos 2 jugadores válidos para comparar.");
                 return;
             }
 
@@ -415,7 +420,7 @@ function renderizarEstadisticasTiempos() {
                 htmlTablaComparativa += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
                 
                 seleccionados.forEach(sel => {
-                    const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase());
+                    const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase() || j.nombre.toLowerCase().includes(sel.toLowerCase()));
                     const valor = jData ? metrica.fn(jData) : "-";
                     htmlTablaComparativa += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${valor}</td>`;
                 });
@@ -434,12 +439,11 @@ function renderizarEstadisticasTiempos() {
 
     if (btnDescargarTiempos) {
         btnDescargarTiempos.addEventListener("click", () => {
-            const card = document.getElementById("modal-tiempos-card");
-            ejecutarCapturaHtml2Canvas(card, 'comparativa_tiempos_michi.png');
+            ejecutarCapturaHtml2Canvas(document.getElementById("modal-tiempos-card"), 'comparativa_tiempos_michi.png');
         });
     }
 
-    // 2. Evento Civilizaciones
+    // 2. Civilizaciones
     const btnConsultarCivs = document.getElementById("btn-consultar-civs");
     const modalCivsOverlay = document.getElementById("modal-civs-overlay");
     const cerrarModalCivs = document.getElementById("cerrar-modal-civs");
@@ -447,24 +451,25 @@ function renderizarEstadisticasTiempos() {
 
     if (btnConsultarCivs) {
         btnConsultarCivs.addEventListener("click", () => {
-            const j1 = document.getElementById("input-civ-1").value.trim();
-            const j2 = document.getElementById("input-civ-2").value.trim();
-            const j3 = document.getElementById("input-civ-3").value.trim();
-            const j4 = document.getElementById("input-civ-4").value.trim();
+            const j1 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-1").value);
+            const j2 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-2").value);
+            const j3 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-3").value);
+            const j4 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-4").value);
             const contenedorResultado = document.getElementById("resultado-civs-container");
 
             let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
-            seleccionados = [...new Set(seleccionados.map(j => obtenerNickOficialEstadisticas(j)))];
+            seleccionados = [...new Set(seleccionados)];
 
             if (seleccionados.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores para comparar civilizaciones.");
+                alert("Debes ingresar al menos 2 jugadores válidos para comparar civilizaciones.");
                 return;
             }
 
             let civsSet = new Set();
             seleccionados.forEach(sel => {
-                if (estadisticasJugadorCiv[sel]) {
-                    Object.keys(estadisticasJugadorCiv[sel]).forEach(c => civsSet.add(c));
+                const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()));
+                if (realKey && estadisticasJugadorCiv[realKey]) {
+                    Object.keys(estadisticasJugadorCiv[realKey]).forEach(c => civsSet.add(c));
                 }
             });
 
@@ -495,7 +500,8 @@ function renderizarEstadisticasTiempos() {
                     htmlTablaCivs += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
 
                     seleccionados.forEach(sel => {
-                        const datosJugCiv = estadisticasJugadorCiv[sel] && estadisticasJugadorCiv[sel][civ];
+                        const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()));
+                        const datosJugCiv = realKey && estadisticasJugadorCiv[realKey] && estadisticasJugadorCiv[realKey][civ];
                         if (datosJugCiv && datosJugCiv.jugadas > 0) {
                             const wr = ((datosJugCiv.victorias / datosJugCiv.jugadas) * 100).toFixed(0);
                             htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${datosJugCiv.jugadas}p (${wr}%)</td>`;
@@ -520,12 +526,11 @@ function renderizarEstadisticasTiempos() {
 
     if (btnDescargarCivs) {
         btnDescargarCivs.addEventListener("click", () => {
-            const card = document.getElementById("modal-civs-card");
-            ejecutarCapturaHtml2Canvas(card, 'comparativa_civs_michi.png');
+            ejecutarCapturaHtml2Canvas(document.getElementById("modal-civs-card"), 'comparativa_civs_michi.png');
         });
     }
 
-    // 3. Evento Sinergia (Actualizado a formato Tabla Compacta con Diminutivos y Leyenda)
+    // 3. Sinergia
     const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
     const modalSinergiaOverlay = document.getElementById("modal-sinergia-overlay");
     const cerrarModalSinergia = document.getElementById("cerrar-modal-sinergia");
@@ -533,17 +538,17 @@ function renderizarEstadisticasTiempos() {
 
     if (btnConsultarSinergia) {
         btnConsultarSinergia.addEventListener("click", () => {
-            const j1 = document.getElementById("input-sinergia-1").value.trim();
-            const j2 = document.getElementById("input-sinergia-2").value.trim();
-            const j3 = document.getElementById("input-sinergia-3").value.trim();
-            const j4 = document.getElementById("input-sinergia-4").value.trim();
+            const j1 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-1").value);
+            const j2 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-2").value);
+            const j3 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-3").value);
+            const j4 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-4").value);
             const contenedorResultado = document.getElementById("resultado-sinergia-container");
 
             let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
-            seleccionados = [...new Set(seleccionados.map(j => obtenerNickOficialEstadisticas(j)))];
+            seleccionados = [...new Set(seleccionados)];
 
             if (seleccionados.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores diferentes para calcular la sinergia.");
+                alert("Debes ingresar al menos 2 jugadores diferentes válidos para calcular la sinergia.");
                 return;
             }
 
@@ -562,7 +567,9 @@ function renderizarEstadisticasTiempos() {
 
                 Object.values(equiposEnPartida).forEach(miembrosEquipo => {
                     const nombresEnEquipo = miembrosEquipo.map(me => me.nombre);
-                    const todosEnEsteEquipo = seleccionados.every(sel => nombresEnEquipo.includes(sel));
+                    const todosEnEsteEquipo = seleccionados.every(sel => 
+                        nombresEnEquipo.some(ne => ne.toLowerCase() === sel.toLowerCase() || ne.toLowerCase().includes(sel.toLowerCase()))
+                    );
 
                     if (todosEnEsteEquipo) {
                         partidasJuntos++;
@@ -570,7 +577,7 @@ function renderizarEstadisticasTiempos() {
                         let algunoPerdio = false;
 
                         seleccionados.forEach(sel => {
-                            const datosJugador = miembrosEquipo.find(me => me.nombre === sel);
+                            const datosJugador = miembrosEquipo.find(me => me.nombre.toLowerCase() === sel.toLowerCase() || me.nombre.toLowerCase().includes(sel.toLowerCase()));
                             if (datosJugador) {
                                 if (datosJugador.pg !== 1) todosGanaron = false;
                                 if (datosJugador.pp === 1) algunoPerdio = true;
@@ -595,7 +602,6 @@ function renderizarEstadisticasTiempos() {
                 if (victoriasJuntos > 0 && derrotasJuntos === 0) estadoTxt = `🔥 Invictos (${efSinergia}%)`;
 
                 htmlSinergiaModal += `
-                    <!-- Leyenda de Diminutivos -->
                     <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
                         <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Ef.</strong>: Efectividad Conjunta
                     </div>
@@ -634,8 +640,7 @@ function renderizarEstadisticasTiempos() {
 
     if (btnDescargarSinergia) {
         btnDescargarSinergia.addEventListener("click", () => {
-            const card = document.getElementById("modal-sinergia-card");
-            ejecutarCapturaHtml2Canvas(card, 'comparativa_sinergia_michi.png');
+            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'comparativa_sinergia_michi.png');
         });
     }
 }
