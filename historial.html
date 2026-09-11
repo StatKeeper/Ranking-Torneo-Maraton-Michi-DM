@@ -3,54 +3,552 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnóstico - Historial</title>
+    <title>Ranking Maratón Michi DM - Historial de Partidas</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #121212; color: #fff; font-family: sans-serif; padding: 20px; }
-        .box { background: #1e1e1e; border: 2px solid #d4af37; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        body {
+            box-sizing: border-box;
+            background-color: #121212;
+            color: #e0e0e0;
+            -webkit-text-size-adjust: 100%;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            gap: 10px;
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            max-width: 65%;
+            color: #f8f9fa;
+        }
+        .header-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .admin-toggle-btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: #2a2a2a;
+            color: #ddd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #444;
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover {
+            background: #333;
+            color: #d4af37;
+            border-color: #d4af37;
+        }
+        .tab-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #996e05;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
+        #main-content {
+            margin-left: 0;
+            padding: 20px;
+        }
+        .match-card {
+            background: #1a1c23;
+            border: 1px solid #2d3142;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .match-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #2d3142;
+            padding-bottom: 8px;
+        }
+        .match-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .match-map-icon {
+            width: 45px;
+            height: 45px;
+            background: #2e3a23;
+            border: 2px solid #5c832f;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #a3c26a;
+        }
+        .match-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 0;
+        }
+        .match-subtitle {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .match-duration {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            white-space: nowrap;
+        }
+        .table-dark-custom {
+            background-color: #16181f;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+
+        /* 📱 ESTILOS ADAPTATIVOS PARA CELULARES */
+        @media (max-width: 768px) {
+            #main-content {
+                padding: 10px !important;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .header-top h1 {
+                max-width: 100%;
+                font-size: 1.2rem;
+            }
+            .header-info-container {
+                align-items: flex-start;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .match-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .match-duration {
+                align-self: flex-start;
+            }
+            .match-card {
+                padding: 10px 12px;
+            }
+            .table-dark-custom th, .table-dark-custom td {
+                padding: 6px 8px;
+                font-size: 0.82rem;
+            }
+            .tabs {
+                gap: 5px;
+                padding: 6px;
+            }
+            .tab-btn {
+                padding: 6px 9px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-warning">🛠️ Panel de Diagnóstico</h1>
-        <p class="text-muted">Si ves este texto, el archivo HTML **SÍ** se ha actualizado correctamente y el navegador lo está leyendo.</p>
-        
-        <div class="box">
-            <h3>Estado del LocalStorage:</h3>
-            <div id="diagnostico-info" class="font-monospace text-info">Analizando...</div>
-        </div>
 
-        <div class="box">
-            <h3>Claves encontradas en el navegador:</h3>
-            <ul id="lista-claves" class="text-white"></ul>
-        </div>
-        
-        <a href="index.html" class="btn btn-warning fw-bold">Volver al Inicio</a>
+    <div id="sidebar">
+        <h3>🔐 Panel de Control</h3>
+        <label class="form-label mt-2">Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let infoDiv = document.getElementById('diagnostico-info');
-            let listaClaves = document.getElementById('lista-claves');
-            
-            let totalKeys = localStorage.length;
-            let registrosEncontrados = 0;
-            let htmlClaves = "";
+    <div id="main-content" class="container-fluid p-4">
+        <div class="header-top">
+            <h1>🏆 Ranking Maratón Michi DM</h1>
+            <div class="header-info-container">
+                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
+                <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.90rem;">
+                    --/--/---- --:--:-- --
+                </div>
+            </div>
+        </div>
 
-            for (let i = 0; i < totalKeys; i++) {
-                let key = localStorage.key(i);
-                htmlClaves += `<li>${key}</li>`;
-                if (key && key.startsWith("registros_")) {
-                    registrosEncontrados++;
+        <div class="tabs mb-4">
+            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
+            <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
+            <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
+            <a href="historial.html" class="tab-btn active">📜 Historial de Partidas</a>
+            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería y Registro</a>
+            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
+        </div>
+
+        <h2 class="mb-3 text-white fs-5"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
+
+        <!-- Filtros del Historial -->
+        <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
+            <div class="row align-items-center g-2">
+                <div class="col-12 col-md-3">
+                    <span class="fw-bold text-light fs-6"><i class="fas fa-filter text-warning"></i> Filtros</span>
+                </div>
+                <div class="col-12 col-md-9 d-flex flex-wrap justify-content-md-end gap-2 align-items-center">
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 90px;">
+                            <option value="todos">Todos</option>
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
+                            <option value="todos">Todos</option>
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08" selected>Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <label class="fw-bold text-secondary mb-0 small">Fecha:</label>
+                        <select id="filtro-fecha" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 100px;">
+                            <option value="todas">Todas</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lista-partidas-container"></div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/equivalencias.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('open');
+        }
+
+        function obtenerNombreOficial(nombreOriginal) {
+            if (!nombreOriginal) return "";
+            let mapaCorrecciones = {};
+            const correccionesGuardadas = localStorage.getItem("mapa_correccion_nombres") || localStorage.getItem("correcciones_nombres");
+            if (correccionesGuardadas) {
+                try {
+                    mapaCorrecciones = JSON.parse(correccionesGuardadas);
+                } catch (e) {}
+            }
+            return mapaCorrecciones[nombreOriginal] || nombreOriginal;
+        }
+
+        function cargarHistorialPartidas() {
+            try {
+                const contenedor = document.getElementById('lista-partidas-container');
+                if (!contenedor) return;
+                contenedor.innerHTML = "";
+                let matchesMap = {};
+
+                for (let i = 0; i < localStorage.length; i++) {
+                    let key = localStorage.key(i);
+                    if (key && key.startsWith("registros_")) {
+                        let val = localStorage.getItem(key);
+                        try {
+                            let registros = JSON.parse(val);
+                            if (Array.isArray(registros) && registros.length > 0) {
+                                let partes = key.split('_');
+                                let periodo = partes[1] || "2026-08"; 
+                                let fechaStr = partes[2] || "Fecha 01"; 
+                                let partidaStr = partes[3] || "Partida 1"; 
+
+                                let anio = periodo.split('-')[0] || "2026";
+                                let mesNum = periodo.split('-')[1] || "08";
+                                let fechaNum = fechaStr.replace(/\D/g, '') || "01";
+                                let partidaNum = partidaStr.replace(/\D/g, '') || "1";
+
+                                let matchKey = `${anio}_${mesNum}_${fechaNum}_${partidaNum}`;
+                                let duracionPartida = registros[0].duracion || "01:07:08";
+
+                                matchesMap[matchKey] = {
+                                    anio: anio,
+                                    mes: mesNum,
+                                    fechaNum: fechaNum,
+                                    partidaNum: partidaNum,
+                                    duracion: duracionPartida,
+                                    registros: registros
+                                };
+                            }
+                        } catch(e) {}
+                    }
+                }
+
+                let keys = Object.keys(matchesMap);
+                if (keys.length === 0) {
+                    contenedor.innerHTML = `
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-folder-open fa-3x mb-3 text-secondary"></i>
+                            <p class="fs-5">No hay partidas registradas en el sistema todavía.</p>
+                        </div>`;
+                    return;
+                }
+
+                keys.sort((a, b) => {
+                    let ma = matchesMap[a];
+                    let mb = matchesMap[b];
+                    let idA = parseInt(ma.anio) * 10000 + parseInt(ma.mes) * 100 + parseInt(ma.fechaNum) * 10 + parseInt(ma.partidaNum);
+                    let idB = parseInt(mb.anio) * 10000 + parseInt(mb.mes) * 100 + parseInt(mb.fechaNum) * 10 + parseInt(mb.partidaNum);
+                    return idA - idB;
+                });
+
+                let posicionesPorPartidaMap = {};
+                let rankingAcumuladoMap = {};
+                let jugadoresConParticipacionPrevia = new Set();
+
+                keys.forEach(k => {
+                    let m = matchesMap[k];
+                    let posicionesAnterioresMap = {};
+                    let listaAnterior = Object.values(rankingAcumuladoMap).sort((a, b) => b.pts - a.pts);
+                    listaAnterior.forEach((j, idx) => {
+                        posicionesAnterioresMap[j.jugador] = idx + 1;
+                    });
+
+                    let jugadoresEnEstaPartida = new Set();
+                    try {
+                        m.registros.forEach(r => {
+                            let nombreRaw = r.jugador || r.Jugador;
+                            if (!nombreRaw) return;
+                            let nombre = obtenerNombreOficial(nombreRaw);
+                            jugadoresEnEstaPartida.add(nombre);
+                            
+                            if (!rankingAcumuladoMap[nombre]) {
+                                rankingAcumuladoMap[nombre] = { jugador: nombre, pts: 0 };
+                            }
+                            rankingAcumuladoMap[nombre].pts += parseInt(r.pts || 0);
+                        });
+                    } catch(e) {}
+
+                    let listaActual = Object.values(rankingAcumuladoMap).sort((a, b) => b.pts - a.pts);
+                    let variacionesEstaPartida = {};
+
+                    let esPrimeraPartidaTotal = (parseInt(m.fechaNum, 10) === 1 && parseInt(m.partidaNum, 10) === 1 && keys[0] === k);
+
+                    listaActual.forEach((j, idx) => {
+                        let posActual = idx + 1;
+                        let variacion = 0;
+
+                        if (esPrimeraPartidaTotal) {
+                            variacion = 0;
+                        } else if (!jugadoresConParticipacionPrevia.has(j.jugador)) {
+                            variacion = 0;
+                        } else if (posicionesAnterioresMap[j.jugador] !== undefined) {
+                            let posAnterior = posicionesAnterioresMap[j.jugador];
+                            variacion = posAnterior - posActual;
+                        }
+
+                        variacionesEstaPartida[j.jugador] = variacion;
+                    });
+
+                    jugadoresEnEstaPartida.forEach(jName => {
+                        jugadoresConParticipacionPrevia.add(jName);
+                    });
+
+                    posicionesPorPartidaMap[k] = variacionesEstaPartida;
+                });
+
+                let filtroA = document.getElementById('filtro-anio') ? document.getElementById('filtro-anio').value : 'todos';
+                let filtroM = document.getElementById('filtro-mes') ? document.getElementById('filtro-mes').value : 'todos';
+                let filtroF = document.getElementById('filtro-fecha') ? document.getElementById('filtro-fecha').value : 'todas';
+
+                let matchesFiltrados = keys.filter(k => {
+                    let m = matchesMap[k];
+                    let matchAnio = (filtroA === 'todos' || m.anio === filtroA);
+                    let matchMes = (filtroM === 'todos' || m.mes === filtroM);
+                    let matchFecha = (filtroF === 'todas' || `Fecha ${m.fechaNum}` === filtroF);
+                    return matchAnio && matchMes && matchFecha;
+                });
+
+                matchesFiltrados.sort((a, b) => {
+                    let ma = matchesMap[a];
+                    let mb = matchesMap[b];
+                    let idA = parseInt(ma.anio) * 10000 + parseInt(ma.mes) * 100 + parseInt(ma.fechaNum) * 10 + parseInt(ma.partidaNum);
+                    let idB = parseInt(mb.anio) * 10000 + parseInt(mb.mes) * 100 + parseInt(mb.fechaNum) * 10 + parseInt(mb.partidaNum);
+                    return idB - idA;
+                });
+
+                if (matchesFiltrados.length === 0) {
+                    contenedor.innerHTML = `
+                        <div class="text-center py-5 text-muted">
+                            <p class="fs-5">No se encontraron partidas con los filtros seleccionados.</p>
+                        </div>`;
+                    return;
+                }
+
+                const nombresMeses = {
+                    "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+                    "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+                    "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+                };
+
+                matchesFiltrados.forEach(k => {
+                    let m = matchesMap[k];
+                    let nombreMes = nombresMeses[m.mes] || m.mes;
+                    let varsMap = posicionesPorPartidaMap[k] || {};
+
+                    let filasJugadores = "";
+                    m.registros.forEach(reg => {
+                        let nombreRaw = reg.jugador || reg.nombre || "-";
+                        let nombreOficial = obtenerNombreOficial(nombreRaw);
+                        let varValor = varsMap[nombreOficial] !== undefined ? varsMap[nombreOficial] : 0;
+
+                        let varHtml = "";
+                        if (varValor > 0) {
+                            varHtml = `<span class="text-success fw-bold">+${varValor} <i class="fas fa-arrow-up"></i></span>`;
+                        } else if (varValor < 0) {
+                            varHtml = `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>`;
+                        } else {
+                            varHtml = `<span class="fw-bold" style="color: #4da6ff; background: rgba(0, 86, 179, 0.25); padding: 2px 8px; border-radius: 4px;">0</span>`;
+                        }
+
+                        let esGanador = (reg.pg === 1 || reg.pts >= 3 || reg.ganador === true);
+                        let iconoResultado = esGanador ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
+
+                        filasJugadores += `
+                            <tr>
+                                <td class="fw-bold text-white">${iconoResultado} ${nombreRaw}</td>
+                                <td><span class="badge bg-secondary">${reg.equipo || "Sin Equipo"}</span></td>
+                                <td>${reg.civ || "-"}</td>
+                                <td class="text-center">${varHtml}</td>
+                            </tr>
+                        `;
+                    });
+
+                    let cardHTML = `
+                        <div class="match-card">
+                            <div class="match-header">
+                                <div class="match-title-group">
+                                    <div class="match-map-icon">
+                                        <i class="fas fa-map"></i>
+                                    </div>
+                                    <div>
+                                        <div class="match-title">Michi - Fecha ${m.fechaNum}, Partida ${m.partidaNum}</div>
+                                        <div class="match-subtitle">Maratón DM (${nombreMes} ${m.anio})</div>
+                                    </div>
+                                </div>
+                                <div class="match-duration"><i class="far fa-clock"></i> ${m.duracion}</div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-sm table-striped align-middle mb-0 table-dark-custom">
+                                    <thead>
+                                        <tr>
+                                            <th>Jugador</th>
+                                            <th>Equipo</th>
+                                            <th>Civilización</th>
+                                            <th class="text-center">Var</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${filasJugadores}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    contenedor.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            } catch (err) {
+                console.error("Error crítico en historial:", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const selectFiltroFecha = document.getElementById('filtro-fecha');
+            if (selectFiltroFecha) {
+                selectFiltroFecha.innerHTML = '<option value="todas">Todas</option>';
+                for (let i = 1; i <= 31; i++) {
+                    let opt = document.createElement('option');
+                    let numStr = i < 10 ? '0' + i : i;
+                    opt.value = `Fecha ${numStr}`;
+                    opt.textContent = `Fecha ${numStr}`;
+                    selectFiltroFecha.appendChild(opt);
                 }
             }
 
-            infoDiv.innerHTML = `
-                Total de elementos en localStorage: <b>${totalKeys}</b><br>
-                Claves con prefijo 'registros_': <b>${registrosEncontrados}</b>
-            `;
+            if (document.getElementById('filtro-anio')) document.getElementById('filtro-anio').addEventListener('change', cargarHistorialPartidas);
+            if (document.getElementById('filtro-mes')) document.getElementById('filtro-mes').addEventListener('change', cargarHistorialPartidas);
+            if (document.getElementById('filtro-fecha')) document.getElementById('filtro-fecha').addEventListener('change', cargarHistorialPartidas);
 
-            listaClaves.innerHTML = htmlClaves || "<li>No hay ninguna clave registrada en este navegador.</li>";
+            cargarHistorialPartidas();
+
+            const elFecha = document.getElementById('ultima-actualizacion');
+            if (elFecha) {
+                const ahora = new Date();
+                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                elFecha.textContent = `${ahora.toLocaleDateString('es-ES', opcionesFecha)}, ${ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase()}`;
+            }
         });
     </script>
 </body>
