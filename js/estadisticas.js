@@ -174,55 +174,125 @@ function renderizarEstadisticasTiempos() {
     }
 
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
-    
+    listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
+
+    // --- SECCIÓN TIEMPOS: DISEÑO VERTICAL TIPO TARJETAS CON BUSCADOR ---
     let htmlTiempos = `
-        <h3>⏱️ Tiempos de Partida y Promedios por Jugador</h3>
+        <h3>⏱️ Consulta de Tiempos y Promedios por Jugador</h3>
         <div style="background: #f8f9fa; padding: 10px 12px; border-radius: 6px; margin-top: 8px; margin-bottom: 12px; font-size: 0.82em; border-left: 4px solid #0d6efd;">
             <strong>Leyenda:</strong> <strong>Part.</strong>: Partidas | <strong>Dur. Acum.</strong>: Duración Total | <strong>Prom. Dur.</strong>: Promedio Duración | <strong>Tot. Unid.</strong>: Unidades Asesinadas | <strong>Prom. Unid.</strong>: Promedio Unidades | <strong>Tot. Edif.</strong>: Edificios Arrasados | <strong>Prom. Edif.</strong>: Promedio Edificios
         </div>
-        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 10px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
-            <table style="width: 100%; min-width: 650px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
-                <thead>
-                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 10px 8px; white-space: nowrap;">Jugador</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Part.</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Dur. Acum.</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Prom. Dur.</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Tot. Unid.</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Prom. Unid.</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Tot. Edif.</th>
-                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Prom. Edif.</th>
-                    </tr>
-                </thead>
-                <tbody>
+
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
+                    <input type="text" id="input-tiempo-1" list="lista-jugadores-sug-t" placeholder="Escribe para buscar..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2 (Opcional):</label>
+                    <input type="text" id="input-tiempo-2" list="lista-jugadores-sug-t" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
+                </div>
+            </div>
+            
+            <datalist id="lista-jugadores-sug-t">
+                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
+            </datalist>
+
+            <button id="btn-consultar-tiempos" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Estadísticas</button>
+        </div>
+
+        <div id="resultado-tiempos-container" style="display: none; margin-bottom: 25px;"></div>
+
+        <h3 style="margin-top: 20px;">📋 Listado General Completo (Vertical)</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
     `;
 
     if (listaJugadores.length === 0) {
-        htmlTiempos += `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #6c757d;">No hay registros de tiempos disponibles para este periodo.</td></tr>`;
+        htmlTiempos += `<div style="background: white; padding: 20px; text-align: center; border-radius: 8px; color: #6c757d; border: 1px solid #dee2e6;">No hay registros de tiempos disponibles para este periodo.</div>`;
     } else {
-        listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
         listaJugadores.forEach(j => {
             const promedioSeg = j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0;
             const promedioUnidades = j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0;
             const promedioEdificios = j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0;
 
             htmlTiempos += `
-                <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${j.nombre}</strong></td>
-                    <td style="padding: 10px 8px; text-align: center;">${j.totalPartidas}</td>
-                    <td style="padding: 10px 8px; text-align: center; white-space: nowrap;">${convertirSegundosADuracion(j.segundosTotales)}</td>
-                    <td style="padding: 10px 8px; text-align: center; white-space: nowrap; font-weight: bold; color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</td>
-                    <td style="padding: 10px 8px; text-align: center;">${j.unidadesTotales}</td>
-                    <td style="padding: 10px 8px; text-align: center;">${promedioUnidades}</td>
-                    <td style="padding: 10px 8px; text-align: center;">${j.edificiosTotales}</td>
-                    <td style="padding: 10px 8px; text-align: center;">${promedioEdificios}</td>
-                </tr>
+                <div style="background: white; border-radius: 8px; padding: 12px 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
+                    <div style="font-weight: bold; color: #0d6efd; font-size: 1.05em; border-bottom: 1px solid #e9ecef; padding-bottom: 6px; margin-bottom: 8px;">
+                        👤 ${j.nombre}
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.88em;">
+                        <div><span style="color: #6c757d;">Partidas:</span> <strong>${j.totalPartidas}</strong></div>
+                        <div><span style="color: #6c757d;">Dur. Acum.:</span> <strong>${convertirSegundosADuracion(j.segundosTotales)}</strong></div>
+                        <div><span style="color: #6c757d;">Prom. Dur.:</span> <strong style="color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</strong></div>
+                        <div><span style="color: #6c757d;">Tot. Unid.:</span> <strong>${j.unidadesTotales}</strong></div>
+                        <div><span style="color: #6c757d;">Prom. Unid.:</span> <strong>${promedioUnidades}</strong></div>
+                        <div><span style="color: #6c757d;">Tot. Edif.:</span> <strong>${j.edificiosTotales}</strong></div>
+                        <div style="grid-column: span 2;"><span style="color: #6c757d;">Prom. Edif.:</span> <strong>${promedioEdificios}</strong></div>
+                    </div>
+                </div>
             `;
         });
     }
-    htmlTiempos += `</tbody></table></div>`;
+    htmlTiempos += `</div>`;
     secTiempos.innerHTML = htmlTiempos;
 
+    // --- EVENTO DE CONSULTA INTERACTIVA DE TIEMPOS ---
+    const btnConsultarTiempos = document.getElementById("btn-consultar-tiempos");
+    if (btnConsultarTiempos) {
+        btnConsultarTiempos.addEventListener("click", () => {
+            const j1 = document.getElementById("input-tiempo-1").value.trim();
+            const j2 = document.getElementById("input-tiempo-2").value.trim();
+            const contenedorResultado = document.getElementById("resultado-tiempos-container");
+
+            let seleccionados = [j1, j2].filter(j => j !== "");
+            seleccionados = [...new Set(seleccionados.map(j => obtenerNickOficialEstadisticas(j)))];
+
+            if (seleccionados.length === 0) {
+                alert("Debes ingresar al menos un jugador para consultar.");
+                return;
+            }
+
+            let htmlCards = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;">`;
+
+            seleccionados.forEach(nombreSel => {
+                const jData = listaJugadores.find(j => j.nombre.toLowerCase() === nombreSel.toLowerCase());
+                if (!jData) {
+                    htmlCards += `
+                        <div style="background: white; border-radius: 8px; padding: 15px; border: 1px solid #dc3545; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <h4 style="color: #dc3545; margin-top: 0;">${nombreSel}</h4>
+                            <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 0;">No se encontraron registros para este jugador en el periodo seleccionado.</p>
+                        </div>
+                    `;
+                } else {
+                    const promSeg = jData.totalPartidas > 0 ? Math.round(jData.segundosTotales / jData.totalPartidas) : 0;
+                    const promUnid = jData.totalPartidas > 0 ? (jData.unidadesTotales / jData.totalPartidas).toFixed(1) : 0;
+                    const promEdif = jData.totalPartidas > 0 ? (jData.edificiosTotales / jData.totalPartidas).toFixed(1) : 0;
+
+                    htmlCards += `
+                        <div style="background: white; border-radius: 8px; padding: 15px; border: 2px solid #0d6efd; box-shadow: 0 3px 6px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0d6efd; margin-top: 0; border-bottom: 2px solid #e9ecef; padding-bottom: 8px;">👤 ${jData.nombre}</h4>
+                            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9em; margin-top: 10px;">
+                                <div><strong>Partidas:</strong> ${jData.totalPartidas}</div>
+                                <div><strong>Duración Acumulada:</strong> ${convertirSegundosADuracion(jData.segundosTotales)}</div>
+                                <div><strong>Promedio Duración:</strong> <span style="color: #0d6efd; font-weight: bold;">${convertirSegundosADuracion(promSeg)}</span></div>
+                                <div><strong>Unidades Asesinadas (Tot.):</strong> ${jData.unidadesTotales}</div>
+                                <div><strong>Promedio Unidades:</strong> ${promUnid}</div>
+                                <div><strong>Edificios Arrasados (Tot.):</strong> ${jData.edificiosTotales}</div>
+                                <div><strong>Promedio Edificios:</strong> ${promEdif}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            htmlCards += `</div>`;
+            contenedorResultado.style.display = "block";
+            contenedorResultado.innerHTML = htmlCards;
+        });
+    }
+
+    // --- SECCIÓN CIVILIZACIONES ---
     const listaCivs = Object.values(estadisticasCivilizaciones);
     let htmlCivs = `
         <h3>🏛️ Rendimiento y Win Rate por Civilización</h3>
@@ -260,6 +330,7 @@ function renderizarEstadisticasTiempos() {
     htmlCivs += `</tbody></table></div>`;
     secCivilizaciones.innerHTML = htmlCivs;
 
+    // --- SECCIÓN SINERGIA Y EQUIPOS ---
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
         <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
