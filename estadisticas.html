@@ -8,6 +8,8 @@
     <style>
         body {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         .header-top {
             display: flex;
@@ -51,7 +53,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
+        /* --- PESTAÑAS SUPERIORES (Escritorio) --- */
         .tabs {
             display: flex;
             gap: 8px;
@@ -85,6 +87,39 @@
             border-color: #996e05;
         }
 
+        /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
+        .mobile-bottom-nav {
+            display: none; /* Oculto por defecto en PC */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+            z-index: 1000;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 2px solid #d4af37;
+            box-sizing: border-box;
+        }
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #555;
+            font-size: 0.75rem;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .mobile-nav-item span.icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        .mobile-nav-item.active {
+            color: #b8860b;
+        }
+
         /* --- PANEL LATERAL CORREGIDO PARA MÓVILES Y PC --- */
         #sidebar {
             position: fixed;
@@ -94,10 +129,14 @@
             height: 100%;
             background: #fff;
             box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-            z-index: 999;
+            z-index: 1001;
             padding: 20px;
             box-sizing: border-box;
             transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
         }
         #main-content {
             margin-left: 280px;
@@ -106,14 +145,22 @@
 
         @media (max-width: 768px) {
             #sidebar {
-                transform: translateX(-100%); /* Oculto por defecto en celulares a la izquierda */
+                transform: translateX(-100%);
             }
             #sidebar.open {
-                transform: translateX(0); /* Se despliega al pulsar el botón Admin */
+                transform: translateX(0);
             }
             #main-content {
                 margin-left: 0 !important;
-                padding: 10px !important;
+                padding: 10px 10px 70px 10px !important; /* Espacio extra abajo para que la barra móvil no tape contenido */
+            }
+            /* Ocultar las pestañas superiores en celulares ya que se usa la barra inferior */
+            .tabs {
+                display: none !important;
+            }
+            /* Mostrar la barra de navegación inferior en celulares */
+            .mobile-bottom-nav {
+                display: flex !important;
             }
         }
     </style>
@@ -137,7 +184,7 @@
             </div>
         </div>
 
-        <!-- Pestañas Principales -->
+        <!-- Pestañas Principales (Escritorio) -->
         <div class="tabs">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
@@ -199,6 +246,26 @@
         </div>
 
     </div>
+
+    <!-- Barra de Navegación Inferior Flotante (Solo dispositivos móviles) -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <span class="icon">📊</span>
+            <span>Clasificación</span>
+        </a>
+        <a href="estadisticas.html" class="mobile-nav-item active">
+            <span class="icon">📈</span>
+            <span>Estadísticas</span>
+        </a>
+        <a href="candidatos.html" class="mobile-nav-item">
+            <span class="icon">⭐</span>
+            <span>Candidatos</span>
+        </a>
+        <a href="historial.html" class="mobile-nav-item">
+            <span class="icon">📜</span>
+            <span>Historial</span>
+        </a>
+    </nav>
 
     <script src="js/auth.js"></script>
     <script src="js/estadisticas.js"></script>
