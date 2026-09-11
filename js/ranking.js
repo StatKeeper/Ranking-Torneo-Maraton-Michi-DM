@@ -238,6 +238,15 @@ function renderTablaRankingGeneral() {
 
     let jugadores = Object.values(acumuladoMap);
     
+    // Filtro estricto: mínimo una participación (pg + pp > 0), mínimo un punto (pts > 0), y máximo top 25
+    jugadores = jugadores.filter(jug => {
+        const pj = jug.pg + jug.pp;
+        return pj > 0 && jug.pts > 0;
+    });
+
+    jugadores.sort((a, b) => b.pts - a.pts);
+    jugadores = jugadores.slice(0, 25);
+
     if (jugadores.length === 0) {
         tbody.innerHTML = `
             <tr>
@@ -252,8 +261,6 @@ function renderTablaRankingGeneral() {
         }
         return;
     }
-
-    jugadores.sort((a, b) => b.pts - a.pts);
 
     let totalPts = 0, totalE = 0, totalR = 0, totalM = 0, totalO = 0, totalS = 0, totalRch = 0, totalMG = 0, totalRLP = 0, totalTB = 0;
 
