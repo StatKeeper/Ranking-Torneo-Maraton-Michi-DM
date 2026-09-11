@@ -380,7 +380,7 @@ function renderizarEstadisticasTiempos() {
                 <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos y Estadísticas</h3>
                 
                 <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Duración Acumulada | <strong>P.Dur.</strong>: Promedio Duración | <strong>UACS</strong>: Unidades Asesinadas | <strong>P.Un.</strong>: Promedio Unidades | <strong>E.ARR</strong>: Edificios Arrasados | <strong>P.Ed.</strong>: Promedio Edificios
+                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas | <strong>Dur.A.</strong>: Tiempo Acumulado | <strong>P.Dur.</strong>: Promedio Duración | <strong>U.Ases.</strong>: Unidades Asesinadas | <strong>P.U.Ases.</strong>: Promedio Unidades | <strong>E.Arr.</strong>: Edificios Arrasados | <strong>P.E.Arr.</strong>: Promedio Edificios
                 </div>
 
                 <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
@@ -398,10 +398,10 @@ function renderizarEstadisticasTiempos() {
                 { label: "P.", fn: j => j.totalPartidas },
                 { label: "Dur.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales) },
                 { label: "P.Dur.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
-                { label: "UACS", fn: j => j.unidadesTotales },
-                { label: "P.Un.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
-                { label: "E.ARR", fn: j => j.edificiosTotales },
-                { label: "P.Ed.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
+                { label: "U.Ases.", fn: j => j.unidadesTotales },
+                { label: "P.U.Ases.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
+                { label: "E.Arr.", fn: j => j.edificiosTotales },
+                { label: "P.E.Arr.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
             ];
 
             metricasT.forEach((metrica, idx) => {
@@ -526,7 +526,7 @@ function renderizarEstadisticasTiempos() {
         });
     }
 
-    // 3. Sinergia (Rediseño Estético Profesional)
+    // 3. Sinergia
     const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
     const modalSinergiaOverlay = document.getElementById("modal-sinergia-overlay");
     const cerrarModalSinergia = document.getElementById("cerrar-modal-sinergia");
