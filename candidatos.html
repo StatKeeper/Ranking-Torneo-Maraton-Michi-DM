@@ -132,7 +132,7 @@
         }
 
         /* ==========================================
-           DISEÑO RESPONSIVO MÓVIL Y BARRA INFERIOR
+           DISEÑO RESPONSIVO MÓVIL Y BARRA INFERIOR (5 Pestañas)
            ========================================== */
         @media (max-width: 768px) {
             body {
@@ -155,7 +155,7 @@
                 display: none;
             }
 
-            /* Barra de navegación inferior fija estilo app móvil */
+            /* Barra de navegación inferior fija estilo app móvil con 5 opciones */
             .mobile-bottom-nav {
                 position: fixed;
                 bottom: 0;
@@ -177,7 +177,7 @@
                 align-items: center;
                 text-decoration: none;
                 color: #6c757d;
-                font-size: 0.75rem;
+                font-size: 0.65rem;
                 font-weight: 600;
                 flex-grow: 1;
                 padding: 6px 0;
@@ -185,8 +185,8 @@
             }
 
             .mobile-nav-item i {
-                font-size: 20px;
-                margin-bottom: 3px;
+                font-size: 18px;
+                margin-bottom: 2px;
             }
 
             .mobile-nav-item:hover, 
@@ -216,7 +216,9 @@
             <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
         </div>
 
+        <!-- Pestañas de Escritorio con Inicio al extremo izquierdo -->
         <div class="tabs mb-4">
+            <a href="inicio.html" class="tab-btn">🏠 Inicio</a>
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn">📈 Estadísticas y Tiempos</a>
             <a href="candidatos.html" class="tab-btn active">⭐ Candidatos</a>
@@ -271,8 +273,12 @@
         <div id="lista-candidatos-container"></div>
     </div>
 
-    <!-- Barra de Navegación Inferior Móvil -->
+    <!-- Barra de Navegación Inferior Móvil (5 Pestañas) -->
     <nav class="mobile-bottom-nav">
+        <a href="inicio.html" class="mobile-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
+        </a>
         <a href="index.html" class="mobile-nav-item">
             <i class="fas fa-chart-bar"></i>
             <span>General</span>
@@ -355,7 +361,6 @@
 
             listaItems.sort((a, b) => b.baseKey.localeCompare(a.baseKey));
             
-            // Limitado estrictamente a las últimas 5 partidas para evitar sobrecarga
             listaItems = listaItems.slice(0, 5);
 
             if (listaItems.length === 0) {
