@@ -14,27 +14,13 @@
             color: #333333;
         }
         .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #dee2e6;
-            position: relative;
-            gap: 10px;
+            display: none; /* Oculto ya que la cabecera general pasa a la ventana de Inicio */
         }
-        .header-top h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            line-height: 1.2;
-            max-width: 65%;
-            color: #212529;
-        }
-        .header-info-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
+        .admin-toggle-floating {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
         }
         .admin-toggle-btn {
             background: #b8860b;
@@ -102,6 +88,7 @@
         #main-content {
             margin-left: 0;
             padding: 20px;
+            position: relative;
         }
         .candidate-card {
             background: #ffffff;
@@ -168,7 +155,7 @@
                 padding: 15px 15px 30px 15px;
             }
 
-            /* Ocultar pestañas superiores y botón admin en móvil para dar espacio a la barra inferior */
+            /* Ocultar pestañas superiores y botón admin de texto en móvil */
             .tabs, 
             .admin-toggle-btn {
                 display: none;
@@ -231,14 +218,9 @@
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <div class="header-top">
-            <h1>🏆 Ranking Maratón Michi DM</h1>
-            <div class="header-info-container">
-                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-                <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.90rem;">
-                    --/--/---- --:--:-- --
-                </div>
-            </div>
+        <!-- Botón Admin Flotante / Esquina superior para emergencias móviles -->
+        <div class="d-flex justify-content-end mb-3">
+            <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
         </div>
 
         <div class="tabs mb-4">
@@ -474,14 +456,6 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             cargarCandidatos();
-
-            const elFecha = document.getElementById('ultima-actualizacion');
-            if (elFecha) {
-                const ahora = new Date();
-                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
-                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                elFecha.textContent = `${ahora.toLocaleDateString('es-ES', opcionesFecha)}, ${ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase()}`;
-            }
         });
     </script>
 </body>
