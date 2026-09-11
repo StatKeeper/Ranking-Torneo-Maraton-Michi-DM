@@ -500,30 +500,31 @@ function renderizarEstadisticasTiempos() {
 
                     seleccionadosNombres.forEach(sel => {
                         const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(k.toLowerCase()));
-                        let textoCelda = "-";
+                        let celdaTexto = "-";
                         if (realKey && estadisticasJugadorCiv[realKey] && estadisticasJugadorCiv[realKey][civ]) {
-                            const cData = estadisticasJugadorCiv[realKey][civ];
-                            textoCelda = `${cData.victorias}/${cData.jugadas}`;
+                            const datosCiv = estadisticasJugadorCiv[realKey][civ];
+                            celdaTexto = `${datosCiv.jugadas} (${datosCiv.victorias}V/${datosCiv.derrotas}D)`;
                         }
-                        htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${textoCelda}</td>`;
+                        htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.9em;">${celdaTexto}</td>`;
                     });
-                    htmlTablaCivs += `</tr>`;
-                });
-                htmlTablaCivs += `</tbody></table></div>`;
-            }
-            contenedorResultado.innerHTML = htmlTablaCivs;
-            modalCivsOverlay.style.display = "block";
-        });
+                  htmlTablaCivs += `</tr>`;
+              });
+              htmlTablaCivs += `</tbody></table></div>`;
+          }
+
+          contenedorResultado.innerHTML = htmlTablaCivs;
+          modalCivsOverlay.style.display = "block";
+      });
     }
 
     if (cerrarModalCivs) {
-        cerrarModalCivs.addEventListener("click", () => { modalCivsOverlay.style.display = "none"; });
+      cerrarModalCivs.addEventListener("click", () => { modalCivsOverlay.style.display = "none"; });
     }
 
     if (btnDescargarCivs) {
-        btnDescargarCivs.addEventListener("click", () => {
-            ejecutarCapturaHtml2Canvas(document.getElementById("modal-civs-card"), 'comparativa_civs_michi.png');
-        });
+      btnDescargarCivs.addEventListener("click", () => {
+        ejecutarCapturaHtml2Canvas(document.getElementById("modal-civs-card"), 'comparativa_civilizaciones_michi.png');
+      });
     }
 
     // 3. Sinergia
@@ -533,110 +534,110 @@ function renderizarEstadisticasTiempos() {
     const btnDescargarSinergia = document.getElementById("btn-descargar-sinergia");
 
     if (btnConsultarSinergia) {
-        btnConsultarSinergia.addEventListener("click", () => {
-            const val1 = document.getElementById("input-sinergia-1").value;
-            const val2 = document.getElementById("input-sinergia-2").value;
-            const val3 = document.getElementById("input-sinergia-3").value;
-            const val4 = document.getElementById("input-sinergia-4").value;
-            const contenedorResultado = document.getElementById("resultado-sinergia-container");
+      btnConsultarSinergia.addEventListener("click", () => {
+        const val1 = document.getElementById("input-sinergia-1").value;
+        const val2 = document.getElementById("input-sinergia-2").value;
+        const val3 = document.getElementById("input-sinergia-3").value;
+        const val4 = document.getElementById("input-sinergia-4").value;
+        const contenedorResultado = document.getElementById("resultado-sinergia-container");
 
-            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
-            if (inputsRaw.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores para consultar la sinergia.");
-                return;
-            }
+        let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
+        if (inputsRaw.length < 2) {
+          alert("Debes ingresar al menos 2 jugadores para consultar la sinergia.");
+          return;
+        }
 
-            let seleccionadosNombres = [];
-            inputsRaw.forEach(inp => {
-                const encontrado = buscarJugadorFlexible(inp);
-                if (encontrado) {
-                    seleccionadosNombres.push(encontrado.nombre);
-                } else {
-                    seleccionadosNombres.push(inp.trim());
-                }
-            });
-            seleccionadosNombres = [...new Set(seleccionadosNombres)];
-
-            let partidasEnComun = 0;
-            let victoriasEnComun = 0;
-            let derrotasEnComun = 0;
-
-            partidasDetalleGlobal.forEach(partidaJugadores => {
-                let nombresEnPartida = partidaJugadores.map(p => p.nombre.toLowerCase());
-                let todosPresentes = seleccionadosNombres.every(sel => nombresEnPartida.includes(sel.toLowerCase()));
-
-                if (todosPresentes) {
-                    partidasEnComun++;
-                    let primerMiembro = partidaJugadores.find(p => p.nombre.toLowerCase() === seleccionadosNombres[0].toLowerCase());
-                    if (primerMiembro) {
-                        if (primerMiembro.pg === 1) victoriasEnComun++;
-                        if (primerMiembro.pp === 1) derrotasEnComun++;
-                    }
-                }
-            });
-
-            let efectividad = partidasEnComun > 0 ? Math.round((victoriasEnComun / partidasEnComun) * 100) : 0;
-            let textoEf = partidasEnComun > 0 ? `${efectividad}%` : "0%";
-            if (partidasEnComun > 0 && victoriasEnComun === partidasEnComun) {
-                textoEf = `🔥 Invictos (100%)`;
-            }
-
-            let htmlSinergia = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal: ${seleccionadosNombres.join(", ")}</h3>
-                
-                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Ef.</strong>: Efectividad Conjunta
-                </div>
-
-                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table style="width: 100%; min-width: 280px; border-collapse: collapse; background: #fff; font-size: 0.75em;">
-                        <thead>
-                            <tr style="background-color: #343a40; color: #fff;">
-                                <th style="padding: 6px 4px; text-align: center; width: 40px;">P.</th>
-                                <th style="padding: 6px 4px; text-align: center; width: 40px;">V.</th>
-                                <th style="padding: 6px 4px; text-align: center; width: 40px;">D.</th>
-                                <th style="padding: 6px 6px; text-align: center;">Efec. Conjunta</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #dee2e6; background-color: #ffffff;">
-                                <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #343a40;">${partidasEnComun}</td>
-                                <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasEnComun}</td>
-                                <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasEnComun}</td>
-                                <td style="padding: 8px 6px; text-align: center; font-weight: bold; color: #0d6efd;">${textoEf}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            contenedorResultado.innerHTML = htmlSinergia;
-            modalSinergiaOverlay.style.display = "block";
+        let seleccionadosNombres = [];
+        inputsRaw.forEach(inp => {
+          const encontrado = buscarJugadorFlexible(inp);
+          if (encontrado) {
+            seleccionadosNombres.push(encontrado.nombre);
+          } else {
+            seleccionadosNombres.push(inp.trim());
+          }
         });
+        seleccionadosNombres = [...new Set(seleccionadosNombres)];
+
+        let partidasEnComun = 0;
+        let victoriasEnComun = 0;
+        let derrotasEnComun = 0;
+
+        if (partidasDetalleGlobal.length > 0) {
+          partidasDetalleGlobal.forEach(partida => {
+            let todosParticiparon = true;
+            let ganoPartida = true;
+            let perdioPartida = false;
+
+            seleccionadosNombres.forEach(sel => {
+              const regJugador = partida.find(j => j.nombre.toLowerCase() === sel.toLowerCase() || j.nombre.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(j.nombre.toLowerCase()));
+              if (!regJugador) {
+                todosParticiparon = false;
+              } else {
+                if (regJugador.pg !== 1) ganoPartida = false;
+              if (regJugador.pp === 1) perdioPartida = true;
+            }
+          });
+
+          if (todosParticiparon) {
+            partidasEnComun++;
+            if (ganoPartida) {
+              victoriasEnComun++;
+            } else if (perdioPartida) {
+              derrotasEnComun++;
+            }
+          }
+        });
+      }
+
+      let efectividadConjunta = partidasEnComun > 0 ? (victoriasEnComun / partidasEnComun) * 100 : 0;
+      let textoEf = partidasEnComun > 0 ? `${efetividadConjunta.toFixed(1)}%` : "0.0%";
+      // Ajuste para evitar error tipográfico en la variable de texto de efectividad
+      let textoEfec = partidasEnComun > 0 ? `${efectividadConjunta.toFixed(1)}%` : "0.0%";
+
+      let htmlSinergia = `
+          <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal</h3>
+          
+          <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
+            <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Ef.</strong>: Efectividad Conjunta
+          </div>
+
+          <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+            <table style="width: 100%; min-width: 280px; border-collapse: collapse; background: #fff; font-size: 0.75em;">
+              <thead>
+                <tr style="background-color: #343a40; color: #fff;">
+                  <th colspan="4" style="padding: 6px 4px; text-align: center; font-size: 0.9em; border-bottom: 1px solid #495057;">${seleccionadosNombres.join(", ")}</th>
+                </tr>
+                <tr style="background-color: #343a40; color: #fff;">
+                  <th style="padding: 6px 4px; text-align: center; width: 40px; font-size: 0.85em;">P.</th>
+                  <th style="padding: 6px 4px; text-align: center; width: 40px; font-size: 0.85em;">V.</th>
+                  <th style="padding: 6px 4px; text-align: center; width: 40px; font-size: 0.85em;">D.</th>
+                  <th style="padding: 6px 6px; text-align: center; font-size: 0.85em;">Efec. Conjunta</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid #dee2e6; background-color: #ffffff;">
+                  <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #343a40;">${partidasEnComun}</td>
+                  <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasEnComun}</td>
+                  <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasEnComun}</td>
+                  <td style="padding: 8px 6px; text-align: center; font-weight: bold; color: #0d6efd;">${textoEfec}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      contenedorResultado.innerHTML = htmlSinergia;
+      modalSinergiaOverlay.style.display = "block";
+    });
     }
 
     if (cerrarModalSinergia) {
-        cerrarModalSinergia.addEventListener("click", () => { modalSinergiaOverlay.style.display = "none"; });
+      cerrarModalSinergia.addEventListener("click", () => { modalSinergiaOverlay.style.display = "none"; });
     }
 
     if (btnDescargarSinergia) {
-        btnDescargarSinergia.addEventListener("click", () => {
-            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'sinergia_grupo_michi.png');
-        });
+      btnDescargarSinergia.addEventListener("click", () => {
+        ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'sinergia_grupal_michi.png');
+      });
     }
-}
-
-function ejecutarCapturaHtml2Canvas(elementoDOM, nombreArchivo) {
-    if (!elementoDOM) return;
-    if (typeof html2canvas === 'undefined') {
-        alert("La librería html2canvas no está cargada.");
-        return;
-    }
-    html2canvas(elementoDOM, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
-        const enlace = document.createElement("a");
-        enlace.download = nombreArchivo;
-        enlace.href = canvas.toDataURL("image/png");
-        enlace.click();
-    }).catch(err => {
-        console.error("Error al generar la imagen:", err);
-    });
 }
