@@ -26,7 +26,6 @@ function obtenerNickOficialEstadisticas(nombreIngresado) {
         }
     }
 
-    // Revisar equivalencias guardadas o globales
     if (typeof equivalencias !== 'undefined') {
         const guardadas = localStorage.getItem("equivalencias_michi_dm");
         const lista = guardadas ? JSON.parse(guardadas) : equivalencias;
@@ -34,7 +33,6 @@ function obtenerNickOficialEstadisticas(nombreIngresado) {
         if (buscado) return buscado.oficial;
     }
 
-    // Revisar mapa de correcciones exacto o parcial
     for (let key in mapaCorrecciones) {
         if (key.toLowerCase().includes(limpioIngresado) || limpioIngresado.includes(key.toLowerCase())) {
             return mapaCorrecciones[key];
@@ -199,6 +197,25 @@ function renderizarEstadisticasTiempos() {
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
     const optionsDatalist = Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("");
+
+    // Función auxiliar flexible para buscar coincidencias de nombres (parciales o con corchetes)
+    function buscarJugadorFlexible(nombreBusqueda) {
+        if (!nombreBusqueda) return null;
+        const query = nombreBusqueda.toLowerCase().trim();
+        return listaJugadores.find(j => {
+            const n = j.nombre.toLowerCase();
+            return n === query || n.includes(query) || query.includes(n);
+        });
+    }
+
+    function buscarJugadorCivFlexible(nombreBusqueda) {
+        if (!nombreBusqueda) return null;
+        const query = nombreBusqueda.toLowerCase().trim();
+        return Object.keys(estadisticasJugadorCiv).find(k => {
+            const n = k.toLowerCase();
+            return n === query || n.includes(query) || query.includes(n);
+        });
+    }
 
     // ==========================================
     // 1. SUBPESTAÑA TIEMPOS
@@ -372,19 +389,28 @@ function renderizarEstadisticasTiempos() {
 
     if (btnConsultarTiempos) {
         btnConsultarTiempos.addEventListener("click", () => {
-            const j1 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-1").value);
-            const j2 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-2").value);
-            const j3 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-3").value);
-            const j4 = obtenerNickOficialEstadisticas(document.getElementById("input-tiempo-4").value);
+            const val1 = document.getElementById("input-tiempo-1").value;
+            const val2 = document.getElementById("input-tiempo-2").value;
+            const val3 = document.getElementById("input-tiempo-3").value;
+            const val4 = document.getElementById("input-tiempo-4").value;
             const contenedorResultado = document.getElementById("resultado-tiempos-container");
 
-            let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
-            seleccionados = [...new Set(seleccionados)];
-
-            if (seleccionados.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores válidos para comparar.");
+            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
+            if (inputsRaw.length < 2) {
+                alert("Debes ingresar al menos 2 jugadores para comparar.");
                 return;
             }
+
+            let seleccionadosNombres = [];
+            inputsRaw.forEach(inp => {
+                const encontrado = buscarJugadorFlexible(inp);
+                if (encontrado) {
+                    seleccionadosNombres.push(encontrado.nombre);
+                } else {
+                    seleccionadosNombres.push(inp.trim());
+                }
+            });
+            seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
             let htmlTablaComparativa = `
                 <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos</h3>
@@ -394,12 +420,12 @@ function renderizarEstadisticasTiempos() {
                 </div>
 
                 <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table style="width: 100%; min-width: ${seleccionados.length * 95 + 50}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
+                    <table style="width: 100%; min-width: ${seleccionadosNombres.length * 95 + 50}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
                         <thead>
                             <tr style="background-color: #343a40; color: #fff;">
                                 <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Métrica</th>
             `;
-            seleccionados.forEach(sel => {
+            seleccionadosNombres.forEach(sel => {
                 htmlTablaComparativa += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel}</th>`;
             });
             htmlTablaComparativa += `</tr></thead><tbody>`;
@@ -419,8 +445,8 @@ function renderizarEstadisticasTiempos() {
                 htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
                 htmlTablaComparativa += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
                 
-                seleccionados.forEach(sel => {
-                    const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase() || j.nombre.toLowerCase().includes(sel.toLowerCase()));
+                seleccionadosNombres.forEach(sel => {
+                    const jData = listaJugadores.find(j => j.nombre.toLowerCase() === sel.toLowerCase() || j.nombre.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(j.nombre.toLowerCase()));
                     const valor = jData ? metrica.fn(jData) : "-";
                     htmlTablaComparativa += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${valor}</td>`;
                 });
@@ -451,23 +477,32 @@ function renderizarEstadisticasTiempos() {
 
     if (btnConsultarCivs) {
         btnConsultarCivs.addEventListener("click", () => {
-            const j1 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-1").value);
-            const j2 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-2").value);
-            const j3 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-3").value);
-            const j4 = obtenerNickOficialEstadisticas(document.getElementById("input-civ-4").value);
+            const val1 = document.getElementById("input-civ-1").value;
+            const val2 = document.getElementById("input-civ-2").value;
+            const val3 = document.getElementById("input-civ-3").value;
+            const val4 = document.getElementById("input-civ-4").value;
             const contenedorResultado = document.getElementById("resultado-civs-container");
 
-            let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
-            seleccionados = [...new Set(seleccionados)];
-
-            if (seleccionados.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores válidos para comparar civilizaciones.");
+            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
+            if (inputsRaw.length < 2) {
+                alert("Debes ingresar al menos 2 jugadores para comparar civilizaciones.");
                 return;
             }
 
+            let seleccionadosNombres = [];
+            inputsRaw.forEach(inp => {
+                const encontrado = buscarJugadorFlexible(inp);
+                if (encontrado) {
+                    seleccionadosNombres.push(encontrado.nombre);
+                } else {
+                    seleccionadosNombres.push(inp.trim());
+                }
+            });
+            seleccionadosNombres = [...new Set(seleccionadosNombres)];
+
             let civsSet = new Set();
-            seleccionados.forEach(sel => {
-                const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()));
+            seleccionadosNombres.forEach(sel => {
+                const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(k.toLowerCase()));
                 if (realKey && estadisticasJugadorCiv[realKey]) {
                     Object.keys(estadisticasJugadorCiv[realKey]).forEach(c => civsSet.add(c));
                 }
@@ -484,12 +519,12 @@ function renderizarEstadisticasTiempos() {
             } else {
                 htmlTablaCivs += `
                     <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        <table style="width: 100%; min-width: ${seleccionados.length * 100 + 70}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
+                        <table style="width: 100%; min-width: ${seleccionadosNombres.length * 100 + 70}px; border-collapse: collapse; background: #fff; font-size: 0.7em;">
                             <thead>
                                 <tr style="background-color: #343a40; color: #fff;">
                                     <th style="padding: 5px 3px; text-align: left; font-size: 0.85em;">Civ</th>
                 `;
-                seleccionados.forEach(sel => {
+                seleccionadosNombres.forEach(sel => {
                     htmlTablaCivs += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel} (Part/WR)</th>`;
                 });
                 htmlTablaCivs += `</tr></thead><tbody>`;
@@ -499,8 +534,8 @@ function renderizarEstadisticasTiempos() {
                     htmlTablaCivs += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
                     htmlTablaCivs += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">🏛️ ${civ}</td>`;
 
-                    seleccionados.forEach(sel => {
-                        const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()));
+                    seleccionadosNombres.forEach(sel => {
+                        const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(k.toLowerCase()));
                         const datosJugCiv = realKey && estadisticasJugadorCiv[realKey] && estadisticasJugadorCiv[realKey][civ];
                         if (datosJugCiv && datosJugCiv.jugadas > 0) {
                             const wr = ((datosJugCiv.victorias / datosJugCiv.jugadas) * 100).toFixed(0);
@@ -538,19 +573,28 @@ function renderizarEstadisticasTiempos() {
 
     if (btnConsultarSinergia) {
         btnConsultarSinergia.addEventListener("click", () => {
-            const j1 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-1").value);
-            const j2 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-2").value);
-            const j3 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-3").value);
-            const j4 = obtenerNickOficialEstadisticas(document.getElementById("input-sinergia-4").value);
+            const val1 = document.getElementById("input-sinergia-1").value;
+            const val2 = document.getElementById("input-sinergia-2").value;
+            const val3 = document.getElementById("input-sinergia-3").value;
+            const val4 = document.getElementById("input-sinergia-4").value;
             const contenedorResultado = document.getElementById("resultado-sinergia-container");
 
-            let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
-            seleccionados = [...new Set(seleccionados)];
-
-            if (seleccionados.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores diferentes válidos para calcular la sinergia.");
+            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
+            if (inputsRaw.length < 2) {
+                alert("Debes ingresar al menos 2 jugadores diferentes para calcular la sinergia.");
                 return;
             }
+
+            let seleccionadosNombres = [];
+            inputsRaw.forEach(inp => {
+                const encontrado = buscarJugadorFlexible(inp);
+                if (encontrado) {
+                    seleccionadosNombres.push(encontrado.nombre);
+                } else {
+                    seleccionadosNombres.push(inp.trim());
+                }
+            });
+            seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
             let partidasJuntos = 0;
             let victoriasJuntos = 0;
@@ -567,8 +611,8 @@ function renderizarEstadisticasTiempos() {
 
                 Object.values(equiposEnPartida).forEach(miembrosEquipo => {
                     const nombresEnEquipo = miembrosEquipo.map(me => me.nombre);
-                    const todosEnEsteEquipo = seleccionados.every(sel => 
-                        nombresEnEquipo.some(ne => ne.toLowerCase() === sel.toLowerCase() || ne.toLowerCase().includes(sel.toLowerCase()))
+                    const todosEnEsteEquipo = seleccionadosNombres.every(sel => 
+                        nombresEnEquipo.some(ne => ne.toLowerCase() === sel.toLowerCase() || ne.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(ne.toLowerCase()))
                     );
 
                     if (todosEnEsteEquipo) {
@@ -576,8 +620,8 @@ function renderizarEstadisticasTiempos() {
                         let todosGanaron = true;
                         let algunoPerdio = false;
 
-                        seleccionados.forEach(sel => {
-                            const datosJugador = miembrosEquipo.find(me => me.nombre.toLowerCase() === sel.toLowerCase() || me.nombre.toLowerCase().includes(sel.toLowerCase()));
+                        seleccionadosNombres.forEach(sel => {
+                            const datosJugador = miembrosEquipo.find(me => me.nombre.toLowerCase() === sel.toLowerCase() || me.nombre.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(me.nombre.toLowerCase()));
                             if (datosJugador) {
                                 if (datosJugador.pg !== 1) todosGanaron = false;
                                 if (datosJugador.pp === 1) algunoPerdio = true;
@@ -591,7 +635,7 @@ function renderizarEstadisticasTiempos() {
             });
 
             let htmlSinergiaModal = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal: ${seleccionados.join(", ")}</h3>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal: ${seleccionadosNombres.join(", ")}</h3>
             `;
 
             if (partidasJuntos === 0) {
