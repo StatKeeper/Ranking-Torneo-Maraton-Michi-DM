@@ -15,36 +15,12 @@
             padding-bottom: 70px;
             font-family: Arial, sans-serif;
         }
+        /* Ocultamos la barra superior anterior para evitar duplicidad en móviles */
         .mobile-header-bar {
-            display: none;
-            background: #f4f1ea;
-            border-bottom: 2px solid #d4af37;
-            padding: 10px 15px;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .mobile-header-bar h1 {
-            margin: 0;
-            font-size: 1.05rem;
-            color: #222222;
-            font-weight: bold;
+            display: none !important;
         }
         .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .header-top h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            color: #222222;
-        }
-        @media (max-width: 768px) {
-            .header-top { display: none !important; }
-            .mobile-header-bar { display: flex; }
+            display: none;
         }
         .tabs {
             display: flex;
@@ -133,16 +109,7 @@
 </head>
 <body>
 
-    <!-- Barra superior móvil -->
-    <div class="mobile-header-bar">
-        <h1>[cLm] Ranking Maratón Michi DM</h1>
-    </div>
-
     <div style="padding: 15px;" id="main-content">
-        <div class="header-top">
-            <h1>[cLm] Ranking Maratón Michi DM</h1>
-        </div>
-
         <!-- Pestañas de PC -->
         <div class="tabs">
             <a href="inicio.html" class="tab-btn active">🏠 Inicio</a>
