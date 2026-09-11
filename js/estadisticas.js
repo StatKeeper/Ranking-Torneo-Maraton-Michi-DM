@@ -1,324 +1,421 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking Maratón Michi DM - Estadísticas y Tiempos</title>
-    <link rel="stylesheet" href="css/estilos.css">
-    <style>
-        body {
-            box-sizing: border-box;
-            background-color: #ffffff;
-            color: #333333;
-            margin: 0;
-            padding-bottom: 70px; /* Espacio para la barra inferior en móviles */
-            font-family: Arial, sans-serif;
-        }
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-            position: relative;
-            gap: 10px;
-        }
-        .header-top h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            line-height: 1.2;
-            max-width: 65%;
-            color: #222222;
-        }
-        .header-info-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-        .header-top .fecha-actualizacion {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #555555;
-            text-align: right;
-        }
+document.addEventListener("DOMContentLoaded", () => {
+    renderizarEstadisticasTiempos();
 
-        /* --- BOTÓN ADMIN FLOTANTE SEGURO --- */
-        .admin-toggle-btn {
-            background: #b8860b;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+    const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
+    const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
 
-        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS (Escritorio) --- */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            background: #f4f1ea;
-            padding: 10px;
-            border-radius: 8px;
-            border: 2px solid #d4af37;
-            margin-bottom: 20px;
-        }
-        .tab-btn {
-            background: #fff;
-            color: #333;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            border: 1px solid #ccc;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
-        }
-        .tab-btn:hover {
-            background: #fdf8ed;
-            color: #b8860b;
-            border-color: #b8860b;
-        }
-        .tab-btn.active {
-            background: #b8860b;
-            color: white;
-            border-color: #996e05;
-        }
+    if (selectAnio) {
+        selectAnio.addEventListener("change", renderizarEstadisticasTiempos);
+    }
+    if (selectMes) {
+        selectMes.addEventListener("change", renderizarEstadisticasTiempos);
+    }
+});
 
-        /* --- SUBPESTAÑAS --- */
-        .subtabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
+function obtenerNickOficialEstadisticas(nombreIngresado) {
+    if (!nombreIngresado) return "";
+    let mapaCorrecciones = {};
+    const correccionesGuardadas = localStorage.getItem("mapa_correccion_nombres") || localStorage.getItem("correcciones_nombres");
+    if (correccionesGuardadas) {
+        try {
+            mapaCorrecciones = JSON.parse(correccionesGuardadas);
+        } catch (e) {
+            console.error("Error parseando correcciones:", e);
         }
-        .subtab-btn {
-            background: #f8f9fa;
-            color: #333;
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .subtab-btn.active {
-            background: #0d6efd;
-            color: white;
-            border-color: #0b5ed7;
-        }
+    }
+    if (typeof equivalencias !== 'undefined') {
+        const guardadas = localStorage.getItem("equivalencias_michi_dm");
+        const lista = guardadas ? JSON.parse(guardadas) : equivalencias;
+        const buscado = lista.find(e => e.antiguo.toLowerCase() === nombreIngresado.toLowerCase().trim());
+        if (buscado) return buscado.oficial;
+    }
+    return mapaCorrecciones[nombreIngresado] || nombreIngresado.trim();
+}
 
-        /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
-        .mobile-bottom-nav {
-            display: none;
-        }
+function convertirDuracionASegundos(duracionStr) {
+    if (!duracionStr || typeof duracionStr !== 'string') return 0;
+    const partes = duracionStr.split(':').map(p => parseInt(p, 10) || 0);
+    if (partes.length === 3) {
+        return partes[0] * 3600 + partes[1] * 60 + partes[2];
+    } else if (partes.length === 2) {
+        return partes[0] * 60 + partes[1];
+    }
+    return 0;
+}
 
-        /* --- PANEL LATERAL CORREGIDO PARA MÓVILES Y PC --- */
-        #sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 260px;
-            height: 100%;
-            background: #fff;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-            z-index: 999;
-            padding: 20px;
-            box-sizing: border-box;
-            transition: transform 0.3s ease;
-            transform: translateX(-100%);
-        }
-        #sidebar.open {
-            transform: translateX(0);
-        }
-        #main-content {
-            margin-left: 280px;
-            padding: 20px;
-        }
+function convertirSegundosADuracion(segundosTotales) {
+    if (!segundosTotales || segundosTotales <= 0) return "00:00:00";
+    const h = Math.floor(segundosTotales / 3600);
+    const m = Math.floor((segundosTotales % 3600) / 60);
+    const s = segundosTotales % 60;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
 
-        @media (max-width: 768px) {
-            /* Ocultar elementos superiores innecesarios en celular para ganar espacio */
-            .header-top, .tabs {
-                display: none !important;
-            }
-            #sidebar {
-                transform: translateX(-100%);
-            }
-            #sidebar.open {
-                transform: translateX(0);
-            }
-            #main-content {
-                margin-left: 0 !important;
-                padding: 10px !important;
-            }
-            /* Mostrar la barra inferior en celulares */
-            .mobile-bottom-nav {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background: #ffffff;
-                border-top: 2px solid #d4af37;
-                justify-content: space-around;
-                align-items: center;
-                padding: 8px 0;
-                z-index: 1500;
-                box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
-            }
-            .mobile-nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                color: #666666;
-                text-decoration: none;
-                font-size: 0.7rem;
-                font-weight: bold;
-            }
-            .mobile-nav-item span.icon {
-                font-size: 1.2rem;
-                margin-bottom: 2px;
-            }
-            .mobile-nav-item.active {
-                color: #b8860b;
+function renderizarEstadisticasTiempos() {
+    const secTiempos = document.getElementById("sec-tiempos");
+    const secCivilizaciones = document.getElementById("sec-civilizaciones");
+    const secEnfrentamientos = document.getElementById("sec-enfrentamientos");
+
+    if (!secTiempos || !secCivilizaciones || !secEnfrentamientos) return;
+
+    let estadisticasJugadores = {};
+    let estadisticasCivilizaciones = {};
+    let estadisticasEquipos = {};
+    let listaGlobalJugadores = new Set();
+    let partidasDetalleGlobal = [];
+
+    const selectAnio = document.getElementById("select-anio-filtro") || document.getElementById("select-anio") || document.getElementById("anio");
+    const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
+    
+    const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
+    const mesSeleccionado = selectMes ? selectMes.value : "08";
+
+    const mesesMapInverso = {
+        "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+        "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+        "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+    };
+
+    const mesesMapTexto = {
+        "enero": "01", "febrero": "02", "marzo": "03", "abril": "04",
+        "mayo": "05", "junio": "06", "julio": "07", "agosto": "08",
+        "septiembre": "09", "octubre": "10", "noviembre": "11", "diciembre": "12",
+        "Agosto": "08", "Septiembre": "09", "Octubre": "10", "Noviembre": "11", "Diciembre": "12"
+    };
+
+    const mesFormatoNum = mesesMapTexto[mesSeleccionado] || mesSeleccionado;
+    const mesFormatoTexto = mesesMapInverso[mesSeleccionado] || mesSeleccionado;
+
+    for (let i = 0; i < localStorage.length; i++) {
+        const clave = localStorage.key(i);
+        
+        if (clave && clave.startsWith("registros_") && !clave.includes("img_")) {
+            if (clave.includes(anioSeleccionado) && (clave.includes(mesFormatoNum) || clave.toLowerCase().includes(mesFormatoTexto.toLowerCase()))) {
+                try {
+                    const registros = JSON.parse(localStorage.getItem(clave));
+                    if (Array.isArray(registros) && registros.length > 0) {
+                        let jugadoresEnPartida = [];
+                        let partidaYaProcesadaEnEstaClave = new Set();
+
+                        registros.forEach(reg => {
+                            const nombreRaw = reg.jugador || reg.Jugador;
+                            if (!nombreRaw) return;
+                            const nombre = obtenerNickOficialEstadisticas(nombreRaw);
+                            
+                            if (partidaYaProcesadaEnEstaClave.has(nombre)) return;
+                            partidaYaProcesadaEnEstaClave.add(nombre);
+
+                            listaGlobalJugadores.add(nombre);
+
+                            const pg = (reg.pg === 1 || reg.PG === 1) ? 1 : 0;
+                            const pp = (reg.pp === 1 || reg.PP === 1) ? 1 : 0;
+                            const equipoReg = (reg.equipo || reg.Equipo || "Sin Equipo").trim();
+
+                            jugadoresEnPartida.push({ nombre, pg, pp, equipo: equipoReg });
+
+                            if (!estadisticasJugadores[nombre]) {
+                                estadisticasJugadores[nombre] = {
+                                    nombre: nombre,
+                                    totalPartidas: 0,
+                                    victorias: 0,
+                                    derrotas: 0,
+                                    unidadesTotales: 0,
+                                    edificiosTotales: 0,
+                                    segundosTotales: 0
+                                };
+                            }
+
+                            const stats = estadisticasJugadores[nombre];
+                            stats.totalPartidas++;
+                            if (pg === 1) stats.victorias++;
+                            if (pp === 1) stats.derrotas++;
+
+                            stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || reg.UnidadesAsesinadas || 0, 10);
+                            stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || 0, 10);
+                            stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
+
+                            const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
+                            if (civRaw && civRaw !== "-" && String(civRaw).trim() !== "") {
+                                const civ = String(civRaw).trim();
+                                if (!estadisticasCivilizaciones[civ]) {
+                                    estadisticasCivilizaciones[civ] = { civ: civ, jugadas: 0, victorias: 0, derrotas: 0 };
+                                }
+                                estadisticasCivilizaciones[civ].jugadas++;
+                                if (pg === 1) estadisticasCivilizaciones[civ].victorias++;
+                                if (pp === 1) estadisticasCivilizaciones[civ].derrotas++;
+                            }
+
+                            if (equipoReg && equipoReg !== "-") {
+                                const claveEquipo = `${clave} - ${equipoReg}`;
+                                if (!estadisticasEquipos[claveEquipo]) {
+                                    estadisticasEquipos[claveEquipo] = {
+                                        nombreEquipo: equipoReg,
+                                        partidaKey: clave,
+                                        victorias: 0,
+                                        derrotas: 0,
+                                        miembros: new Set()
+                                    };
+                                }
+                                estadisticasEquipos[claveEquipo].miembros.add(nombre);
+                                if (pg === 1) estadisticasEquipos[claveEquipo].victorias = 1;
+                                if (pp === 1) estadisticasEquipos[claveEquipo].derrotas = 1;
+                            }
+                        });
+
+                        if (jugadoresEnPartida.length > 0) {
+                            partidasDetalleGlobal.push(jugadoresEnPartida);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error al procesar registros para estadísticas:", e);
+                }
             }
         }
-    </style>
-</head>
-<body>
+    }
 
-    <div id="sidebar">
-        <h3>🔐 Panel de Control</h3>
-        <label>Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
-    </div>
+    const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
+    let htmlTiempos = `
+        <h3>⏱️ Tiempos de Partida, Totales y Promedios por Jugador</h3>
+        <div style="background: #f8f9fa; padding: 12px 15px; border-radius: 6px; margin-top: 10px; margin-bottom: 15px; font-size: 0.9em; border-left: 4px solid #0d6efd;">
+            <strong>Leyenda de Diminutivos:</strong>
+            <ul style="margin: 5px 0 0 20px; padding: 0; color: #495057;">
+                <li><strong>Part.</strong>: Partidas Registradas</li>
+                <li><strong>Dur. Acum.</strong>: Duración Total Acumulada</li>
+                <li><strong>Prom. Dur.</strong>: Promedio de Duración por Partida</li>
+                <li><strong>Tot. Unid.</strong>: Total de Unidades Asesinadas</li>
+                <li><strong>Prom. Unid.</strong>: Promedio de Unidades Asesinadas por Partida</li>
+                <li><strong>Tot. Edif.</strong>: Total de Edificios Arrasados</li>
+                <li><strong>Prom. Edif.</strong>: Promedio de Edificios Arrasados por Partida</li>
+            </ul>
+        </div>
+        <div style="overflow-x: auto; margin-top: 15px;">
+            <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
+                        <th style="padding: 12px;">Jugador</th>
+                        <th style="padding: 12px;">Part.</th>
+                        <th style="padding: 12px;">Dur. Acum.</th>
+                        <th style="padding: 12px;">Prom. Dur.</th>
+                        <th style="padding: 12px;">Tot. Unid.</th>
+                        <th style="padding: 12px;">Prom. Unid.</th>
+                        <th style="padding: 12px;">Tot. Edif.</th>
+                        <th style="padding: 12px;">Prom. Edif.</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
 
-    <div id="main-content">
-        <!-- Encabezado superior (Visible en PC) -->
-        <div class="header-top">
-            <h1>Ranking Maratón Michi DM</h1>
-            <div class="header-info-container">
-                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-                <div id="ultima-actualizacion" class="fecha-actualizacion">--/--/---- --:--:-- p. m.</div>
+    if (listaJugadores.length === 0) {
+        htmlTiempos += `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #6c757d;">No hay registros de tiempos disponibles para este periodo.</td></tr>`;
+    } else {
+        listaJugadores.sort((a, b) => b.totalPartidas - a.totalPartidas);
+        listaJugadores.forEach(j => {
+            const promedioSeg = j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0;
+            const promedioUnidades = j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0;
+            const promedioEdificios = j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0;
+
+            htmlTiempos += `
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;"><strong>${j.nombre}</strong></td>
+                    <td style="padding: 12px;">${j.totalPartidas}</td>
+                    <td style="padding: 12px;">${convertirSegundosADuracion(j.segundosTotales)}</td>
+                    <td style="padding: 12px; font-weight: bold; color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</td>
+                    <td style="padding: 12px;">${j.unidadesTotales}</td>
+                    <td style="padding: 12px;">${promedioUnidades}</td>
+                    <td style="padding: 12px;">${j.edificiosTotales}</td>
+                    <td style="padding: 12px;">${promedioEdificios}</td>
+                </tr>
+            `;
+        });
+    }
+    htmlTiempos += `</tbody></table></div>`;
+    secTiempos.innerHTML = htmlTiempos;
+
+    const listaCivs = Object.values(estadisticasCivilizaciones);
+    let htmlCivs = `
+        <h3>🏛️ Rendimiento y Win Rate por Civilización</h3>
+        <div style="overflow-x: auto; margin-top: 15px;">
+            <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
+                        <th style="padding: 12px;">Civilización</th>
+                        <th style="padding: 12px;">Veces Jugada</th>
+                        <th style="padding: 12px;">Victorias</th>
+                        <th style="padding: 12px;">Derrotas</th>
+                        <th style="padding: 12px;">Win Rate (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    if (listaCivs.length === 0) {
+        htmlCivs += `<tr><td colspan="5" style="text-align: center; padding: 25px; color: #6c757d;">No hay civilizaciones registradas aún.</td></tr>`;
+    } else {
+        listaCivs.sort((a, b) => b.jugadas - a.jugadas);
+        listaCivs.forEach(c => {
+            const winRate = c.jugadas > 0 ? ((c.victorias / c.jugadas) * 100).toFixed(1) : 0;
+            htmlCivs += `
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;"><strong>${c.civ}</strong></td>
+                    <td style="padding: 12px;">${c.jugadas}</td>
+                    <td style="padding: 12px; color: #198754; font-weight: bold;">${c.victorias}</td>
+                    <td style="padding: 12px; color: #dc3545; font-weight: bold;">${c.derrotas}</td>
+                    <td style="padding: 12px; font-weight: bold; color: ${winRate >= 50 ? '#198754' : '#dc3545'};">${winRate}%</td>
+                </tr>
+            `;
+        });
+    }
+    htmlCivs += `</tbody></table></div>`;
+    secCivilizaciones.innerHTML = htmlCivs;
+
+    const listaEquipos = Object.values(estadisticasEquipos);
+    let htmlEnfrentamientos = `
+        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
+        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en el mismo equipo.</p>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 1:</label>
+                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 2:</label>
+                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 3 (Opcional):</label>
+                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 4 (Opcional):</label>
+                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                </div>
             </div>
+            
+            <datalist id="lista-jugadores-sug">
+                ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
+            </datalist>
+
+            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer;">Consultar Sinergia Grupal</button>
         </div>
 
-        <!-- Pestañas Principales (Visible en PC) -->
-        <div class="tabs">
-            <a href="index.html" class="tab-btn">📊 Clasificación general</a>
-            <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
-            <a href="candidatos.html" class="tab-btn">⭐ Candidatos</a>
-            <a href="historial.html" class="tab-btn">📜 Historial de Partidas</a>
-            <a href="galeria.html" class="tab-btn admin-only">🖼️ Galería</a>
-            <a href="correccion.html" class="tab-btn admin-only">📝 Corrección</a>
-        </div>
+        <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 35px; display: none;"></div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; margin-bottom: 10px;">
-            <h2 style="margin: 0; color: #222;">📈 Estadísticas Generales del Torneo</h2>
-            <!-- Selectores limpios con los IDs que el JS lee exactamente -->
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <label for="select-anio-filtro" style="font-weight: bold;">Año:</label>
-                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
-                    <option value="2026" selected>2026</option>
-                </select>
-                <label for="select-mes-filtro" style="font-weight: bold; margin-left: 10px;">Mes:</label>
-                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
-                    <option value="01">Enero</option>
-                    <option value="02">Febrero</option>
-                    <option value="03">Marzo</option>
-                    <option value="04">Abril</option>
-                    <option value="05">Mayo</option>
-                    <option value="06">Junio</option>
-                    <option value="07">Julio</option>
-                    <option value="08">Agosto</option>
-                    <option value="09" selected>Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
-            </div>
-        </div>
+        <h3 style="margin-top: 25px;">🤝 Rendimiento por Equipos (3v3 / 4v4)</h3>
+        <div style="overflow-x: auto; margin-top: 15px;">
+            <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background-color: #343a40; color: #fff; text-align: left;">
+                        <th style="padding: 12px;">Equipo / Bando</th>
+                        <th style="padding: 12px;">Miembros Integrantes</th>
+                        <th style="padding: 12px;">Partidas</th>
+                        <th style="padding: 12px;">Victorias</th>
+                        <th style="padding: 12px;">Derrotas</th>
+                        <th style="padding: 12px;">Efectividad</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
 
-        <!-- Subpestañas Secundarias Originales -->
-        <div class="subtabs">
-            <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')">⏱️ Tiempos de partida</button>
-            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')">🏛️ Civilizaciones y Win Rate</button>
-            <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')">🤝 Sinergia y Enfrentamientos</button>
-        </div>
+    if (listaEquipos.length === 0) {
+        htmlEnfrentamientos += `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">No hay equipos registrados en las partidas.</td></tr>`;
+    } else {
+        listaEquipos.forEach(eq => {
+            const totalP = eq.victorias + eq.derrotas;
+            const ef = totalP > 0 ? ((eq.victorias / totalP) * 100).toFixed(0) : 0;
+            const miembrosArr = Array.from(eq.miembros).join(", ");
+            htmlEnfrentamientos += `
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px;"><strong>${eq.nombreEquipo}</strong></td>
+                    <td style="padding: 12px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
+                    <td style="padding: 12px;">${totalP}</td>
+                    <td style="padding: 12px; color: #198754; font-weight: bold;">${eq.victorias}</td>
+                    <td style="padding: 12px; color: #dc3545; font-weight: bold;">${eq.derrotas}</td>
+                    <td style="padding: 12px; font-weight: bold; color: ${eq.victorias > 0 && eq.derrotas === 0 ? '#198754' : '#0d6efd'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
+                </tr>
+            `;
+        });
+    }
 
-        <!-- Vista 1: Tiempos de partida -->
-        <div id="sec-tiempos" class="card subtab-content">
-            <h3>⏱️ Tiempos de Partida</h3>
-            <div class="info-box">Aquí se mostrarán los registros de duración de partidas y promedios por jugador.</div>
-        </div>
+    htmlEnfrentamientos += `</tbody></table></div>`;
+    secEnfrentamientos.innerHTML = htmlEnfrentamientos;
 
-        <!-- Vista 2: Civilizaciones y Win Rate -->
-        <div id="sec-civilizaciones" class="card subtab-content" style="display: none;">
-            <h3>🏛️ Civilizaciones y Win Rate</h3>
-            <div class="info-box">Aquí se desplegará el porcentaje de victorias por civilización y elecciones más frecuentes.</div>
-        </div>
+    const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
+    if (btnConsultarSinergia) {
+        btnConsultarSinergia.addEventListener("click", () => {
+            const j1 = document.getElementById("input-sinergia-1").value.trim();
+            const j2 = document.getElementById("input-sinergia-2").value.trim();
+            const j3 = document.getElementById("input-sinergia-3").value.trim();
+            const j4 = document.getElementById("input-sinergia-4").value.trim();
+            const contenedorResultado = document.getElementById("resultado-sinergia-container");
 
-        <!-- Vista 3: Sinergia y Enfrentamientos -->
-        <div id="sec-enfrentamientos" class="card subtab-content" style="display: none;">
-            <h3>🤝 Sinergia y Enfrentamientos Directos</h3>
-            <div class="info-box">Aquí podrás revisar el historial cara a cara (Head to Head) entre jugadores.</div>
-        </div>
+            let seleccionados = [j1, j2, j3, j4].filter(j => j !== "");
+            seleccionados = [...new Set(seleccionados.map(j => obtenerNickOficialEstadisticas(j)))];
 
-    </div>
+            if (seleccionados.length < 2) {
+                alert("Debes ingresar al menos 2 jugadores diferentes para calcular la sinergia.");
+                return;
+            }
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA MÓVILES -->
-    <nav class="mobile-bottom-nav">
-        <a href="index.html" class="mobile-nav-item">
-            <span class="icon">📊</span>
-            <span>Clasificación</span>
-        </a>
-        <a href="estadisticas.html" class="mobile-nav-item active">
-            <span class="icon">📈</span>
-            <span>Estadísticas</span>
-        </a>
-        <a href="candidatos.html" class="mobile-nav-item">
-            <span class="icon">⭐</span>
-            <span>Candidatos</span>
-        </a>
-        <a href="historial.html" class="mobile-nav-item">
-            <span class="icon">📜</span>
-            <span>Historial</span>
-        </a>
-    </nav>
+            let partidasJuntos = 0;
+            let victoriasJuntos = 0;
+            let derrotasJuntos = 0;
 
-    <script src="js/auth.js"></script>
-    <script src="js/estadisticas.js"></script>
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
+            partidasDetalleGlobal.forEach(jugadoresPartida => {
+                let equiposEnPartida = {};
+                jugadoresPartida.forEach(jp => {
+                    if (!equiposEnPartida[jp.equipo]) {
+                        equiposEnPartida[jp.equipo] = [];
+                    }
+                    equiposEnPartida[jp.equipo].push(jp);
+                });
 
-        function cambiarSubtab(seccion) {
-            document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
+                Object.values(equiposEnPartida).forEach(miembrosEquipo => {
+                    const nombresEnEquipo = miembrosEquipo.map(me => me.nombre);
+                    const todosEnEsteEquipo = seleccionados.every(sel => nombresEnEquipo.includes(sel));
 
-            document.getElementById('sec-' + seccion).style.display = 'block';
-            event.currentTarget.classList.add('active');
-        }
+                    if (todosEnEsteEquipo) {
+                        partidasJuntos++;
+                        let todosGanaron = true;
+                        let algunoPerdio = false;
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const elFecha = document.getElementById('ultima-actualizacion');
-            if (elFecha) {
-                const ahora = new Date();
-                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
-                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
-                const horaStr = ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase();
-                elFecha.textContent = `${fechaStr}, ${horaStr}`;
+                        seleccionados.forEach(sel => {
+                            const datosJugador = miembrosEquipo.find(me => me.nombre === sel);
+                            if (datosJugador) {
+                                if (datosJugador.pg !== 1) todosGanaron = false;
+                                if (datosJugador.pp === 1) algunoPerdio = true;
+                            }
+                        });
+
+                        if (todosGanaron) victoriasJuntos++;
+                        else if (algunoPerdio) derrotasJuntos++;
+                    }
+                });
+            });
+
+            contenedorResultado.style.display = "block";
+            if (partidasJuntos === 0) {
+                contenedorResultado.innerHTML = `
+                    <h4 style="color: #343a40; margin-bottom: 10px;">📊 Sinergia para: ${seleccionados.join(" , ")}</h4>
+                    <p style="color: #dc3545; margin: 0; font-weight: bold;">⚠️ Partida no existente: Estos jugadores no han participado juntos en el mismo equipo/bando en ninguna partida registrada.</p>
+                `;
+            } else {
+                const efSinergia = ((victoriasJuntos / partidasJuntos) * 100).toFixed(0);
+                let badgeEstado = `<span style="color: #0d6efd; font-weight: bold;">${efSinergia}% Efectividad</span>`;
+                if (victoriasJuntos > 0 && derrotasJuntos === 0) badgeEstado = `<span style="color: #198754; font-weight: bold;">🔥 ¡Grupo Invicto!</span>`;
+                else if (derrotasJuntos > 0 && victoriasJuntos === 0) badgeEstado = `<span style="color: #dc3545; font-weight: bold;">⚠️ Sin victorias conjuntas</span>`;
+
+                contenedorResultado.innerHTML = `
+                    <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta (Mismo Equipo): ${seleccionados.join(" , ")}</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center;">
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #6c757d;">Partidas Juntos</div><div style="font-size: 1.4em; font-weight: bold; color: #343a40;">${partidasJuntos}</div></div>
+                        <div style="background: #e8f5e9; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #198754;">Victorias</div><div style="font-size: 1.4em; font-weight: bold; color: #198754;">${victoriasJuntos}</div></div>
+                        <div style="background: #ffebee; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #dc3545;">Derrotas</div><div style="font-size: 1.4em; font-weight: bold; color: #dc3545;">${derrotasJuntos}</div></div>
+                        <div style="background: #e7f1ff; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #0d6efd;">Estado Sinergia</div><div style="font-size: 1.1em; margin-top: 4px;">${badgeEstado}</div></div>
+                    </div>
+                `;
             }
         });
-    </script>
-</body>
-</html>
+    }
+}
