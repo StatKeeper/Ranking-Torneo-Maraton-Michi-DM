@@ -80,7 +80,7 @@
 
         /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
         .mobile-bottom-nav {
-            display: none; /* Oculto por defecto en PC */
+            display: none;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -111,45 +111,18 @@
             color: #b8860b;
         }
 
-        /* --- PANEL LATERAL --- */
-        #sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 260px;
-            height: 100%;
-            background: #fff;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-            z-index: 1001;
-            padding: 20px;
-            box-sizing: border-box;
-            transition: transform 0.3s ease;
-            transform: translateX(-100%);
-        }
-        #sidebar.open {
-            transform: translateX(0);
-        }
         #main-content {
             margin-left: 0;
             padding: 15px;
         }
 
         @media (max-width: 768px) {
-            #sidebar {
-                transform: translateX(-100%);
-            }
-            #sidebar.open {
-                transform: translateX(0);
-            }
             #main-content {
-                margin-left: 0 !important;
                 padding: 10px 10px 70px 10px !important;
             }
-            /* Ocultar las pestañas superiores en celulares */
             .tabs {
                 display: none !important;
             }
-            /* Mostrar la barra de navegación inferior en celulares */
             .mobile-bottom-nav {
                 display: flex !important;
             }
@@ -158,11 +131,10 @@
 </head>
 <body>
 
+    <!-- Panel lateral oculto pero presente para que auth.js no falle al buscar sus IDs -->
     <div id="sidebar" style="display:none;">
-        <h3>🔐 Panel de Control</h3>
-        <label>Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+        <input type="password" id="admin-pass">
+        <div id="status-mode" class="status-badge"></div>
     </div>
 
     <div id="main-content">
