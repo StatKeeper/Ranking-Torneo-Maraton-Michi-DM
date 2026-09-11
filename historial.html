@@ -311,7 +311,6 @@
                     return;
                 }
 
-                // Ordenar cronológicamente (de más antiguo a más reciente)
                 keys.sort((a, b) => {
                     let ma = matchesMap[a];
                     let mb = matchesMap[b];
@@ -320,7 +319,6 @@
                     return idA - idB;
                 });
 
-                // Cálculo acumulativo exacto respetando el debut de los jugadores
                 let posicionesPorPartidaMap = {};
                 let rankingAcumuladoMap = {};
                 let jugadoresConParticipacionPrevia = new Set();
@@ -333,7 +331,6 @@
                         posicionesAnterioresMap[j.jugador] = idx + 1;
                     });
 
-                    // Identificar qué jugadores participan en *esta* partida específica
                     let jugadoresEnEstaPartida = new Set();
                     try {
                         m.registros.forEach(r => {
@@ -361,7 +358,6 @@
                         if (esPrimeraPartidaTotal) {
                             variacion = 0;
                         } else if (!jugadoresConParticipacionPrevia.has(j.jugador)) {
-                            // REGLA CLAVE: Si el jugador no tenía participación previa antes de esta partida, es su DEBUT. Su variación debe ser 0.
                             variacion = 0;
                         } else if (posicionesAnterioresMap[j.jugador] !== undefined) {
                             let posAnterior = posicionesAnterioresMap[j.jugador];
@@ -371,7 +367,6 @@
                         variacionesEstaPartida[j.jugador] = variacion;
                     });
 
-                    // Registrar a los jugadores de esta partida como "con participación previa" para las partidas futuras
                     jugadoresEnEstaPartida.forEach(jName => {
                         jugadoresConParticipacionPrevia.add(jName);
                     });
@@ -391,7 +386,6 @@
                     return matchAnio && matchMes && matchFecha;
                 });
 
-                // Invertir para mostrar las más recientes arriba
                 matchesFiltrados.sort((a, b) => {
                     let ma = matchesMap[a];
                     let mb = matchesMap[b];
@@ -431,7 +425,6 @@
                         } else if (varValor < 0) {
                             varHtml = `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>`;
                         } else {
-                            // Ceros estilizados con un azul marino fuerte y contrastado
                             varHtml = `<span class="fw-bold" style="color: #4da6ff; background: rgba(0, 86, 179, 0.25); padding: 2px 8px; border-radius: 4px;">0</span>`;
                         }
 
@@ -450,7 +443,7 @@
 
                     let cardHTML = `
                         <div class="match-card">
-                            <div class="match-header"> limpia
+                            <div class="match-header">
                                 <div class="match-title-group">
                                     <div class="match-map-icon">
                                         <i class="fas fa-map"></i>
