@@ -16,12 +16,6 @@
         .header-top {
             display: none; /* Oculto ya que la cabecera general pasa a la ventana de Inicio */
         }
-        .admin-toggle-floating {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 100;
-        }
         .admin-toggle-btn {
             background: #b8860b;
             color: white;
@@ -218,7 +212,6 @@
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <!-- Botón Admin Flotante / Esquina superior para emergencias móviles -->
         <div class="d-flex justify-content-end mb-3">
             <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
         </div>
@@ -361,7 +354,9 @@
             });
 
             listaItems.sort((a, b) => b.baseKey.localeCompare(a.baseKey));
-            listaItems = listaItems.slice(0, 10);
+            
+            // Limitado estrictamente a las últimas 5 partidas para evitar sobrecarga
+            listaItems = listaItems.slice(0, 5);
 
             if (listaItems.length === 0) {
                 contenedor.innerHTML = `
