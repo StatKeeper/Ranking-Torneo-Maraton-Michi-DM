@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -89,6 +89,28 @@
             background: #b8860b;
             color: white;
             border-color: #996e05;
+        }
+
+        /* --- SUBPESTAÑAS --- */
+        .subtabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .subtab-btn {
+            background: #f8f9fa;
+            color: #333;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .subtab-btn.active {
+            background: #0d6efd;
+            color: white;
+            border-color: #0b5ed7;
         }
 
         /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
@@ -199,7 +221,7 @@
 
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; margin-bottom: 10px;">
             <h2 style="margin: 0; color: #222;">📈 Estadísticas Generales del Torneo</h2>
-            <!-- Selectores de Año y Mes originales -->
+            <!-- Selectores limpios con los IDs que el JS lee exactamente -->
             <div style="display: flex; gap: 10px; align-items: center;">
                 <label for="select-anio-filtro" style="font-weight: bold;">Año:</label>
                 <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
@@ -214,8 +236,8 @@
                     <option value="05">Mayo</option>
                     <option value="06">Junio</option>
                     <option value="07">Julio</option>
-                    <option value="08" selected>Agosto</option>
-                    <option value="09">Septiembre</option>
+                    <option value="08">Agosto</option>
+                    <option value="09" selected>Septiembre</option>
                     <option value="10">Octubre</option>
                     <option value="11">Noviembre</option>
                     <option value="12">Diciembre</option>
