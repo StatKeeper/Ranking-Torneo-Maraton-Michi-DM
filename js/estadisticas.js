@@ -295,51 +295,87 @@ function renderizarEstadisticasTiempos() {
     `;
 
     // ==========================================
-    // 3. SUBPESTAÑA SINERGIA
+    // 3. SUBPESTAÑA SINERGIA (BLOQUE COMPLETO)
     // ==========================================
-    secEnfrentamientos.innerHTML = `
-        <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en pantalla completa.</p>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
-                    <input type="text" id="input-sinergia-1" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
-                    <input type="text" id="input-sinergia-2" list="lista-jugadores-global" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
-                    <input type="text" id="input-sinergia-3" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
-                    <input type="text" id="input-sinergia-4" list="lista-jugadores-global" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
-                </div>
-            </div>
-            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.95em; width: 100%;">Consultar Sinergia</button>
-        </div>
+    const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
+    const modalSinergiaOverlay = document.getElementById("modal-sinergia-overlay");
+    const cerrarModalSinergia = document.getElementById("cerrar-modal-sinergia");
+    const btnDescargarSinergia = document.getElementById("btn-descargar-sinergia");
 
-        <div id="modal-sinergia-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;">
-            <div id="modal-sinergia-card" style="background: white; max-width: 100%; margin: 10px auto; border-radius: 8px; padding: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px;">
-                    <button id="btn-descargar-sinergia" title="Descargar como Imagen" style="background: #198754; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center;">📥</button>
-                    <button id="cerrar-modal-sinergia" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1em;">×</button>
-                </div>
-                <div id="resultado-sinergia-container"></div>
-            </div>
-        </div>
-    `;
+    if (btnConsultarSinergia) {
+        btnConsultarSinergia.addEventListener("click", () => {
+            const val1 = document.getElementById("input-sinergia-1").value;
+            const val2 = document.getElementById("input-sinergia-2").value;
+            const val3 = document.getElementById("input-sinergia-3").value;
+            const val4 = document.getElementById("input-sinergia-4").value;
+            const contenedorResultado = document.getElementById("resultado-sinergia-container");
 
-    let contenedorDatalistGlobal = document.getElementById("lista-jugadores-global");
-    if (!contenedorDatalistGlobal) {
-        contenedorDatalistGlobal = document.createElement("datalist");
-        contenedorDatalistGlobal.id = "lista-jugadores-global";
-        document.body.appendChild(contenedorDatalistGlobal);
+            let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
+            if (inputsRaw.length < 2) {
+                alert("Debes ingresar al menos 2 jugadores para consultar la sinergia grupal.");
+                return;
+            }
+
+            let seleccionadosNombres = [];
+            inputsRaw.forEach(inp => {
+                const encontrado = buscarJugadorFlexible(inp);
+                if (encontrado) {
+                    seleccionadosNombres.push(encontrado.nombre);
+                } else {
+                    seleccionadosNombres.push(inp.trim());
+                }
+            });
+            seleccionadosNombres = [...new Set(seleccionadosNombres)];
+
+            // Filtrar partidas donde hayan participado en conjunto o como equipo
+            let partidasEnComun = partidasDetalleGlobal.filter(partida => {
+                let nombresEnPartida = partida.map(p => p.nombre.toLowerCase());
+                return seleccionadosNombres.every(sel => nombresEnPartida.includes(sel.toLowerCase()));
+            });
+
+            let totalPartidasConjuntas = partidasEnComun.length;
+            let victoriasConjuntas = 0;
+            let derrotasConjuntas = 0;
+
+            partidasEnComun.forEach(partida => {
+                // Verificar si todos los seleccionados ganaron en esa misma partida
+                let todosGanaron = seleccionadosNombres.every(sel => {
+                    let pData = partida.find(p => p.nombre.toLowerCase() === sel.toLowerCase());
+                    return pData && pData.pg === 1;
+                });
+                if (todosGanaron) {
+                    victoriasConjuntas++;
+                } else {
+                    derrotasConjuntas++;
+                }
+            });
+
+            let htmlSinergia = `
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🔍 Sinergia Grupal de Jugadores</h3>
+                <p style="font-size: 0.8em; color: #495057;">Jugadores analizados: <strong>${seleccionadosNombres.join(", ")}</strong></p>
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 0.85em;">
+                    <p>Partidas conjuntas registradas: <strong>${totalPartidasConjuntas}</strong></p>
+                    <p>Victorias conjuntas: <strong style="color: #198754;">${victoriasConjuntas}</strong></p>
+                    <p>Derrotas conjuntas: <strong style="color: #dc3545;">${derrotasConjuntas}</strong></p>
+                </div>
+            `;
+
+            contenedorResultado.innerHTML = htmlSinergia;
+            modalSinergiaOverlay.style.display = "block";
+        });
     }
-    contenedorDatalistGlobal.innerHTML = optionsDatalist;
+
+    if (cerrarModalSinergia) {
+        cerrarModalSinergia.addEventListener("click", () => { 
+            modalSinergiaOverlay.style.display = "none"; 
+        });
+    }
+
+    if (btnDescargarSinergia) {
+        btnDescargarSinergia.addEventListener("click", () => {
+            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'sinergia_grupal_michi.png');
+        });
+    }
 
     // ==========================================
     // EVENTOS Y MODALES
