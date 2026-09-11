@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Maratón Michi DM - Clasificación General</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <script>
+        // Redirige automáticamente a inicio.html al abrir la app en móvil si es una nueva sesión o entrada raíz
+        (function() {
+            const esMovil = window.innerWidth <= 768;
+            const sessionStorageKey = 'michi_iniciado_sesion';
+            
+            if (esMovil && !sessionStorage.getItem(sessionStorageKey)) {
+                sessionStorage.setItem(sessionStorageKey, 'true');
+                window.location.replace('inicio.html');
+            }
+        })();
+    </script>
     <style>
         body {
             box-sizing: border-box;
