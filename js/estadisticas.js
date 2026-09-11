@@ -526,7 +526,7 @@ function renderizarEstadisticasTiempos() {
         });
     }
 
-    // 3. Sinergia
+    // 3. Sinergia (Rediseño Estético Profesional)
     const btnConsultarSinergia = document.getElementById("btn-consultar-sinergia");
     const modalSinergiaOverlay = document.getElementById("modal-sinergia-overlay");
     const cerrarModalSinergia = document.getElementById("cerrar-modal-sinergia");
@@ -575,13 +575,38 @@ function renderizarEstadisticasTiempos() {
                 }
             });
 
+            let efectividad = partidasEnComun > 0 ? Math.round((victoriasEnComun / partidasEnComun) * 100) : 0;
+            let textoEf = partidasEnComun > 0 ? `${efectividad}%` : "0%";
+            if (partidasEnComun > 0 && victoriasEnComun === partidasEnComun) {
+                textoEf = `🔥 Invictos (100%)`;
+            }
+
             let htmlSinergia = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.95em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🔍 Sinergia de Grupo</h3>
-                <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 0.8em; color: #333;">
-                    <p style="margin-bottom: 6px;"><strong>Integrantes:</strong> ${seleccionadosNombres.join(", ")}</p>
-                    <p style="margin-bottom: 6px;"><strong>Partidas juntos:</strong> ${partidasEnComun}</p>
-                    <p style="margin-bottom: 6px;"><strong>Victorias en equipo:</strong> <span style="color: #198754; font-weight: bold;">${victoriasEnComun}</span></p>
-                    <p style="margin-bottom: 0;"><strong>Derrotas en equipo:</strong> <span style="color: #dc3545; font-weight: bold;">${derrotasEnComun}</span></p>
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal: ${seleccionadosNombres.join(", ")}</h3>
+                
+                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
+                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Ef.</strong>: Efectividad Conjunta
+                </div>
+
+                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <table style="width: 100%; min-width: 280px; border-collapse: collapse; background: #fff; font-size: 0.75em;">
+                        <thead>
+                            <tr style="background-color: #343a40; color: #fff;">
+                                <th style="padding: 6px 4px; text-align: center; width: 40px;">P.</th>
+                                <th style="padding: 6px 4px; text-align: center; width: 40px;">V.</th>
+                                <th style="padding: 6px 4px; text-align: center; width: 40px;">D.</th>
+                                <th style="padding: 6px 6px; text-align: center;">Efec. Conjunta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #dee2e6; background-color: #ffffff;">
+                                <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #343a40;">${partidasEnComun}</td>
+                                <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasEnComun}</td>
+                                <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasEnComun}</td>
+                                <td style="padding: 8px 6px; text-align: center; font-weight: bold; color: #0d6efd;">${textoEf}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             `;
             contenedorResultado.innerHTML = htmlSinergia;
