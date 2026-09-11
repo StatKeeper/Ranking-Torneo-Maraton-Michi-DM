@@ -121,7 +121,18 @@ function renderizarEstadisticasTiempos() {
                             const pp = (reg.pp === 1 || reg.PP === 1) ? 1 : 0;
                             const equipoReg = (reg.equipo || reg.Equipo || "Sin Equipo").trim();
 
-                            jugadoresEnPartida.push({ nombre, pg, pp, equipo: equipoReg });
+                            // Extraer unidades y edificios de forma segura de cada registro/partida
+                            const unidadesPartida = parseInt(reg.unidadesAsesinadas || reg.UnidadesAsesinadas || reg["U. Ases."] || reg.unidades || reg.Kills || 0, 10);
+                            const edificiosPartida = parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || reg["E. Arr."] || reg.edificios || reg.Buildings || 0, 10);
+
+                            jugadoresEnPartida.push({ 
+                                nombre, 
+                                pg, 
+                                pp, 
+                                equipo: equipoReg,
+                                unidades: unidadesPartida,
+                                edificios: edificiosPartida
+                            });
 
                             if (!estadisticasJugadores[nombre]) {
                                 estadisticasJugadores[nombre] = {
@@ -140,8 +151,8 @@ function renderizarEstadisticasTiempos() {
                             if (pg === 1) stats.victorias++;
                             if (pp === 1) stats.derrotas++;
 
-                            stats.unidadesTotales += parseInt(reg.unidadesAsesinadas || reg.UnidadesAsesinadas || reg["U. Ases."] || 0, 10);
-                            stats.edificiosTotales += parseInt(reg.edificiosArrasados || reg.EdificiosArrasados || reg["E. Arr."] || 0, 10);
+                            stats.unidadesTotales += unidadesPartida;
+                            stats.edificiosTotales += edificiosPartida;
                             stats.segundosTotales += convertirDuracionASegundos(reg.duracion || reg.Duracion);
 
                             const civRaw = reg.civ || reg.Civ || reg.civilizacion || reg.Civilizacion;
@@ -376,6 +387,28 @@ function renderizarEstadisticasTiempos() {
             });
             seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
+            // Cálculo dinámico acumulado sumando directamente desde el detalle global de las partidas filtradas
+            let estadisticasPartidasJugadores = {};
+            seleccionadosNombres.forEach(nombre => {
+                estadisticasPartidasJugadores[nombre] = { units: 0, edificios: 0 };
+            });
+
+            if (Array.isArray(partidasDetalleGlobal)) {
+                partidasDetalleGlobal.forEach(partida => {
+                    if (Array.isArray(partida)) {
+                        partida.forEach(p => {
+                            const nombreJugadorPartida = p.nombre || "";
+                            seleccionadosNombres.forEach(sel => {
+                                if (nombreJugadorPartida && nombreJugadorPartida.toLowerCase() === sel.toLowerCase()) {
+                                    estadisticasPartidasJugadores[sel].units += Number(p.unidades || 0);
+                                    estadisticasPartidasJugadores[sel].edificios += Number(p.edificios || 0);
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+
             let htmlTablaComparativa = `
                 <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">📊 Comparativa de Tiempos y Estadísticas</h3>
                 
@@ -398,10 +431,22 @@ function renderizarEstadisticasTiempos() {
                 { label: "P.", fn: j => j.totalPartidas },
                 { label: "T.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales) },
                 { label: "P.T.A.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
-                { label: "U.Ases.", fn: j => j.unidadesTotales },
-                { label: "P.U.Ases.", fn: j => j.totalPartidas > 0 ? (j.unidadesTotales / j.totalPartidas).toFixed(1) : 0 },
-                { label: "E.Arr.", fn: j => j.edificiosTotales },
-                { label: "P.E.Arr.", fn: j => j.totalPartidas > 0 ? (j.edificiosTotales / j.totalPartidas).toFixed(1) : 0 }
+                { label: "U.Ases.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.units;
+                    return (calc !== undefined && calc > 0) ? calc : (j.unidadesTotales || 0);
+                }},
+                { label: "P.U.Ases.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.units ?? (j.unidadesTotales || 0);
+                    return j.totalPartidas > 0 ? (calc / j.totalPartidas).toFixed(1) : "0.0";
+                }},
+                { label: "E.Arr.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.edificios;
+                    return (calc !== undefined && calc > 0) ? calc : (j.edificiosTotales || 0);
+                }},
+                { label: "P.E.Arr.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.edificios ?? (j.edificiosTotales || 0);
+                    return j.totalPartidas > 0 ? (calc / j.totalPartidas).toFixed(1) : "0.0";
+                }}
             ];
 
             metricasT.forEach((metrica, idx) => {
@@ -502,9 +547,8 @@ function renderizarEstadisticasTiempos() {
                         const realKey = Object.keys(estadisticasJugadorCiv).find(k => k.toLowerCase() === sel.toLowerCase() || k.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(k.toLowerCase()));
                         let textoCelda = "-";
                         if (realKey && estadisticasJugadorCiv[realKey] && estadisticasJugadorCiv[realKey][civ]) {
-                            const datosCiv = estadisticasJugadorCiv[realKey][civ];
-                            const winRate = datosCiv.jugadas > 0 ? Math.round((datosCiv.victorias / datosCiv.jugadas) * 100) : 0;
-                            textoCelda = `${datosCiv.jugadas}p (${winRate}%)`;
+                            const cData = estadisticasJugadorCiv[realKey][civ];
+                            textoCelda = `${cData.jugadas} (${cData.victorias}V/${cData.derrotas}D)`;
                         }
                         htmlTablaCivs += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${textoCelda}</td>`;
                     });
@@ -544,7 +588,7 @@ function renderizarEstadisticasTiempos() {
 
             let inputsRaw = [val1, val2, val3, val4].filter(v => v.trim() !== "");
             if (inputsRaw.length < 2) {
-                alert("Debes ingresar al menos 2 jugadores para calcular la sinergia.");
+                alert("Debes ingresar al menos 2 jugadores para analizar la sinergia.");
                 return;
             }
 
@@ -559,90 +603,41 @@ function renderizarEstadisticasTiempos() {
             });
             seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
-            // Cálculo de partidas conjuntas
-            let partidasJuntos = 0;
-            let victoriasConjuntas = 0;
-            let derrotasConjuntas = 0;
+            let partidasEnComun = 0;
+            let victoriasEnComun = 0;
+            let derrotasEnComun = 0;
 
-            partidasDetalleGlobal.forEach(partida => {
-                const nombresEnPartida = partida.map(p => p.nombre.toLowerCase());
-                const todosEstan = seleccionadosNombres.every(sel => nombresEnPartida.includes(sel.toLowerCase()));
-
-                if (todosEstan) {
-                    const registrosSeleccionados = partida.filter(p => seleccionadosNombres.some(sel => sel.toLowerCase() === p.nombre.toLowerCase()));
-                    
-                    const primerEquipo = registrosSeleccionados[0] ? registrosSeleccionados[0].equipo : null;
-                    const mismoEquipo = primerEquipo && primerEquipo !== "Sin Equipo" && registrosSeleccionados.every(p => p.equipo === primerEquipo);
-                    
-                    const todosGanaron = registrosSeleccionados.every(p => p.pg === 1);
-                    const todosPerdieron = registrosSeleccionados.every(p => p.pp === 1);
-
-                    if (mismoEquipo || todosGanaron) {
-                        partidasJuntos++;
-                        victoriasConjuntas++;
-                    } else if (todosPerdieron) {
-                        partidasJuntos++;
-                        derrotasConjuntas++;
+            if (Array.isArray(partidasDetalleGlobal)) {
+                partidasDetalleGlobal.forEach(partida => {
+                    const nombresEnPartida = partida.map(p => p.nombre.toLowerCase());
+                    const todosEstan = seleccionadosNombres.every(sel => nombresEnPartida.includes(sel.toLowerCase()));
+                    if (todosEstan) {
+                        partidasEnComun++;
+                        let ganoTodos = true;
+                        let perdioAlguna = false;
+                        partida.forEach(p => {
+                            if (seleccionadosNombres.map(s => s.toLowerCase()).includes(p.nombre.toLowerCase())) {
+                                if (p.pg !== 1) ganoTodos = false;
+                                if (p.pp === 1) perdioAlguna = true;
+                            }
+                        });
+                        if (ganoTodos) victoriasEnComun++;
+                        else if (perdioAlguna) derrotasEnComun++;
                     }
-                }
-            });
-
-            const efectividad = partidasJuntos > 0 ? Math.round((victoriasConjuntas / partidasJuntos) * 100) : 0;
-            let textoEfectividad = `${efectividad}%`;
-            if (partidasJuntos > 0 && victoriasConjuntas === partidasJuntos) {
-                textoEfectividad = `🔥 Invictos (100%)`;
-            } else if (partidasJuntos > 0 && derrotasConjuntas === partidasJuntos) {
-                textoEfectividad = `❌ 0%`;
+                });
             }
 
-            const listaNombresStr = seleccionadosNombres.join(", ");
-
-            let htmlTablaSinergia = `
-                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 6px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🤝 Sinergia Grupal</h3>
-                
-                <div style="background: #f8f9fa; padding: 5px 6px; border-radius: 4px; margin-bottom: 8px; font-size: 0.62em; color: #495057; border-left: 3px solid #0d6efd; line-height: 1.2;">
-                    <strong>Leyenda:</strong> <strong>P.</strong>: Partidas Juntos | <strong>V.</strong>: Victorias | <strong>D.</strong>: Derrotas | <strong>Efec. Conjunta</strong>: Efectividad Conjunta
-                </div>
-
-                <div style="font-weight: bold; color: #343a40; font-size: 0.78em; margin-bottom: 12px; line-height: 1.3;">
-                    ${listaNombresStr}
+            let htmlSinergia = `
+                <h3 style="color: #343a40; margin-top: 0; margin-bottom: 8px; font-size: 0.9em; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; padding-right: 65px;">🔍 Sinergia de Grupo: ${seleccionadosNombres.join(", ")}</h3>
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 0.8em; line-height: 1.4;">
+                    <p style="margin: 0 0 6px 0;"><strong>Partidas juntos:</strong> ${partidasEnComun}</p>
+                    <p style="margin: 0 0 6px 0;"><strong>Victorias conjuntas:</strong> <span style="color: #198754; font-weight: bold;">${victoriasEnComun}</span></p>
+                    <p style="margin: 0 0 6px 0;"><strong>Derrotas conjuntas:</strong> <span style="color: #dc3545; font-weight: bold;">${derrotasEnComun}</span></p>
+                    <p style="margin: 0;"><strong>Porcentaje de Éxito:</strong> ${partidasEnComun > 0 ? ((victoriasEnComun / partidasEnComun) * 100).toFixed(1) : "0.0"}%</p>
                 </div>
             `;
 
-            if (partidasJuntos === 0) {
-                htmlTablaSinergia += `
-                    <div style="width: 100%; text-align: center; padding: 15px 10px; background: #fff5f5; border: 1px dashed #dc3545; border-radius: 6px; margin-top: 10px;">
-                        <span style="color: #dc3545; font-weight: bold; font-size: 0.75em; line-height: 1.4; display: inline-block;">
-                            ⚠️ Estos jugadores nunca jugaron en conjunto, nunca formaron un equipo como para tener estadísticas.
-                        </span>
-                    </div>
-                `;
-            } else {
-                htmlTablaSinergia += `
-                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 6px;">
-                        <table style="width: 100%; border-collapse: collapse; background: #fff; font-size: 0.7em;">
-                            <thead>
-                                <tr style="background-color: #343a40; color: #fff;">
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">P.</th>
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">V.</th>
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">D.</th>
-                                    <th style="padding: 6px 4px; text-align: center; font-size: 0.85em;">Efec. Conjunta</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #dee2e6; background-color: #f8f9fa;">
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold;">${partidasJuntos}</td>
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #198754;">${victoriasConjuntas}</td>
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold; color: #dc3545;">${derrotasConjuntas}</td>
-                                    <td style="padding: 8px 4px; text-align: center; font-weight: bold;">${textoEfectividad}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
-
-            contenedorResultado.innerHTML = htmlTablaSinergia;
+            contenedorResultado.innerHTML = htmlSinergia;
             modalSinergiaOverlay.style.display = "block";
         });
     }
@@ -653,7 +648,7 @@ function renderizarEstadisticasTiempos() {
 
     if (btnDescargarSinergia) {
         btnDescargarSinergia.addEventListener("click", () => {
-            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'sinergia_grupal_michi.png');
+            ejecutarCapturaHtml2Canvas(document.getElementById("modal-sinergia-card"), 'sinergia_grupo_michi.png');
         });
     }
 }
