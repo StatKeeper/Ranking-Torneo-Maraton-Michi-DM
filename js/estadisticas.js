@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,11 @@
     <style>
         body {
             box-sizing: border-box;
+            background-color: #ffffff;
+            color: #333333;
+            margin: 0;
+            padding-bottom: 70px; /* Espacio para la barra inferior en móviles */
+            font-family: Arial, sans-serif;
         }
         .header-top {
             display: flex;
@@ -24,6 +29,7 @@
             font-size: 1.4rem;
             line-height: 1.2;
             max-width: 65%;
+            color: #222222;
         }
         .header-info-container {
             display: flex;
@@ -34,7 +40,7 @@
         .header-top .fecha-actualizacion {
             font-size: 0.85rem;
             font-weight: bold;
-            color: #444;
+            color: #555555;
             text-align: right;
         }
 
@@ -51,7 +57,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS --- */
+        /* --- PESTAÑAS LLAMATIVAS Y ENMARCADAS (Escritorio) --- */
         .tabs {
             display: flex;
             gap: 8px;
@@ -85,6 +91,11 @@
             border-color: #996e05;
         }
 
+        /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
+        .mobile-bottom-nav {
+            display: none;
+        }
+
         /* --- PANEL LATERAL CORREGIDO PARA MÓVILES Y PC --- */
         #sidebar {
             position: fixed;
@@ -98,6 +109,10 @@
             padding: 20px;
             box-sizing: border-box;
             transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
         }
         #main-content {
             margin-left: 280px;
@@ -105,15 +120,50 @@
         }
 
         @media (max-width: 768px) {
+            /* Ocultar elementos superiores innecesarios en celular para ganar espacio */
+            .header-top, .tabs {
+                display: none !important;
+            }
             #sidebar {
-                transform: translateX(-100%); /* Oculto por defecto en celulares a la izquierda */
+                transform: translateX(-100%);
             }
             #sidebar.open {
-                transform: translateX(0); /* Se despliega al pulsar el botón Admin */
+                transform: translateX(0);
             }
             #main-content {
                 margin-left: 0 !important;
                 padding: 10px !important;
+            }
+            /* Mostrar la barra inferior en celulares */
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                border-top: 2px solid #d4af37;
+                justify-content: space-around;
+                align-items: center;
+                padding: 8px 0;
+                z-index: 1500;
+                box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
+            }
+            .mobile-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: #666666;
+                text-decoration: none;
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+            .mobile-nav-item span.icon {
+                font-size: 1.2rem;
+                margin-bottom: 2px;
+            }
+            .mobile-nav-item.active {
+                color: #b8860b;
             }
         }
     </style>
@@ -128,7 +178,7 @@
     </div>
 
     <div id="main-content">
-        <!-- Encabezado superior con título, fecha/hora y botón Admin seguro corregido con id="ultima-actualizacion" -->
+        <!-- Encabezado superior (Visible en PC) -->
         <div class="header-top">
             <h1>Ranking Maratón Michi DM</h1>
             <div class="header-info-container">
@@ -137,7 +187,7 @@
             </div>
         </div>
 
-        <!-- Pestañas Principales -->
+        <!-- Pestañas Principales (Visible en PC) -->
         <div class="tabs">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
@@ -148,15 +198,15 @@
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; margin-bottom: 10px;">
-            <h2 style="margin: 0;">📈 Estadísticas Generales del Torneo</h2>
-            <!-- Selectores de Año y Mes idénticos a los de index.html para que el filtrado funcione perfecto -->
+            <h2 style="margin: 0; color: #222;">📈 Estadísticas Generales del Torneo</h2>
+            <!-- Selectores de Año y Mes originales -->
             <div style="display: flex; gap: 10px; align-items: center;">
                 <label for="select-anio-filtro" style="font-weight: bold;">Año:</label>
-                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
+                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
                     <option value="2026" selected>2026</option>
                 </select>
                 <label for="select-mes-filtro" style="font-weight: bold; margin-left: 10px;">Mes:</label>
-                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da;">
+                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
                     <option value="01">Enero</option>
                     <option value="02">Febrero</option>
                     <option value="03">Marzo</option>
@@ -173,7 +223,7 @@
             </div>
         </div>
 
-        <!-- Subpestañas Secundarias -->
+        <!-- Subpestañas Secundarias Originales -->
         <div class="subtabs">
             <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')">⏱️ Tiempos de partida</button>
             <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')">🏛️ Civilizaciones y Win Rate</button>
@@ -200,6 +250,26 @@
 
     </div>
 
+    <!-- BARRA DE NAVEGACIÓN INFERIOR PARA MÓVILES -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <span class="icon">📊</span>
+            <span>Clasificación</span>
+        </a>
+        <a href="estadisticas.html" class="mobile-nav-item active">
+            <span class="icon">📈</span>
+            <span>Estadísticas</span>
+        </a>
+        <a href="candidatos.html" class="mobile-nav-item">
+            <span class="icon">⭐</span>
+            <span>Candidatos</span>
+        </a>
+        <a href="historial.html" class="mobile-nav-item">
+            <span class="icon">📜</span>
+            <span>Historial</span>
+        </a>
+    </nav>
+
     <script src="js/auth.js"></script>
     <script src="js/estadisticas.js"></script>
     <script>
@@ -216,7 +286,6 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Script de sincronización para actualizar la fecha y hora idéntico al resto de pestañas
         document.addEventListener("DOMContentLoaded", function() {
             const elFecha = document.getElementById('ultima-actualizacion');
             if (elFecha) {
