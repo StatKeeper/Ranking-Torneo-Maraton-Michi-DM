@@ -175,24 +175,24 @@ function renderizarEstadisticasTiempos() {
 
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
     
-    // HTML mejorado con contenedor responsivo optimizado para scroll horizontal fluido en móviles
+    // HTML mejorado con contenedor responsivo forzado para scroll horizontal fluido en móviles
     let htmlTiempos = `
         <h3>⏱️ Tiempos de Partida y Promedios por Jugador</h3>
         <div style="background: #f8f9fa; padding: 10px 12px; border-radius: 6px; margin-top: 8px; margin-bottom: 12px; font-size: 0.82em; border-left: 4px solid #0d6efd;">
             <strong>Leyenda:</strong> <strong>Part.</strong>: Partidas | <strong>Dur. Acum.</strong>: Duración Total | <strong>Prom. Dur.</strong>: Promedio Duración | <strong>Tot. Unid.</strong>: Unidades Asesinadas | <strong>Prom. Unid.</strong>: Promedio Unidades | <strong>Tot. Edif.</strong>: Edificios Arrasados | <strong>Prom. Edif.</strong>: Promedio Edificios
         </div>
-        <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <table style="width: 100%; min-width: 600px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
+        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 10px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
+            <table style="width: 100%; min-width: 650px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
                         <th style="padding: 10px 8px; white-space: nowrap;">Jugador</th>
-                        <th style="padding: 10px 8px; text-align: center;">Part.</th>
-                        <th style="padding: 10px 8px; text-align: center;">Dur. Acum.</th>
-                        <th style="padding: 10px 8px; text-align: center;">Prom. Dur.</th>
-                        <th style="padding: 10px 8px; text-align: center;">Tot. Unid.</th>
-                        <th style="padding: 10px 8px; text-align: center;">Prom. Unid.</th>
-                        <th style="padding: 10px 8px; text-align: center;">Tot. Edif.</th>
-                        <th style="padding: 10px 8px; text-align: center;">Prom. Edif.</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Part.</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Dur. Acum.</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Prom. Dur.</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Tot. Unid.</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Prom. Unid.</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Tot. Edif.</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Prom. Edif.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -224,19 +224,18 @@ function renderizarEstadisticasTiempos() {
     htmlTiempos += `</tbody></table></div>`;
     secTiempos.innerHTML = htmlTiempos;
 
-    // (El resto del código de civilizaciones y enfrentamientos continúa igual...)
     const listaCivs = Object.values(estadisticasCivilizaciones);
     let htmlCivs = `
         <h3>🏛️ Rendimiento y Win Rate por Civilización</h3>
-        <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <table style="width: 100%; min-width: 450px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
+        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
+            <table style="width: 100%; min-width: 500px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 10px 8px;">Civilización</th>
-                        <th style="padding: 10px 8px; text-align: center;">Veces Jugada</th>
-                        <th style="padding: 10px 8px; text-align: center;">Victorias</th>
-                        <th style="padding: 10px 8px; text-align: center;">Derrotas</th>
-                        <th style="padding: 10px 8px; text-align: center;">Win Rate (%)</th>
+                        <th style="padding: 10px 8px; white-space: nowrap;">Civilización</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Veces Jugada</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Victorias</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Derrotas</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Win Rate (%)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -250,7 +249,7 @@ function renderizarEstadisticasTiempos() {
             const winRate = c.jugadas > 0 ? ((c.victorias / c.jugadas) * 100).toFixed(1) : 0;
             htmlCivs += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 10px 8px;"><strong>${c.civ}</strong></td>
+                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${c.civ}</strong></td>
                     <td style="padding: 10px 8px; text-align: center;">${c.jugadas}</td>
                     <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${c.victorias}</td>
                     <td style="padding: 10px 8px; text-align: center; color: #dc3545; font-weight: bold;">${c.derrotas}</td>
@@ -297,16 +296,16 @@ function renderizarEstadisticasTiempos() {
         <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
 
         <h3 style="margin-top: 20px;">🤝 Rendimiento por Equipos</h3>
-        <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <table style="width: 100%; min-width: 500px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
+        <div style="width: 100%; max-width: 100%; overflow-x: scroll; -webkit-overflow-scrolling: touch; margin-top: 10px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #dee2e6;">
+            <table style="width: 100%; min-width: 600px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 10px 8px;">Equipo / Bando</th>
-                        <th style="padding: 10px 8px;">Miembros Integrantes</th>
-                        <th style="padding: 10px 8px; text-align: center;">Partidas</th>
-                        <th style="padding: 10px 8px; text-align: center;">Victorias</th>
-                        <th style="padding: 10px 8px; text-align: center;">Derrotas</th>
-                        <th style="padding: 10px 8px; text-align: center;">Efectividad</th>
+                        <th style="padding: 10px 8px; white-space: nowrap;">Equipo / Bando</th>
+                        <th style="padding: 10px 8px; white-space: nowrap;">Miembros Integrantes</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Partidas</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Victorias</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Derrotas</th>
+                        <th style="padding: 10px 8px; text-align: center; white-space: nowrap;">Efectividad</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -321,7 +320,7 @@ function renderizarEstadisticasTiempos() {
             const miembrosArr = Array.from(eq.miembros).join(", ");
             htmlEnfrentamientos += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 10px 8px;"><strong>${eq.nombreEquipo}</strong></td>
+                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${eq.nombreEquipo}</strong></td>
                     <td style="padding: 10px 8px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
                     <td style="padding: 10px 8px; text-align: center;">${totalP}</td>
                     <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${eq.victorias}</td>
