@@ -49,7 +49,7 @@
             border-color: #996e05;
         }
 
-        /* --- SUBPESTAÑAS COMPACTAS (ICONOS + TEXTO CORTO) --- */
+        /* --- SUBPESTAÑAS COMPACTAS (ICONOS + TEXTO REDUCIDO) --- */
         .subtabs {
             display: flex;
             gap: 6px;
@@ -83,24 +83,6 @@
             display: none;
         }
 
-        /* --- PANEL LATERAL (Necesario para que el script auth.js y datos carguen bien) --- */
-        #sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 260px;
-            height: 100%;
-            background: #fff;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-            z-index: 999;
-            padding: 20px;
-            box-sizing: border-box;
-            transition: transform 0.3s ease;
-            transform: translateX(-100%);
-        }
-        #sidebar.open {
-            transform: translateX(0);
-        }
         #main-content {
             margin-left: 0;
             padding: 15px;
@@ -150,14 +132,6 @@
 </head>
 <body>
 
-    <!-- Panel lateral oculto requerido para la sincronización de scripts -->
-    <div id="sidebar" style="display:none;">
-        <h3>🔐 Panel de Control</h3>
-        <label>Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
-        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
-    </div>
-
     <div id="main-content">
         <!-- Pestañas Principales (Solo Escritorio) -->
         <div class="tabs">
@@ -195,10 +169,10 @@
             </div>
         </div>
 
-        <!-- Subpestañas Secundarias Compactas (Iconos y texto abreviado sin scroll horizontal) -->
+        <!-- Subpestañas Secundarias Compactas con Iconos -->
         <div class="subtabs">
             <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')" title="Tiempos de Partida">⏱️ Tiempos</button>
-            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')" title="Civilizaciones y Win Rate">🏛️ Civs / WinRate</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')" title="Civilizaciones y Win Rate">🏛️ Civs / WR</button>
             <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')" title="Sinergia y Enfrentamientos">🤝 Sinergia</button>
         </div>
 
