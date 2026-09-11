@@ -7,34 +7,15 @@
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Librería html2canvas para la descarga de imágenes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             box-sizing: border-box;
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: #f8f9fa; /* Fondo claro institucional */
+            color: #333333;
             -webkit-text-size-adjust: 100%;
-        }
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
-            gap: 10px;
-        }
-        .header-top h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            line-height: 1.2;
-            max-width: 65%;
-            color: #f8f9fa;
-        }
-        .header-info-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
+            font-family: sans-serif;
         }
         .admin-toggle-btn {
             background: #b8860b;
@@ -45,33 +26,34 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .tabs {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            background: #1e1e1e;
+            background: #ffffff;
             padding: 10px;
             border-radius: 8px;
             border: 2px solid #d4af37;
             margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
-            background: #2a2a2a;
-            color: #ddd;
+            background: #f1f3f5;
+            color: #495057;
             padding: 8px 12px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
             font-size: 0.9rem;
-            border: 1px solid #444;
+            border: 1px solid #ced4da;
             transition: all 0.2s ease;
         }
         .tab-btn:hover {
-            background: #333;
-            color: #d4af37;
-            border-color: #d4af37;
+            background: #e9ecef;
+            color: #b8860b;
+            border-color: #b8860b;
         }
         .tab-btn.active {
             background: #b8860b;
@@ -84,14 +66,15 @@
             left: 0;
             width: 260px;
             height: 100vh;
-            background: #1e1e1e;
-            color: #fff;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            background: #ffffff;
+            color: #212529;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             z-index: 999;
             padding: 20px;
             box-sizing: border-box;
             transition: transform 0.3s ease;
             transform: translateX(-100%);
+            border-right: 1px solid #dee2e6;
         }
         #sidebar.open {
             transform: translateX(0);
@@ -99,22 +82,23 @@
         #main-content {
             margin-left: 0;
             padding: 20px;
+            position: relative;
         }
         .match-card {
-            background: #1a1c23;
-            border: 1px solid #2d3142;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
             border-radius: 10px;
             padding: 15px 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         .match-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #2d3142;
-            padding-bottom: 8px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f1f3f5;
+            padding-bottom: 10px;
         }
         .match-title-group {
             display: flex;
@@ -122,85 +106,102 @@
             gap: 12px;
         }
         .match-map-icon {
-            width: 45px;
-            height: 45px;
-            background: #2e3a23;
+            width: 40px;
+            height: 40px;
+            background: rgba(92, 131, 47, 0.1);
             border: 2px solid #5c832f;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            color: #a3c26a;
+            font-size: 1.1rem;
+            color: #5c832f;
         }
         .match-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            color: #fff;
+            color: #212529;
             margin: 0;
         }
         .match-subtitle {
             font-size: 0.85rem;
-            color: #aaa;
+            color: #6c757d;
         }
         .match-duration {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            color: #d4af37;
+            color: #b8860b;
             background: rgba(212, 175, 55, 0.1);
             padding: 4px 10px;
             border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.3);
             white-space: nowrap;
         }
-        .table-dark-custom {
-            background-color: #16181f;
-            color: #e0e0e0;
+        .table-light-custom {
+            background-color: #ffffff;
+            color: #212529;
             font-size: 0.9rem;
         }
+        .table-light-custom th {
+            background-color: #f1f3f5 !important;
+            color: #212529 !important;
+            border-bottom: 2px solid #dee2e6;
+        }
 
-        /* 📱 ESTILOS ADAPTATIVOS PARA CELULARES */
+        /* 📱 ESTILOS RESPONSIVOS MÓVIL Y BARRA INFERIOR */
         @media (max-width: 768px) {
+            body {
+                padding-bottom: 70px;
+                background-color: #f8f9fa;
+                color: #333333;
+            }
+            #sidebar {
+                display: none;
+            }
             #main-content {
-                padding: 10px !important;
-            }
-            .header-top {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .header-top h1 {
-                max-width: 100%;
-                font-size: 1.2rem;
-            }
-            .header-info-container {
-                align-items: flex-start;
-                flex-direction: row;
-                justify-content: space-between;
-                width: 100%;
-            }
-            .match-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .match-duration {
-                align-self: flex-start;
-            }
-            .match-card {
-                padding: 10px 12px;
-            }
-            .table-dark-custom th, .table-dark-custom td {
-                padding: 6px 8px;
-                font-size: 0.82rem;
+                padding: 15px 15px 30px 15px;
             }
             .tabs {
-                gap: 5px;
-                padding: 6px;
+                display: none;
             }
-            .tab-btn {
-                padding: 6px 9px;
-                font-size: 0.8rem;
+            .mobile-bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #ffffff;
+                border-top: 1px solid #dee2e6;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                height: 60px;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+                z-index: 1000;
+            }
+            .mobile-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: #6c757d;
+                font-size: 0.75rem;
+                font-weight: 600;
+                flex-grow: 1;
+                padding: 6px 0;
+                transition: color 0.2s;
+            }
+            .mobile-nav-item i {
+                font-size: 20px;
+                margin-bottom: 3px;
+            }
+            .mobile-nav-item:hover, 
+            .mobile-nav-item.active {
+                color: #b8860b;
+            }
+        }
+        @media (min-width: 769px) {
+            .mobile-bottom-nav {
+                display: none;
             }
         }
     </style>
@@ -209,20 +210,15 @@
 
     <div id="sidebar">
         <h3>🔐 Panel de Control</h3>
-        <label class="form-label mt-2">Contraseña de Admin:</label>
-        <input type="password" id="admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ingresa contraseña">
+        <label class="form-label mt-2">Contraseña de Administrador:</label>
+        <input type="password" id="admin-pass" class="form-control form-control-sm bg-light text-dark border-secondary" placeholder="Ingrese contraseña">
         <div id="status-mode" class="badge bg-secondary mt-3">Modo Espectador</div>
     </div>
 
     <div id="main-content" class="container-fluid p-4">
-        <div class="header-top">
-            <h1>🏆 Ranking Maratón Michi DM</h1>
-            <div class="header-info-container">
-                <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
-                <div id="ultima-actualizacion" class="text-muted fw-bold" style="font-size: 0.90rem;">
-                    --/--/---- --:--:-- --
-                </div>
-            </div>
+        <!-- Botón de admin flotante para móviles -->
+        <div class="d-flex justify-content-end mb-3">
+            <button class="admin-toggle-btn" onclick="toggleSidebar()">🔐 Admin</button>
         </div>
 
         <div class="tabs mb-4">
@@ -234,18 +230,18 @@
             <a href="correccion.html" class="tab-btn admin-only">📝 Corrección de Nombres</a>
         </div>
 
-        <h2 class="mb-3 text-white fs-5"><i class="fas fa-history text-warning"></i> Partidas Recientes</h2>
+        <h2 class="mb-3 text-dark"><i class="fas fa-history text-warning"></i> Historial de Partidas</h2>
 
         <!-- Filtros del Historial -->
-        <div class="card shadow-sm p-3 mb-4 bg-dark border-secondary" style="border-radius: 10px;">
-            <div class="row align-items-center g-2">
-                <div class="col-12 col-md-3">
-                    <span class="fw-bold text-light fs-6"><i class="fas fa-filter text-warning"></i> Filtros</span>
+        <div class="card shadow-sm p-3 mb-4 bg-white border-secondary" style="border-radius: 10px;">
+            <div class="row align-items-center g-3">
+                <div class="col-md-3">
+                    <span class="fw-bold text-dark fs-5"><i class="fas fa-filter text-warning"></i> Filtro de Encuentros</span>
                 </div>
-                <div class="col-12 col-md-9 d-flex flex-wrap justify-content-md-end gap-2 align-items-center">
-                    <div class="d-flex align-items-center gap-1">
-                        <label class="fw-bold text-secondary mb-0 small">Año:</label>
-                        <select id="filtro-anio" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 90px;">
+                <div class="col-md-9 d-flex flex-wrap justify-content-end gap-3 align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Año:</label>
+                        <select id="filtro-anio" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 100px;">
                             <option value="todos">Todos</option>
                             <option value="2026" selected>2026</option>
                             <option value="2027">2027</option>
@@ -254,9 +250,9 @@
                             <option value="2030">2030</option>
                         </select>
                     </div>
-                    <div class="d-flex align-items-center gap-1">
-                        <label class="fw-bold text-secondary mb-0 small">Mes:</label>
-                        <select id="filtro-mes" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 110px;">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Mes:</label>
+                        <select id="filtro-mes" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 120px;">
                             <option value="todos">Todos</option>
                             <option value="01">Enero</option>
                             <option value="02">Febrero</option>
@@ -272,9 +268,9 @@
                             <option value="12">Diciembre</option>
                         </select>
                     </div>
-                    <div class="d-flex align-items-center gap-1">
-                        <label class="fw-bold text-secondary mb-0 small">Fecha:</label>
-                        <select id="filtro-fecha" class="form-select form-select-sm bg-secondary text-white border-0" style="width: 100px;">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold text-secondary mb-0">Fecha:</label>
+                        <select id="filtro-fecha" class="form-select form-select-sm bg-white text-dark border-secondary" style="width: 110px;">
                             <option value="todas">Todas</option>
                         </select>
                     </div>
@@ -284,6 +280,26 @@
 
         <div id="lista-partidas-container"></div>
     </div>
+
+    <!-- Barra de Navegación Inferior Móvil -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>General</span>
+        </a>
+        <a href="estadisticas.html" class="mobile-nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Stats</span>
+        </a>
+        <a href="candidatos.html" class="mobile-nav-item">
+            <i class="fas fa-star"></i>
+            <span>Candidatos</span>
+        </a>
+        <a href="historial.html" class="mobile-nav-item active">
+            <i class="fas fa-history"></i>
+            <span>Historial</span>
+        </a>
+    </nav>
 
     <script src="js/auth.js"></script>
     <script src="js/equivalencias.js"></script>
@@ -303,6 +319,25 @@
                 } catch (e) {}
             }
             return mapaCorrecciones[nombreOriginal] || nombreOriginal;
+        }
+
+        function descargarPartidaCard(cardId) {
+            const cardElement = document.getElementById(cardId);
+            if (!cardElement) return;
+            // Ocultar temporalmente el botón de descarga para la captura
+            const btnDescarga = cardElement.querySelector('.btn-descargar-partida');
+            if (btnDescarga) btnDescarga.style.display = 'none';
+
+            html2canvas(cardElement, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                if (btnDescarga) btnDescarga.style.display = 'inline-block';
+                let link = document.createElement('a');
+                link.download = `${cardId}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                if (btnDescarga) btnDescarga.style.display = 'inline-block';
+                console.error("Error al generar la imagen de la partida:", err);
+            });
         }
 
         function cargarHistorialPartidas() {
@@ -392,7 +427,6 @@
 
                     let listaActual = Object.values(rankingAcumuladoMap).sort((a, b) => b.pts - a.pts);
                     let variacionesEstaPartida = {};
-
                     let esPrimeraPartidaTotal = (parseInt(m.fechaNum, 10) === 1 && parseInt(m.partidaNum, 10) === 1 && keys[0] === k);
 
                     listaActual.forEach((j, idx) => {
@@ -469,24 +503,30 @@
                         } else if (varValor < 0) {
                             varHtml = `<span class="text-danger fw-bold">${varValor} <i class="fas fa-arrow-down"></i></span>`;
                         } else {
-                            varHtml = `<span class="fw-bold" style="color: #4da6ff; background: rgba(0, 86, 179, 0.25); padding: 2px 8px; border-radius: 4px;">0</span>`;
+                            varHtml = `<span class="fw-bold" style="color: #0d6efd; background: rgba(13, 110, 253, 0.1); padding: 2px 8px; border-radius: 4px;">0</span>`;
                         }
 
                         let esGanador = (reg.pg === 1 || reg.pts >= 3 || reg.ganador === true);
                         let iconoResultado = esGanador ? '<span title="Victoria">👑</span>' : '<span title="Derrota">💀</span>';
 
+                        // Limpiar formato de equipo para que muestre E1 o E2 limpiamente
+                        let eqRaw = reg.equipo || "E1";
+                        let eqLimpio = eqRaw.replace(/[^0-9]/g, '');
+                        let eqTexto = eqLimpio ? `E${eqLimpio}` : eqRaw;
+
                         filasJugadores += `
                             <tr>
-                                <td class="fw-bold text-white">${iconoResultado} ${nombreRaw}</td>
-                                <td><span class="badge bg-secondary">${reg.equipo || "Sin Equipo"}</span></td>
+                                <td class="fw-bold text-dark">${iconoResultado} ${nombreRaw}</td>
+                                <td><span class="badge bg-secondary">${eqTexto}</span></td>
                                 <td>${reg.civ || "-"}</td>
                                 <td class="text-center">${varHtml}</td>
                             </tr>
                         `;
                     });
 
+                    let cardId = `partida_${m.anio}_${m.mes}_f${m.fechaNum}_p${m.partidaNum}`;
                     let cardHTML = `
-                        <div class="match-card">
+                        <div class="match-card" id="${cardId}">
                             <div class="match-header">
                                 <div class="match-title-group">
                                     <div class="match-map-icon">
@@ -497,15 +537,20 @@
                                         <div class="match-subtitle">Maratón DM (${nombreMes} ${m.anio})</div>
                                     </div>
                                 </div>
-                                <div class="match-duration"><i class="far fa-clock"></i> ${m.duracion}</div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="match-duration"><i class="far fa-clock"></i> ${m.duracion}</div>
+                                    <button class="btn btn-sm btn-warning fw-bold text-dark btn-descargar-partida" onclick="descargarPartidaCard('${cardId}')" title="Descargar reporte de partida">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-dark table-sm table-striped align-middle mb-0 table-dark-custom">
+                                <table class="table table-sm table-striped align-middle mb-0 table-light-custom">
                                     <thead>
                                         <tr>
                                             <th>Jugador</th>
                                             <th>Equipo</th>
-                                            <th>Civilización</th>
+                                            <th>Civi</th>
                                             <th class="text-center">Var</th>
                                         </tr>
                                     </thead>
@@ -519,7 +564,7 @@
                     contenedor.insertAdjacentHTML('beforeend', cardHTML);
                 });
             } catch (err) {
-                console.error("Error crítico en historial:", err);
+                console.error("Error al procesar el historial:", err);
             }
         }
 
@@ -541,14 +586,6 @@
             if (document.getElementById('filtro-fecha')) document.getElementById('filtro-fecha').addEventListener('change', cargarHistorialPartidas);
 
             cargarHistorialPartidas();
-
-            const elFecha = document.getElementById('ultima-actualizacion');
-            if (elFecha) {
-                const ahora = new Date();
-                const opcionesFecha = { day: 'numeric', month: 'numeric', year: 'numeric' };
-                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                elFecha.textContent = `${ahora.toLocaleDateString('es-ES', opcionesFecha)}, ${ahora.toLocaleTimeString('es-ES', opcionesHora).toLowerCase()}`;
-            }
         });
     </script>
 </body>
