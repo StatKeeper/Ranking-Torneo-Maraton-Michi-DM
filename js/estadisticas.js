@@ -68,7 +68,7 @@ function renderizarEstadisticasTiempos() {
     const selectMes = document.getElementById("select-mes-filtro") || document.getElementById("select-mes") || document.getElementById("mes");
     
     const anioSeleccionado = selectAnio ? selectAnio.value : "2026";
-    const mesSeleccionado = selectMes ? selectMes.value : "08";
+    const mesSeleccionado = selectMes ? selectMes.value : "09";
 
     const mesesMapInverso = {
         "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
@@ -80,7 +80,7 @@ function renderizarEstadisticasTiempos() {
         "enero": "01", "febrero": "02", "marzo": "03", "abril": "04",
         "mayo": "05", "junio": "06", "julio": "07", "agosto": "08",
         "septiembre": "09", "octubre": "10", "noviembre": "11", "diciembre": "12",
-        "Agosto": "08", "Septiembre": "09", "Octubre": "10", "Noviembre": "11", "Diciembre": "12"
+        "Septiembre": "09", "Agosto": "08", "Octubre": "10", "Noviembre": "11", "Diciembre": "12"
     };
 
     const mesFormatoNum = mesesMapTexto[mesSeleccionado] || mesSeleccionado;
@@ -174,32 +174,25 @@ function renderizarEstadisticasTiempos() {
     }
 
     const listaJugadores = Object.values(estadisticasJugadores).filter(j => j.totalPartidas > 0);
+    
+    // HTML mejorado con contenedor responsivo optimizado para scroll horizontal fluido en móviles
     let htmlTiempos = `
-        <h3>⏱️ Tiempos de Partida, Totales y Promedios por Jugador</h3>
-        <div style="background: #f8f9fa; padding: 12px 15px; border-radius: 6px; margin-top: 10px; margin-bottom: 15px; font-size: 0.9em; border-left: 4px solid #0d6efd;">
-            <strong>Leyenda de Diminutivos:</strong>
-            <ul style="margin: 5px 0 0 20px; padding: 0; color: #495057;">
-                <li><strong>Part.</strong>: Partidas Registradas</li>
-                <li><strong>Dur. Acum.</strong>: Duración Total Acumulada</li>
-                <li><strong>Prom. Dur.</strong>: Promedio de Duración por Partida</li>
-                <li><strong>Tot. Unid.</strong>: Total de Unidades Asesinadas</li>
-                <li><strong>Prom. Unid.</strong>: Promedio de Unidades Asesinadas por Partida</li>
-                <li><strong>Tot. Edif.</strong>: Total de Edificios Arrasados</li>
-                <li><strong>Prom. Edif.</strong>: Promedio de Edificios Arrasados por Partida</li>
-            </ul>
+        <h3>⏱️ Tiempos de Partida y Promedios por Jugador</h3>
+        <div style="background: #f8f9fa; padding: 10px 12px; border-radius: 6px; margin-top: 8px; margin-bottom: 12px; font-size: 0.82em; border-left: 4px solid #0d6efd;">
+            <strong>Leyenda:</strong> <strong>Part.</strong>: Partidas | <strong>Dur. Acum.</strong>: Duración Total | <strong>Prom. Dur.</strong>: Promedio Duración | <strong>Tot. Unid.</strong>: Unidades Asesinadas | <strong>Prom. Unid.</strong>: Promedio Unidades | <strong>Tot. Edif.</strong>: Edificios Arrasados | <strong>Prom. Edif.</strong>: Promedio Edificios
         </div>
-        <div style="overflow-x: auto; margin-top: 15px;">
-            <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <table style="width: 100%; min-width: 600px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 12px;">Jugador</th>
-                        <th style="padding: 12px;">Part.</th>
-                        <th style="padding: 12px;">Dur. Acum.</th>
-                        <th style="padding: 12px;">Prom. Dur.</th>
-                        <th style="padding: 12px;">Tot. Unid.</th>
-                        <th style="padding: 12px;">Prom. Unid.</th>
-                        <th style="padding: 12px;">Tot. Edif.</th>
-                        <th style="padding: 12px;">Prom. Edif.</th>
+                        <th style="padding: 10px 8px; white-space: nowrap;">Jugador</th>
+                        <th style="padding: 10px 8px; text-align: center;">Part.</th>
+                        <th style="padding: 10px 8px; text-align: center;">Dur. Acum.</th>
+                        <th style="padding: 10px 8px; text-align: center;">Prom. Dur.</th>
+                        <th style="padding: 10px 8px; text-align: center;">Tot. Unid.</th>
+                        <th style="padding: 10px 8px; text-align: center;">Prom. Unid.</th>
+                        <th style="padding: 10px 8px; text-align: center;">Tot. Edif.</th>
+                        <th style="padding: 10px 8px; text-align: center;">Prom. Edif.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -216,14 +209,14 @@ function renderizarEstadisticasTiempos() {
 
             htmlTiempos += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 12px;"><strong>${j.nombre}</strong></td>
-                    <td style="padding: 12px;">${j.totalPartidas}</td>
-                    <td style="padding: 12px;">${convertirSegundosADuracion(j.segundosTotales)}</td>
-                    <td style="padding: 12px; font-weight: bold; color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</td>
-                    <td style="padding: 12px;">${j.unidadesTotales}</td>
-                    <td style="padding: 12px;">${promedioUnidades}</td>
-                    <td style="padding: 12px;">${j.edificiosTotales}</td>
-                    <td style="padding: 12px;">${promedioEdificios}</td>
+                    <td style="padding: 10px 8px; white-space: nowrap;"><strong>${j.nombre}</strong></td>
+                    <td style="padding: 10px 8px; text-align: center;">${j.totalPartidas}</td>
+                    <td style="padding: 10px 8px; text-align: center; white-space: nowrap;">${convertirSegundosADuracion(j.segundosTotales)}</td>
+                    <td style="padding: 10px 8px; text-align: center; white-space: nowrap; font-weight: bold; color: #0d6efd;">${convertirSegundosADuracion(promedioSeg)}</td>
+                    <td style="padding: 10px 8px; text-align: center;">${j.unidadesTotales}</td>
+                    <td style="padding: 10px 8px; text-align: center;">${promedioUnidades}</td>
+                    <td style="padding: 10px 8px; text-align: center;">${j.edificiosTotales}</td>
+                    <td style="padding: 10px 8px; text-align: center;">${promedioEdificios}</td>
                 </tr>
             `;
         });
@@ -231,18 +224,19 @@ function renderizarEstadisticasTiempos() {
     htmlTiempos += `</tbody></table></div>`;
     secTiempos.innerHTML = htmlTiempos;
 
+    // (El resto del código de civilizaciones y enfrentamientos continúa igual...)
     const listaCivs = Object.values(estadisticasCivilizaciones);
     let htmlCivs = `
         <h3>🏛️ Rendimiento y Win Rate por Civilización</h3>
-        <div style="overflow-x: auto; margin-top: 15px;">
-            <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <table style="width: 100%; min-width: 450px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 12px;">Civilización</th>
-                        <th style="padding: 12px;">Veces Jugada</th>
-                        <th style="padding: 12px;">Victorias</th>
-                        <th style="padding: 12px;">Derrotas</th>
-                        <th style="padding: 12px;">Win Rate (%)</th>
+                        <th style="padding: 10px 8px;">Civilización</th>
+                        <th style="padding: 10px 8px; text-align: center;">Veces Jugada</th>
+                        <th style="padding: 10px 8px; text-align: center;">Victorias</th>
+                        <th style="padding: 10px 8px; text-align: center;">Derrotas</th>
+                        <th style="padding: 10px 8px; text-align: center;">Win Rate (%)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -256,11 +250,11 @@ function renderizarEstadisticasTiempos() {
             const winRate = c.jugadas > 0 ? ((c.victorias / c.jugadas) * 100).toFixed(1) : 0;
             htmlCivs += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 12px;"><strong>${c.civ}</strong></td>
-                    <td style="padding: 12px;">${c.jugadas}</td>
-                    <td style="padding: 12px; color: #198754; font-weight: bold;">${c.victorias}</td>
-                    <td style="padding: 12px; color: #dc3545; font-weight: bold;">${c.derrotas}</td>
-                    <td style="padding: 12px; font-weight: bold; color: ${winRate >= 50 ? '#198754' : '#dc3545'};">${winRate}%</td>
+                    <td style="padding: 10px 8px;"><strong>${c.civ}</strong></td>
+                    <td style="padding: 10px 8px; text-align: center;">${c.jugadas}</td>
+                    <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${c.victorias}</td>
+                    <td style="padding: 10px 8px; text-align: center; color: #dc3545; font-weight: bold;">${c.derrotas}</td>
+                    <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: ${winRate >= 50 ? '#198754' : '#dc3545'};">${winRate}%</td>
                 </tr>
             `;
         });
@@ -271,25 +265,25 @@ function renderizarEstadisticasTiempos() {
     const listaEquipos = Object.values(estadisticasEquipos);
     let htmlEnfrentamientos = `
         <h3>🔍 Consulta Interactiva de Sinergia de Grupo (2 a 4 Jugadores)</h3>
-        <p style="color: #6c757d; font-size: 0.9em; margin-bottom: 15px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en el mismo equipo.</p>
+        <p style="color: #6c757d; font-size: 0.85em; margin-bottom: 12px;">Ingresa de 2 a 4 jugadores para conocer sus estadísticas conjuntas en el mismo equipo.</p>
         
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
                 <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 1:</label>
-                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 1:</label>
+                    <input type="text" id="input-sinergia-1" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 2:</label>
-                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona o escribe..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 2:</label>
+                    <input type="text" id="input-sinergia-2" list="lista-jugadores-sug" placeholder="Selecciona..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 3 (Opcional):</label>
-                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 3 (Opc.):</label>
+                    <input type="text" id="input-sinergia-3" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
                 <div>
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #343a40;">Jugador 4 (Opcional):</label>
-                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 4px; color: #343a40; font-size: 0.85em;">Jugador 4 (Opc.):</label>
+                    <input type="text" id="input-sinergia-4" list="lista-jugadores-sug" placeholder="Opcional..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;">
                 </div>
             </div>
             
@@ -297,22 +291,22 @@ function renderizarEstadisticasTiempos() {
                 ${Array.from(listaGlobalJugadores).map(j => `<option value="${j}">`).join("")}
             </datalist>
 
-            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer;">Consultar Sinergia Grupal</button>
+            <button id="btn-consultar-sinergia" style="background: #0d6efd; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9em;">Consultar Sinergia</button>
         </div>
 
-        <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 35px; display: none;"></div>
+        <div id="resultado-sinergia-container" style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; display: none;"></div>
 
-        <h3 style="margin-top: 25px;">🤝 Rendimiento por Equipos (3v3 / 4v4)</h3>
-        <div style="overflow-x: auto; margin-top: 15px;">
-            <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 20px;">🤝 Rendimiento por Equipos</h3>
+        <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <table style="width: 100%; min-width: 500px; border-collapse: collapse; background: #fff; font-size: 0.88em;">
                 <thead>
                     <tr style="background-color: #343a40; color: #fff; text-align: left;">
-                        <th style="padding: 12px;">Equipo / Bando</th>
-                        <th style="padding: 12px;">Miembros Integrantes</th>
-                        <th style="padding: 12px;">Partidas</th>
-                        <th style="padding: 12px;">Victorias</th>
-                        <th style="padding: 12px;">Derrotas</th>
-                        <th style="padding: 12px;">Efectividad</th>
+                        <th style="padding: 10px 8px;">Equipo / Bando</th>
+                        <th style="padding: 10px 8px;">Miembros Integrantes</th>
+                        <th style="padding: 10px 8px; text-align: center;">Partidas</th>
+                        <th style="padding: 10px 8px; text-align: center;">Victorias</th>
+                        <th style="padding: 10px 8px; text-align: center;">Derrotas</th>
+                        <th style="padding: 10px 8px; text-align: center;">Efectividad</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -327,12 +321,12 @@ function renderizarEstadisticasTiempos() {
             const miembrosArr = Array.from(eq.miembros).join(", ");
             htmlEnfrentamientos += `
                 <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 12px;"><strong>${eq.nombreEquipo}</strong></td>
-                    <td style="padding: 12px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
-                    <td style="padding: 12px;">${totalP}</td>
-                    <td style="padding: 12px; color: #198754; font-weight: bold;">${eq.victorias}</td>
-                    <td style="padding: 12px; color: #dc3545; font-weight: bold;">${eq.derrotas}</td>
-                    <td style="padding: 12px; font-weight: bold; color: ${eq.victorias > 0 && eq.derrotas === 0 ? '#198754' : '#0d6efd'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
+                    <td style="padding: 10px 8px;"><strong>${eq.nombreEquipo}</strong></td>
+                    <td style="padding: 10px 8px; font-size: 0.9em; color: #495057;">${miembrosArr}</td>
+                    <td style="padding: 10px 8px; text-align: center;">${totalP}</td>
+                    <td style="padding: 10px 8px; text-align: center; color: #198754; font-weight: bold;">${eq.victorias}</td>
+                    <td style="padding: 10px 8px; text-align: center; color: #dc3545; font-weight: bold;">${eq.derrotas}</td>
+                    <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: ${eq.victorias > 0 && eq.derrotas === 0 ? '#198754' : '#0d6efd'};">${eq.victorias > 0 && eq.derrotas === 0 ? '🏆 Invictos' : ef + '%'}</td>
                 </tr>
             `;
         });
@@ -408,11 +402,11 @@ function renderizarEstadisticasTiempos() {
 
                 contenedorResultado.innerHTML = `
                     <h4 style="color: #343a40; margin-bottom: 15px; border-bottom: 2px solid #0d6efd; padding-bottom: 5px;">📊 Estadística Conjunta (Mismo Equipo): ${seleccionados.join(" , ")}</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center;">
-                        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #6c757d;">Partidas Juntos</div><div style="font-size: 1.4em; font-weight: bold; color: #343a40;">${partidasJuntos}</div></div>
-                        <div style="background: #e8f5e9; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #198754;">Victorias</div><div style="font-size: 1.4em; font-weight: bold; color: #198754;">${victoriasJuntos}</div></div>
-                        <div style="background: #ffebee; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #dc3545;">Derrotas</div><div style="font-size: 1.4em; font-weight: bold; color: #dc3545;">${derrotasJuntos}</div></div>
-                        <div style="background: #e7f1ff; padding: 10px; border-radius: 6px;"><div style="font-size: 0.85em; color: #0d6efd;">Estado Sinergia</div><div style="font-size: 1.1em; margin-top: 4px;">${badgeEstado}</div></div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; text-align: center;">
+                        <div style="background: #f8f9fa; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #6c757d;">Partidas Juntos</div><div style="font-size: 1.3em; font-weight: bold; color: #343a40;">${partidasJuntos}</div></div>
+                        <div style="background: #e8f5e9; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #198754;">Victorias</div><div style="font-size: 1.3em; font-weight: bold; color: #198754;">${victoriasJuntos}</div></div>
+                        <div style="background: #ffebee; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #dc3545;">Derrotas</div><div style="font-size: 1.3em; font-weight: bold; color: #dc3545;">${derrotasJuntos}</div></div>
+                        <div style="background: #e7f1ff; padding: 8px; border-radius: 6px;"><div style="font-size: 0.8em; color: #0d6efd;">Estado Sinergia</div><div style="font-size: 1em; margin-top: 4px;">${badgeEstado}</div></div>
                     </div>
                 `;
             }
