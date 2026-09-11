@@ -49,26 +49,33 @@
             border-color: #996e05;
         }
 
-        /* --- SUBPESTAÑAS --- */
+        /* --- SUBPESTAÑAS COMPACTAS (ICONOS + TEXTO CORTO) --- */
         .subtabs {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 6px;
             margin-bottom: 15px;
+            justify-content: space-between;
         }
         .subtab-btn {
+            flex: 1;
             background: #f8f9fa;
             color: #333;
-            padding: 8px 14px;
+            padding: 8px 4px;
             border-radius: 6px;
             border: 1px solid #ccc;
             font-weight: bold;
+            font-size: 0.75rem;
             cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.2s;
         }
         .subtab-btn.active {
-            background: #0d6efd;
+            background: #b8860b;
             color: white;
-            border-color: #0b5ed7;
+            border-color: #996e05;
         }
 
         /* --- BARRA DE NAVEGACIÓN INFERIOR MÓVIL --- */
@@ -76,6 +83,24 @@
             display: none;
         }
 
+        /* --- PANEL LATERAL (Necesario para que el script auth.js y datos carguen bien) --- */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100%;
+            background: #fff;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
         #main-content {
             margin-left: 0;
             padding: 15px;
@@ -125,8 +150,16 @@
 </head>
 <body>
 
+    <!-- Panel lateral oculto requerido para la sincronización de scripts -->
+    <div id="sidebar" style="display:none;">
+        <h3>🔐 Panel de Control</h3>
+        <label>Contraseña de Admin:</label>
+        <input type="password" id="admin-pass" placeholder="Ingresa contraseña">
+        <div id="status-mode" class="status-badge status-espectador">Modo Espectador</div>
+    </div>
+
     <div id="main-content">
-        <!-- Pestañas Principales (Solo PC) -->
+        <!-- Pestañas Principales (Solo Escritorio) -->
         <div class="tabs">
             <a href="index.html" class="tab-btn">📊 Clasificación general</a>
             <a href="estadisticas.html" class="tab-btn active">📈 Estadísticas y Tiempos</a>
@@ -137,15 +170,15 @@
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 5px; margin-bottom: 15px;">
-            <h2 style="margin: 0; color: #222; font-size: 1.3rem;">📈 Estadísticas Generales del Torneo</h2>
+            <h2 style="margin: 0; color: #222; font-size: 1.2rem;">📈 Estadísticas Generales</h2>
             <!-- Selectores de Año y Mes -->
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <label for="select-anio-filtro" style="font-weight: bold; font-size: 0.9rem;">Año:</label>
-                <select id="select-anio-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <label for="select-anio-filtro" style="font-weight: bold; font-size: 0.85rem;">Año:</label>
+                <select id="select-anio-filtro" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333; font-size: 0.85rem;">
                     <option value="2026" selected>2026</option>
                 </select>
-                <label for="select-mes-filtro" style="font-weight: bold; margin-left: 5px; font-size: 0.9rem;">Mes:</label>
-                <select id="select-mes-filtro" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333;">
+                <label for="select-mes-filtro" style="font-weight: bold; margin-left: 4px; font-size: 0.85rem;">Mes:</label>
+                <select id="select-mes-filtro" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #ced4da; background:#fff; color:#333; font-size: 0.85rem;">
                     <option value="01">Enero</option>
                     <option value="02">Febrero</option>
                     <option value="03">Marzo</option>
@@ -162,11 +195,11 @@
             </div>
         </div>
 
-        <!-- Subpestañas Secundarias -->
+        <!-- Subpestañas Secundarias Compactas (Iconos y texto abreviado sin scroll horizontal) -->
         <div class="subtabs">
-            <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')">⏱️ Tiempos de partida</button>
-            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')">🏛️ Civilizaciones y Win Rate</button>
-            <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')">🤝 Sinergia y Enfrentamientos</button>
+            <button class="subtab-btn active" onclick="cambiarSubtab('tiempos')" title="Tiempos de Partida">⏱️ Tiempos</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('civilizaciones')" title="Civilizaciones y Win Rate">🏛️ Civs / WinRate</button>
+            <button class="subtab-btn" onclick="cambiarSubtab('enfrentamientos')" title="Sinergia y Enfrentamientos">🤝 Sinergia</button>
         </div>
 
         <!-- Vista 1: Tiempos de partida -->
