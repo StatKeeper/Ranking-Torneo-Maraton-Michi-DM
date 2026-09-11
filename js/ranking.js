@@ -8,7 +8,6 @@ async function cargarDatosNubeYSincronizar() {
         
         const datosNube = await respuesta.json();
         if (datosNube && typeof datosNube === "object") {
-            // Volcar los datos del archivo JSON al localStorage del dispositivo actual (PC o Celular)
             Object.keys(datosNube).forEach(key => {
                 localStorage.setItem(key, datosNube[key]);
             });
@@ -19,7 +18,6 @@ async function cargarDatosNubeYSincronizar() {
     }
 }
 
-// Función auxiliar para exportar tus datos actuales a un archivo y subirlos a GitHub fácilmente
 function generarArchivoDatosTorneoParaGitHub() {
     let todosLosDatos = {};
     for (let i = 0; i < localStorage.length; i++) {
@@ -34,7 +32,6 @@ function generarArchivoDatosTorneoParaGitHub() {
     console.log("¡Archivo datos_torneo.json generado con éxito para subir a GitHub!");
 }
 
-// Obtener el nombre oficial corregido desde localStorage
 function obtenerNombreOficial(nombreOriginal) {
     if (!nombreOriginal) return "";
     let mapaCorrecciones = {};
@@ -51,7 +48,6 @@ function obtenerNombreOficial(nombreOriginal) {
     return mapaCorrecciones[nombreOriginal] || nombreOriginal;
 }
 
-// Función robusta para contabilizar bonos tanto por texto como por propiedades directas del registro
 function procesarBonosRegistro(reg, objetoJugador) {
     if (reg.e !== undefined || reg.bonoE !== undefined) {
         objetoJugador.bonoE += parseInt(reg.e || reg.bonoE || 0);
@@ -94,7 +90,6 @@ function inicializarSelectoresAnioFiltro() {
     }
 }
 
-// Renderiza el Ranking Acumulado General filtrado correctamente por Año y Mes
 function renderTablaRankingGeneral() {
     const tbody = document.getElementById("tabla-clasificacion");
     const elFechaAct = document.getElementById("fecha-actualizacion");
@@ -116,6 +111,7 @@ function renderTablaRankingGeneral() {
     let ultimaJornada = "01";
     let ultimaPartida = "1";
     let ultimaFechaHora = "";
+    let todosLosJugadoresConocidos = new Set();
 
     for (let i = 0; i < localStorage.length; i++) {
         const clave = localStorage.key(i);
@@ -125,8 +121,27 @@ function renderTablaRankingGeneral() {
 
             if (clave.includes(`_${periodoSeleccionado}_`) && clave.startsWith("registros_")) {
                 clavesPartidasMes.push(clave);
+                try {
+                    const regs = JSON.parse(localStorage.getItem(clave));
+                    if (Array.isArray(regs)) {
+                        regs.forEach(r => {
+                            const nRaw = r.jugador || r.Jugador;
+                            if (nRaw) todosLosJugadoresConocidos.add(obtenerNombreOficial(nRaw));
+                        });
+                    }
+                } catch(e) {}
             }
         }
+    }
+
+    const listaMaestraGuardada = localStorage.getItem("lista_jugadores") || localStorage.getItem("jugadores_torneo");
+    if (listaMaestraGuardada) {
+        try {
+            const parsedLista = JSON.parse(listaMaestraGuardada);
+            if (Array.isArray(parsedLista)) {
+                parsedLista.forEach(j => todosLosJugadoresConocidos.add(obtenerNombreOficial(j)));
+            }
+        } catch(e) {}
     }
 
     clavesPartidasMes.sort((a, b) => {
@@ -182,12 +197,39 @@ function renderTablaRankingGeneral() {
 
     let acumuladoMap = {};
 
+    todosLosJugadoresConocidos.forEach(nombre => {
+        acumuladoMap[nombre] = {
+            jugador: nombre,
+            pts: 0, pg: 0, pp: 0, vd: null,
+            bonoE: 0, bonoR: 0, bonoM: 0, bonoO: 0, bonoS: 0,
+            bonoRch: 0, bonoMG: 0, bonoRLP: 0,
+            ultimoSuceso: 'Sin participación',
+            participoEnUltima: false
+        };
+    });
+
+    const ultimaClaveDelMes = clavesPartidasMes.length > 0 ? clavesPartidasMes[clavesPartidasMes.length - 1] : null;
+    let jugadoresEnUltimaPartida = new Set();
+    if (ultimaClaveDelMes) {
+        try {
+            const regsUltima = JSON.parse(localStorage.getItem(ultimaClaveDelMes));
+            if (Array.isArray(regsUltima)) {
+                regsUltima.forEach(r => {
+                    const n = obtenerNombreOficial(r.jugador || r.Jugador);
+                    if (n) jugadoresEnUltimaPartida.add(n);
+                });
+            }
+        } catch(e) {}
+    }
+
     clavesPartidasMes.forEach(clave => {
         const partesClave = clave.split("_");
         if (partesClave.length >= 4) {
             ultimaJornada = partesClave[partesClave.length - 2] || ultimaJornada;
             ultimaPartida = partesClave[partesClave.length - 1] || ultimaPartida;
         }
+
+        const esLaUltimaPartida = (clave === ultimaClaveDelMes);
 
         try {
             const registros = JSON.parse(localStorage.getItem(clave));
@@ -199,6 +241,7 @@ function renderTablaRankingGeneral() {
                     if (!nombreRaw) return;
 
                     const nombre = obtenerNombreOficial(nombreRaw);
+                    todosLosJugadoresConocidos.add(nombre);
 
                     if (!acumuladoMap[nombre]) {
                         acumuladoMap[nombre] = {
@@ -206,7 +249,8 @@ function renderTablaRankingGeneral() {
                             pts: 0, pg: 0, pp: 0, vd: null,
                             bonoE: 0, bonoR: 0, bonoM: 0, bonoO: 0, bonoS: 0,
                             bonoRch: 0, bonoMG: 0, bonoRLP: 0,
-                            ultimoSuceso: reg.sucesoNota || reg.suceso || reg.ultimoSuceso || 'Victoria'
+                            ultimoSuceso: 'Sin participación',
+                            participoEnUltima: false
                         };
                     }
 
@@ -218,15 +262,33 @@ function renderTablaRankingGeneral() {
                     acumuladoMap[nombre].pts += puntos;
                     acumuladoMap[nombre].pg += ganados;
                     acumuladoMap[nombre].pp += perdidos;
-                    acumuladoMap[nombre].ultimoSuceso = sucesoActual || acumuladoMap[nombre].ultimoSuceso;
+
+                    if (esLaUltimaPartida && jugadoresEnUltimaPartida.has(nombre)) {
+                        acumuladoMap[nombre].participoEnUltima = true;
+                        acumuladoMap[nombre].ultimoSuceso = sucesoActual || (ganados > 0 ? 'Victoria' : (perdidos > 0 ? 'Derrota' : 'Sin participación'));
+                    } else if (!acumuladoMap[nombre].participoEnUltima && acumuladoMap[nombre].ultimoSuceso === 'Sin participación') {
+                        if (esLaUltimaPartida && !jugadoresEnUltimaPartida.has(nombre)) {
+                            acumuladoMap[nombre].ultimoSuceso = 'Sin participación';
+                        } else if (sucesoActual) {
+                            acumuladoMap[nombre].ultimoSuceso = sucesoActual;
+                        }
+                    }
 
                     if (ganados > 0) acumuladoMap[nombre].vd = 1;
-                    else if (perdidos > 0) acumuladoMap[nombre].vd = 0;
+                    else if (perdidos > 0 && acumuladoMap[nombre].vd === null) acumuladoMap[nombre].vd = 0;
 
                     procesarBonosRegistro(reg, acumuladoMap[nombre]);
                 });
             }
         } catch (e) {}
+    });
+
+    // Validar de forma definitiva la última partida para los que no figuraron en ella
+    Object.keys(acumuladoMap).forEach(nombre => {
+        if (ultimaClaveDelMes && !jugadoresEnUltimaPartida.has(nombre)) {
+            // Si el jugador no estuvo en la última partida del período, su último suceso actual debe ser "Sin participación"
+            acumuladoMap[nombre].ultimoSuceso = "Sin participación";
+        }
     });
 
     const numFecha = ultimaJornada.replace(/\D/g, "") || "01";
@@ -238,13 +300,11 @@ function renderTablaRankingGeneral() {
 
     let jugadores = Object.values(acumuladoMap);
     
-    // Filtro estricto: mínimo una participación (pg + pp > 0), mínimo un punto (pts > 0), y máximo top 25
-    jugadores = jugadores.filter(jug => {
-        const pj = jug.pg + jug.pp;
-        return pj > 0 && jug.pts > 0;
+    jugadores.sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        return a.jugador.localeCompare(b.jugador);
     });
 
-    jugadores.sort((a, b) => b.pts - a.pts);
     jugadores = jugadores.slice(0, 25);
 
     if (jugadores.length === 0) {
@@ -303,6 +363,12 @@ function renderTablaRankingGeneral() {
         const fmtBono = (val) => val > 0 ? `<strong style="color: #dc3545;">${val}</strong>` : `<span style="color: #6c757d;">0</span>`;
         const vdTexto = jug.vd !== null ? jug.vd : 0;
 
+        // Renderizar en rojo si es "Sin participación"
+        let sucesoHtml = `<em>${jug.ultimoSuceso || 'Sin participación'}</em>`;
+        if (jug.ultimoSuceso === 'Sin participación') {
+            sucesoHtml = `<em style="color: #dc3545; font-weight: bold;">Sin participación</em>`;
+        }
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>
@@ -313,7 +379,7 @@ function renderTablaRankingGeneral() {
             <td><strong>${jug.jugador}</strong></td>
             <td><span style="color: #0d6efd; font-weight: bold;">${jug.pts}</span></td>
             <td><strong>${vPjStr}</strong></td>
-            <td><em>${jug.ultimoSuceso || 'Sin participación'}</em></td>
+            <td>${sucesoHtml}</td>
             <td><strong>${vdTexto}</strong></td>
             <td>${fmtBono(jug.bonoE)}</td>
             <td>${fmtBono(jug.bonoR)}</td>
@@ -355,11 +421,7 @@ function renderTablaRankingGeneral() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     inicializarSelectoresAnioFiltro();
-    
-    // 1. Cargar primero los datos sincronizados del archivo JSON en GitHub para celulares y PC
     await cargarDatosNubeYSincronizar();
-
-    // 2. Renderizar la tabla con los datos actualizados
     renderTablaRankingGeneral();
 
     const selectAnio = document.getElementById("select-anio-filtro");
