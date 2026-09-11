@@ -367,8 +367,8 @@ function renderizarEstadisticasTiempos() {
 
             let seleccionadosNombres = [];
             inputsRaw.forEach(inp => {
-                const encontrado = buscarJugadorFlexible(inp);
-                if (encontrado) {
+                const encontrado = typeof buscarJugadorFlexible === 'function' ? buscarJugadorFlexible(inp) : null;
+                if (encontrado && encontrado.nombre) {
                     seleccionadosNombres.push(encontrado.nombre);
                 } else {
                     seleccionadosNombres.push(inp.trim());
@@ -376,7 +376,7 @@ function renderizarEstadisticasTiempos() {
             });
             seleccionadosNombres = [...new Set(seleccionadosNombres)];
 
-            // Cálculo acumulado de unidades y edificios desde partidasDetalleGlobal
+            // Cálculo acumulado seguro de unidades y edificios
             let estadisticasPartidasJugadores = {};
             seleccionadosNombres.forEach(nombre => {
                 estadisticasPartidasJugadores[nombre] = { units: 0, edificios: 0 };
@@ -384,14 +384,18 @@ function renderizarEstadisticasTiempos() {
 
             if (typeof partidasDetalleGlobal !== 'undefined' && Array.isArray(partidasDetalleGlobal)) {
                 partidasDetalleGlobal.forEach(partida => {
-                    partida.forEach(p => {
-                        seleccionadosNombres.forEach(sel => {
-                            if (p.nombre && p.nombre.toLowerCase() === sel.toLowerCase()) {
-                                estadisticasPartidasJugadores[sel].units += Number(p.unidades || p.unidadesAsesinadas || p.kills || 0);
-                                estadisticasPartidasJugadores[sel].edificios += Number(p.edificios || p.edificiosArrasados || p.buildings || 0);
-                            }
+                    // Validamos si la partida es un arreglo o un objeto iterable
+                    if (Array.isArray(partida)) {
+                        partida.forEach(p => {
+                            const nombreJugadorPartida = p.nombre || p.jugador || p.competidor || "";
+                            seleccionadosNombres.forEach(sel => {
+                                if (nombreJugadorPartida && nombreJugadorPartida.toLowerCase() === sel.toLowerCase()) {
+                                    estadisticasPartidasJugadores[sel].units += Number(p.unidades || p.unidadesAsesinadas || p.kills || 0);
+                                    estadisticasPartidasJugadores[sel].edificios += Number(p.edificios || p.edificiosArrasados || p.buildings || 0);
+                                }
+                            });
                         });
-                    });
+                    }
                 });
             }
 
@@ -412,6 +416,49 @@ function renderizarEstadisticasTiempos() {
                 htmlTablaComparativa += `<th style="padding: 5px 3px; text-align: center; white-space: nowrap; font-size: 0.85em;">${sel}</th>`;
             });
             htmlTablaComparativa += `</tr></thead><tbody>`;
+
+            const metricasT = [
+                { label: "P.", fn: j => j.totalPartidas || 0 },
+                { label: "T.A.", fn: j => convertirSegundosADuracionCorto(j.segundosTotales || 0) },
+                { label: "P.T.A.", fn: j => convertirSegundosADuracionCorto(j.totalPartidas > 0 ? Math.round(j.segundosTotales / j.totalPartidas) : 0) },
+                { label: "U.Ases.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.units;
+                    return (calc !== undefined && calc > 0) ? calc : (j.unidadesTotales ?? j.unidades ?? j.unidadesAsesinadas ?? 0);
+                }},
+                { label: "P.U.Ases.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.units ?? (j.unidadesTotales ?? j.unidades ?? j.unidadesAsesinadas ?? 0);
+                    return j.totalPartidas > 0 ? (calc / j.totalPartidas).toFixed(1) : "0.0";
+                }},
+                { label: "E.Arr.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.edificios;
+                    return (calc !== undefined && calc > 0) ? calc : (j.edificiosTotales ?? j.edificios ?? j.edificiosArrasados ?? 0);
+                }},
+                { label: "P.E.Arr.", fn: j => {
+                    const calc = estadisticasPartidasJugadores[j.nombre]?.edificios ?? (j.edificiosTotales ?? j.edificios ?? j.edificiosArrasados ?? 0);
+                    return j.totalPartidas > 0 ? (calc / j.totalPartidas).toFixed(1) : "0.0";
+                }}
+            ];
+
+            metricasT.forEach((metrica, idx) => {
+                const bgRow = idx % 2 === 0 ? '#f8f9fa' : '#ffffff';
+                htmlTablaComparativa += `<tr style="border-bottom: 1px solid #dee2e6; background-color: ${bgRow};">`;
+                htmlTablaComparativa += `<td style="padding: 5px 3px; font-weight: bold; color: #343a40; white-space: nowrap;">${metrica.label}</td>`;
+                
+                seleccionadosNombres.forEach(sel => {
+                    const jData = listaJugadores.find(j => j.nombre && (j.nombre.toLowerCase() === sel.toLowerCase() || j.nombre.toLowerCase().includes(sel.toLowerCase()) || sel.toLowerCase().includes(j.nombre.toLowerCase())));
+                    const valor = jData ? metrica.fn(jData) : "-";
+                    htmlTablaComparativa += `<td style="padding: 5px 3px; text-align: center; white-space: nowrap;">${valor}</td>`;
+                });
+                htmlTablaComparativa += `</tr>`;
+            });
+
+            htmlTablaComparativa += `</tbody></table></div>`;
+            contenedorResultado.innerHTML = htmlTablaComparativa;
+            if (typeof modalTiemposOverlay !== 'undefined' && modalTiemposOverlay) {
+                modalTiemposOverlay.style.display = "block";
+            }
+        });
+    }
 
             const metricasT = [
                 { label: "P.", fn: j => j.totalPartidas || 0 },
