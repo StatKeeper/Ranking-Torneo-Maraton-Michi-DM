@@ -26,11 +26,20 @@ function obtenerNickOficialEstadisticas(nombreIngresado) {
         }
     }
 
-    if (typeof equivalencias !== 'undefined') {
-        const guardadas = localStorage.getItem("equivalencias_michi_dm");
-        const lista = guardadas ? JSON.parse(guardadas) : equivalencias;
-        const buscado = lista.find(e => e.antiguo.toLowerCase().includes(limpioIngresado) || limpioIngresado.includes(e.antiguo.toLowerCase()));
-        if (buscado) return buscado.oficial;
+    const equivalenciasGuardadas = localStorage.getItem("equivalencias_michi_dm");
+    if (equivalenciasGuardadas) {
+        try {
+            const lista = JSON.parse(equivalenciasGuardadas);
+            // Primero buscamos coincidencia EXACTA para evitar falsos positivos por substring
+            const buscadoExacto = lista.find(e => e.antiguo.toLowerCase() === limpioIngresado);
+            const buscado = buscadoExacto || lista.find(e => e.antiguo.toLowerCase().includes(limpioIngresado) || limpioIngresado.includes(e.antiguo.toLowerCase()));
+            if (buscado) {
+                const oficial = buscado.oficial || (buscado.oficiales && buscado.oficiales[0]);
+                if (oficial) return oficial;
+            }
+        } catch (e) {
+            console.error("Error parseando equivalencias:", e);
+        }
     }
 
     for (let key in mapaCorrecciones) {
