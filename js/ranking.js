@@ -1,29 +1,30 @@
-// Sincronización inteligente con control de versión estricto
+// Sincronización forzada con bypass anti-caché absoluto para celulares
 const ARCHIVO_DATOS_URL = "./datos_torneo.json";
-const VERSION_DATOS_ACTUAL = "2026-09-11-v3"; // Cambia esta etiqueta cada vez que subas cambios masivos a GitHub
 
 async function cargarDatosNubeYSincronizar() {
     try {
-        const versionGuardada = localStorage.getItem("version_datos_torneo");
-        const timestampUnico = new Date().getTime();
+        // Generamos un parámetro aleatorio único por milisegundo para evitar que el celular use caché vieja
+        const urlConAntiCache = `${ARCHIVO_DATOS_URL}?nocache=${new Date().getTime()}`;
         
-        const respuesta = await fetch(`${ARCHIVO_DATOS_URL}?v=${timestampUnico}`, {
-            cache: "no-store"
+        const respuesta = await fetch(urlConAntiCache, {
+            method: 'GET',
+            cache: 'reload',
+            headers: {
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache'
+            }
         });
         
         if (!respuesta.ok) throw new Error("No se pudo cargar el archivo de datos del torneo.");
         
         const datosNube = await respuesta.json();
         if (datosNube && typeof datosNube === "object") {
-            // Si la versión cambió o hay datos nuevos en la nube, forzamos la actualización completa del localStorage
-            if (versionGuardada !== VERSION_DATOS_ACTUAL) {
-                // Limpiamos registros antiguos de localStorage para evitar conflictos de fechas pasadas
-                Object.keys(datosNube).forEach(key => {
-                    localStorage.setItem(key, datosNube[key]);
-                });
-                localStorage.setItem("version_datos_torneo", VERSION_DATOS_ACTUAL);
-                console.log("¡Base de datos actualizada y sincronizada desde GitHub exitosamente!");
-            }
+            // Limpiamos y sobrescribimos el almacenamiento local por completo con la versión fresca de la nube
+            localStorage.clear();
+            Object.keys(datosNube).forEach(key => {
+                localStorage.setItem(key, datosNube[key]);
+            });
+            console.log("¡Datos sincronizados y forzados desde GitHub exitosamente!");
         }
     } catch (error) {
         console.warn("Aviso: Usando almacenamiento local actual (modo offline):", error);
@@ -129,7 +130,7 @@ function renderTablaRankingGeneral() {
         const clave = localStorage.key(i);
         if (clave) {
             const claveLower = clave.toLowerCase();
-            if (claveLower.startsWith("img_") || claveLower.startsWith("version_datos_")) continue;
+            if (claveLower.startsWith("img_")) continue;
 
             if (clave.includes(`_${periodoSeleccionado}_`) && clave.startsWith("registros_")) {
                 clavesPartidasMes.push(clave);
@@ -396,7 +397,7 @@ function renderTablaRankingGeneral() {
             <td>${fmtBono(jug.bonoO)}</td>
             <td>${fmtBono(jug.bonoS)}</td>
             <td>${fmtBono(jug.bonoRch)}</td>
-            java<td>${fmtBono(jug.bonoMG)}</td>
+            <td>${fmtBono(jug.bonoMG)}</td>
             <td>${fmtBono(jug.bonoRLP)}</td>
             <td><strong style="color: #198754;">${tbJugador}</strong></td>
         `;
