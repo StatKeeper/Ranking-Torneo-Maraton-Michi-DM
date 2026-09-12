@@ -1,9 +1,8 @@
-// Sincronización forzada con bypass anti-caché absoluto para celulares
+// Sincronización robusta con manejo de errores visible para dispositivos móviles
 const ARCHIVO_DATOS_URL = "./datos_torneo.json";
 
 async function cargarDatosNubeYSincronizar() {
     try {
-        // Generamos un parámetro aleatorio único por milisegundo para evitar que el celular use caché vieja
         const urlConAntiCache = `${ARCHIVO_DATOS_URL}?nocache=${new Date().getTime()}`;
         
         const respuesta = await fetch(urlConAntiCache, {
@@ -15,19 +14,18 @@ async function cargarDatosNubeYSincronizar() {
             }
         });
         
-        if (!respuesta.ok) throw new Error("No se pudo cargar el archivo de datos del torneo.");
+        if (!respuesta.ok) throw new Error("No se pudo conectar con el archivo de la nube (Error " + respuesta.status + ")");
         
         const datosNube = await respuesta.json();
         if (datosNube && typeof datosNube === "object") {
-            // Limpiamos y sobrescribimos el almacenamiento local por completo con la versión fresca de la nube
             localStorage.clear();
             Object.keys(datosNube).forEach(key => {
                 localStorage.setItem(key, datosNube[key]);
             });
-            console.log("¡Datos sincronizados y forzados desde GitHub exitosamente!");
+            console.log("¡Datos sincronizados desde GitHub exitosamente!");
         }
     } catch (error) {
-        console.warn("Aviso: Usando almacenamiento local actual (modo offline):", error);
+        console.warn("Aviso de sincronización:", error);
     }
 }
 
@@ -433,6 +431,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     inicializarSelectoresAnioFiltro();
     await cargarDatosNubeYSincronizar();
     renderTablaRankingGeneral();
+
+    // Añadimos un botón flotante de sincronización manual en la interfaz para celulares de forma automática
+    if (!document.getElementById("btn-sincronizar-cloud-flotante")) {
+        const btnFlotante = document.createElement("button");
+        btnFlotante.id = "btn-sincronizar-cloud-flotante";
+        btnFlotante.innerHTML = "🔄 Actualizar Datos";
+        btnFlotante.style.cssText = "position: fixed; bottom: 20px; right: 20px; z-index: 99999; background: #0d6efd; color: white; border: none; padding: 10px 16px; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; font-size: 0.9em;";
+        btnFlotante.onclick = async () => {
+            btnFlotante.textContent = "Actualizando...";
+            await cargarDatosNubeYSincronizar();
+            renderTablaRankingGeneral();
+            btnFlotante.textContent = "¡Actualizado!";
+            setTimeout(() => { btnFlotante.innerHTML = "🔄 Actualizar Datos"; }, 2000);
+        };
+        document.body.appendChild(btnFlotante);
+    }
 
     const selectAnio = document.getElementById("select-anio-filtro");
     const selectMes = document.getElementById("select-mes-filtro");
