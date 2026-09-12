@@ -1,4 +1,4 @@
-// Sincronización robusta con manejo de errores visible para dispositivos móviles
+// Sincronización segura sin borrado destructivo de almacenamiento
 const ARCHIVO_DATOS_URL = "./datos_torneo.json";
 
 async function cargarDatosNubeYSincronizar() {
@@ -14,18 +14,20 @@ async function cargarDatosNubeYSincronizar() {
             }
         });
         
-        if (!respuesta.ok) throw new Error("No se pudo conectar con el archivo de la nube (Error " + respuesta.status + ")");
+        if (!respuesta.ok) throw new Error("No se pudo conectar con el archivo de la nube.");
         
         const datosNube = await respuesta.json();
-        if (datosNube && typeof datosNube === "object") {
-            localStorage.clear();
+        if (datosNube && typeof datosNube === "object" && Object.keys(datosNube).length > 0) {
+            // Solo actualizamos/agregamos los datos de la nube sin vaciar preventivamente el localStorage
             Object.keys(datosNube).forEach(key => {
-                localStorage.setItem(key, datosNube[key]);
+                if (!key.startsWith("img_")) {
+                    localStorage.setItem(key, datosNube[key]);
+                }
             });
-            console.log("¡Datos sincronizados desde GitHub exitosamente!");
+            console.log("¡Datos sincronizados de forma segura desde GitHub!");
         }
     } catch (error) {
-        console.warn("Aviso de sincronización:", error);
+        console.warn("Aviso de sincronización (usando datos locales):", error);
     }
 }
 
@@ -33,7 +35,9 @@ function generarArchivoDatosTorneoParaGitHub() {
     let todosLosDatos = {};
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        todosLosDatos[key] = localStorage.getItem(key);
+        if (!key.startsWith("img_")) {
+            todosLosDatos[key] = localStorage.getItem(key);
+        }
     }
     const blob = new Blob([JSON.stringify(todosLosDatos, null, 2)], {type: "application/json"});
     const enlace = document.createElement("a");
@@ -432,7 +436,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarDatosNubeYSincronizar();
     renderTablaRankingGeneral();
 
-    // Añadimos un botón flotante de sincronización manual en la interfaz para celulares de forma automática
     if (!document.getElementById("btn-sincronizar-cloud-flotante")) {
         const btnFlotante = document.createElement("button");
         btnFlotante.id = "btn-sincronizar-cloud-flotante";
