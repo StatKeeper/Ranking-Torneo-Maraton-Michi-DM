@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Candidatos — Comunidad AoE II</title>
+<title>Candidatos y Galardones — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -23,20 +23,25 @@
 </script>
 
 <style>
-  .jornada-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 18px; }
-  .jornada-card h3 { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
-  .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 560px) { .img-grid { grid-template-columns: 1fr; } }
-  .img-box { text-align: center; }
-  .img-box img { max-width: 100%; border-radius: var(--radius); border: 1px solid var(--line); display: block; margin-bottom: 8px; }
-  .img-box .caption { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 6px; }
+  .tabla-honor { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; }
+  .tabla-honor th, .tabla-honor td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: middle; }
+  .tabla-honor th { color: var(--gold); font-weight: 600; font-size: 0.78rem; background: var(--panel-raised); }
+  .tabla-honor td.ganador { font-weight: 700; color: var(--win); }
+  .acciones-jornada { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-accion { font-size: 0.72rem; padding: 4px 8px; border-radius: var(--radius); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  
+  /* Modal de Visualización de Imágenes */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
+  .modal-content { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); max-width: 90%; max-height: 90vh; overflow: auto; padding: 16px; text-align: center; position: relative; }
+  .modal-content img { max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 12px; display: block; }
+  .modal-close { position: absolute; top: 10px; right: 12px; background: var(--panel-raised); color: var(--text); border: 1px solid var(--line); border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub">Candidatos al Jugador de la Fecha</span>
+    <span class="sub">Candidatos y Galardones</span>
   </div>
   <nav class="tabs">
     <a href="index.html">Inicio</a>
@@ -54,8 +59,24 @@
     <select id="filtro-anio"></select>
     <select id="filtro-mes"></select>
   </div>
-  <div id="lista-partidas"></div>
+
+  <div class="panel" style="margin-top: 10px;">
+    <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin-bottom:12px;">🏆 Cuadro de Honor Mensual</h3>
+    <div id="contenedor-cuadro-honor">
+      <div class="empty-state">Cargando…</div>
+    </div>
+  </div>
 </main>
+
+<!-- Modal para ver imágenes en grande -->
+<div id="modal-imagen" class="modal-overlay" onclick="cerrarModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="cerrarModal()">×</button>
+    <h3 id="modal-titulo" style="color: var(--gold); margin-bottom: 10px; font-size: 0.95rem;"></h3>
+    <img id="modal-img-src" src="" alt="Vista previa">
+    <a id="modal-btn-descargar" class="btn secondary" href="" download style="font-size: 0.8rem;">⬇ Descargar Imagen (HD)</a>
+  </div>
+</div>
 
 <nav class="mobile-nav">
   <a href="index.html"><span class="icon">🏠</span>Inicio</a>
@@ -68,10 +89,10 @@
 
 <script src="js/datos.js"></script>
 <script>
-let JORNADAS_IMAGENES = [];
+let JORNADAS_IMAGENES = [], CUADRO_HONOR = [];
 
 function poblarFiltros() {
-  const anios = [...new Set(JORNADAS_IMAGENES.map(j => j.anio))].sort((a, b) => b - a);
+  const anios = [...new Set([...JORNADAS_IMAGENES.map(j => j.anio), ...CUADRO_HONOR.map(c => c.anio)])].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-anio");
   selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">Sin datos</option>`;
   selAnio.addEventListener("change", () => { poblarMeses(); render(); });
@@ -81,7 +102,11 @@ function poblarFiltros() {
 
 function poblarMeses() {
   const anio = document.getElementById("filtro-anio").value;
-  const meses = [...new Set(JORNADAS_IMAGENES.filter(j => j.anio == anio).map(j => String(j.mes).padStart(2, "0")))].sort().reverse();
+  const mesesSet = new Set([
+    ...JORNADAS_IMAGENES.filter(j => j.anio == anio).map(j => String(j.mes).padStart(2, "0")),
+    ...CUADRO_HONOR.filter(c => c.anio == anio).map(c => String(c.mes).padStart(2, "0"))
+  ]);
+  const meses = [...mesesSet].sort().reverse();
   const selMes = document.getElementById("filtro-mes");
   selMes.innerHTML = meses.length ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("") : `<option value="">Sin datos</option>`;
 }
@@ -89,45 +114,90 @@ function poblarMeses() {
 function render() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
-  const cont = document.getElementById("lista-partidas");
+  const cont = document.getElementById("contenedor-cuadro-honor");
+  const titulo = document.getElementById("titulo-cuadro-honor");
+
+  const nombreMes = NOMBRES_MES[mes] || "";
+  if (titulo) titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
 
   if (!anio || !mes) {
-    cont.innerHTML = `<div class="empty-state">No hay infografías cargadas todavía.</div>`;
+    cont.innerHTML = `<div class="empty-state">Selecciona un período.</div>`;
     return;
   }
 
-  const delMes = JORNADAS_IMAGENES.filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes)
-    .sort((a, b) => numeroDeJornada(b.jornada) - numeroDeJornada(a.jornada));
+  const delMesHonor = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
+    .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
 
-  if (delMes.length === 0) {
-    cont.innerHTML = `<div class="empty-state">No hay infografías cargadas para ${NOMBRES_MES[mes]} ${anio}.</div>`;
+  const delMesImgs = JORNADAS_IMAGENES.filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes);
+
+  if (delMesHonor.length === 0 && delMesImgs.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay registros para ${nombreMes} ${anio}.</div>`;
     return;
   }
 
-  cont.innerHTML = delMes.map(j => `
-    <div class="jornada-card">
-      <h3>${j.jornada}</h3>
-      <div class="img-grid">
-        ${j.imagenGalardon ? `
-          <div class="img-box">
-            <div class="caption">👑 Jugador de la Fecha</div>
-            <img src="${j.imagenGalardon}" alt="Galardón ${j.jornada}" loading="lazy">
-            <a class="btn secondary" href="${j.imagenGalardon}" download>⬇ Descargar (HD)</a>
-          </div>` : ""}
-        ${j.imagenEvaluacion ? `
-          <div class="img-box">
-            <div class="caption">📋 Evaluación de Candidatos</div>
-            <img src="${j.imagenEvaluacion}" alt="Evaluación ${j.jornada}" loading="lazy">
-            <a class="btn secondary" href="${j.imagenEvaluacion}" download>⬇ Descargar (HD)</a>
-          </div>` : ""}
-      </div>
+  // Unificar combinando el cuadro de honor con las imágenes asociadas por jornada
+  const jornadasMap = {};
+  delMesHonor.forEach(h => {
+    jornadasMap[h.jornada] = { jornada: h.jornada, jugador: h.jugador, civ: h.civ, imgEval: null, imgGal: null };
+  });
+
+  delMesImgs.forEach(j => {
+    if (!jornadasMap[j.jornada]) {
+      jornadasMap[j.jornada] = { jornada: j.jornada, jugador: '—', civ: '—', imgEval: null, imgGal: null };
+    }
+    jornadasMap[j.jornada].imgEval = j.imagenEvaluacion;
+    jornadasMap[j.jornada].imgGal = j.imagenGalardon;
+  });
+
+  const listaJornadas = Object.values(jornadasMap).sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
+
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table class="tabla-honor">
+        <thead>
+          <tr>
+            <th>Jornada</th>
+            <th>Jugador de la Fecha</th>
+            <th>Civilización</th>
+            <th>Archivos Multimedia</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${listaJornadas.map(j => `
+            <tr>
+              <td style="font-weight:600; color:var(--text);">${j.jornada}</td>
+              <td class="ganador">👑 ${j.jugador || '—'}</td>
+              <td style="color:var(--text-dim);">${j.civ || '—'}</td>
+              <td>
+                <div class="acciones-jornada">
+                  ${j.imgEval ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - Evaluación', '${j.imgEval}')">📋 Ver Evaluación</button>` : ''}
+                  ${j.imgGal ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - Galardón', '${j.imgGal}')">👑 Ver Galardón</button>` : ''}
+                  ${!j.imgEval && !j.imgGal ? '<span style="font-size:0.75rem; color:var(--text-dim);">Sin imágenes</span>' : ''}
+                </div>
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
     </div>
-  `).join("");
+  `;
+}
+
+function abrirModal(titulo, url) {
+  document.getElementById("modal-titulo").textContent = titulo;
+  document.getElementById("modal-img-src").src = url;
+  document.getElementById("modal-btn-descargar").href = url;
+  document.getElementById("modal-imagen").style.display = "flex";
+}
+
+function cerrarModal() {
+  document.getElementById("modal-imagen").style.display = "none";
 }
 
 (async function init() {
   const datos = await cargarDatos();
   JORNADAS_IMAGENES = datos.jornadasImagenes || [];
+  CUADRO_HONOR = datos.cuadroHonor || [];
   poblarFiltros();
   render();
 })();
