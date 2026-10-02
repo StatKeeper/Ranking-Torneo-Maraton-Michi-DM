@@ -1163,13 +1163,6 @@
     },
     {
       "anio": 2026,
-      "mes": "01",
-      "jornada": "Fecha 01",
-      "imagenEvaluacion": "imagenes/candidatos_2026-01_fecha01.png",
-      "imagenGalardon": "imagenes/galardon_2026-01_fecha01.png"
-    },
-    {
-      "anio": 2026,
       "mes": "09",
       "jornada": "Fecha 01",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha01.png",
@@ -1184,10 +1177,10 @@
     },
     {
       "anio": 2026,
-      "mes": "08",
+      "mes": "09",
       "jornada": "Fecha 03",
-      "imagenEvaluacion": "imagenes/candidatos_2026-08_fecha03.png",
-      "imagenGalardon": "imagenes/galardon_2026-08_fecha03.png"
+      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha03.png",
+      "imagenGalardon": "imagenes/galardon_2026-09_fecha03.png"
     }
   ],
   "civEquivalencias": [],
