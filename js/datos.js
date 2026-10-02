@@ -75,7 +75,6 @@ function calcularEstadisticasJugadores(partidas, equivalencias) {
   ordenadas.forEach(p => {
     const claveJor = claveJornada(p.anio, p.mes, p.jornada);
     if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
-    const numJor = numeroDeJornada(p.jornada);
 
     (p.jugadores || []).forEach(j => {
       const nombre = resolverNombreOficial(j.nombre, equivalencias);
@@ -133,47 +132,54 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
   const acumuladas = ordenadas.slice(0, limiteIdx);
   if (acumuladas.length === 0) return { filas: [], jornadaMostrada: "", ultimaPartida: null };
 
+  const mapJugadores = {};
   const ultimasVictorias = {};
-  const mapFilas = {};
   const conteoPorJornada = {};
-  let rankingPrevioPos = {};
 
-  acumuladas.forEach((p, idxPartida) => {
+  // Recorrer partida por partida para construir el estado evolutivo exacto
+  acumuladas.forEach((p) => {
     const claveJor = claveJornada(p.anio, p.mes, p.jornada);
     if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
     const numJor = numeroDeJornada(p.jornada);
 
-    // Calcular ranking previo antes de procesar esta partida exacta
-    const listaActual = Object.values(mapFilas).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
-    const posAnteriorMap = {};
-    listaActual.forEach((item, index) => {
-      posAnteriorMap[item.nombre] = index + 1; // 1-indexed
+    // 1. Obtener la lista y posiciones ordenadas ANTES de procesar esta partida
+    const listaPrevia = Object.values(mapJugadores).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
+    const posPreviaMap = {};
+    listaPrevia.forEach((item, index) => {
+      posPreviaMap[item.nombre] = index + 1;
     });
 
-    // Jugadores válidos en esta partida
-    const jugadoresPartida = (p.jugadores || []).map(j => {
+    // Marcar a TODOS los jugadores registrados en el mes como "Sin participación" por defecto en esta partida
+    Object.keys(mapJugadores).forEach(nombre => {
+      mapJugadores[nombre].participoEnUltima = false;
+      mapJugadores[nombre].ultimoSucesoPartida = "Sin participación";
+    });
+
+    // Identificar quiénes juegan en esta partida
+    const jugadoresEnPartida = (p.jugadores || []).map(j => {
       const nombre = resolverNombreOficial(j.nombre, equivalencias);
       conteoPorJornada[claveJor][nombre] = (conteoPorJornada[claveJor][nombre] || 0) + 1;
       return { j, nombre, numPartidaEnJornada: conteoPorJornada[claveJor][nombre] };
     });
 
-    jugadoresPartida.forEach(({ j, nombre, numPartidaEnJornada }) => {
-      if (!mapFilas[nombre]) {
-        mapFilas[nombre] = {
+    // Procesar a los jugadores que participan
+    jugadoresEnPartida.forEach(({ j, nombre, numPartidaEnJornada }) => {
+      if (!mapJugadores[nombre]) {
+        mapJugadores[nombre] = {
           nombre, puntos: 0, partidas: 0, victorias: 0,
           ultimoSuceso: "Sin participación", vd: "0",
           bonos: { E:0, R:0, M:0, O:0, S:0, Rch:0, MG:0, RLP:0 },
-          tb: 0, variacion: 0
+          tb: 0, variacion: 0, participoEnUltima: false, ultimoSucesoPartida: "Sin participación"
         };
       }
 
-      const f = mapFilas[nombre];
-
-      // Registrar posición previa antes de sumar puntos de esta partida (si es nuevo o no estaba, posición 11)
-      const posPrevia = posAnteriorMap[nombre] || 11;
+      const f = mapJugadores[nombre];
+      f.participoEnUltima = true;
+      const posPrevia = posPreviaMap[nombre] || 11;
 
       if (numPartidaEnJornada > 3) {
-        f.ultimoSuceso = "Partida inválida (+3 en la jornada)";
+        f.ultimoSucesoPartida = "Partida inválida (+3 en la jornada)";
+        f.ultimoSuceso = f.ultimoSucesoPartida;
         return;
       }
 
@@ -190,7 +196,7 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
         f.vd = "0";
       }
 
-      // Bonos E, R, M, O, S (1 punto cada uno)
+      // Bonos E, R, M, O, S
       (j.bonos || []).forEach(b => {
         if (f.bonos[b] !== undefined) {
           f.bonos[b]++;
@@ -200,7 +206,7 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
         }
       });
 
-      // Bono Rch (Racha) - Activo desde la primera fecha
+      // Bono Rch (Racha) - Activo desde fecha 1
       if (gano && ultimasVictorias[nombre]) {
         f.bonos.Rch++;
         f.tb++;
@@ -208,39 +214,35 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
         listaSucesos.push("Rch");
       }
 
-      // Bono MG (Matagigantes) - Activo desde la Fecha 06
-      if (gano && numJor >= 6) {
-        // Verificar si venció a alguien del Top 5 estando fuera del Top 5 (posPrevia >= 6)
-        if (posPrevia >= 6) {
-          // Buscar rivales del equipo contrario que estuvieran en el Top 5
-          const rivalesEnTop5 = jugadoresPartida.filter(o => 
-            o.nombre !== nombre && 
-            o.j.equipo !== j.equipo && 
-            (posAnteriorMap[o.nombre] || 11) <= 5
-          );
+      // Bono MG (Matagigantes) - Activo desde fecha 6
+      if (gano && numJor >= 6 && posPrevia >= 6) {
+        const rivalesEnTop5 = jugadoresEnPartida.filter(o => 
+          o.nombre !== nombre && 
+          o.j.equipo !== j.equipo && 
+          (posPreviaMap[o.nombre] || 11) <= 5
+        );
 
-          if (rivalesEnTop5.length > 0) {
-            let ptsMg = 1;
-            let etiquetaMg = "MG1";
-            if (posPrevia >= 6 && posPrevia <= 10) { ptsMg = 1; etiquetaMg = "MG1"; }
-            else if (posPrevia >= 11 && posPrevia <= 15) { ptsMg = 2; etiquetaMg = "MG2"; }
-            else { ptsMg = 3; etiquetaMg = "MG3"; }
+        if (rivalesEnTop5.length > 0) {
+          let etiquetaMg = "MG1";
+          let ptsMg = 1;
+          if (posPrevia >= 6 && posPrevia <= 10) { etiquetaMg = "MG1"; ptsMg = 1; }
+          else if (posPrevia >= 11 && posPrevia <= 15) { etiquetaMg = "MG2"; ptsMg = 2; }
+          else { etiquetaMg = "MG3"; ptsMg = 3; }
 
-            f.bonos.MG++;
-            f.tb++;
-            puntosEstaPartida += ptsMg;
-            listaSucesos.push(etiquetaMg);
-          }
+          f.bonos.MG++;
+          f.tb++;
+          puntosEstaPartida += ptsMg;
+          listaSucesos.push(etiquetaMg);
         }
       }
 
-      // Bono RLP (Relámpago) - Activo desde la primera fecha (< 60 min / 3600 seg)
+      // Bono RLP (Relámpago) - Activo desde fecha 1 (< 60 min)
       if (gano && p.duracionSeg && p.duracionSeg < 3600) {
-        let ptsRlp = 1;
         let etiquetaRlp = "RLP1";
-        if (posPrevia <= 10) { ptsRlp = 1; etiquetaRlp = "RLP1"; }
-        else if (posPrevia >= 11 && posPrevia <= 15) { ptsRlp = 2; etiquetaRlp = "RLP2"; }
-        else { ptsRlp = 3; etiquetaRlp = "RLP3"; }
+        let ptsRlp = 1;
+        if (posPrevia <= 10) { etiquetaRlp = "RLP1"; ptsRlp = 1; }
+        else if (posPrevia >= 11 && posPrevia <= 15) { etiquetaRlp = "RLP2"; ptsRlp = 2; }
+        else { etiquetaRlp = "RLP3"; ptsRlp = 3; }
 
         f.bonos.RLP++;
         f.tb++;
@@ -251,17 +253,22 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
       f.puntos += puntosEstaPartida;
       ultimasVictorias[nombre] = gano;
 
-      // Último suceso con total de puntos ganados en esta partida
-      f.ultimoSuceso = `${listaSucesos.join(" + ")} (+${puntosEstaPartida} pts)`;
+      // Guardar el suceso específico de esta partida con sus puntos
+      f.ultimoSucesoPartida = `${listaSucesos.join(" + ")} (+${puntosEstaPartida} pts)`;
+      f.ultimoSuceso = f.ultimoSucesoPartida;
+    });
 
-      // Calcular variación comparando la posición previa vs la posición actual provisional
-      const rankingProvisional = Object.values(mapFilas).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
-      const posActual = rankingProvisional.findIndex(item => item.nombre === nombre) + 1;
-      f.variacion = posPrevia - posActual;
+    // 2. Calcular la posición provisional DESPUÉS de esta partida para establecer la variación exacta
+    const listaActual = Object.values(mapJugadores).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
+    listaActual.forEach((item, index) => {
+      const posActual = index + 1;
+      const posAnt = posPreviaMap[item.nombre] || 11;
+      item.variacion = posAnt - posActual;
     });
   });
 
-  const filas = Object.values(mapFilas).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
+  // Ordenar filas finales por Puntos y Victorias
+  const filas = Object.values(mapJugadores).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
   const ultimaPartida = acumuladas[acumuladas.length - 1];
 
   return { filas, jornadaMostrada: ultimaPartida ? ultimaPartida.jornada : "", ultimaPartida };
