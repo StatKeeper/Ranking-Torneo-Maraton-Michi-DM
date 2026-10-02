@@ -1017,6 +1017,13 @@
       "jornada": "Fecha 01",
       "jugador": "Papita Huayro",
       "civ": "Bengalíes"
+    },
+    {
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 02",
+      "jugador": "Erik Tha Barbaro",
+      "civ": "Vikingos"
     }
   ]
 }
