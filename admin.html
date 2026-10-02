@@ -6,6 +6,21 @@
 <title>Administración — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
+
+<!-- Configuración PWA e Ícono de Inicio -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14161c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maratón Michi">
+<link rel="apple-touch-icon" href="imagenes/icono-192.png">
+
+<!-- Registro del Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
 </head>
 <body>
 
@@ -102,9 +117,9 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
       y, si quieres, su civilización favorita. Ambos campos son editables en cualquier momento.
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-      <input type="text" id="input-pais-jugador" placeholder="Nombre oficial (ej. GJ Euphory)" style="flex:2; min-width:180px;">
+      <input type="text" id="input-pais-jugador" placeholder="Nombre oficial (ej. GJ Euphory)" style="flex:2; min-width:180px;" list="lista-nombres-sugeridos">
       <input type="text" id="input-pais-codigo" maxlength="2" placeholder="PE" style="flex:0 0 70px; text-transform:uppercase;">
-      <input type="text" id="input-civ-favorita" placeholder="Civilización favorita (opc.)" style="flex:1.5; min-width:160px;">
+      <input type="text" id="input-civ-favorita" placeholder="Civilización favorita (opc.)" style="flex:1.5; min-width:160px;" list="lista-civs-sugeridas">
       <button class="btn secondary" onclick="agregarPais()">Guardar</button>
     </div>
     <div id="lista-paises"></div>
@@ -142,7 +157,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   <div class="panel">
     <h3>⑧ Cuadro de Honor (Jugador de la Fecha)</h3>
     <p class="hint">
-      Asigna manualmente al jugador destacado de cada Jornada para el Cuadro de Honor mensual.
+      Asigna manualmente al jugador destacado y su civilización de cada Jornada para el Cuadro de Honor mensual.
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
       <input type="number" id="input-honor-anio" placeholder="2026" style="flex:1; min-width:90px;" value="2026">
@@ -153,11 +168,16 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
         <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
       </select>
       <input type="text" id="input-honor-jornada" placeholder="Fecha 01" style="flex:1; min-width:110px;">
-      <input type="text" id="input-honor-jugador" placeholder="Nombre del jugador" style="flex:2; min-width:160px;">
+      <input type="text" id="input-honor-jugador" placeholder="Nombre del jugador" style="flex:2; min-width:160px;" list="lista-nombres-sugeridos">
+      <input type="text" id="input-honor-civ" placeholder="Civilización (ej. Mayas)" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
       <button class="btn secondary" onclick="guardarHonor()">Guardar Honor</button>
     </div>
     <div id="lista-cuadro-honor"></div>
   </div>
+
+  <!-- Datalists globales para autocompletar nombres y civilizaciones -->
+  <datalist id="lista-nombres-sugeridos"></datalist>
+  <datalist id="lista-civs-sugeridas"></datalist>
 
   <div class="panel">
     <h3>⑨ Descargar y publicar</h3>
@@ -177,6 +197,26 @@ let DATOS = { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresIn
 function actualizarContador() {
   document.getElementById("contador-partidas").textContent =
     `${DATOS.partidas.length} partida(s) en memoria`;
+}
+
+function actualizarListasSugerencias() {
+  const nombresSet = new Set();
+  const civsSet = new Set();
+
+  (DATOS.partidas || []).forEach(p => {
+    (p.jugadores || []).forEach(j => {
+      if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS.equivalencias));
+      if (j.civ) civsSet.add(resolverCivOficial(j.civ, DATOS.civEquivalencias));
+    });
+  });
+
+  Object.keys(DATOS.jugadoresInfo || {}).forEach(n => nombresSet.add(n));
+
+  const listaNombresHTML = [...nombresSet].sort().map(n => `<option value="${n}">`).join("");
+  const listaCivsHTML = [...civsSet].sort().map(c => `<option value="${c}">`).join("");
+
+  document.getElementById("lista-nombres-sugeridos").innerHTML = listaNombresHTML;
+  document.getElementById("lista-civs-sugeridas").innerHTML = listaCivsHTML;
 }
 
 async function cargarDesdeServidor() {
@@ -206,6 +246,7 @@ async function cargarDesdeServidor() {
   if (!Array.isArray(DATOS.jornadasImagenes)) DATOS.jornadasImagenes = [];
   if (!Array.isArray(DATOS.cuadroHonor)) DATOS.cuadroHonor = [];
   actualizarContador();
+  actualizarListasSugerencias();
   poblarFiltrosPartidas();
   renderizarListaPartidas();
   renderizarEquivalencias();
@@ -322,6 +363,7 @@ function procesarReporte() {
 
   DATOS.partidas.push(nuevaPartida);
   actualizarContador();
+  actualizarListasSugerencias();
   poblarFiltrosPartidas();
   renderizarListaPartidas();
 
@@ -395,6 +437,7 @@ function eliminarPartida(id) {
   if (!confirm("¿Eliminar esta partida? Esto no se puede deshacer una vez que descargues y subas el archivo.")) return;
   DATOS.partidas = DATOS.partidas.filter(p => p.id !== id);
   actualizarContador();
+  actualizarListasSugerencias();
   poblarFiltrosPartidas();
   renderizarListaPartidas();
 }
@@ -428,11 +471,13 @@ function agregarEquivalencia() {
   }
   document.getElementById("input-antiguo").value = "";
   document.getElementById("input-oficial").value = "";
+  actualizarListasSugerencias();
   renderizarEquivalencias();
 }
 
 function eliminarEquivalencia(i) {
   DATOS.equivalencias.splice(i, 1);
+  actualizarListasSugerencias();
   renderizarEquivalencias();
 }
 
@@ -466,11 +511,13 @@ function agregarCivEquivalencia() {
   }
   document.getElementById("input-civ-antigua").value = "";
   document.getElementById("input-civ-oficial").value = "";
+  actualizarListasSugerencias();
   renderizarCivEquivalencias();
 }
 
 function eliminarCivEquivalencia(i) {
   DATOS.civEquivalencias.splice(i, 1);
+  actualizarListasSugerencias();
   renderizarCivEquivalencias();
 }
 
@@ -551,11 +598,13 @@ function agregarPais() {
   document.getElementById("input-pais-jugador").value = "";
   document.getElementById("input-pais-codigo").value = "";
   document.getElementById("input-civ-favorita").value = "";
+  actualizarListasSugerencias();
   renderizarPaises();
 }
 
 function eliminarPais(nombre) {
   delete DATOS.jugadoresInfo[nombre];
+  actualizarListasSugerencias();
   renderizarPaises();
 }
 
@@ -647,7 +696,7 @@ function renderizarCuadroHonorAdmin() {
   }
   cont.innerHTML = lista.map((h, i) => `
     <div class="match-item">
-      <span>${h.anio} · ${NOMBRES_MES[h.mes]} · <strong>${h.jornada}</strong> → 👑 ${h.jugador}</span>
+      <span>${h.anio} · ${NOMBRES_MES[h.mes]} · <strong>${h.jornada}</strong> → 👑 ${h.jugador}${h.civ ? ` (${h.civ})` : ''}</span>
       <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor(${i})">🗑</button>
     </div>
   `).join("");
@@ -658,6 +707,7 @@ function guardarHonor() {
   const mes = document.getElementById("input-honor-mes").value;
   const jornada = document.getElementById("input-honor-jornada").value.trim();
   const jugador = document.getElementById("input-honor-jugador").value.trim();
+  const civ = document.getElementById("input-honor-civ").value.trim();
 
   if (!anio || !jornada || !jugador) {
     alert("Completa Año, Jornada y Jugador.");
@@ -668,14 +718,16 @@ function guardarHonor() {
   const clave = claveHonor(anio, mes, jornada);
   const idx = DATOS.cuadroHonor.findIndex(h => claveHonor(h.anio, h.mes, h.jornada) === clave);
 
+  const nuevoRegistro = { anio, mes, jornada, jugador, civ };
   if (idx !== -1) {
-    DATOS.cuadroHonor[idx] = { anio, mes, jornada, jugador };
+    DATOS.cuadroHonor[idx] = nuevoRegistro;
   } else {
-    DATOS.cuadroHonor.push({ anio, mes, jornada, jugador });
+    DATOS.cuadroHonor.push(nuevoRegistro);
   }
 
   document.getElementById("input-honor-jornada").value = "";
   document.getElementById("input-honor-jugador").value = "";
+  document.getElementById("input-honor-civ").value = "";
   renderizarCuadroHonorAdmin();
 }
 
