@@ -140,7 +140,27 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   </div>
 
   <div class="panel">
-    <h3>⑧ Descargar y publicar</h3>
+    <h3>⑧ Cuadro de Honor (Jugador de la Fecha)</h3>
+    <p class="hint">
+      Asigna manualmente al jugador destacado de cada Jornada para el Cuadro de Honor mensual.
+    </p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <input type="number" id="input-honor-anio" placeholder="2026" style="flex:1; min-width:90px;" value="2026">
+      <select id="input-honor-mes" style="flex:1; min-width:110px;">
+        <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+        <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+        <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+        <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+      </select>
+      <input type="text" id="input-honor-jornada" placeholder="Fecha 01" style="flex:1; min-width:110px;">
+      <input type="text" id="input-honor-jugador" placeholder="Nombre del jugador" style="flex:2; min-width:160px;">
+      <button class="btn secondary" onclick="guardarHonor()">Guardar Honor</button>
+    </div>
+    <div id="lista-cuadro-honor"></div>
+  </div>
+
+  <div class="panel">
+    <h3>⑨ Descargar y publicar</h3>
     <p class="hint">
       Descarga el archivo, y súbelo a GitHub (Add file → Upload files) reemplazando
       <code>data/data.json</code> en la raíz del repositorio.
@@ -152,7 +172,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
 
 <script src="js/datos.js"></script>
 <script>
-let DATOS = { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [] };
+let DATOS = { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [], cuadroHonor: [] };
 
 function actualizarContador() {
   document.getElementById("contador-partidas").textContent =
@@ -169,6 +189,7 @@ async function cargarDesdeServidor() {
     if (!Array.isArray(DATOS.partidas)) DATOS.partidas = [];
     if (!Array.isArray(DATOS.equivalencias)) DATOS.equivalencias = [];
     if (!Array.isArray(DATOS.civEquivalencias)) DATOS.civEquivalencias = [];
+    if (!Array.isArray(DATOS.cuadroHonor)) DATOS.cuadroHonor = [];
     if (!DATOS.jugadoresInfo || typeof DATOS.jugadoresInfo !== "object") {
       DATOS.jugadoresInfo = {};
       if (DATOS.paises && typeof DATOS.paises === "object") {
@@ -183,6 +204,7 @@ async function cargarDesdeServidor() {
     estado.textContent = "⚠ No se encontró data.json publicado todavía (se empezará desde cero).";
   }
   if (!Array.isArray(DATOS.jornadasImagenes)) DATOS.jornadasImagenes = [];
+  if (!Array.isArray(DATOS.cuadroHonor)) DATOS.cuadroHonor = [];
   actualizarContador();
   poblarFiltrosPartidas();
   renderizarListaPartidas();
@@ -190,6 +212,7 @@ async function cargarDesdeServidor() {
   renderizarCivEquivalencias();
   renderizarPaises();
   renderizarFechasImagenes();
+  renderizarCuadroHonorAdmin();
 }
 
 function convertirDuracionASegundos(str) {
@@ -216,7 +239,6 @@ function procesarReporte() {
   let duracionSeg = 0;
   const jugadores = [];
 
-  // Quita "palabra:" o "palabra " del inicio de una línea de encabezado y devuelve el resto
   function valorDespuesDe(linea, palabras) {
     for (const palabra of palabras) {
       const regex = new RegExp(`^${palabra}\\s*:?\\s*`, "i");
@@ -237,13 +259,11 @@ function procesarReporte() {
       return;
     }
     if ((valor = valorDespuesDe(linea, ["jornada"])) !== null) {
-      // Normaliza cualquier variante ("Fecha 1", "fecha01", "Fecha 01") a "Fecha 01"
       const numJor = numeroDeJornada(valor);
       jornada = numJor > 0 ? `Fecha ${String(numJor).padStart(2, "0")}` : valor;
       return;
     }
     if ((valor = valorDespuesDe(linea, ["partida"])) !== null) {
-      // Acepta "partida: 1" o "partida 1 01:07:08" (número + duración juntos)
       const match = valor.match(/^(\d+)\s*(?:(\d{1,2}:\d{2}(?::\d{2})?))?/);
       if (match) {
         numeroPartida = parseInt(match[1], 10) || numeroPartida;
@@ -259,11 +279,7 @@ function procesarReporte() {
     const partes = linea.split("|").map(p => p.trim());
     if (partes.length < 2) return;
 
-    // Formato: Jugador | Pts(3 o 0) | E | R | M | O | S | Rch | MG | RLP | UAses | EArr | Equipo | Civ
-    // Las columnas MG y RLP se IGNORAN a propósito: el sistema las calcula automáticamente.
     const [nombre, ptsRaw, eRaw, rRaw, mRaw, oRaw, sRaw, , , , uAsesRaw, eArrRaw, equipo, civ] = partes;
-    // La columna de "Rch" (posición 8) se ignora a propósito: el sistema calcula la
-    // racha automáticamente según si el jugador ganó también su partida inmediata anterior.
 
     const bonos = [];
     if (parseInt(eRaw, 10) > 0) bonos.push("E");
@@ -466,7 +482,6 @@ function renderizarPaises() {
     return;
   }
 
-  // Los incompletos (sin país o sin civ favorita) primero, luego alfabético
   const ordenados = [...nombres].sort((a, b) => {
     const infoA = DATOS.jugadoresInfo[a] || {};
     const infoB = DATOS.jugadoresInfo[b] || {};
@@ -558,7 +573,6 @@ function actualizarSugerenciaImagenes() {
   const sug = sugerirNombresImagenes(anio, mes, jornada);
   sugerenciaEl.innerHTML = `💡 Nombre sugerido: <code>${sug.evaluacion}</code> y <code>${sug.galardon}</code>`;
 
-  // Si los campos de ruta están vacíos o todavía tienen una sugerencia anterior, los autocompleta
   const inputEval = document.getElementById("input-img-evaluacion");
   const inputGal = document.getElementById("input-img-galardon");
   if (!inputEval.value || inputEval.dataset.autocompletado === "1") {
@@ -586,7 +600,7 @@ function renderizarFechasImagenes() {
     <p class="hint">Fechas con imágenes guardadas:</p>
     ${ordenadas.map(j => `
       <div class="match-item">
-        <span>${j.anio} · ${NOMBRES_MES[j.mes]} · ${j.jornada}</span>
+        <span>${j.anio} · ${NOMBRES_MES[j.mes]} ·${j.jornada}</span>
         <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarFechaImagenes('${claveJornada(j.anio, j.mes, j.jornada)}')">🗑</button>
       </div>
     `).join("")}
@@ -622,6 +636,52 @@ function guardarImagenesFecha() {
 function eliminarFechaImagenes(clave) {
   DATOS.jornadasImagenes = (DATOS.jornadasImagenes || []).filter(j => claveJornada(j.anio, j.mes, j.jornada) !== clave);
   renderizarFechasImagenes();
+}
+
+function renderizarCuadroHonorAdmin() {
+  const cont = document.getElementById("lista-cuadro-honor");
+  const lista = DATOS.cuadroHonor || [];
+  if (lista.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor.</p>`;
+    return;
+  }
+  cont.innerHTML = lista.map((h, i) => `
+    <div class="match-item">
+      <span>${h.anio} · ${NOMBRES_MES[h.mes]} · <strong>${h.jornada}</strong> → 👑 ${h.jugador}</span>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor(${i})">🗑</button>
+    </div>
+  `).join("");
+}
+
+function guardarHonor() {
+  const anio = parseInt(document.getElementById("input-honor-anio").value, 10);
+  const mes = document.getElementById("input-honor-mes").value;
+  const jornada = document.getElementById("input-honor-jornada").value.trim();
+  const jugador = document.getElementById("input-honor-jugador").value.trim();
+
+  if (!anio || !jornada || !jugador) {
+    alert("Completa Año, Jornada y Jugador.");
+    return;
+  }
+
+  if (!DATOS.cuadroHonor) DATOS.cuadroHonor = [];
+  const clave = claveHonor(anio, mes, jornada);
+  const idx = DATOS.cuadroHonor.findIndex(h => claveHonor(h.anio, h.mes, h.jornada) === clave);
+
+  if (idx !== -1) {
+    DATOS.cuadroHonor[idx] = { anio, mes, jornada, jugador };
+  } else {
+    DATOS.cuadroHonor.push({ anio, mes, jornada, jugador });
+  }
+
+  document.getElementById("input-honor-jornada").value = "";
+  document.getElementById("input-honor-jugador").value = "";
+  renderizarCuadroHonorAdmin();
+}
+
+function eliminarHonor(i) {
+  DATOS.cuadroHonor.splice(i, 1);
+  renderizarCuadroHonorAdmin();
 }
 
 function descargarJSON() {
