@@ -1232,6 +1232,169 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-09-Fecha06-P1",
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 06",
+      "numeroPartida": 1,
+      "duracionSeg": 7429,
+      "jugadores": [
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Francos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 8306,
+          "edificiosArrasados": 110,
+          "bonos": []
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5402,
+          "edificiosArrasados": 122,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Incas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 9008,
+          "edificiosArrasados": 180,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Francos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5845,
+          "edificiosArrasados": 71,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6295,
+          "edificiosArrasados": 60,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Incas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11077,
+          "edificiosArrasados": 44,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-09-Fecha06-P2",
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 06",
+      "numeroPartida": 2,
+      "duracionSeg": 4291,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Borgoñeses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2755,
+          "edificiosArrasados": 16,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Romanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5621,
+          "edificiosArrasados": 7,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "WaG",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4349,
+          "edificiosArrasados": 44,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Francos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3003,
+          "edificiosArrasados": 113,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Borgoñeses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3201,
+          "edificiosArrasados": 33,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Romanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4044,
+          "edificiosArrasados": 124,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3974,
+          "edificiosArrasados": 19,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Francos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2573,
+          "edificiosArrasados": 74,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -1758,6 +1921,13 @@
       "jornada": "Fecha 04",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha04.png",
       "imagenGalardon": "imagenes/galardon_2026-09_fecha04.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 06",
+      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha06.png",
+      "imagenGalardon": "imagenes/galardon_2026-09_fecha06.png"
     }
   ],
   "civEquivalencias": [],
@@ -1803,6 +1973,13 @@
       "jornada": "Fecha 05",
       "jugador": "P@K()",
       "civ": "Etíopes"
+    },
+    {
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 06",
+      "jugador": "BioTiNe",
+      "civ": "Romanos"
     }
   ]
 }
