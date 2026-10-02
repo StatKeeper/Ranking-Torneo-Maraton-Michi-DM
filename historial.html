@@ -19,6 +19,7 @@
   table.tabla-match th { color: var(--text-dim); font-weight: 600; font-size: 0.72rem; }
   table.tabla-match tr:last-child td { border-bottom: none; }
   .resultado-icono { font-size: 0.95rem; margin-right: 6px; }
+  .tag-invalida { display: inline-block; font-size: 0.7rem; color: var(--loss); font-weight: 600; margin-left: 6px; background: rgba(176,85,79,0.15); padding: 2px 6px; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -89,6 +90,28 @@ function poblarJornadas() {
   selJornada.innerHTML = `<option value="">Todas las fechas</option>` + jornadas.map(j => `<option value="${j}">${j}</option>`).join("");
 }
 
+function obtenerMapaPartidasInvalidas(partidas) {
+  const mapa = {};
+  const conteoPorJornada = {};
+  const ordenadas = [...partidas].sort((a, b) => claveOrden(a) - claveOrden(b));
+
+  ordenadas.forEach(p => {
+    const claveJor = claveJornada(p.anio, p.mes, p.jornada);
+    if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
+    if (!mapa[p.id]) mapa[p.id] = {};
+
+    (p.jugadores || []).forEach(j => {
+      const nombreOf = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+      conteoPorJornada[claveJor][nombreOf] = (conteoPorJornada[claveJor][nombreOf] || 0) + 1;
+      if (conteoPorJornada[claveJor][nombreOf] > 3) {
+        mapa[p.id][nombreOf] = true;
+      }
+    });
+  });
+
+  return mapa;
+}
+
 function render() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
@@ -105,6 +128,7 @@ function render() {
   const delPeriodo = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes)
     .sort((a, b) => claveOrden(a) - claveOrden(b));
 
+  const mapaInvalidas = obtenerMapaPartidasInvalidas(delPeriodo);
   const varsPorPartida = calcularVarPorPartida(delPeriodo, EQUIVALENCIAS);
 
   let filtradas = jornadaFiltro ? delPeriodo.filter(p => p.jornada === jornadaFiltro) : delPeriodo;
@@ -124,6 +148,8 @@ function render() {
 
   cont.innerHTML = filtradas.map(p => {
     const varsDeEsta = varsPorPartida[p.id] || {};
+    const invalidasEstaPartida = mapaInvalidas[p.id] || {};
+
     return `
     <div class="match-card" id="card-${p.id}">
       <div class="cabecera">
@@ -142,10 +168,14 @@ function render() {
             const v = varsDeEsta[nombreOf] ?? 0;
             const varClass = v > 0 ? "var-up" : v < 0 ? "var-down" : "";
             const varTexto = v > 0 ? `+${v}` : `${v}`;
+            const esInvalida = invalidasEstaPartida[nombreOf];
+
             return `
               <tr>
                 <td><span class="resultado-icono">${gano ? "👑" : "💀"}</span></td>
-                <td><a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a></td>
+                <td>
+                  <a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a>${esInvalida ? `<span class="tag-invalida">⚠️ Inválida (+3 en fecha)</span>` : ''}
+                </td>
                 <td>${j.equipo || "—"}</td>
                 <td>${j.civ || "—"}</td>
                 <td class="${varClass}">${varTexto}</td>
