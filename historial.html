@@ -6,6 +6,22 @@
 <title>Historial — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
+
+<!-- Configuración PWA e Ícono de Inicio -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14161c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maratón Michi">
+<link rel="apple-touch-icon" href="imagenes/icono-192.png">
+
+<!-- Registro del Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   .match-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
@@ -174,7 +190,7 @@ function render() {
               <tr>
                 <td><span class="resultado-icono">${gano ? "👑" : "💀"}</span></td>
                 <td>
-                  <a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a>${esInvalida ? `<span class="tag-invalida">⚠️ Inválida (+3 en fecha)</span>` : ''}
+                  <a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a>${esInvalida ? `<span class="tag-invalida">⚠️️ Inválida (+3 en fecha)</span>` : ''}
                 </td>
                 <td>${j.equipo || "—"}</td>
                 <td>${j.civ || "—"}</td>
