@@ -20,6 +20,12 @@
   .bono-cell.activo { color: var(--loss); font-weight: 700; }
   .bono-cell.inactivo { color: var(--text-dim); }
   .toolbar-clasif { display:flex; justify-content: space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 10px; }
+
+  /* Estilos para el Cuadro de Honor (optimizado para celular vertical) */
+  .tabla-honor { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; }
+  .tabla-honor th, .tabla-honor td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+  .tabla-honor th { color: var(--gold); font-weight: 600; font-size: 0.78rem; background: var(--panel-raised); }
+  .tabla-honor td.ganador { font-weight: 700; color: var(--win); }
 </style>
 </head>
 <body>
@@ -84,6 +90,19 @@
     </p>
     <p style="margin:4px 0;"><strong style="color:var(--text);">TB</strong> = Total de Bonos conseguidos.</p>
   </div>
+
+  <!-- Panel del Cuadro de Honor Mensual -->
+  <div class="panel" style="margin-top:18px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="descargarImagenHonor()">📷 Descargar Imagen</button>
+    </div>
+    <div id="captura-cuadro-honor" style="padding:4px;">
+      <div id="contenedor-cuadro-honor">
+        <div class="empty-state">Cargando…</div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <nav class="mobile-nav">
@@ -97,7 +116,7 @@
 
 <script src="js/datos.js"></script>
 <script>
-let PARTIDAS = [], EQUIVALENCIAS = [];
+let PARTIDAS = [], EQUIVALENCIAS = [], CUADRO_HONOR = [];
 
 function poblarFiltros() {
   const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
@@ -137,6 +156,46 @@ function celdaBono(valor) {
   return `<span class="bono-cell ${valor > 0 ? 'activo' : 'inactivo'}">${valor}</span>`;
 }
 
+function renderizarCuadroHonor() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const cont = document.getElementById("contenedor-cuadro-honor");
+
+  if (!anio || !mes) {
+    cont.innerHTML = `<div class="empty-state">Selecciona un período.</div>`;
+    return;
+  }
+
+  const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
+    .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
+
+  if (delMes.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay registros para este mes en el Cuadro de Honor.</div>`;
+    return;
+  }
+
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table class="tabla-honor">
+        <thead>
+          <tr>
+            <th>Jornada</th>
+            <th>Jugador de la Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${delMes.map(h => `
+            <tr>
+              <td style="font-weight:600; color:var(--text);">${h.jornada}</td>
+              <td class="ganador">👑 ${h.jugador}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
 function renderizar() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
@@ -144,6 +203,7 @@ function renderizar() {
 
   if (!anio || !mes) {
     document.getElementById("contenedor-standings").innerHTML = `<div class="empty-state">No hay partidas registradas todavía.</div>`;
+    renderizarCuadroHonor();
     return;
   }
 
@@ -155,64 +215,65 @@ function renderizar() {
   const cont = document.getElementById("contenedor-standings");
   if (filas.length === 0) {
     cont.innerHTML = `<div class="empty-state">No hay partidas para este período.</div>`;
-    return;
+  } else {
+    const totales = { E:0,R:0,M:0,O:0,S:0,Rch:0,MG:0,RLP:0 };
+    let totalPts = 0, totalTB = 0;
+    filas.forEach(f => {
+      totalPts += f.puntos; totalTB += f.tb;
+      Object.keys(totales).forEach(k => totales[k] += f.bonos[k]);
+    });
+
+    cont.innerHTML = `
+      <div style="overflow-x:auto;">
+        <table class="tabla-detallada">
+          <thead>
+            <tr>
+              <th>Pos</th><th>Var</th><th style="text-align:left;">Jugador</th><th>Pts</th><th>V/PJ</th>
+              <th style="text-align:left;">Último Suceso</th><th>V/D</th>
+              <th>E</th><th>R</th><th>M</th><th>O</th><th>S</th><th>Rch</th><th>MG</th><th>RLP</th><th>TB</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filas.map((f, i) => {
+              const varClass = f.variacion > 0 ? "var-up" : f.variacion < 0 ? "var-down" : "";
+              const varTexto = f.variacion > 0 ? `+${f.variacion}` : `${f.variacion}`;
+              return `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td class="${varClass}">${varTexto}</td>
+                  <td class="jugador"><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
+                  <td>${f.puntos}</td>
+                  <td>${f.victorias}/${f.partidas}</td>
+                  <td style="text-align:left; font-style:italic;" class="${f.ultimoSuceso === 'Sin participación' ? 'suceso-sin-participacion' : ''}">${f.ultimoSuceso}</td>
+                  <td>${f.vd}</td>
+                  <td>${celdaBono(f.bonos.E)}</td>
+                  <td>${celdaBono(f.bonos.R)}</td>
+                  <td>${celdaBono(f.bonos.M)}</td>
+                  <td>${celdaBono(f.bonos.O)}</td>
+                  <td>${celdaBono(f.bonos.S)}</td>
+                  <td>${celdaBono(f.bonos.Rch)}</td>
+                  <td>${celdaBono(f.bonos.MG)}</td>
+                  <td>${celdaBono(f.bonos.RLP)}</td>
+                  <td style="font-weight:700; color: var(--win);">${f.tb}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align:right;">Sumatoria Total:</td>
+              <td>${totalPts}</td><td>-</td><td>-</td><td>-</td>
+              <td>${totales.E}</td><td>${totales.R}</td><td>${totales.M}</td><td>${totales.O}</td>
+              <td>${totales.S}</td><td>${totales.Rch}</td><td>${totales.MG}</td><td>${totales.RLP}</td>
+              <td style="color: var(--win);">${totalTB}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    `;
   }
 
-  const totales = { E:0,R:0,M:0,O:0,S:0,Rch:0,MG:0,RLP:0 };
-  let totalPts = 0, totalTB = 0;
-  filas.forEach(f => {
-    totalPts += f.puntos; totalTB += f.tb;
-    Object.keys(totales).forEach(k => totales[k] += f.bonos[k]);
-  });
-
-  cont.innerHTML = `
-    <div style="overflow-x:auto;">
-      <table class="tabla-detallada">
-        <thead>
-          <tr>
-            <th>Pos</th><th>Var</th><th style="text-align:left;">Jugador</th><th>Pts</th><th>V/PJ</th>
-            <th style="text-align:left;">Último Suceso</th><th>V/D</th>
-            <th>E</th><th>R</th><th>M</th><th>O</th><th>S</th><th>Rch</th><th>MG</th><th>RLP</th><th>TB</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${filas.map((f, i) => {
-            const varClass = f.variacion > 0 ? "var-up" : f.variacion < 0 ? "var-down" : "";
-            const varTexto = f.variacion > 0 ? `+${f.variacion}` : `${f.variacion}`;
-            return `
-              <tr>
-                <td>${i + 1}</td>
-                <td class="${varClass}">${varTexto}</td>
-                <td class="jugador"><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
-                <td>${f.puntos}</td>
-                <td>${f.victorias}/${f.partidas}</td>
-                <td style="text-align:left; font-style:italic;" class="${f.ultimoSuceso === 'Sin participación' ? 'suceso-sin-participacion' : ''}">${f.ultimoSuceso}</td>
-                <td>${f.vd}</td>
-                <td>${celdaBono(f.bonos.E)}</td>
-                <td>${celdaBono(f.bonos.R)}</td>
-                <td>${celdaBono(f.bonos.M)}</td>
-                <td>${celdaBono(f.bonos.O)}</td>
-                <td>${celdaBono(f.bonos.S)}</td>
-                <td>${celdaBono(f.bonos.Rch)}</td>
-                <td>${celdaBono(f.bonos.MG)}</td>
-                <td>${celdaBono(f.bonos.RLP)}</td>
-                <td style="font-weight:700; color: var(--win);">${f.tb}</td>
-              </tr>
-            `;
-          }).join("")}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3" style="text-align:right;">Sumatoria Total:</td>
-            <td>${totalPts}</td><td>-</td><td>-</td><td>-</td>
-            <td>${totales.E}</td><td>${totales.R}</td><td>${totales.M}</td><td>${totales.O}</td>
-            <td>${totales.S}</td><td>${totales.Rch}</td><td>${totales.MG}</td><td>${totales.RLP}</td>
-            <td style="color: var(--win);">${totalTB}</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  `;
+  renderizarCuadroHonor();
 }
 
 function descargarImagen() {
@@ -220,10 +281,16 @@ function descargarImagen() {
   descargarElementoComoImagen(el, "clasificacion.png", "#14161c");
 }
 
+function descargarImagenHonor() {
+  const el = document.getElementById("captura-cuadro-honor");
+  descargarElementoComoImagen(el, "cuadro-de-honor.png", "#14161c");
+}
+
 (async function init() {
   const datos = await cargarDatos();
   PARTIDAS = datos.partidas;
   EQUIVALENCIAS = datos.equivalencias;
+  CUADRO_HONOR = datos.cuadroHonor || [];
   poblarFiltros();
   renderizar();
 })();
