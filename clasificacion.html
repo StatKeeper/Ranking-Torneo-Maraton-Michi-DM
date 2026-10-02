@@ -37,20 +37,24 @@
   .bono-cell.inactivo { color: var(--text-dim); }
   .toolbar-clasif { display:flex; justify-content: space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 10px; }
 
-  /* Estilos para el Cuadro de Honor y Mini-rankings */
+  /* Estilos para el Cuadro de Honor y Mini-rankings tipo Excel con rejillas */
   .tabla-honor { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; margin-bottom: 16px; }
-  .tabla-honor th, .tabla-honor td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+  .tabla-honor th, .tabla-honor td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; }
   .tabla-honor th { color: var(--gold); font-weight: 600; font-size: 0.78rem; background: var(--panel-raised); }
   .tabla-honor td.ganador { font-weight: 700; color: var(--win); }
 
-  .minitables-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 12px; }
+  .minitables-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 12px; }
   .minitable-box { background: var(--panel-raised); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; }
   .minitable-box h4 { font-size: 0.88rem; color: var(--gold); margin-bottom: 8px; }
-  .tabla-mini { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-  .tabla-mini th, .tabla-mini td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
-  .tabla-mini th { color: var(--text-dim); font-size: 0.72rem; }
-  .tabla-mini td.num { text-align: center; width: 40px; font-weight: 700; }
-  .tabla-mini td.val { text-align: right; font-weight: 700; color: var(--win); width: 50px; }
+  
+  /* Estilo tipo Excel con celdas de cuadrícula marcadas */
+  .tabla-mini-excel { width: 100%; border-collapse: collapse; font-size: 0.8rem; background: var(--panel); border: 1px solid var(--line); }
+  .tabla-mini-excel th, .tabla-mini-excel td { padding: 8px 10px; border: 1px solid var(--line); text-align: left; vertical-align: middle; }
+  .tabla-mini-excel th { background: var(--panel-raised); color: var(--gold); font-size: 0.75rem; font-weight: 600; }
+  .tabla-mini-excel td.num-celda { text-align: center; width: 45px; font-weight: 700; background: rgba(255,255,255,0.02); }
+  .tabla-mini-excel td.val-celda { text-align: center; width: 65px; font-weight: 700; color: var(--win); background: rgba(255,255,255,0.02); }
+  .sub-fila-item { padding: 3px 0; font-weight: 600; }
+  .sub-fila-item:not(:last-child) { border-bottom: 1px dashed var(--line); }
 </style>
 </head>
 <body>
@@ -119,11 +123,11 @@
   <!-- Panel del Cuadro de Honor Mensual -->
   <div class="panel" style="margin-top:18px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-      <h3 id="titulo-honor-header" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
+      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
       <button class="btn secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="descargarImagenHonor()">📷 Descargar Imagen</button>
     </div>
-    <div id="captura-cuadro-honor" style="padding:10px; background: var(--panel);">
-      <div id="titulo-honor-captura" style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.05rem; font-weight:600; margin-bottom:10px; text-align:left;">🏆 Cuadro de Honor Mensual</div>
+    <div id="captura-cuadro-honor" style="padding:12px; background: var(--panel);">
+      <div id="titulo-honor-captura" style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.1rem; font-weight:600; margin-bottom:12px; text-align:left;">🏆 Cuadro de Honor — Mes</div>
       <div id="contenedor-cuadro-honor">
         <div class="empty-state">Cargando…</div>
       </div>
@@ -187,11 +191,9 @@ function renderizarCuadroHonor() {
   const mes = document.getElementById("filtro-mes").value;
   const cont = document.getElementById("contenedor-cuadro-honor");
   const tituloCaptura = document.getElementById("titulo-honor-captura");
-  const tituloHeader = document.getElementById("titulo-honor-header");
 
   const nombreMes = NOMBRES_MES[mes] || "";
-  const textoTitulo = `🏆 Cuadro de Honor — ${nombreMes} ${anio}`;
-  if (tituloHeader) tituloHeader.textContent = textoTitulo;
+  const textoTitulo = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
   if (tituloCaptura) tituloCaptura.textContent = textoTitulo;
 
   if (!anio || !mes) {
@@ -279,14 +281,22 @@ function renderizarCuadroHonor() {
       <div class="minitable-box">
         <h4>🥇 Ranking de Galardones (Jugadores)</h4>
         ${rankingJugadores.length === 0 ? `<div class="empty-state">Sin datos.</div>` : `
-          <table class="tabla-mini">
-            <thead><tr><th class="num">#</th><th>Jugador</th><th class="val">Galardones</th></tr></thead>
+          <table class="tabla-mini-excel">
+            <thead>
+              <tr>
+                <th style="text-align:center; width:45px;">#</th>
+                <th>Jugador</th>
+                <th style="text-align:center; width:65px;">Galardones</th>
+              </tr>
+            </thead>
             <tbody>
               ${rankingJugadores.map(r => `
                 <tr>
-                  <td class="num">${r.pos}°</td>
-                  <td>${r.nombres.join(", ")}</td>
-                  <td class="val">${r.valor}</td>
+                  <td class="num-celda" style="vertical-align: middle;">${r.pos}°</td>
+                  <td>
+                    ${r.nombres.map(n => `<div class="sub-fila-item">👑 ${n}</div>`).join("")}
+                  </td>
+                  <td class="val-celda" style="vertical-align: middle;">${r.valor}</td>
                 </tr>
               `).join("")}
             </tbody>
@@ -297,14 +307,22 @@ function renderizarCuadroHonor() {
       <div class="minitable-box">
         <h4>🏛 Civilizaciones más Destacadas</h4>
         ${rankingCivs.length === 0 ? `<div class="empty-state">Sin datos.</div>` : `
-          <table class="tabla-mini">
-            <thead><tr><th class="num">#</th><th>Civilización</th><th class="val">Apariciones</th></tr></thead>
+          <table class="tabla-mini-excel">
+            <thead>
+              <tr>
+                <th style="text-align:center; width:45px;">#</th>
+                <th>Civilización</th>
+                <th style="text-align:center; width:65px;">Apariciones</th>
+              </tr>
+            </thead>
             <tbody>
               ${rankingCivs.map(r => `
                 <tr>
-                  <td class="num">${r.pos}°</td>
-                  <td>${r.nombres.join(", ")}</td>
-                  <td class="val">${r.valor}</td>
+                  <td class="num-celda" style="vertical-align: middle;">${r.pos}°</td>
+                  <td>
+                    ${r.nombres.map(c => `<div class="sub-fila-item">${c}</div>`).join("")}
+                  </td>
+                  <td class="val-celda" style="vertical-align: middle;">${r.valor}</td>
                 </tr>
               `).join("")}
             </tbody>
