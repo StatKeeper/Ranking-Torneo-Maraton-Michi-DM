@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administración — Comunidad AoE II</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="sub">Administración</span>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Inicio</a>
+    <a href="clasificacion.html">Clasificación</a>
+    <a href="jugador.html">Jugadores</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="candidatos.html">Candidatos</a>
+    <a href="historial.html">Historial</a>
+    <a href="admin.html" class="active">Administración</a>
+  </nav>
+</header>
+
+<main>
+  <div class="panel">
+    <h3>① Cargar datos actuales</h3>
+    <p class="hint">Esto trae el data.json que ya está publicado, para trabajar sobre el historial real sin perder nada.</p>
+    <button class="btn secondary" onclick="cargarDesdeServidor()">📥 Cargar data.json publicado</button>
+    <span id="estado-carga" style="margin-left:10px; font-size:0.8rem; color: var(--text-dim);"></span>
+  </div>
+
+  <div class="panel">
+    <h3>② Agregar nueva partida</h3>
+    <p class="hint">
+      Cabecera flexible (con o sin ":"): <code>año 2026</code>, <code>mes 08</code>,
+      <code>jornada Fecha 1</code>, <code>partida 1 01:07:08</code> (número y duración juntos,
+      o por separado con <code>duracion: HH:MM:SS</code>).<br>
+      Luego una línea por jugador con tus columnas de siempre:<br>
+      <code>Jugador | Pts | E | R | M | O | S | Rch | MG | RLP | UnidAsesinadas | EdifArrasados | Equipo | Civilización</code><br>
+      <strong>Pts</strong>: 3 si ganó, 0 si perdió. Los bonos E/R/M/O/S van con 1 (sí) o 0 (no).
+      Las columnas <strong>Rch, MG y RLP se ignoran</strong> (se calculan solas) — puedes dejarlas en 0
+      como siempre, no afectan nada.
+    </p>
+    <textarea id="input-reporte" placeholder="año 2026
+mes 08
+jornada Fecha 1
+partida 1 01:07:08
+[cLm] KFICHO | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4242 | 73 | Equipo 1 | Gurjaras
+GJ Euphory | 3 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 3700 | 119 | Equipo 1 | Mayas
+Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"></textarea>
+    <div style="margin-top:10px;">
+      <button class="btn" onclick="procesarReporte()">➕ Agregar esta partida</button>
+    </div>
+    <div id="resultado-parseo" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="panel">
+    <h3>③ Partidas cargadas (eliminar si algo se ingresó mal)</h3>
+    <div style="display:flex; gap:8px; margin-bottom:10px;">
+      <select id="filtro-partidas-anio" onchange="poblarMesesPartidasFiltro(); renderizarListaPartidas();"></select>
+      <select id="filtro-partidas-mes" onchange="renderizarListaPartidas();"></select>
+    </div>
+    <div id="lista-partidas"><p class="hint">Carga los datos primero (paso ①).</p></div>
+  </div>
+
+  <div class="panel">
+    <h3>④ Corrección y unificación de nombres</h3>
+    <p class="hint">
+      Vincula cualquier cantidad de nicks antiguos/alternos a un mismo nick oficial.
+      Ej: "kficho" → "[cLm] KFICHO", y aparte "kficho2" → "[cLm] KFICHO" también es válido.
+    </p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <input type="text" id="input-antiguo" placeholder="Nombre como se registró" style="flex:1; min-width:160px;">
+      <input type="text" id="input-oficial" placeholder="Nick oficial" style="flex:1; min-width:160px;">
+      <button class="btn secondary" onclick="agregarEquivalencia()">Vincular</button>
+    </div>
+    <div id="lista-equivalencias"></div>
+  </div>
+
+  <div class="panel">
+    <h3>⑤ Corrección de civilizaciones</h3>
+    <p class="hint">
+      Si escribes una civilización con typo o variante ("Gurjara" en vez de "Gurjaras"),
+      vincúlala aquí a su nombre oficial. Se corrige automáticamente en todas las pantallas.
+    </p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <input type="text" id="input-civ-antigua" placeholder="Como se escribió (ej. Gurjara)" style="flex:1; min-width:160px;">
+      <input type="text" id="input-civ-oficial" placeholder="Nombre oficial (ej. Gurjaras)" style="flex:1; min-width:160px;">
+      <button class="btn secondary" onclick="agregarCivEquivalencia()">Vincular</button>
+    </div>
+    <div id="lista-civ-equivalencias"></div>
+  </div>
+
+  <div class="panel">
+    <h3>⑥ Nacionalidad y civilización favorita</h3>
+    <p class="hint">
+      Escribe el nombre oficial exacto del jugador, su código de país de 2 letras
+      (ej. Perú = PE, Argentina = AR, México = MX, España = ES, Colombia = CO, Chile = CL)
+      y, si quieres, su civilización favorita. Ambos campos son editables en cualquier momento.
+    </p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <input type="text" id="input-pais-jugador" placeholder="Nombre oficial (ej. GJ Euphory)" style="flex:2; min-width:180px;">
+      <input type="text" id="input-pais-codigo" maxlength="2" placeholder="PE" style="flex:0 0 70px; text-transform:uppercase;">
+      <input type="text" id="input-civ-favorita" placeholder="Civilización favorita (opc.)" style="flex:1.5; min-width:160px;">
+      <button class="btn secondary" onclick="agregarPais()">Guardar</button>
+    </div>
+    <div id="lista-paises"></div>
+  </div>
+
+  <div class="panel">
+    <h3>⑦ Imágenes de Candidatos (por Fecha)</h3>
+    <p class="hint">
+      Cada Fecha (jornada) tiene 2 imágenes: la <strong>evaluación</strong> de candidatos y el
+      <strong>galardón</strong> del ganador (el nombre del jugador ya va dentro de la imagen).
+      Primero elige Año/Mes/Jornada abajo, copia el nombre de archivo sugerido, sube tus
+      imágenes con ese mismo nombre a la carpeta <code>imagenes/</code> en GitHub
+      (Add file → Upload files), y luego guarda aquí.
+    </p>
+    <div style="display:grid; grid-template-columns: 100px 140px 140px; gap:8px; margin-bottom:8px;">
+      <input type="number" id="input-img-anio" placeholder="2026" oninput="actualizarSugerenciaImagenes()">
+      <select id="input-img-mes" onchange="actualizarSugerenciaImagenes()">
+        <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+        <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+        <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+        <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+      </select>
+      <input type="text" id="input-img-jornada" placeholder="Fecha 05" oninput="actualizarSugerenciaImagenes()">
+    </div>
+    <p class="hint" id="sugerencia-nombres" style="margin-bottom:10px;"></p>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+      <input type="text" id="input-img-evaluacion" placeholder="imagenes/candidatos_2026-09_fecha05.png">
+      <input type="text" id="input-img-galardon" placeholder="imagenes/galardon_2026-09_fecha05.png">
+    </div>
+    <button class="btn secondary" onclick="guardarImagenesFecha()">Guardar imágenes de esta Fecha</button>
+
+    <div id="lista-fechas-imagenes" style="margin-top:16px;"></div>
+  </div>
+
+  <div class="panel">
+    <h3>⑧ Descargar y publicar</h3>
+    <p class="hint">
+      Descarga el archivo, y súbelo a GitHub (Add file → Upload files) reemplazando
+      <code>data/data.json</code> en la raíz del repositorio.
+    </p>
+    <button class="btn" onclick="descargarJSON()">⬇ Descargar data.json actualizado</button>
+    <span id="contador-partidas" style="margin-left:10px; font-size:0.8rem; color: var(--text-dim);"></span>
+  </div>
+</main>
+
+<script src="js/datos.js"></script>
+<script>
+let DATOS = { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [] };
+
+function actualizarContador() {
+  document.getElementById("contador-partidas").textContent =
+    `${DATOS.partidas.length} partida(s) en memoria`;
+}
+
+async function cargarDesdeServidor() {
+  const estado = document.getElementById("estado-carga");
+  estado.textContent = "Cargando...";
+  try {
+    const resp = await fetch(`data/data.json?t=${Date.now()}`, { cache: "no-store" });
+    if (!resp.ok) throw new Error("no encontrado");
+    DATOS = await resp.json();
+    if (!Array.isArray(DATOS.partidas)) DATOS.partidas = [];
+    if (!Array.isArray(DATOS.equivalencias)) DATOS.equivalencias = [];
+    if (!Array.isArray(DATOS.civEquivalencias)) DATOS.civEquivalencias = [];
+    if (!DATOS.jugadoresInfo || typeof DATOS.jugadoresInfo !== "object") {
+      DATOS.jugadoresInfo = {};
+      if (DATOS.paises && typeof DATOS.paises === "object") {
+        Object.entries(DATOS.paises).forEach(([nombre, pais]) => {
+          DATOS.jugadoresInfo[nombre] = { pais, civFavorita: "" };
+        });
+        delete DATOS.paises;
+      }
+    }
+    estado.textContent = `✔ Cargado: ${DATOS.partidas.length} partidas existentes.`;
+  } catch (e) {
+    estado.textContent = "⚠ No se encontró data.json publicado todavía (se empezará desde cero).";
+  }
+  if (!Array.isArray(DATOS.jornadasImagenes)) DATOS.jornadasImagenes = [];
+  actualizarContador();
+  poblarFiltrosPartidas();
+  renderizarListaPartidas();
+  renderizarEquivalencias();
+  renderizarCivEquivalencias();
+  renderizarPaises();
+  renderizarFechasImagenes();
+}
+
+function convertirDuracionASegundos(str) {
+  if (!str) return 0;
+  const partes = str.split(":").map(p => parseInt(p, 10) || 0);
+  if (partes.length === 3) return partes[0] * 3600 + partes[1] * 60 + partes[2];
+  if (partes.length === 2) return partes[0] * 60 + partes[1];
+  return 0;
+}
+
+function procesarReporte() {
+  const texto = document.getElementById("input-reporte").value.trim();
+  const resultadoDiv = document.getElementById("resultado-parseo");
+  if (!texto) {
+    resultadoDiv.innerHTML = `<p style="color:var(--loss);">Pega un reporte primero.</p>`;
+    return;
+  }
+
+  const lineas = texto.split("\n").map(l => l.trim()).filter(l => l);
+  let anio = new Date().getFullYear();
+  let mes = String(new Date().getMonth() + 1).padStart(2, "0");
+  let jornada = "Fecha 01";
+  let numeroPartida = 1;
+  let duracionSeg = 0;
+  const jugadores = [];
+
+  // Quita "palabra:" o "palabra " del inicio de una línea de encabezado y devuelve el resto
+  function valorDespuesDe(linea, palabras) {
+    for (const palabra of palabras) {
+      const regex = new RegExp(`^${palabra}\\s*:?\\s*`, "i");
+      if (regex.test(linea)) return linea.replace(regex, "").trim();
+    }
+    return null;
+  }
+
+  lineas.forEach(linea => {
+    let valor;
+
+    if ((valor = valorDespuesDe(linea, ["anio", "año"])) !== null) {
+      anio = parseInt(valor, 10) || anio;
+      return;
+    }
+    if ((valor = valorDespuesDe(linea, ["mes"])) !== null) {
+      mes = valor.padStart(2, "0");
+      return;
+    }
+    if ((valor = valorDespuesDe(linea, ["jornada"])) !== null) {
+      // Normaliza cualquier variante ("Fecha 1", "fecha01", "Fecha 01") a "Fecha 01"
+      const numJor = numeroDeJornada(valor);
+      jornada = numJor > 0 ? `Fecha ${String(numJor).padStart(2, "0")}` : valor;
+      return;
+    }
+    if ((valor = valorDespuesDe(linea, ["partida"])) !== null) {
+      // Acepta "partida: 1" o "partida 1 01:07:08" (número + duración juntos)
+      const match = valor.match(/^(\d+)\s*(?:(\d{1,2}:\d{2}(?::\d{2})?))?/);
+      if (match) {
+        numeroPartida = parseInt(match[1], 10) || numeroPartida;
+        if (match[2]) duracionSeg = convertirDuracionASegundos(match[2]);
+      }
+      return;
+    }
+    if ((valor = valorDespuesDe(linea, ["duracion", "duración"])) !== null) {
+      duracionSeg = convertirDuracionASegundos(valor);
+      return;
+    }
+
+    const partes = linea.split("|").map(p => p.trim());
+    if (partes.length < 2) return;
+
+    // Formato: Jugador | Pts(3 o 0) | E | R | M | O | S | Rch | MG | RLP | UAses | EArr | Equipo | Civ
+    // Las columnas MG y RLP se IGNORAN a propósito: el sistema las calcula automáticamente.
+    const [nombre, ptsRaw, eRaw, rRaw, mRaw, oRaw, sRaw, , , , uAsesRaw, eArrRaw, equipo, civ] = partes;
+    // La columna de "Rch" (posición 8) se ignora a propósito: el sistema calcula la
+    // racha automáticamente según si el jugador ganó también su partida inmediata anterior.
+
+    const bonos = [];
+    if (parseInt(eRaw, 10) > 0) bonos.push("E");
+    if (parseInt(rRaw, 10) > 0) bonos.push("R");
+    if (parseInt(mRaw, 10) > 0) bonos.push("M");
+    if (parseInt(oRaw, 10) > 0) bonos.push("O");
+    if (parseInt(sRaw, 10) > 0) bonos.push("S");
+
+    jugadores.push({
+      nombre,
+      resultado: (parseInt(ptsRaw, 10) || 0) > 0 ? "victoria" : "derrota",
+      civ: civ || "",
+      equipo: equipo || "",
+      unidadesAsesinadas: parseInt(uAsesRaw, 10) || 0,
+      edificiosArrasados: parseInt(eArrRaw, 10) || 0,
+      bonos
+    });
+  });
+
+  if (jugadores.length === 0) {
+    resultadoDiv.innerHTML = `<p style="color:var(--loss);">No se pudo interpretar ninguna línea de jugador. Revisa el formato.</p>`;
+    return;
+  }
+
+  const idNuevo = `${anio}-${mes}-${jornada.replace(/\s+/g,"")}-P${numeroPartida}`;
+  if (DATOS.partidas.some(p => p.id === idNuevo)) {
+    if (!confirm(`Ya existe una partida con ID "${idNuevo}" (mismo año/mes/jornada/partida). ¿Reemplazarla?`)) {
+      resultadoDiv.innerHTML = `<p style="color:var(--loss);">Cancelado. Cambia el número de partida o jornada.</p>`;
+      return;
+    }
+    DATOS.partidas = DATOS.partidas.filter(p => p.id !== idNuevo);
+  }
+
+  const nuevaPartida = {
+    id: idNuevo,
+    anio, mes, jornada, numeroPartida,
+    duracionSeg,
+    jugadores
+  };
+
+  DATOS.partidas.push(nuevaPartida);
+  actualizarContador();
+  poblarFiltrosPartidas();
+  renderizarListaPartidas();
+
+  resultadoDiv.innerHTML = `
+    <p style="color:var(--win);">✔ Partida agregada: ${etiquetaPartida(nuevaPartida)} (${jugadores.length} jugadores).</p>
+  `;
+  document.getElementById("input-reporte").value = "";
+}
+
+function poblarFiltrosPartidas() {
+  const selAnio = document.getElementById("filtro-partidas-anio");
+  const valorAnioPrevio = selAnio.value;
+
+  if (DATOS.partidas.length === 0) {
+    selAnio.innerHTML = `<option value="">Sin datos</option>`;
+    document.getElementById("filtro-partidas-mes").innerHTML = `<option value="">Sin datos</option>`;
+    return;
+  }
+
+  const anios = [...new Set(DATOS.partidas.map(p => p.anio))].sort((a, b) => b - a);
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  selAnio.value = anios.includes(parseInt(valorAnioPrevio, 10)) ? valorAnioPrevio : anios[0];
+
+  poblarMesesPartidasFiltro();
+}
+
+function poblarMesesPartidasFiltro() {
+  const anio = document.getElementById("filtro-partidas-anio").value;
+  const selMes = document.getElementById("filtro-partidas-mes");
+  const valorMesPrevio = selMes.value;
+
+  const mesesDelAnio = [...new Set(DATOS.partidas.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))]
+    .sort().reverse();
+
+  if (mesesDelAnio.length === 0) {
+    selMes.innerHTML = `<option value="">Sin datos</option>`;
+    return;
+  }
+
+  selMes.innerHTML = mesesDelAnio.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  selMes.value = mesesDelAnio.includes(valorMesPrevio) ? valorMesPrevio : mesesDelAnio[0];
+}
+
+function renderizarListaPartidas() {
+  const cont = document.getElementById("lista-partidas");
+  if (DATOS.partidas.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay partidas cargadas.</p>`;
+    return;
+  }
+
+  const anio = document.getElementById("filtro-partidas-anio").value;
+  const mes = document.getElementById("filtro-partidas-mes").value;
+
+  const filtradas = DATOS.partidas.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+  const ordenadas = [...filtradas].sort((a, b) => claveOrden(b) - claveOrden(a));
+
+  if (ordenadas.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay partidas para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
+    return;
+  }
+
+  cont.innerHTML = ordenadas.map(p => `
+    <div class="match-item">
+      <span>${etiquetaPartida(p)} — ${p.jugadores.map(j => j.nombre).join(", ")}</span>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarPartida('${p.id}')">🗑 Eliminar</button>
+    </div>
+  `).join("");
+}
+
+function eliminarPartida(id) {
+  if (!confirm("¿Eliminar esta partida? Esto no se puede deshacer una vez que descargues y subas el archivo.")) return;
+  DATOS.partidas = DATOS.partidas.filter(p => p.id !== id);
+  actualizarContador();
+  poblarFiltrosPartidas();
+  renderizarListaPartidas();
+}
+
+function renderizarEquivalencias() {
+  const cont = document.getElementById("lista-equivalencias");
+  if (DATOS.equivalencias.length === 0) {
+    cont.innerHTML = `<p class="hint">Todavía no hay nombres vinculados.</p>`;
+    return;
+  }
+  cont.innerHTML = DATOS.equivalencias.map((e, i) => `
+    <div class="match-item">
+      <span>"${e.antiguo}" → <strong>${e.oficial}</strong></span>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarEquivalencia(${i})">🗑</button>
+    </div>
+  `).join("");
+}
+
+function agregarEquivalencia() {
+  const antiguo = document.getElementById("input-antiguo").value.trim();
+  const oficial = document.getElementById("input-oficial").value.trim();
+  if (!antiguo || !oficial) {
+    alert("Completa ambos campos.");
+    return;
+  }
+  const existente = DATOS.equivalencias.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
+  if (existente) {
+    existente.oficial = oficial;
+  } else {
+    DATOS.equivalencias.push({ antiguo, oficial });
+  }
+  document.getElementById("input-antiguo").value = "";
+  document.getElementById("input-oficial").value = "";
+  renderizarEquivalencias();
+}
+
+function eliminarEquivalencia(i) {
+  DATOS.equivalencias.splice(i, 1);
+  renderizarEquivalencias();
+}
+
+function renderizarCivEquivalencias() {
+  const cont = document.getElementById("lista-civ-equivalencias");
+  if (!DATOS.civEquivalencias || DATOS.civEquivalencias.length === 0) {
+    cont.innerHTML = `<p class="hint">Todavía no hay civilizaciones vinculadas.</p>`;
+    return;
+  }
+  cont.innerHTML = DATOS.civEquivalencias.map((e, i) => `
+    <div class="match-item">
+      <span>"${e.antiguo}" → <strong>${e.oficial}</strong></span>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarCivEquivalencia(${i})">🗑</button>
+    </div>
+  `).join("");
+}
+
+function agregarCivEquivalencia() {
+  const antiguo = document.getElementById("input-civ-antigua").value.trim();
+  const oficial = document.getElementById("input-civ-oficial").value.trim();
+  if (!antiguo || !oficial) {
+    alert("Completa ambos campos.");
+    return;
+  }
+  if (!DATOS.civEquivalencias) DATOS.civEquivalencias = [];
+  const existente = DATOS.civEquivalencias.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
+  if (existente) {
+    existente.oficial = oficial;
+  } else {
+    DATOS.civEquivalencias.push({ antiguo, oficial });
+  }
+  document.getElementById("input-civ-antigua").value = "";
+  document.getElementById("input-civ-oficial").value = "";
+  renderizarCivEquivalencias();
+}
+
+function eliminarCivEquivalencia(i) {
+  DATOS.civEquivalencias.splice(i, 1);
+  renderizarCivEquivalencias();
+}
+
+function renderizarPaises() {
+  const cont = document.getElementById("lista-paises");
+  const nombres = Object.keys(DATOS.jugadoresInfo || {});
+  if (nombres.length === 0) {
+    cont.innerHTML = `<p class="hint">Todavía no hay jugadores registrados.</p>`;
+    return;
+  }
+
+  // Los incompletos (sin país o sin civ favorita) primero, luego alfabético
+  const ordenados = [...nombres].sort((a, b) => {
+    const infoA = DATOS.jugadoresInfo[a] || {};
+    const infoB = DATOS.jugadoresInfo[b] || {};
+    const incompletaA = (!infoA.pais || !infoA.civFavorita) ? 0 : 1;
+    const incompletaB = (!infoB.pais || !infoB.civFavorita) ? 0 : 1;
+    if (incompletaA !== incompletaB) return incompletaA - incompletaB;
+    return a.localeCompare(b);
+  });
+
+  cont.innerHTML = `
+    <p class="hint">${nombres.length} jugadores registrados en total. Los que les falta país y/o civilización aparecen primero.</p>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
+        <thead>
+          <tr style="text-align:left; color:var(--gold); border-bottom:1px solid var(--line);">
+            <th style="padding:6px 8px;">Jugador</th>
+            <th style="padding:6px 8px;">País</th>
+            <th style="padding:6px 8px;">Civ. favorita</th>
+            <th style="padding:6px 8px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ordenados.map(nombre => {
+            const info = DATOS.jugadoresInfo[nombre] || {};
+            const faltaAlgo = !info.pais || !info.civFavorita;
+            return `
+              <tr style="border-bottom:1px solid var(--line); ${faltaAlgo ? 'background:rgba(176,85,79,0.08);' : ''}">
+                <td style="padding:6px 8px;">${nombre}</td>
+                <td style="padding:6px 8px;">
+                  ${info.pais ? `<img src="https://flagcdn.com/w40/${info.pais.toLowerCase()}.png" style="width:20px; vertical-align:middle; margin-right:4px; border-radius:2px;">${info.pais}` : `<span style="color:var(--loss);">falta</span>`}
+                </td>
+                <td style="padding:6px 8px;">${info.civFavorita || `<span style="color:var(--loss);">falta</span>`}</td>
+                <td style="padding:6px 8px; text-align:right;">
+                  <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="precargarPais('${nombre.replace(/'/g,"\\'")}')">✎</button>
+                  <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="eliminarPais('${nombre.replace(/'/g,"\\'")}')">🗑</button>
+                </td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function precargarPais(nombre) {
+  const info = DATOS.jugadoresInfo[nombre] || {};
+  document.getElementById("input-pais-jugador").value = nombre;
+  document.getElementById("input-pais-codigo").value = info.pais || "";
+  document.getElementById("input-civ-favorita").value = info.civFavorita || "";
+  document.getElementById("input-pais-jugador").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function agregarPais() {
+  const nombre = document.getElementById("input-pais-jugador").value.trim();
+  const codigo = document.getElementById("input-pais-codigo").value.trim().toUpperCase();
+  const civFavorita = document.getElementById("input-civ-favorita").value.trim();
+  if (!nombre || (codigo && codigo.length !== 2)) {
+    alert("Escribe el nombre oficial. Si pones país, debe ser de exactamente 2 letras.");
+    return;
+  }
+  if (!DATOS.jugadoresInfo) DATOS.jugadoresInfo = {};
+  DATOS.jugadoresInfo[nombre] = {
+    pais: codigo || (DATOS.jugadoresInfo[nombre]?.pais || ""),
+    civFavorita: civFavorita || (DATOS.jugadoresInfo[nombre]?.civFavorita || "")
+  };
+  document.getElementById("input-pais-jugador").value = "";
+  document.getElementById("input-pais-codigo").value = "";
+  document.getElementById("input-civ-favorita").value = "";
+  renderizarPaises();
+}
+
+function eliminarPais(nombre) {
+  delete DATOS.jugadoresInfo[nombre];
+  renderizarPaises();
+}
+
+function actualizarSugerenciaImagenes() {
+  const anio = document.getElementById("input-img-anio").value.trim();
+  const mes = document.getElementById("input-img-mes").value;
+  const jornada = document.getElementById("input-img-jornada").value.trim();
+  const sugerenciaEl = document.getElementById("sugerencia-nombres");
+
+  if (!anio || !jornada) {
+    sugerenciaEl.textContent = "Completa Año y Jornada para ver el nombre sugerido.";
+    return;
+  }
+
+  const sug = sugerirNombresImagenes(anio, mes, jornada);
+  sugerenciaEl.innerHTML = `💡 Nombre sugerido: <code>${sug.evaluacion}</code> y <code>${sug.galardon}</code>`;
+
+  // Si los campos de ruta están vacíos o todavía tienen una sugerencia anterior, los autocompleta
+  const inputEval = document.getElementById("input-img-evaluacion");
+  const inputGal = document.getElementById("input-img-galardon");
+  if (!inputEval.value || inputEval.dataset.autocompletado === "1") {
+    inputEval.value = sug.evaluacion;
+    inputEval.dataset.autocompletado = "1";
+  }
+  if (!inputGal.value || inputGal.dataset.autocompletado === "1") {
+    inputGal.value = sug.galardon;
+    inputGal.dataset.autocompletado = "1";
+  }
+}
+
+function renderizarFechasImagenes() {
+  const cont = document.getElementById("lista-fechas-imagenes");
+  const lista = DATOS.jornadasImagenes || [];
+  if (lista.length === 0) {
+    cont.innerHTML = `<p class="hint">Todavía no hay imágenes guardadas para ninguna Fecha.</p>`;
+    return;
+  }
+  const ordenadas = [...lista].sort((a, b) =>
+    claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
+    claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
+  );
+  cont.innerHTML = `
+    <p class="hint">Fechas con imágenes guardadas:</p>
+    ${ordenadas.map(j => `
+      <div class="match-item">
+        <span>${j.anio} · ${NOMBRES_MES[j.mes]} · ${j.jornada}</span>
+        <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarFechaImagenes('${claveJornada(j.anio, j.mes, j.jornada)}')">🗑</button>
+      </div>
+    `).join("")}
+  `;
+}
+
+function guardarImagenesFecha() {
+  const anio = parseInt(document.getElementById("input-img-anio").value.trim(), 10);
+  const mes = document.getElementById("input-img-mes").value;
+  const jornada = document.getElementById("input-img-jornada").value.trim();
+  const imagenEvaluacion = document.getElementById("input-img-evaluacion").value.trim();
+  const imagenGalardon = document.getElementById("input-img-galardon").value.trim();
+
+  if (!anio || !jornada) {
+    alert("Completa Año y Jornada.");
+    return;
+  }
+  if (!DATOS.jornadasImagenes) DATOS.jornadasImagenes = [];
+
+  const clave = claveJornada(anio, mes, jornada);
+  const existente = DATOS.jornadasImagenes.find(j => claveJornada(j.anio, j.mes, j.jornada) === clave);
+  const nueva = { anio, mes, jornada, imagenEvaluacion, imagenGalardon };
+  if (existente) {
+    Object.assign(existente, nueva);
+  } else {
+    DATOS.jornadasImagenes.push(nueva);
+  }
+
+  renderizarFechasImagenes();
+  alert("Imágenes guardadas para esta Fecha. No olvides descargar y subir el archivo.");
+}
+
+function eliminarFechaImagenes(clave) {
+  DATOS.jornadasImagenes = (DATOS.jornadasImagenes || []).filter(j => claveJornada(j.anio, j.mes, j.jornada) !== clave);
+  renderizarFechasImagenes();
+}
+
+function descargarJSON() {
+  const blob = new Blob([JSON.stringify(DATOS, null, 2)], { type: "application/json" });
+  const enlace = document.createElement("a");
+  enlace.href = URL.createObjectURL(blob);
+  enlace.download = "data.json";
+  enlace.click();
+}
+</script>
+</body>
+</html>

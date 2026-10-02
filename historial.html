@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historial — Comunidad AoE II</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/estilo.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  .match-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
+  .match-card .cabecera { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap: 10px; }
+  .match-card .cabecera .titulo { font-family:'Cinzel',serif; color: var(--gold); font-size: 0.95rem; }
+  .match-card .cabecera .acciones { display:flex; align-items:center; gap:10px; }
+  .match-card .cabecera .dur { font-size: 0.78rem; color: var(--text-dim); }
+  .match-card .cabecera button { background: var(--panel-raised); border: 1px solid var(--line); color: var(--text); border-radius: var(--radius); padding: 4px 8px; font-size: 0.75rem; cursor: pointer; }
+  table.tabla-match { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  table.tabla-match th, table.tabla-match td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+  table.tabla-match th { color: var(--text-dim); font-weight: 600; font-size: 0.72rem; }
+  table.tabla-match tr:last-child td { border-bottom: none; }
+  .resultado-icono { font-size: 0.95rem; margin-right: 6px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="sub">Historial de partidas</span>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Inicio</a>
+    <a href="clasificacion.html">Clasificación</a>
+    <a href="jugador.html">Jugadores</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="candidatos.html">Candidatos</a>
+    <a href="historial.html" class="active">Historial</a>
+    <a href="admin.html">Administración</a>
+  </nav>
+</header>
+
+<main>
+  <div class="filters">
+    <select id="filtro-anio"></select>
+    <select id="filtro-mes"></select>
+    <select id="filtro-jornada"></select>
+  </div>
+  <p class="hint" id="nota-limite" style="margin-bottom:12px;"></p>
+  <div id="lista-historial"></div>
+</main>
+
+<nav class="mobile-nav">
+  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
+  <a href="clasificacion.html"><span class="icon">🏆</span>Ranking</a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
+  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
+  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
+  <a href="historial.html" class="active"><span class="icon">📜</span>Historial</a>
+</nav>
+
+<script src="js/datos.js"></script>
+<script>
+const LIMITE_PARTIDAS_DEFAULT = 10;
+let PARTIDAS = [], EQUIVALENCIAS = [];
+
+function poblarFiltros() {
+  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-anio");
+  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">Sin datos</option>`;
+  selAnio.addEventListener("change", () => { poblarMeses(); poblarJornadas(); render(); });
+  poblarMeses();
+  document.getElementById("filtro-mes").addEventListener("change", () => { poblarJornadas(); render(); });
+  document.getElementById("filtro-jornada").addEventListener("change", render);
+}
+
+function poblarMeses() {
+  const anio = document.getElementById("filtro-anio").value;
+  const meses = [...new Set(PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
+  const selMes = document.getElementById("filtro-mes");
+  selMes.innerHTML = meses.length ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("") : `<option value="">Sin datos</option>`;
+  poblarJornadas();
+}
+
+function poblarJornadas() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const jornadas = [...new Set(PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2,"0") === mes).map(p => p.jornada))]
+    .sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
+  const selJornada = document.getElementById("filtro-jornada");
+  selJornada.innerHTML = `<option value="">Todas las fechas</option>` + jornadas.map(j => `<option value="${j}">${j}</option>`).join("");
+}
+
+function render() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const jornadaFiltro = document.getElementById("filtro-jornada").value;
+  const cont = document.getElementById("lista-historial");
+  const nota = document.getElementById("nota-limite");
+
+  if (!anio || !mes) {
+    cont.innerHTML = `<div class="empty-state">No hay partidas registradas todavía.</div>`;
+    nota.textContent = "";
+    return;
+  }
+
+  const delPeriodo = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes)
+    .sort((a, b) => claveOrden(a) - claveOrden(b));
+
+  const varsPorPartida = calcularVarPorPartida(delPeriodo, EQUIVALENCIAS);
+
+  let filtradas = jornadaFiltro ? delPeriodo.filter(p => p.jornada === jornadaFiltro) : delPeriodo;
+  filtradas = [...filtradas].sort((a, b) => claveOrden(b) - claveOrden(a));
+
+  if (!jornadaFiltro && filtradas.length > LIMITE_PARTIDAS_DEFAULT) {
+    nota.textContent = `Mostrando las últimas ${LIMITE_PARTIDAS_DEFAULT} partidas de ${NOMBRES_MES[mes]} ${anio}. Selecciona una Fecha específica para ver el resto.`;
+    filtradas = filtradas.slice(0, LIMITE_PARTIDAS_DEFAULT);
+  } else {
+    nota.textContent = "";
+  }
+
+  if (filtradas.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay partidas para este filtro.</div>`;
+    return;
+  }
+
+  cont.innerHTML = filtradas.map(p => {
+    const varsDeEsta = varsPorPartida[p.id] || {};
+    return `
+    <div class="match-card" id="card-${p.id}">
+      <div class="cabecera">
+        <span class="titulo">${etiquetaPartida(p)}</span>
+        <div class="acciones">
+          <span class="dur">⏱ ${formatearDuracion(p.duracionSeg)}</span>
+          <button onclick="descargarImagenPartida('${p.id}')">📷 Descargar</button>
+        </div>
+      </div>
+      <table class="tabla-match">
+        <thead><tr><th></th><th>Jugador</th><th>Equipo</th><th>Civilización</th><th>Var</th></tr></thead>
+        <tbody>
+          ${p.jugadores.map(j => {
+            const nombreOf = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+            const gano = j.resultado === "victoria";
+            const v = varsDeEsta[nombreOf] ?? 0;
+            const varClass = v > 0 ? "var-up" : v < 0 ? "var-down" : "";
+            const varTexto = v > 0 ? `+${v}` : `${v}`;
+            return `
+              <tr>
+                <td><span class="resultado-icono">${gano ? "👑" : "💀"}</span></td>
+                <td><a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a></td>
+                <td>${j.equipo || "—"}</td>
+                <td>${j.civ || "—"}</td>
+                <td class="${varClass}">${varTexto}</td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+  }).join("");
+}
+
+function descargarImagenPartida(id) {
+  const el = document.getElementById(`card-${id}`);
+  descargarElementoComoImagen(el, `partida-${id}.png`, "#1c2027");
+}
+
+(async function init() {
+  const datos = await cargarDatos();
+  PARTIDAS = datos.partidas;
+  EQUIVALENCIAS = datos.equivalencias;
+  poblarFiltros();
+  render();
+})();
+</script>
+</body>
+</html>

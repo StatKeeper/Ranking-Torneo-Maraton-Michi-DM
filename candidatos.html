@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidatos — Comunidad AoE II</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/estilo.css">
+<style>
+  .jornada-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 18px; }
+  .jornada-card h3 { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
+  .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .img-grid { grid-template-columns: 1fr; } }
+  .img-box { text-align: center; }
+  .img-box img { max-width: 100%; border-radius: var(--radius); border: 1px solid var(--line); display: block; margin-bottom: 8px; }
+  .img-box .caption { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="sub">Candidatos al Jugador de la Fecha</span>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Inicio</a>
+    <a href="clasificacion.html">Clasificación</a>
+    <a href="jugador.html">Jugadores</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="candidatos.html" class="active">Candidatos</a>
+    <a href="historial.html">Historial</a>
+    <a href="admin.html">Administración</a>
+  </nav>
+</header>
+
+<main>
+  <div class="filters">
+    <select id="filtro-anio"></select>
+    <select id="filtro-mes"></select>
+  </div>
+  <div id="lista-partidas"></div>
+</main>
+
+<nav class="mobile-nav">
+  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
+  <a href="clasificacion.html"><span class="icon">🏆</span>Ranking</a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
+  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
+  <a href="candidatos.html" class="active"><span class="icon">⭐</span>Candidatos</a>
+  <a href="historial.html"><span class="icon">📜</span>Historial</a>
+</nav>
+
+<script src="js/datos.js"></script>
+<script>
+let JORNADAS_IMAGENES = [];
+
+function poblarFiltros() {
+  const anios = [...new Set(JORNADAS_IMAGENES.map(j => j.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-anio");
+  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">Sin datos</option>`;
+  selAnio.addEventListener("change", () => { poblarMeses(); render(); });
+  poblarMeses();
+  document.getElementById("filtro-mes").addEventListener("change", render);
+}
+
+function poblarMeses() {
+  const anio = document.getElementById("filtro-anio").value;
+  const meses = [...new Set(JORNADAS_IMAGENES.filter(j => j.anio == anio).map(j => String(j.mes).padStart(2, "0")))].sort().reverse();
+  const selMes = document.getElementById("filtro-mes");
+  selMes.innerHTML = meses.length ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("") : `<option value="">Sin datos</option>`;
+}
+
+function render() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const cont = document.getElementById("lista-partidas");
+
+  if (!anio || !mes) {
+    cont.innerHTML = `<div class="empty-state">No hay infografías cargadas todavía.</div>`;
+    return;
+  }
+
+  const delMes = JORNADAS_IMAGENES.filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes)
+    .sort((a, b) => numeroDeJornada(b.jornada) - numeroDeJornada(a.jornada));
+
+  if (delMes.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay infografías cargadas para ${NOMBRES_MES[mes]} ${anio}.</div>`;
+    return;
+  }
+
+  cont.innerHTML = delMes.map(j => `
+    <div class="jornada-card">
+      <h3>${j.jornada}</h3>
+      <div class="img-grid">
+        ${j.imagenGalardon ? `
+          <div class="img-box">
+            <div class="caption">👑 Jugador de la Fecha</div>
+            <img src="${j.imagenGalardon}" alt="Galardón ${j.jornada}" loading="lazy">
+            <a class="btn secondary" href="${j.imagenGalardon}" download>⬇ Descargar (HD)</a>
+          </div>` : ""}
+        ${j.imagenEvaluacion ? `
+          <div class="img-box">
+            <div class="caption">📋 Evaluación de Candidatos</div>
+            <img src="${j.imagenEvaluacion}" alt="Evaluación ${j.jornada}" loading="lazy">
+            <a class="btn secondary" href="${j.imagenEvaluacion}" download>⬇ Descargar (HD)</a>
+          </div>` : ""}
+      </div>
+    </div>
+  `).join("");
+}
+
+(async function init() {
+  const datos = await cargarDatos();
+  JORNADAS_IMAGENES = datos.jornadasImagenes || [];
+  poblarFiltros();
+  render();
+})();
+</script>
+</body>
+</html>
