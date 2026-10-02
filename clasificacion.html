@@ -119,10 +119,11 @@
   <!-- Panel del Cuadro de Honor Mensual -->
   <div class="panel" style="margin-top:18px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
+      <h3 id="titulo-honor-header" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
       <button class="btn secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="descargarImagenHonor()">📷 Descargar Imagen</button>
     </div>
-    <div id="captura-cuadro-honor" style="padding:4px;">
+    <div id="captura-cuadro-honor" style="padding:10px; background: var(--panel);">
+      <div id="titulo-honor-captura" style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.05rem; font-weight:600; margin-bottom:10px; text-align:left;">🏆 Cuadro de Honor Mensual</div>
       <div id="contenedor-cuadro-honor">
         <div class="empty-state">Cargando…</div>
       </div>
@@ -185,6 +186,13 @@ function renderizarCuadroHonor() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
   const cont = document.getElementById("contenedor-cuadro-honor");
+  const tituloCaptura = document.getElementById("titulo-honor-captura");
+  const tituloHeader = document.getElementById("titulo-honor-header");
+
+  const nombreMes = NOMBRES_MES[mes] || "";
+  const textoTitulo = `🏆 Cuadro de Honor — ${nombreMes} ${anio}`;
+  if (tituloHeader) tituloHeader.textContent = textoTitulo;
+  if (tituloCaptura) tituloCaptura.textContent = textoTitulo;
 
   if (!anio || !mes) {
     cont.innerHTML = `<div class="empty-state">Selecciona un período.</div>`;
