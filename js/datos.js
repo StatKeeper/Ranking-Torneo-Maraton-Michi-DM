@@ -79,8 +79,14 @@ function listaDeNombresOficiales(partidas, equivalencias) {
 
 function calcularEstadisticasJugadores(partidas, equivalencias) {
   const stats = {};
+  const conteoPorJornada = {};
 
-  partidas.forEach(p => {
+  const ordenadas = [...partidas].sort((a, b) => claveOrden(a) - claveOrden(b));
+
+  ordenadas.forEach(p => {
+    const claveJor = claveJornada(p.anio, p.mes, p.jornada);
+    if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
+
     (p.jugadores || []).forEach(j => {
       const nombre = resolverNombreOficial(j.nombre, equivalencias);
       if (!stats[nombre]) {
@@ -89,6 +95,13 @@ function calcularEstadisticasJugadores(partidas, equivalencias) {
           segundosTotales: 0, unidadesAsesinadas: 0, edificiosArrasados: 0,
           civs: {}
         };
+      }
+
+      conteoPorJornada[claveJor][nombre] = (conteoPorJornada[claveJor][nombre] || 0) + 1;
+      const numPartidaEnJornada = conteoPorJornada[claveJor][nombre];
+
+      if (numPartidaEnJornada > 3) {
+        return;
       }
 
       const st = stats[nombre];
@@ -135,13 +148,14 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
 
   const ultimasVictorias = {};
   const mapFilas = {};
+  const conteoPorJornada = {};
 
   acumuladas.forEach((p) => {
-    const participantesEstaPartida = new Set();
+    const claveJor = claveJornada(p.anio, p.mes, p.jornada);
+    if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
 
     (p.jugadores || []).forEach(j => {
       const nombre = resolverNombreOficial(j.nombre, equivalencias);
-      participantesEstaPartida.add(nombre);
 
       if (!mapFilas[nombre]) {
         mapFilas[nombre] = {
@@ -152,7 +166,16 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
         };
       }
 
+      conteoPorJornada[claveJor][nombre] = (conteoPorJornada[claveJor][nombre] || 0) + 1;
+      const numPartidaEnJornada = conteoPorJornada[claveJor][nombre];
+
       const f = mapFilas[nombre];
+
+      if (numPartidaEnJornada > 3) {
+        f.ultimoSuceso = "Partida inválida (+3 en la jornada)";
+        return;
+      }
+
       f.partidas++;
       let gano = j.resultado === "victoria";
 
