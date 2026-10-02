@@ -1748,16 +1748,16 @@
     {
       "anio": 2026,
       "mes": "09",
-      "jornada": "Fecha 04",
-      "imagenEvaluacion": "",
-      "imagenGalardon": "imagenes/galardon_2026-09_fecha04.png"
+      "jornada": "Fecha 05",
+      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha05.png",
+      "imagenGalardon": "imagenes/galardon_2026-09_fecha05.png"
     },
     {
       "anio": 2026,
       "mes": "09",
-      "jornada": "Fecha 05",
-      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha05.png",
-      "imagenGalardon": "imagenes/galardon_2026-09_fecha05.png"
+      "jornada": "Fecha 04",
+      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha04.png",
+      "imagenGalardon": "imagenes/galardon_2026-09_fecha04.png"
     }
   ],
   "civEquivalencias": [],
