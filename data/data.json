@@ -573,5 +573,13 @@
     }
   ],
   "civEquivalencias": [],
-  "cuadroHonor": []
+  "cuadroHonor": [
+    {
+      "anio": 2026,
+      "mes": "01",
+      "jornada": "Fecha 01",
+      "jugador": "GJ Euphory",
+      "civ": "Mayas"
+    }
+  ]
 }
