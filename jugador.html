@@ -7,6 +7,39 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  .grid-companeros {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .tabla-companeros {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    background: var(--panel);
+  }
+  .tabla-companeros th, .tabla-companeros td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .tabla-companeros th {
+    background: var(--panel-raised);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+  .tabla-companeros td.num {
+    text-align: center;
+  }
+  .tabla-companeros td.wr {
+    text-align: right;
+    font-weight: 600;
+    color: var(--win);
+  }
+</style>
 </head>
 <body>
 
@@ -84,7 +117,8 @@ function poblarFiltrosPeriodo() {
 
 function pintarPerfil(nombre) {
   const cont = document.getElementById("contenido-perfil");
-  const stats = calcularEstadisticasJugadores(partidasFiltradas(), EQUIVALENCIAS)[nombre];
+  const partidasActivas = partidasFiltradas();
+  const stats = calcularEstadisticasJugadores(partidasActivas, EQUIVALENCIAS)[nombre];
 
   if (!stats) {
     cont.innerHTML = `<div class="empty-state">No se encontraron partidas para "${nombre}" en este período.</div>`;
@@ -104,6 +138,8 @@ function pintarPerfil(nombre) {
 
   const civsOrdenadas = Object.entries(stats.civs).sort((a, b) => b[1].jugadas - a[1].jugadas);
   const maxJugadas = civsOrdenadas.length ? civsOrdenadas[0][1].jugadas : 1;
+
+  const { aliados, adversarios } = calcularCompanerosYRivales(stats.nombre, partidasActivas, EQUIVALENCIAS);
 
   cont.innerHTML = `
     <div class="profile-header">
@@ -130,16 +166,68 @@ function pintarPerfil(nombre) {
     <div class="breakdown-list">
       ${civsOrdenadas.length === 0 ? `<div class="empty-state">Sin datos de civilización.</div>` : civsOrdenadas.map(([civ, d]) => {
         const wr = Math.round((d.victorias / d.jugadas) * 100);
+        const pctUso = Math.round((d.jugadas / stats.partidas) * 100);
         const ancho = Math.round((d.jugadas / maxJugadas) * 100);
         return `
           <div class="breakdown-row">
             <span>${civ}</span>
-            <span>${d.jugadas}p</span>
+            <span>${d.jugadas}p (${pctUso}%)</span>
             <span class="wr">${wr}% WR</span>
             <div class="bar-track"><div class="bar-fill" style="width:${ancho}%"></div></div>
           </div>
         `;
       }).join("")}
+    </div>
+
+    <div class="section-head" style="margin-top:24px;"><h2>Compañeros y Rivales</h2></div>
+    <div class="grid-companeros">
+      <div class="panel" style="padding:10px;">
+        <h3 style="font-size:0.88rem; color:var(--gold); margin-bottom:8px;">🤝 Aliados</h3>
+        ${aliados.length === 0 ? `<div class="empty-state">Sin partidas en equipo.</div>` : `
+          <table class="tabla-companeros">
+            <thead>
+              <tr>
+                <th>Aliado</th>
+                <th class="num">PJ</th>
+                <th style="text-align:right;">% Vic.</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${aliados.map(a => `
+                <tr>
+                  <td><a href="jugador.html?nombre=${encodeURIComponent(a.nombre)}">${a.nombre}</a></td>
+                  <td class="num">${a.partidas}</td>
+                  <td class="wr">${a.wr}%</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `}
+      </div>
+
+      <div class="panel" style="padding:10px;">
+        <h3 style="font-size:0.88rem; color:var(--loss); margin-bottom:8px;">⚔️ Adversarios</h3>
+        ${adversarios.length === 0 ? `<div class="empty-state">Sin enfrentamientos directos.</div>` : `
+          <table class="tabla-companeros">
+            <thead>
+              <tr>
+                <th>Adversario</th>
+                <th class="num">PJ</th>
+                <th style="text-align:right;">% Vic.</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${adversarios.map(adv => `
+                <tr>
+                  <td><a href="jugador.html?nombre=${encodeURIComponent(adv.nombre)}">${adv.nombre}</a></td>
+                  <td class="num">${adv.partidas}</td>
+                  <td class="wr">${adv.wr}%</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `}
+      </div>
     </div>
   `;
   document.getElementById("btn-descargar-perfil").style.display = "inline-block";
@@ -150,6 +238,8 @@ function poblarBuscador() {
   const nombres = Object.keys(stats).sort();
   document.getElementById("lista-nombres").innerHTML =
     nombres.map(n => `<option value="${n}">`).join("");
+
+  poblarFiltrosPeriodo();
 
   const params = new URLSearchParams(window.location.search);
   const nombreURL = params.get("nombre");
