@@ -556,6 +556,15 @@
       "civFavorita": ""
     }
   },
-  "jornadasImagenes": [],
-  "civEquivalencias": []
+  "jornadasImagenes": [
+    {
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 01",
+      "imagenEvaluacion": "candidatos_2026-08_fecha01.png",
+      "imagenGalardon": "galardon_2026-08_fecha01.png"
+    }
+  ],
+  "civEquivalencias": [],
+  "cuadroHonor": []
 }
