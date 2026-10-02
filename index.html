@@ -6,6 +6,22 @@
 <title>Inicio — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
+
+<!-- Configuración PWA e Ícono de Inicio -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14161c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maratón Michi">
+<link rel="apple-touch-icon" href="imagenes/icono-192.png">
+
+<!-- Registro del Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+
 <style>
   .bienvenida { text-align: center; padding: 10px 0 24px; }
   .bienvenida h1 { font-size: 1.6rem; color: var(--text); margin-bottom: 6px; }
