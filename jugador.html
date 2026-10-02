@@ -105,8 +105,6 @@ function pintarPerfil(nombre) {
   const civsOrdenadas = Object.entries(stats.civs).sort((a, b) => b[1].jugadas - a[1].jugadas);
   const maxJugadas = civsOrdenadas.length ? civsOrdenadas[0][1].jugadas : 1;
 
-  const historial = historialDeJugador(nombre, PARTIDAS, EQUIVALENCIAS).slice(0, 10);
-
   cont.innerHTML = `
     <div class="profile-header">
       <div class="avatar" style="${codigoPais ? 'overflow:hidden; padding:0;' : ''}">${contenidoAvatar}</div>
@@ -142,19 +140,6 @@ function pintarPerfil(nombre) {
           </div>
         `;
       }).join("")}
-    </div>
-
-    <div class="section-head"><h2>Partidas recientes</h2></div>
-    <div class="panel">
-      ${historial.length === 0 ? `<div class="empty-state">Sin partidas registradas.</div>` : historial.map(({ partida, registro }) => `
-        <div class="match-item">
-          <span>
-            <span class="match-badge ${registro.resultado === 'victoria' ? 'win' : 'loss'}"></span>
-            ${registro.civ || "—"} ${registro.equipo ? `· ${registro.equipo}` : ""}
-          </span>
-          <span class="match-meta">${etiquetaPartida(partida)} · ${formatearDuracion(partida.duracionSeg)}</span>
-        </div>
-      `).join("")}
     </div>
   `;
   document.getElementById("btn-descargar-perfil").style.display = "inline-block";
