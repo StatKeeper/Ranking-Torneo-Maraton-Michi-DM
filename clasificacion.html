@@ -203,7 +203,7 @@ function renderizarCuadroHonor() {
           ${delMes.map(h => `
             <tr>
               <td style="font-weight:600; color:var(--text);">${h.jornada}</td>
-              <td class="ganador">👑 ${h.jugador}</td>
+              <td class="ganador">👑 ${h.jugador}${h.civ ? ` <span style="font-weight:400; color:var(--text-dim); font-size:0.8rem;">(${h.civ})</span>` : ''}</td>
             </tr>
           `).join("")}
         </tbody>
