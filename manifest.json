@@ -1,0 +1,21 @@
+{
+  "short_name": "Maratón Michi",
+  "name": "Maratón Michi DM — AoE II",
+  "icons": [
+    {
+      "src": "imagenes/icono-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "imagenes/icono-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#14161c",
+  "theme_color": "#14161c",
+  "display": "standalone",
+  "orientation": "portrait"
+}
