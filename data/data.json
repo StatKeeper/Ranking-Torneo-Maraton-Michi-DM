@@ -488,6 +488,187 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-09-Fecha03-P1",
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 03",
+      "numeroPartida": 1,
+      "duracionSeg": 3994,
+      "jugadores": [
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3624,
+          "edificiosArrasados": 45,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "Mayas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1771,
+          "edificiosArrasados": 37,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Bengalíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4079,
+          "edificiosArrasados": 58,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2054,
+          "edificiosArrasados": 120,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3183,
+          "edificiosArrasados": 66,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Mayas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 468,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Bengalíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6972,
+          "edificiosArrasados": 113,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1581,
+          "edificiosArrasados": 44,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-09-Fecha03-P2",
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 03",
+      "numeroPartida": 2,
+      "duracionSeg": 14038,
+      "jugadores": [
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Shu",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 14296,
+          "edificiosArrasados": 157,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Polacos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10302,
+          "edificiosArrasados": 139,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Bizantinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 11411,
+          "edificiosArrasados": 135,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "Coreanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 15460,
+          "edificiosArrasados": 93,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Shu",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10818,
+          "edificiosArrasados": 223,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11420,
+          "edificiosArrasados": 162,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Bizantinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7923,
+          "edificiosArrasados": 133,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Coreanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7928,
+          "edificiosArrasados": 121,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -1000,6 +1181,13 @@
       "jornada": "Fecha 02",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha02.png",
       "imagenGalardon": "imagenes/galardon_2026-09_fecha02.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 03",
+      "imagenEvaluacion": "imagenes/candidatos_2026-08_fecha03.png",
+      "imagenGalardon": "imagenes/galardon_2026-08_fecha03.png"
     }
   ],
   "civEquivalencias": [],
@@ -1024,6 +1212,13 @@
       "jornada": "Fecha 02",
       "jugador": "Erik Tha Barbaro",
       "civ": "Vikingos"
+    },
+    {
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 03",
+      "jugador": "P@K()",
+      "civ": "Coreanos"
     }
   ]
 }
