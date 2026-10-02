@@ -67,54 +67,41 @@ function sugerirNombresImagenes(anio, mes, jornada) {
   };
 }
 
-function listaDeNombresOficiales(partidas, equivalencias) {
-  const nombres = new Set();
-  partidas.forEach(p => {
-    (p.jugadores || []).forEach(j => {
-      nombres.add(resolverNombreOficial(j.nombre, equivalencias));
-    });
-  });
-  return [...nombres].sort();
-}
-
 function calcularEstadisticasJugadores(partidas, equivalencias) {
   const stats = {};
   const conteoPorJornada = {};
-
   const ordenadas = [...partidas].sort((a, b) => claveOrden(a) - claveOrden(b));
 
   ordenadas.forEach(p => {
     const claveJor = claveJornada(p.anio, p.mes, p.jornada);
     if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
+    const numJor = numeroDeJornada(p.jornada);
 
     (p.jugadores || []).forEach(j => {
       const nombre = resolverNombreOficial(j.nombre, equivalencias);
       if (!stats[nombre]) {
         stats[nombre] = {
           nombre, puntos: 0, partidas: 0, victorias: 0, derrotas: 0,
-          segundosTotales: 0, unidadesAsesinadas: 0, edificiosArrasados: 0,
-          civs: {}
+          segundosTotales: 0, unidadesAsesinadas: 0, edificiosArrasados: 0, civs: {}
         };
       }
 
       conteoPorJornada[claveJor][nombre] = (conteoPorJornada[claveJor][nombre] || 0) + 1;
-      const numPartidaEnJornada = conteoPorJornada[claveJor][nombre];
-
-      if (numPartidaEnJornada > 3) {
-        return;
-      }
+      if (conteoPorJornada[claveJor][nombre] > 3) return;
 
       const st = stats[nombre];
       st.partidas++;
+      let ptsPartida = 0;
+
       if (j.resultado === "victoria") {
         st.victorias++;
-        st.puntos += 3;
+        ptsPartida += 3;
       } else {
         st.derrotas++;
       }
 
-      (j.bonos || []).forEach(() => { st.puntos += 1; });
-
+      (j.bonos || []).forEach(() => { ptsPartida += 1; });
+      st.puntos += ptsPartida;
       st.segundosTotales += p.duracionSeg || 0;
       st.unidadesAsesinadas += j.unidadesAsesinadas || 0;
       st.edificiosArrasados += j.edificiosArrasados || 0;
@@ -149,14 +136,28 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
   const ultimasVictorias = {};
   const mapFilas = {};
   const conteoPorJornada = {};
+  let rankingPrevioPos = {};
 
-  acumuladas.forEach((p) => {
+  acumuladas.forEach((p, idxPartida) => {
     const claveJor = claveJornada(p.anio, p.mes, p.jornada);
     if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
+    const numJor = numeroDeJornada(p.jornada);
 
-    (p.jugadores || []).forEach(j => {
+    // Calcular ranking previo antes de procesar esta partida exacta
+    const listaActual = Object.values(mapFilas).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
+    const posAnteriorMap = {};
+    listaActual.forEach((item, index) => {
+      posAnteriorMap[item.nombre] = index + 1; // 1-indexed
+    });
+
+    // Jugadores válidos en esta partida
+    const jugadoresPartida = (p.jugadores || []).map(j => {
       const nombre = resolverNombreOficial(j.nombre, equivalencias);
+      conteoPorJornada[claveJor][nombre] = (conteoPorJornada[claveJor][nombre] || 0) + 1;
+      return { j, nombre, numPartidaEnJornada: conteoPorJornada[claveJor][nombre] };
+    });
 
+    jugadoresPartida.forEach(({ j, nombre, numPartidaEnJornada }) => {
       if (!mapFilas[nombre]) {
         mapFilas[nombre] = {
           nombre, puntos: 0, partidas: 0, victorias: 0,
@@ -166,10 +167,10 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
         };
       }
 
-      conteoPorJornada[claveJor][nombre] = (conteoPorJornada[claveJor][nombre] || 0) + 1;
-      const numPartidaEnJornada = conteoPorJornada[claveJor][nombre];
-
       const f = mapFilas[nombre];
+
+      // Registrar posición previa antes de sumar puntos de esta partida (si es nuevo o no estaba, posición 11)
+      const posPrevia = posAnteriorMap[nombre] || 11;
 
       if (numPartidaEnJornada > 3) {
         f.ultimoSuceso = "Partida inválida (+3 en la jornada)";
@@ -178,42 +179,85 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
 
       f.partidas++;
       let gano = j.resultado === "victoria";
+      let puntosEstaPartida = 0;
+      const listaSucesos = [gano ? "Victoria" : "Derrota"];
 
       if (gano) {
-        f.puntos += 3;
         f.victorias++;
         f.vd = "1";
+        puntosEstaPartida += 3;
       } else {
         f.vd = "0";
       }
 
-      const listaSucesos = [gano ? "Victoria" : "Derrota"];
-
+      // Bonos E, R, M, O, S (1 punto cada uno)
       (j.bonos || []).forEach(b => {
         if (f.bonos[b] !== undefined) {
           f.bonos[b]++;
           f.tb++;
-          f.puntos++;
+          puntosEstaPartida += 1;
           listaSucesos.push(b);
         }
       });
 
+      // Bono Rch (Racha) - Activo desde la primera fecha
       if (gano && ultimasVictorias[nombre]) {
         f.bonos.Rch++;
         f.tb++;
-        f.puntos++;
+        puntosEstaPartida += 1;
         listaSucesos.push("Rch");
       }
 
-      if (gano && p.duracionSeg && p.duracionSeg < 3600) {
-        f.bonos.RLP++;
-        f.tb++;
-        f.puntos++;
-        listaSucesos.push("RLP");
+      // Bono MG (Matagigantes) - Activo desde la Fecha 06
+      if (gano && numJor >= 6) {
+        // Verificar si venció a alguien del Top 5 estando fuera del Top 5 (posPrevia >= 6)
+        if (posPrevia >= 6) {
+          // Buscar rivales del equipo contrario que estuvieran en el Top 5
+          const rivalesEnTop5 = jugadoresPartida.filter(o => 
+            o.nombre !== nombre && 
+            o.j.equipo !== j.equipo && 
+            (posAnteriorMap[o.nombre] || 11) <= 5
+          );
+
+          if (rivalesEnTop5.length > 0) {
+            let ptsMg = 1;
+            let etiquetaMg = "MG1";
+            if (posPrevia >= 6 && posPrevia <= 10) { ptsMg = 1; etiquetaMg = "MG1"; }
+            else if (posPrevia >= 11 && posPrevia <= 15) { ptsMg = 2; etiquetaMg = "MG2"; }
+            else { ptsMg = 3; etiquetaMg = "MG3"; }
+
+            f.bonos.MG++;
+            f.tb++;
+            puntosEstaPartida += ptsMg;
+            listaSucesos.push(etiquetaMg);
+          }
+        }
       }
 
+      // Bono RLP (Relámpago) - Activo desde la primera fecha (< 60 min / 3600 seg)
+      if (gano && p.duracionSeg && p.duracionSeg < 3600) {
+        let ptsRlp = 1;
+        let etiquetaRlp = "RLP1";
+        if (posPrevia <= 10) { ptsRlp = 1; etiquetaRlp = "RLP1"; }
+        else if (posPrevia >= 11 && posPrevia <= 15) { ptsRlp = 2; etiquetaRlp = "RLP2"; }
+        else { ptsRlp = 3; etiquetaRlp = "RLP3"; }
+
+        f.bonos.RLP++;
+        f.tb++;
+        puntosEstaPartida += ptsRlp;
+        listaSucesos.push(etiquetaRlp);
+      }
+
+      f.puntos += puntosEstaPartida;
       ultimasVictorias[nombre] = gano;
-      f.ultimoSuceso = listaSucesos.join(" + ");
+
+      // Último suceso con total de puntos ganados en esta partida
+      f.ultimoSuceso = `${listaSucesos.join(" + ")} (+${puntosEstaPartida} pts)`;
+
+      // Calcular variación comparando la posición previa vs la posición actual provisional
+      const rankingProvisional = Object.values(mapFilas).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
+      const posActual = rankingProvisional.findIndex(item => item.nombre === nombre) + 1;
+      f.variacion = posPrevia - posActual;
     });
   });
 
@@ -221,11 +265,6 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
   const ultimaPartida = acumuladas[acumuladas.length - 1];
 
   return { filas, jornadaMostrada: ultimaPartida ? ultimaPartida.jornada : "", ultimaPartida };
-}
-
-function calcularVarPorPartida(partidas, equivalencias) {
-  const vars = {};
-  return vars;
 }
 
 function compararJugadores(nombres, partidas, equivalencias) {
@@ -268,14 +307,12 @@ function calcularCompanerosYRivales(nombreJugador, partidas, equivalencias) {
   const aliados = {};
   const adversarios = {};
   const conteoPorJornada = {};
-
   const ordenadas = [...partidas].sort((a, b) => claveOrden(a) - claveOrden(b));
 
   ordenadas.forEach(p => {
     const claveJor = claveJornada(p.anio, p.mes, p.jornada);
     if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
 
-    // Mapeamos jugadores válidos de esta partida
     const jugadoresValidos = [];
     (p.jugadores || []).forEach(j => {
       const nombreOf = resolverNombreOficial(j.nombre, equivalencias);
@@ -286,13 +323,12 @@ function calcularCompanerosYRivales(nombreJugador, partidas, equivalencias) {
     });
 
     const objetivo = jugadoresValidos.find(j => j.nombreOf === nombreJugador);
-    if (!objetivo) return; // Si el jugador no jugó o su partida fue inválida, se omite
+    if (!objetivo) return;
 
     const ganoElObjetivo = objetivo.resultado === "victoria";
 
     jugadoresValidos.forEach(j => {
       if (j.nombreOf === nombreJugador) return;
-
       const esAliado = j.equipo && objetivo.equipo && j.equipo === objetivo.equipo;
 
       if (esAliado) {
