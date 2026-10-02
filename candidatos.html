@@ -6,6 +6,22 @@
 <title>Candidatos — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
+
+<!-- Configuración PWA e Ícono de Inicio -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14161c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maratón Michi">
+<link rel="apple-touch-icon" href="imagenes/icono-192.png">
+
+<!-- Registro del Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+
 <style>
   .jornada-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 18px; }
   .jornada-card h3 { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
