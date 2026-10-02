@@ -11,7 +11,7 @@ async function cargarDatos() {
     return await resp.json();
   } catch (e) {
     console.error(e);
-    return { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [] };
+    return { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [], cuadroHonor: [] };
   }
 }
 
@@ -252,4 +252,8 @@ function descargarElementoComoImagen(elemento, nombreArchivo = "captura.png", co
     enlace.href = canvas.toDataURL("image/png");
     enlace.click();
   });
+}
+
+function claveHonor(anio, mes, jornada) {
+  return `${anio}-${String(mes).padStart(2, "0")}-${(jornada || "").replace(/\s+/g, "").toLowerCase()}`;
 }
