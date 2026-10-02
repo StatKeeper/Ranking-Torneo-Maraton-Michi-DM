@@ -264,6 +264,64 @@ function calcularSinergia(nombres, partidas, equivalencias) {
   return { partidasJuntos, victorias, derrotas, efectividad };
 }
 
+function calcularCompanerosYRivales(nombreJugador, partidas, equivalencias) {
+  const aliados = {};
+  const adversarios = {};
+  const conteoPorJornada = {};
+
+  const ordenadas = [...partidas].sort((a, b) => claveOrden(a) - claveOrden(b));
+
+  ordenadas.forEach(p => {
+    const claveJor = claveJornada(p.anio, p.mes, p.jornada);
+    if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
+
+    // Mapeamos jugadores válidos de esta partida
+    const jugadoresValidos = [];
+    (p.jugadores || []).forEach(j => {
+      const nombreOf = resolverNombreOficial(j.nombre, equivalencias);
+      conteoPorJornada[claveJor][nombreOf] = (conteoPorJornada[claveJor][nombreOf] || 0) + 1;
+      if (conteoPorJornada[claveJor][nombreOf] <= 3) {
+        jugadoresValidos.push({ ...j, nombreOf });
+      }
+    });
+
+    const objetivo = jugadoresValidos.find(j => j.nombreOf === nombreJugador);
+    if (!objetivo) return; // Si el jugador no jugó o su partida fue inválida, se omite
+
+    const ganoElObjetivo = objetivo.resultado === "victoria";
+
+    jugadoresValidos.forEach(j => {
+      if (j.nombreOf === nombreJugador) return;
+
+      const esAliado = j.equipo && objetivo.equipo && j.equipo === objetivo.equipo;
+
+      if (esAliado) {
+        if (!aliados[j.nombreOf]) aliados[j.nombreOf] = { partidas: 0, victorias: 0 };
+        aliados[j.nombreOf].partidas++;
+        if (ganoElObjetivo) aliados[j.nombreOf].victorias++;
+      } else {
+        if (!adversarios[j.nombreOf]) adversarios[j.nombreOf] = { partidas: 0, victorias: 0 };
+        adversarios[j.nombreOf].partidas++;
+        if (ganoElObjetivo) adversarios[j.nombreOf].victorias++;
+      }
+    });
+  });
+
+  const listaAliados = Object.entries(aliados).map(([nombre, st]) => ({
+    nombre,
+    partidas: st.partidas,
+    wr: st.partidas > 0 ? Math.round((st.victorias / st.partidas) * 100) : 0
+  })).sort((a, b) => b.partidas - a.partidas || b.wr - a.wr);
+
+  const listaAdversarios = Object.entries(adversarios).map(([nombre, st]) => ({
+    nombre,
+    partidas: st.partidas,
+    wr: st.partidas > 0 ? Math.round((st.victorias / st.partidas) * 100) : 0
+  })).sort((a, b) => b.partidas - a.partidas || b.wr - a.wr);
+
+  return { aliados: listaAliados, adversarios: listaAdversarios };
+}
+
 function descargarElementoComoImagen(elemento, nombreArchivo = "captura.png", colorFondo = "#14161c") {
   if (typeof html2canvas === "undefined") {
     alert("La librería de descarga de imagen no se pudo cargar.");
