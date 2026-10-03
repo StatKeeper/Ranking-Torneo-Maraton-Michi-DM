@@ -1487,96 +1487,6 @@
       ]
     },
     {
-      "id": "2026-10-Fecha01-P1",
-      "anio": 2026,
-      "mes": "10",
-      "jornada": "Fecha 01",
-      "numeroPartida": 1,
-      "duracionSeg": 5040,
-      "jugadores": [
-        {
-          "nombre": "[cLm] KFICHO",
-          "resultado": "victoria",
-          "civ": "Chinos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 3920,
-          "edificiosArrasados": 217,
-          "bonos": []
-        },
-        {
-          "nombre": "FoNcHiO",
-          "resultado": "victoria",
-          "civ": "Birmanos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 3211,
-          "edificiosArrasados": 193,
-          "bonos": []
-        },
-        {
-          "nombre": "P@KO",
-          "resultado": "derrota",
-          "civ": "Mayas",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 7689,
-          "edificiosArrasados": 222,
-          "bonos": [
-            "R",
-            "M"
-          ]
-        },
-        {
-          "nombre": "Matote896",
-          "resultado": "victoria",
-          "civ": "Polacos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 2282,
-          "edificiosArrasados": 252,
-          "bonos": []
-        },
-        {
-          "nombre": "Papita Huayro",
-          "resultado": "derrota",
-          "civ": "Aztecas",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 5160,
-          "edificiosArrasados": 208,
-          "bonos": []
-        },
-        {
-          "nombre": "Felipe!",
-          "resultado": "derrota",
-          "civ": "Chinos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 4228,
-          "edificiosArrasados": 235,
-          "bonos": []
-        },
-        {
-          "nombre": "Saul Goodman",
-          "resultado": "derrota",
-          "civ": "Vikingos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 5495,
-          "edificiosArrasados": 239,
-          "bonos": [
-            "E"
-          ]
-        },
-        {
-          "nombre": "GJ Euphory",
-          "resultado": "derrota",
-          "civ": "Vikingos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 2933,
-          "edificiosArrasados": 157,
-          "bonos": [
-            "M",
-            "O"
-          ]
-        }
-      ]
-    },
-    {
       "id": "2026-10-Fecha01-P2",
       "anio": 2026,
       "mes": "10",
@@ -1644,6 +1554,97 @@
           "bonos": [
             "E",
             "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha01-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 01",
+      "numeroPartida": 1,
+      "duracionSeg": 5040,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3920,
+          "edificiosArrasados": 217,
+          "bonos": []
+        },
+        {
+          "nombre": "FoNcHiO",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3211,
+          "edificiosArrasados": 193,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7689,
+          "edificiosArrasados": 222,
+          "bonos": [
+            "R",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Matote896",
+          "resultado": "derrota",
+          "civ": "Polacos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2282,
+          "edificiosArrasados": 252,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5160,
+          "edificiosArrasados": 208,
+          "bonos": []
+        },
+        {
+          "nombre": "Felipe!",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4228,
+          "edificiosArrasados": 235,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5495,
+          "edificiosArrasados": 239,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2933,
+          "edificiosArrasados": 157,
+          "bonos": [
+            "M",
+            "O"
           ]
         }
       ]
