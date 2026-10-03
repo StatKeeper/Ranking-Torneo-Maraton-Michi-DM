@@ -1395,6 +1395,96 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-09-Fecha07-P1",
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 07",
+      "numeroPartida": 1,
+      "duracionSeg": 9549,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Lituanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 13036,
+          "edificiosArrasados": 232,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "victoria",
+          "civ": "Magiares",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6774,
+          "edificiosArrasados": 86,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Bohemios",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7260,
+          "edificiosArrasados": 204,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6183,
+          "edificiosArrasados": 44,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9420,
+          "edificiosArrasados": 79,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Magiares",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7016,
+          "edificiosArrasados": 62,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "Lituanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10133,
+          "edificiosArrasados": 148,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Bohemios",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4634,
+          "edificiosArrasados": 29,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -1928,6 +2018,13 @@
       "jornada": "Fecha 06",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha06.png",
       "imagenGalardon": "imagenes/galardon_2026-09_fecha06.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 07",
+      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha07.png",
+      "imagenGalardon": "imagenes/galardon_2026-09_fecha07.png"
     }
   ],
   "civEquivalencias": [],
