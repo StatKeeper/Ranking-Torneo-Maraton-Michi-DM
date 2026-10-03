@@ -79,19 +79,22 @@
     <button class="btn secondary" onclick="descargarImagen()">📷 Descargar Imagen</button>
   </div>
 
-  <div class="filters">
-    <select id="filtro-anio"></select>
-    <select id="filtro-mes"></select>
-    <select id="filtro-jornada"></select>
-    <span class="meta" id="resumen-periodo"></span>
-  </div>
+  <!-- Contenedor general de captura que incluye el título, los filtros de mes/año/jornada y la tabla completa -->
+  <div id="captura-clasificacion" style="background: var(--panel); padding: 16px; border-radius: var(--radius); border: 1px solid var(--line);">
+    <div style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.1rem; font-weight:600; margin-bottom:12px;">TABLA DE POSICIONES</div>
+    
+    <div class="filters" style="margin-bottom: 14px;">
+      <select id="filtro-anio"></select>
+      <select id="filtro-mes"></select>
+      <select id="filtro-jornada"></select>
+      <span class="meta" id="resumen-periodo"></span>
+    </div>
 
-  <!-- Contenedor general de captura que ahora incluye la cabecera, indicador y tabla completa -->
-  <div id="captura-clasificacion" style="background: var(--panel); padding: 14px; border-radius: var(--radius); border: 1px solid var(--line);">
-    <div style="margin-bottom: 12px;">
+    <div style="margin-bottom: 12px; border-top: 1px solid var(--line); padding-top: 12px;">
       <h2 id="titulo-jornada" style="margin:0; font-size: 1.1rem; color: var(--gold); font-family: 'Cinzel', serif;">Tabla de posiciones</h2>
       <div id="indicador-partidas-mes" style="font-size: 0.78rem; color: var(--text-dim); margin-top: 4px; font-weight: 600;"></div>
     </div>
+
     <div id="contenedor-standings">
       <div class="empty-state">Cargando…</div>
     </div>
