@@ -1485,6 +1485,166 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha01-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 01",
+      "numeroPartida": 1,
+      "duracionSeg": 5040,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3920,
+          "edificiosArrasados": 217,
+          "bonos": []
+        },
+        {
+          "nombre": "FoNcHiO",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3211,
+          "edificiosArrasados": 193,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7689,
+          "edificiosArrasados": 222,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Matote896",
+          "resultado": "victoria",
+          "civ": "Polacos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2282,
+          "edificiosArrasados": 252,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5160,
+          "edificiosArrasados": 208,
+          "bonos": []
+        },
+        {
+          "nombre": "Felipe!",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4228,
+          "edificiosArrasados": 235,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5495,
+          "edificiosArrasados": 239,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2933,
+          "edificiosArrasados": 157,
+          "bonos": [
+            "E",
+            "M",
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha01-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 01",
+      "numeroPartida": 2,
+      "duracionSeg": 4365,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Mayas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3278,
+          "edificiosArrasados": 223,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4739,
+          "edificiosArrasados": 187,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Tártaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2159,
+          "edificiosArrasados": 152,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3900,
+          "edificiosArrasados": 201,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "Mayas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3556,
+          "edificiosArrasados": 283,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6538,
+          "edificiosArrasados": 220,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -2025,6 +2185,13 @@
       "jornada": "Fecha 07",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha07.png",
       "imagenGalardon": "imagenes/galardon_2026-09_fecha07.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 01",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha01.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha01.png"
     }
   ],
   "civEquivalencias": [],
@@ -2077,6 +2244,13 @@
       "jornada": "Fecha 06",
       "jugador": "BioTiNe",
       "civ": "Romanos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 01",
+      "jugador": "Saul Goodman",
+      "civ": "Birmanos"
     }
   ]
 }
