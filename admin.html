@@ -151,7 +151,12 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
     </div>
     <button class="btn secondary" onclick="guardarImagenesFecha()">Guardar imágenes de esta Fecha</button>
 
-    <div id="lista-fechas-imagenes" style="margin-top:16px;"></div>
+    <!-- Filtros de visualización para Imágenes -->
+    <div style="display:flex; gap:8px; margin-top:16px; margin-bottom:8px;">
+      <select id="filtro-admin-img-anio" onchange="poblarAdminMesesImg(); renderizarFechasImagenes();"></select>
+      <select id="filtro-admin-img-mes" onchange="renderizarFechasImagenes();"></select>
+    </div>
+    <div id="lista-fechas-imagenes"></div>
   </div>
 
   <div class="panel">
@@ -171,6 +176,12 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
       <input type="text" id="input-honor-jugador" placeholder="Nombre del jugador" style="flex:2; min-width:160px;" list="lista-nombres-sugeridos">
       <input type="text" id="input-honor-civ" placeholder="Civilización (ej. Mayas)" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
       <button class="btn secondary" onclick="guardarHonor()">Guardar Honor</button>
+    </div>
+
+    <!-- Filtros de visualización para Cuadro de Honor -->
+    <div style="display:flex; gap:8px; margin-top:16px; margin-bottom:8px;">
+      <select id="filtro-admin-honor-anio" onchange="poblarAdminMesesHonor(); renderizarCuadroHonorAdmin();"></select>
+      <select id="filtro-admin-honor-mes" onchange="renderizarCuadroHonorAdmin();"></select>
     </div>
     <div id="lista-cuadro-honor"></div>
   </div>
@@ -245,6 +256,7 @@ async function cargarDesdeServidor() {
   }
   if (!Array.isArray(DATOS.jornadasImagenes)) DATOS.jornadasImagenes = [];
   if (!Array.isArray(DATOS.cuadroHonor)) DATOS.cuadroHonor = [];
+  
   actualizarContador();
   actualizarListasSugerencias();
   poblarFiltrosPartidas();
@@ -252,8 +264,9 @@ async function cargarDesdeServidor() {
   renderizarEquivalencias();
   renderizarCivEquivalencias();
   renderizarPaises();
-  renderizarFechasImagenes();
-  renderizarCuadroHonorAdmin();
+  
+  poblarAdminFiltrosImg();
+  poblarAdminFiltrosHonor();
 }
 
 function convertirDuracionASegundos(str) {
@@ -634,19 +647,41 @@ function actualizarSugerenciaImagenes() {
   }
 }
 
+function poblarAdminFiltrosImg() {
+  const anios = [...new Set((DATOS.jornadasImagenes || []).map(j => j.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-admin-img-anio");
+  if (anios.length === 0) {
+    anios.push(new Date().getFullYear());
+  }
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  poblarAdminMesesImg();
+}
+
+function poblarAdminMesesImg() {
+  const anio = document.getElementById("filtro-admin-img-anio").value;
+  const meses = [...new Set((DATOS.jornadasImagenes || []).filter(j => j.anio == anio).map(j => String(j.mes).padStart(2, "0")))].sort().reverse();
+  const selMes = document.getElementById("filtro-admin-img-mes");
+  if (meses.length === 0) {
+    selMes.innerHTML = `<option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option><option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option><option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>`;
+  } else {
+    selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  }
+  renderizarFechasImagenes();
+}
+
 function renderizarFechasImagenes() {
   const cont = document.getElementById("lista-fechas-imagenes");
-  const lista = DATOS.jornadasImagenes || [];
+  const anio = document.getElementById("filtro-admin-img-anio").value;
+  const mes = document.getElementById("filtro-admin-img-mes").value;
+
+  const lista = (DATOS.jornadasImagenes || []).filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes);
   if (lista.length === 0) {
-    cont.innerHTML = `<p class="hint">Todavía no hay imágenes guardadas para ninguna Fecha.</p>`;
+    cont.innerHTML = `<p class="hint">No hay imágenes guardadas para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
     return;
   }
-  const ordenadas = [...lista].sort((a, b) =>
-    claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
-    claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
-  );
+  const ordenadas = [...lista].sort((a, b) => numeroDeJornada(b.jornada) - numeroDeJornada(a.jornada));
   cont.innerHTML = `
-    <p class="hint">Fechas con imágenes guardadas:</p>
+    <p class="hint">Fechas con imágenes guardadas en ${NOMBRES_MES[mes]} ${anio}:</p>
     ${ordenadas.map(j => `
       <div class="match-item">
         <span>${j.anio} · ${NOMBRES_MES[j.mes]} ·${j.jornada}</span>
@@ -678,6 +713,7 @@ function guardarImagenesFecha() {
     DATOS.jornadasImagenes.push(nueva);
   }
 
+  poblarAdminFiltrosImg();
   renderizarFechasImagenes();
   alert("Imágenes guardadas para esta Fecha. No olvides descargar y subir el archivo.");
 }
@@ -687,17 +723,44 @@ function eliminarFechaImagenes(clave) {
   renderizarFechasImagenes();
 }
 
+function poblarAdminFiltrosHonor() {
+  const anios = [...new Set((DATOS.cuadroHonor || []).map(h => h.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-admin-honor-anio");
+  if (anios.length === 0) {
+    anios.push(new Date().getFullYear());
+  }
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  poblarAdminMesesHonor();
+}
+
+function poblarAdminMesesHonor() {
+  const anio = document.getElementById("filtro-admin-honor-anio").value;
+  const meses = [...new Set((DATOS.cuadroHonor || []).filter(h => h.anio == anio).map(h => String(h.mes).padStart(2, "0")))].sort().reverse();
+  const selMes = document.getElementById("filtro-admin-honor-mes");
+  if (meses.length === 0) {
+    selMes.innerHTML = `<option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option><option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option><option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>`;
+  } else {
+    selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  }
+  renderizarCuadroHonorAdmin();
+}
+
 function renderizarCuadroHonorAdmin() {
   const cont = document.getElementById("lista-cuadro-honor");
-  const lista = DATOS.cuadroHonor || [];
+  const anio = document.getElementById("filtro-admin-honor-anio").value;
+  const mes = document.getElementById("filtro-admin-honor-mes").value;
+
+  const lista = (DATOS.cuadroHonor || []).filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes);
   if (lista.length === 0) {
-    cont.innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor.</p>`;
+    cont.innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
     return;
   }
-  cont.innerHTML = lista.map((h, i) => `
+  const ordenadas = [...lista].sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
+  
+  cont.innerHTML = ordenadas.map(h => `
     <div class="match-item">
       <span>${h.anio} · ${NOMBRES_MES[h.mes]} · <strong>${h.jornada}</strong> → 👑 ${h.jugador}${h.civ ? ` (${h.civ})` : ''}</span>
-      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor(${i})">🗑</button>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonorPorClave(${h.anio}, '${h.mes}', '${h.jornada}')">🗑</button>
     </div>
   `).join("");
 }
@@ -728,11 +791,13 @@ function guardarHonor() {
   document.getElementById("input-honor-jornada").value = "";
   document.getElementById("input-honor-jugador").value = "";
   document.getElementById("input-honor-civ").value = "";
+  poblarAdminFiltrosHonor();
   renderizarCuadroHonorAdmin();
 }
 
-function eliminarHonor(i) {
-  DATOS.cuadroHonor.splice(i, 1);
+function eliminarHonorPorClave(anio, mes, jornada) {
+  const clave = claveHonor(anio, mes, jornada);
+  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => claveHonor(h.anio, h.mes, h.jornada) !== clave);
   renderizarCuadroHonorAdmin();
 }
 
