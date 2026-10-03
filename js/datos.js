@@ -11,7 +11,7 @@ async function cargarDatos() {
     return await resp.json();
   } catch (e) {
     console.error(e);
-    return { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [], cuadroHonor: [] };
+    return { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: [], jornadasImagenes: [], cuadroHonor: [] };
   }
 }
 
@@ -161,20 +161,27 @@ function calcularVarPorPartida(partidas, equivalencias) {
       return { j, nombre, numPartidaEnJornada: conteoPorJornada[claveJor][nombre] };
     });
 
-    // Validar si es la primera partida del mes actual en curso
     const esPrimeraPartidaMes = idxPartidaGlobal === 0 || !ordenadas.slice(0, idxPartidaGlobal].some(prev => `${prev.anio}-${String(prev.mes).padStart(2, "0")}` === claveMes);
+
+    let totalJugadoresPrevios = Object.keys(mapJugadores).length;
 
     jugadoresEnPartida.forEach(({ j, nombre, numPartidaEnJornada }) => {
       const esNuevoEnMes = !mapJugadores[nombre];
       if (esNuevoEnMes) {
-        mapJugadores[nombre] = { nombre, puntos: 0, partidas: 0, victorias: 0 };
+        totalJugadoresPrevios++;
+        mapJugadores[nombre] = { 
+          nombre, 
+          puntos: 0, 
+          partidas: 0, 
+          victorias: 0,
+          posicionReferenciaAnterior: totalJugadoresPrevios
+        };
       }
       const f = mapJugadores[nombre];
       
       let posPrevia;
       if (esNuevoEnMes) {
-        const totalActualPrevia = Object.keys(mapJugadores).length - 1;
-        posPrevia = totalActualPrevia > 0 ? totalActualPrevia + 1 : 1;
+        posPrevia = f.posicionReferenciaAnterior;
       } else {
         posPrevia = posPreviaMap[nombre] || 1;
       }
@@ -195,7 +202,6 @@ function calcularVarPorPartida(partidas, equivalencias) {
       const listaActual = Object.values(mapJugadores).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
       const posActual = listaActual.findIndex(item => item.nombre === nombre) + 1;
       
-      // Si es la primera partida del mes, la variación de todos es estrictamente 0
       const varCalculada = esPrimeraPartidaMes ? 0 : (posPrevia - posActual);
 
       varsPorPartida[p.id][nombre] = varCalculada;
@@ -244,22 +250,25 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
       return { j, nombre, numPartidaEnJornada: conteoPorJornada[claveJor][nombre] };
     });
 
+    let totalJugadoresPrevios = Object.keys(mapJugadores).length;
+
     jugadoresEnPartida.forEach(({ j, nombre, numPartidaEnJornada }) => {
       const esNuevoEnMes = !mapJugadores[nombre];
       if (esNuevoEnMes) {
+        totalJugadoresPrevios++;
         mapJugadores[nombre] = {
           nombre, puntos: 0, partidas: 0, victorias: 0,
           ultimoSuceso: "Sin participación", vd: "0",
           bonos: { E:0, R:0, M:0, O:0, S:0, Rch:0, MG:0, RLP:0 },
-          tb: 0, variacion: 0
+          tb: 0, variacion: 0,
+          posicionReferenciaAnterior: totalJugadoresPrevios
         };
       }
 
       const f = mapJugadores[nombre];
       let posPrevia;
       if (esNuevoEnMes) {
-        const totalActualPrevia = Object.keys(mapJugadores).length - 1;
-        posPrevia = totalActualPrevia > 0 ? totalActualPrevia + 1 : 1;
+        posPrevia = f.posicionReferenciaAnterior;
       } else {
         posPrevia = posPreviaMap[nombre] || 1;
       }
@@ -314,7 +323,7 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
 
     listaActual.forEach((item, index) => {
       const posActual = index + 1;
-      const posAnt = posPreviaMap[item.nombre] || posActual;
+      const posAnt = posPreviaMap[item.nombre] || item.posicionReferenciaAnterior || posActual;
       item.variacion = esPrimeraPartidaMes ? 0 : (posAnt - posActual);
     });
   });
