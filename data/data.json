@@ -1498,7 +1498,7 @@
           "nombre": "[cLm] KFICHO",
           "resultado": "victoria",
           "civ": "Chinos",
-          "equipo": "Equipo 2",
+          "equipo": "Equipo 1",
           "unidadesAsesinadas": 3920,
           "edificiosArrasados": 217,
           "bonos": []
@@ -1507,20 +1507,20 @@
           "nombre": "FoNcHiO",
           "resultado": "victoria",
           "civ": "Birmanos",
-          "equipo": "Equipo 2",
+          "equipo": "Equipo 1",
           "unidadesAsesinadas": 3211,
           "edificiosArrasados": 193,
           "bonos": []
         },
         {
           "nombre": "P@KO",
-          "resultado": "victoria",
-          "civ": "Aztecas",
-          "equipo": "Equipo 2",
+          "resultado": "derrota",
+          "civ": "Mayas",
+          "equipo": "Equipo 1",
           "unidadesAsesinadas": 7689,
           "edificiosArrasados": 222,
           "bonos": [
-            "E",
+            "R",
             "M"
           ]
         },
@@ -1528,7 +1528,7 @@
           "nombre": "Matote896",
           "resultado": "victoria",
           "civ": "Polacos",
-          "equipo": "Equipo 2",
+          "equipo": "Equipo 1",
           "unidadesAsesinadas": 2282,
           "edificiosArrasados": 252,
           "bonos": []
@@ -1537,7 +1537,7 @@
           "nombre": "Papita Huayro",
           "resultado": "derrota",
           "civ": "Aztecas",
-          "equipo": "Equipo 1",
+          "equipo": "Equipo 2",
           "unidadesAsesinadas": 5160,
           "edificiosArrasados": 208,
           "bonos": []
@@ -1546,7 +1546,7 @@
           "nombre": "Felipe!",
           "resultado": "derrota",
           "civ": "Chinos",
-          "equipo": "Equipo 1",
+          "equipo": "Equipo 2",
           "unidadesAsesinadas": 4228,
           "edificiosArrasados": 235,
           "bonos": []
@@ -1554,21 +1554,22 @@
         {
           "nombre": "Saul Goodman",
           "resultado": "derrota",
-          "civ": "Birmanos",
-          "equipo": "Equipo 1",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
           "unidadesAsesinadas": 5495,
           "edificiosArrasados": 239,
-          "bonos": []
+          "bonos": [
+            "E"
+          ]
         },
         {
           "nombre": "GJ Euphory",
           "resultado": "derrota",
-          "civ": "Polacos",
-          "equipo": "Equipo 1",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
           "unidadesAsesinadas": 2933,
           "edificiosArrasados": 157,
           "bonos": [
-            "E",
             "M",
             "O"
           ]
@@ -1585,30 +1586,30 @@
       "jugadores": [
         {
           "nombre": "[cLm] KFICHO",
-          "resultado": "victoria",
+          "resultado": "derrota",
           "civ": "Mayas",
-          "equipo": "Equipo 2",
+          "equipo": "Equipo 1",
           "unidadesAsesinadas": 3278,
           "edificiosArrasados": 223,
           "bonos": []
         },
         {
           "nombre": "GJ Euphory",
-          "resultado": "victoria",
+          "resultado": "derrota",
           "civ": "Vikingos",
-          "equipo": "Equipo 2",
+          "equipo": "Equipo 1",
           "unidadesAsesinadas": 4739,
           "edificiosArrasados": 187,
           "bonos": [
-            "E",
+            "R",
             "O"
           ]
         },
         {
           "nombre": "[cLm]diego.leal5",
-          "resultado": "victoria",
+          "resultado": "derrota",
           "civ": "Tártaros",
-          "equipo": "Equipo 2",
+          "equipo": "Equipo 1",
           "unidadesAsesinadas": 2159,
           "edificiosArrasados": 152,
           "bonos": [
@@ -1617,31 +1618,32 @@
         },
         {
           "nombre": "Saul Goodman",
-          "resultado": "derrota",
+          "resultado": "victoria",
           "civ": "Vikingos",
-          "equipo": "Equipo 1",
+          "equipo": "Equipo 2",
           "unidadesAsesinadas": 3900,
           "edificiosArrasados": 201,
           "bonos": []
         },
         {
           "nombre": "P@KO",
-          "resultado": "derrota",
+          "resultado": "victoria",
           "civ": "Mayas",
-          "equipo": "Equipo 1",
+          "equipo": "Equipo 2",
           "unidadesAsesinadas": 3556,
           "edificiosArrasados": 283,
           "bonos": []
         },
         {
           "nombre": "BioTiNe",
-          "resultado": "derrota",
+          "resultado": "victoria",
           "civ": "Tártaros",
-          "equipo": "Equipo 1",
+          "equipo": "Equipo 2",
           "unidadesAsesinadas": 6538,
           "edificiosArrasados": 220,
           "bonos": [
-            "R"
+            "E",
+            "S"
           ]
         }
       ]
