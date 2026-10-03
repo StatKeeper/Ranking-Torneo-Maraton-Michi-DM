@@ -126,7 +126,6 @@ function calcularEstadisticasJugadores(partidas, equivalencias) {
   return stats;
 }
 
-// Motor unificado y seguro para calcular variaciones y estados por partida (para Historial y Clasificación)
 function calcularVarPorPartida(partidas, equivalencias) {
   const varsPorPartida = {};
   const mapJugadores = {};
@@ -161,7 +160,7 @@ function calcularVarPorPartida(partidas, equivalencias) {
       return { j, nombre, numPartidaEnJornada: conteoPorJornada[claveJor][nombre] };
     });
 
-    const esPrimeraPartidaMes = idxPartidaGlobal === 0 || !ordenadas.slice(0, idxPartidaGlobal].some(prev => `${prev.anio}-${String(prev.mes).padStart(2, "0")}` === claveMes);
+    const esPrimeraPartidaMes = idxPartidaGlobal === 0 || !ordenadas.slice(0, idxPartidaGlobal).some(prev => `${prev.anio}-${String(prev.mes).padStart(2, "0")}` === claveMes);
 
     let totalJugadoresPrevios = Object.keys(mapJugadores).length;
 
