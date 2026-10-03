@@ -1575,6 +1575,78 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha01-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 01",
+      "numeroPartida": 2,
+      "duracionSeg": 4365,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Mayas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3278,
+          "edificiosArrasados": 223,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4739,
+          "edificiosArrasados": 187,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2159,
+          "edificiosArrasados": 152,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3900,
+          "edificiosArrasados": 201,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "Mayas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3556,
+          "edificiosArrasados": 283,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Tártaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6538,
+          "edificiosArrasados": 220,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
