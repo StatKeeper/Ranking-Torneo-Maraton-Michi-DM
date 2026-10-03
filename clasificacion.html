@@ -76,7 +76,10 @@
 
 <main>
   <div class="toolbar-clasif">
-    <h2 id="titulo-jornada">Tabla de posiciones</h2>
+    <div>
+      <h2 id="titulo-jornada" style="margin:0; font-size: 1.2rem;">Tabla de posiciones</h2>
+      <div id="indicador-partidas-mes" style="font-size: 0.78rem; color: var(--gold); margin-top: 3px; font-weight: 600;"></div>
+    </div>
     <button class="btn secondary" onclick="descargarImagen()">📷 Descargar Imagen</button>
   </div>
 
@@ -87,7 +90,7 @@
     <span class="meta" id="resumen-periodo"></span>
   </div>
 
-  <div id="captura-clasificacion">
+  <div id="captura-clasificacion" style="background: var(--background); padding: 5px;">
     <div id="contenedor-standings">
       <div class="empty-state">Cargando…</div>
     </div>
@@ -209,17 +212,12 @@ function renderizarCuadroHonor() {
     return;
   }
 
-  // Contabilizar frecuencias para los rankings con manejo de empates
   const conteoJugadores = {};
   const conteoCivs = {};
 
   delMes.forEach(h => {
-    if (h.jugador) {
-      conteoJugadores[h.jugador] = (conteoJugadores[h.jugador] || 0) + 1;
-    }
-    if (h.civ) {
-      conteoCivs[h.civ] = (conteoCivs[h.civ] || 0) + 1;
-    }
+    if (h.jugador) conteoJugadores[h.jugador] = (conteoJugadores[h.jugador] || 0) + 1;
+    if (h.civ) conteoCivs[h.civ] = (conteoCivs[h.civ] || 0) + 1;
   });
 
   function generarRankingConEmpates(conteoObj) {
@@ -336,15 +334,24 @@ function renderizarCuadroHonor() {
 function renderizar() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
-  const jornada = document.getElementById("filtro-jornada").value;
+  const jornadaFiltro = document.getElementById("filtro-jornada").value;
 
   if (!anio || !mes) {
     document.getElementById("contenedor-standings").innerHTML = `<div class="empty-state">No hay partidas registradas todavía.</div>`;
+    document.getElementById("indicador-partidas-mes").textContent = "";
     renderizarCuadroHonor();
     return;
   }
 
-  const { filas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornada || null);
+  // Calcular total de partidas jugadas en todo el mes seleccionado
+  const partidasDelMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+  const totalPartidasMes = partidasDelMes.length;
+  document.getElementById("indicador-partidas-mes").textContent = `📊 Partidas jugadas en el mes: ${totalPartidasMes}`;
+
+  const { filas: filasCompletas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornadaFiltro || null);
+
+  // Limitar estrictamente a un máximo de 20 jugadores
+  const filas = filasCompletas.slice(0, 20);
 
   document.getElementById("titulo-jornada").textContent = ultimaPartida ? etiquetaPartida(ultimaPartida) : "Tabla de posiciones";
   document.getElementById("resumen-periodo").textContent = "";
@@ -415,7 +422,13 @@ function renderizar() {
 
 function descargarImagen() {
   const el = document.getElementById("captura-clasificacion");
-  descargarElementoComoImagen(el, "clasificacion.png", "#14161c");
+  // Forzar ancho temporal de escritorio para que en celulares la captura salga completa y no cortada
+  const anchoOriginal = el.style.width;
+  el.style.width = "950px";
+  
+  descargarElementoComoImagen(el, "clasificacion.png", "#14161c").finally(() => {
+    el.style.width = anchoOriginal;
+  });
 }
 
 function descargarImagenHonor() {
