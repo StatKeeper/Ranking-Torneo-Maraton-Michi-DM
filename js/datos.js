@@ -136,7 +136,7 @@ function calcularVarPorPartida(partidas, equivalencias) {
 
   const ordenadas = [...partidas].sort((a, b) => claveOrden(a) - claveOrden(b));
 
-  ordenadas.forEach((p) => {
+  ordenadas.forEach((p, idxPartidaGlobal) => {
     const claveMes = `${p.anio}-${String(p.mes).padStart(2, "0")}`;
     if (claveMes !== mesActualId) {
       mesActualId = claveMes;
@@ -161,6 +161,9 @@ function calcularVarPorPartida(partidas, equivalencias) {
       return { j, nombre, numPartidaEnJornada: conteoPorJornada[claveJor][nombre] };
     });
 
+    // Validar si es la primera partida del mes actual en curso
+    const esPrimeraPartidaMes = idxPartidaGlobal === 0 || !ordenadas.slice(0, idxPartidaGlobal].some(prev => `${prev.anio}-${String(prev.mes).padStart(2, "0")}` === claveMes);
+
     jugadoresEnPartida.forEach(({ j, nombre, numPartidaEnJornada }) => {
       const esNuevoEnMes = !mapJugadores[nombre];
       if (esNuevoEnMes) {
@@ -173,7 +176,7 @@ function calcularVarPorPartida(partidas, equivalencias) {
         const totalActualPrevia = Object.keys(mapJugadores).length - 1;
         posPrevia = totalActualPrevia > 0 ? totalActualPrevia + 1 : 1;
       } else {
-        posPrevia = posPreviaMap[nombre] || posPreviaMap[Object.keys(mapJugadores)[0]] || 1;
+        posPrevia = posPreviaMap[nombre] || 1;
       }
 
       if (numPartidaEnJornada <= 3) {
@@ -192,8 +195,8 @@ function calcularVarPorPartida(partidas, equivalencias) {
       const listaActual = Object.values(mapJugadores).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
       const posActual = listaActual.findIndex(item => item.nombre === nombre) + 1;
       
-      const esPrimeraPartidaMes = Object.values(mapJugadores).every(item => item.partidas <= 1 && item.puntos <= 3);
-      const varCalculada = (esNuevoEnMes && esPrimeraPartidaMes) ? 0 : (posPrevia - posActual);
+      // Si es la primera partida del mes, la variación de todos es estrictamente 0
+      const varCalculada = esPrimeraPartidaMes ? 0 : (posPrevia - posActual);
 
       varsPorPartida[p.id][nombre] = varCalculada;
     });
@@ -222,7 +225,7 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
   const ultimasVictorias = {};
   const conteoPorJornada = {};
 
-  acumuladas.forEach((p) => {
+  acumuladas.forEach((p, idxAcumulada) => {
     const claveJor = claveJornada(p.anio, p.mes, p.jornada);
     if (!conteoPorJornada[claveJor]) conteoPorJornada[claveJor] = {};
     const numJor = numeroDeJornada(p.jornada);
@@ -258,7 +261,7 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
         const totalActualPrevia = Object.keys(mapJugadores).length - 1;
         posPrevia = totalActualPrevia > 0 ? totalActualPrevia + 1 : 1;
       } else {
-        posPrevia = posPreviaMap[nombre] || posPreviaMap[Object.keys(mapJugadores)[0]] || 1;
+        posPrevia = posPreviaMap[nombre] || 1;
       }
 
       if (numPartidaEnJornada > 3) {
@@ -285,7 +288,7 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
       }
 
       if (gano && numJor >= 6 && posPrevia >= 6) {
-        const rivalesEnTop5 = jugadoresEnPartida.filter(o => 
+        let rivalesEnTop5 = jugadoresEnPartida.filter(o => 
           o.nombre !== nombre && o.j.equipo !== j.equipo && (posPreviaMap[o.nombre] || 11) <= 5
         );
         if (rivalesEnTop5.length > 0) {
@@ -307,12 +310,12 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
     });
 
     const listaActual = Object.values(mapJugadores).sort((a, b) => b.puntos - a.puntos || b.victorias - a.victorias);
-    const esPrimeraPartidaMes = acumuladas[0].id === p.id;
+    const esPrimeraPartidaMes = idxAcumulada === 0;
 
     listaActual.forEach((item, index) => {
       const posActual = index + 1;
       const posAnt = posPreviaMap[item.nombre] || posActual;
-      item.variacion = (esPrimeraPartidaMes) ? 0 : (posAnt - posActual);
+      item.variacion = esPrimeraPartidaMes ? 0 : (posAnt - posActual);
     });
   });
 
