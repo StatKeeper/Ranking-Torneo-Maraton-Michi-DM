@@ -2267,6 +2267,13 @@
       "jornada": "Fecha 01",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha01.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha01.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 02",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha02.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha02.png"
     }
   ],
   "civEquivalencias": [],
@@ -2326,6 +2333,13 @@
       "jornada": "Fecha 01",
       "jugador": "Saul Goodman",
       "civ": "Birmanos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 02",
+      "jugador": "Papita Huayro",
+      "civ": "Persas"
     }
   ]
 }
