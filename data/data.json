@@ -1647,6 +1647,79 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha02-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 02",
+      "numeroPartida": 1,
+      "duracionSeg": 4741,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Lituanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 891,
+          "edificiosArrasados": 111,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6319,
+          "edificiosArrasados": 264,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Eslavos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2370,
+          "edificiosArrasados": 164,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3202,
+          "edificiosArrasados": 146,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "Lituanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2410,
+          "edificiosArrasados": 111,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Eslavos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 821,
+          "edificiosArrasados": 126,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
