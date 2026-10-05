@@ -3133,152 +3133,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "2026-10-Fecha03-P1",
-      "anio": 2026,
-      "mes": "10",
-      "jornada": "Fecha 03",
-      "numeroPartida": 1,
-      "duracionSeg": 7812,
-      "jugadores": [
-        {
-          "nombre": "Saul Goodman",
-          "resultado": "victoria",
-          "civ": "Lituanos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 9750,
-          "edificiosArrasados": 310,
-          "bonos": []
-        },
-        {
-          "nombre": "[cLm] Gerard",
-          "resultado": "victoria",
-          "civ": "Etiopes",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 3920,
-          "edificiosArrasados": 202,
-          "bonos": [
-            "O"
-          ]
-        },
-        {
-          "nombre": "P@KO",
-          "resultado": "victoria",
-          "civ": "Persas",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 12859,
-          "edificiosArrasados": 271,
-          "bonos": [
-            "E",
-            "M"
-          ]
-        },
-        {
-          "nombre": "GGINDU",
-          "resultado": "derrota",
-          "civ": "Lituanos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 4123,
-          "edificiosArrasados": 132,
-          "bonos": [
-            "S"
-          ]
-        },
-        {
-          "nombre": "Papita Huayro",
-          "resultado": "derrota",
-          "civ": "Etiopes",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 9469,
-          "edificiosArrasados": 232,
-          "bonos": []
-        },
-        {
-          "nombre": "Elraf",
-          "resultado": "derrota",
-          "civ": "Persas",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 7599,
-          "edificiosArrasados": 220,
-          "bonos": [
-            "R"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "2026-10-Fecha03-P2",
-      "anio": 2026,
-      "mes": "10",
-      "jornada": "Fecha 03",
-      "numeroPartida": 2,
-      "duracionSeg": 2875,
-      "jugadores": [
-        {
-          "nombre": "Saul Goodman",
-          "resultado": "victoria",
-          "civ": "Incas",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 2594,
-          "edificiosArrasados": 128,
-          "bonos": [
-            "E",
-            "M"
-          ]
-        },
-        {
-          "nombre": "P@KO",
-          "resultado": "victoria",
-          "civ": "Túrcidos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 790,
-          "edificiosArrasados": 77,
-          "bonos": [
-            "S"
-          ]
-        },
-        {
-          "nombre": "風速蛋蛋",
-          "resultado": "victoria",
-          "civ": "Persas",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 697,
-          "edificiosArrasados": 76,
-          "bonos": [
-            "O"
-          ]
-        },
-        {
-          "nombre": "ErikThaBarbaro",
-          "resultado": "derrota",
-          "civ": "Incas",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 1471,
-          "edificiosArrasados": 71,
-          "bonos": [
-            "R"
-          ]
-        },
-        {
-          "nombre": "[cLm] Gerard",
-          "resultado": "derrota",
-          "civ": "Túrcidos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 493,
-          "edificiosArrasados": 63,
-          "bonos": []
-        },
-        {
-          "nombre": "AhmetCrafter",
-          "resultado": "derrota",
-          "civ": "Persas",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 1041,
-          "edificiosArrasados": 66,
-          "bonos": []
-        }
-      ]
     }
   ],
   "jugadoresInfo": {
@@ -3833,6 +3687,13 @@
       "jornada": "Fecha 02",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha02.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha02.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 03",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha03.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha03.png"
     }
   ],
   "civEquivalencias": [],
@@ -3899,6 +3760,13 @@
       "jornada": "Fecha 02",
       "jugador": "Papita Huayro",
       "civ": "Persas"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 03",
+      "jugador": "P@K()",
+      "civ": "Cumanos"
     }
   ]
 }
