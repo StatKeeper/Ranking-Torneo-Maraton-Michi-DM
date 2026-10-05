@@ -352,7 +352,9 @@ function renderizar() {
   document.getElementById("indicador-partidas-mes").textContent = `📊 Partidas jugadas en el mes: ${totalPartidasMes}`;
 
   const { filas: filasCompletas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornadaFiltro || null);
-  const filas = filasCompletas.slice(0, 20);
+  
+  // MODIFICACIÓN APLICADA: Se muestran todos los jugadores que tienen al menos una participación (eliminando el límite de 20)
+  const filas = filasCompletas;
 
   document.getElementById("titulo-jornada").textContent = ultimaPartida ? etiquetaPartida(ultimaPartida) : "Tabla de posiciones";
   document.getElementById("resumen-periodo").textContent = "";
