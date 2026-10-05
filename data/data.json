@@ -4438,6 +4438,642 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-08-Fecha02-P1",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 02",
+      "numeroPartida": 1,
+      "duracionSeg": 6345,
+      "jugadores": [
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5312,
+          "edificiosArrasados": 120,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Celtas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5951,
+          "edificiosArrasados": 104,
+          "bonos": []
+        },
+        {
+          "nombre": "Nova_8",
+          "resultado": "derrota",
+          "civ": "Mongoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8285,
+          "edificiosArrasados": 154,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5507,
+          "edificiosArrasados": 163,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] Persic",
+          "resultado": "victoria",
+          "civ": "Celtas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4669,
+          "edificiosArrasados": 58,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Mongoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6002,
+          "edificiosArrasados": 82,
+          "bonos": [
+            "E",
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha02-P2",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 02",
+      "numeroPartida": 2,
+      "duracionSeg": 6106,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5939,
+          "edificiosArrasados": 157,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "bLiTzKrieG*RoMmEL",
+          "resultado": "derrota",
+          "civ": "Celtas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6341,
+          "edificiosArrasados": 210,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Francos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2606,
+          "edificiosArrasados": 91,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Celtas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4544,
+          "edificiosArrasados": 149,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7585,
+          "edificiosArrasados": 225,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "victoria",
+          "civ": "Francos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5678,
+          "edificiosArrasados": 224,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha02-P3",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 02",
+      "numeroPartida": 3,
+      "duracionSeg": 10064,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Francos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 8866,
+          "edificiosArrasados": 248,
+          "bonos": []
+        },
+        {
+          "nombre": "bLiTzKrieG*RoMmEL",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12132,
+          "edificiosArrasados": 312,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Bereberes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5666,
+          "edificiosArrasados": 157,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] MalditoFutre",
+          "resultado": "derrota",
+          "civ": "Indostanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10517,
+          "edificiosArrasados": 211,
+          "bonos": []
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 13983,
+          "edificiosArrasados": 326,
+          "bonos": [
+            "E",
+            "M",
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8532,
+          "edificiosArrasados": 260,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Francos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10627,
+          "edificiosArrasados": 280,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Indostanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6975,
+          "edificiosArrasados": 177,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha03-P1",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 03",
+      "numeroPartida": 1,
+      "duracionSeg": 3303,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Romanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2630,
+          "edificiosArrasados": 157,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Espanoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2502,
+          "edificiosArrasados": 182,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "VicRoldanG",
+          "resultado": "victoria",
+          "civ": "Britanicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1265,
+          "edificiosArrasados": 116,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1844,
+          "edificiosArrasados": 162,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Romanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1642,
+          "edificiosArrasados": 113,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Espanoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1347,
+          "edificiosArrasados": 101,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Britanicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1741,
+          "edificiosArrasados": 114,
+          "bonos": []
+        },
+        {
+          "nombre": "rod",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1860,
+          "edificiosArrasados": 102,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha03-P2",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 03",
+      "numeroPartida": 2,
+      "duracionSeg": 2788,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 939,
+          "edificiosArrasados": 88,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Bengalies",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1155,
+          "edificiosArrasados": 78,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Turcos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 661,
+          "edificiosArrasados": 72,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2281,
+          "edificiosArrasados": 147,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] Persic",
+          "resultado": "victoria",
+          "civ": "Bengalies",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 264,
+          "edificiosArrasados": 84,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "VicRoldanG",
+          "resultado": "victoria",
+          "civ": "Turcos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1359,
+          "edificiosArrasados": 76,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha04-P1",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 04",
+      "numeroPartida": 1,
+      "duracionSeg": 8813,
+      "jugadores": [
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 3",
+          "unidadesAsesinadas": 7853,
+          "edificiosArrasados": 215,
+          "bonos": [
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Incas",
+          "equipo": "Equipo 3",
+          "unidadesAsesinadas": 12471,
+          "edificiosArrasados": 278,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 3",
+          "unidadesAsesinadas": 5853,
+          "edificiosArrasados": 154,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 9505,
+          "edificiosArrasados": 250,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Incas",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 6987,
+          "edificiosArrasados": 168,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Bereberes",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 10082,
+          "edificiosArrasados": 233,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha04-P2",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 04",
+      "numeroPartida": 2,
+      "duracionSeg": 1897,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 816,
+          "edificiosArrasados": 56,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Celtas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 381,
+          "edificiosArrasados": 36,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] MalditoFutre",
+          "resultado": "derrota",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 573,
+          "edificiosArrasados": 41,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1140,
+          "edificiosArrasados": 65,
+          "bonos": [
+            "E",
+            "M",
+            "O"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Celtas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 453,
+          "edificiosArrasados": 44,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 535,
+          "edificiosArrasados": 50,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha05-P1",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 05",
+      "numeroPartida": 1,
+      "duracionSeg": 4230,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Italianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1305,
+          "edificiosArrasados": 162,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "Persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3639,
+          "edificiosArrasados": 257,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Indostanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2133,
+          "edificiosArrasados": 208,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2309,
+          "edificiosArrasados": 218,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Indostanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1772,
+          "edificiosArrasados": 167,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Italianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 534,
+          "edificiosArrasados": 132,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "BullRunner",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3466,
+          "edificiosArrasados": 233,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Jackey9522",
+          "resultado": "derrota",
+          "civ": "Persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2358,
+          "edificiosArrasados": 217,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
