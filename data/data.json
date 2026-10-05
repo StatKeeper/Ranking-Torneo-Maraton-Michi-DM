@@ -2982,6 +2982,13 @@
       "jornada": "Fecha 02",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha02.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha02.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 03",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha03.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha03.png"
     }
   ],
   "civEquivalencias": [],
@@ -3048,6 +3055,13 @@
       "jornada": "Fecha 02",
       "jugador": "Papita Huayro",
       "civ": "Persas"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 03",
+      "jugador": "P@K()",
+      "civ": "Cumanos"
     }
   ]
 }
