@@ -5139,6 +5139,13 @@
       "jornada": "Fecha 28",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha28.png",
       "imagenGalardon": "imagenes/galardon_2026-09_fecha28.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 04",
+      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha04.png",
+      "imagenGalardon": "imagenes/galardon_2026-09_fecha04.png"
     }
   ],
   "civEquivalencias": [],
@@ -5359,6 +5366,13 @@
       "jornada": "Fecha 28",
       "jugador": "Mr.Magic",
       "civ": "Eslavos"
+    },
+    {
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 04",
+      "jugador": "Papita Huayro",
+      "civ": "Turcos"
     }
   ]
 }
