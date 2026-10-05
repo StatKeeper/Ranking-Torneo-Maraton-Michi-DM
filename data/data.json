@@ -4961,13 +4961,6 @@
     {
       "anio": 2026,
       "mes": "09",
-      "jornada": "Fecha 04",
-      "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha04.png",
-      "imagenGalardon": "imagenes/galardon_2026-09_fecha04.png"
-    },
-    {
-      "anio": 2026,
-      "mes": "09",
       "jornada": "Fecha 06",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha06.png",
       "imagenGalardon": "imagenes/galardon_2026-09_fecha06.png"
@@ -5177,13 +5170,6 @@
       "jornada": "Fecha 03",
       "jugador": "P@K()",
       "civ": "Coreanos"
-    },
-    {
-      "anio": 2026,
-      "mes": "09",
-      "jornada": "Fecha04",
-      "jugador": "Papita Huayro",
-      "civ": "Turcos"
     },
     {
       "anio": 2026,
