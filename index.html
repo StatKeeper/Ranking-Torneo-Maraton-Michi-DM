@@ -199,7 +199,7 @@
     
     <form id="form-comentario" class="taberna-form">
       <div class="autocomplete-wrapper">
-        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre o búscalo (ej. [cLm]...)" autocomplete="off" required>
+        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre oficial o búscalo (ej. [cLm]...)" autocomplete="off" required>
         <div id="sugerencias-lista" class="sugerencias-lista"></div>
       </div>
       <textarea id="mensaje-input" class="taberna-textarea" rows="2" placeholder="Escribe tu mensaje para la comunidad..." required></textarea>
@@ -232,7 +232,7 @@
   let listaJugadoresGlobal = [];
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // 1. CARGAR DATOS DE JUGADORES DESDE datos.js
+    // 1. CARGAR DATOS Y EXTRAER LOS NOMBRES OFICIALES COMPLETOS
     try {
       const datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
       const cont = document.getElementById("contenedor-galardon");
@@ -254,9 +254,18 @@
         `;
       }
 
-      // Extracción idéntica a la vista de jugadores para obtener los nombres oficiales completos
+      // Extracción exhaustiva de nombres oficiales desde todas las fuentes posibles de la app
       const jugadoresSet = new Set();
       
+      // Fuente A: Si existe un objeto global de jugadores o nacionalidades
+      if (typeof jugadores !== 'undefined' && typeof jugadores === 'object') {
+        Object.keys(jugadores).forEach(j => { if (j && j.trim()) jugadoresSet.add(j.trim()); });
+      }
+      if (window.jugadores && typeof window.jugadores === 'object') {
+        Object.keys(window.jugadores).forEach(j => { if (j && j.trim()) jugadoresSet.add(j.trim()); });
+      }
+
+      // Fuente B: Propiedades dentro del objeto devuelto por cargarDatos()
       if (datos.jugadores) {
         if (Array.isArray(datos.jugadores)) {
           datos.jugadores.forEach(j => {
@@ -267,15 +276,15 @@
             }
           });
         } else if (typeof datos.jugadores === 'object') {
-          // Si es un diccionario / objeto de jugadores
           Object.entries(datos.jugadores).forEach(([key, val]) => {
-            const nombreReal = (val && (val.nombreCompleto || val.nombre)) ? (val.nombreCompleto || val.nombre) : key;
+            if (key && key.trim()) jugadoresSet.add(key.trim());
+            const nombreReal = val && (val.nombreCompleto || val.nombre);
             if (typeof nombreReal === 'string' && nombreReal.trim()) jugadoresSet.add(nombreReal.trim());
           });
         }
       }
-      
-      // También recolectar de partidas por si algún jugador aparece ahí
+
+      // Fuente C: Historial de partidas y rankings
       if (datos.partidas && Array.isArray(datos.partidas)) {
         datos.partidas.forEach(p => {
           if (p.jugadores && Array.isArray(p.jugadores)) {
@@ -286,15 +295,11 @@
         });
       }
 
-      // Fallback de seguridad por si la estructura varía
-      if (jugadoresSet.size === 0) {
-        ["[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo", "Gerardo", "BullRunner", "Coleman", "Gato :3", "Jackey9522", "Knar", "La_Gloire", "Little duck", "Matote896"].forEach(j => jugadoresSet.add(j));
-      }
-
-      listaJugadoresGlobal = Array.from(jugadoresSet).sort();
+      listaJugadoresGlobal = Array.from(jugadoresSet).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+      console.log("Jugadores oficiales cargados en Taberna:", listaJugadoresGlobal.length);
     } catch (e) {
-      console.log("Aviso al cargar jugadores:", e);
-      listaJugadoresGlobal = ["[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo", "Gerardo"];
+      console.log("Aviso al cargar datos de jugadores:", e);
+      listaJugadoresGlobal = ["[cLm] KFICHO", "[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo"];
     }
 
     // Configurar el autocompletado inteligente por iniciales sucesivas (startsWith)
@@ -310,10 +315,10 @@
         return;
       }
 
-      // Filtrar los miembros que inician con las letras escritas
+      // Filtrar los miembros oficiales que inician con las letras escritas
       const filtrados = listaJugadoresGlobal.filter(j => j.toLowerCase().startsWith(valor));
 
-      // Mostrar sugerencias de jugadores oficiales encontrados
+      // Mostrar sugerencias oficiales
       filtrados.forEach(nombre => {
         const item = document.createElement('div');
         item.className = 'sugerencia-item';
@@ -325,7 +330,7 @@
         sugerenciasLista.appendChild(item);
       });
 
-      // Añadir la opción de registrar como Invitado al final
+      // Añadir opción de Invitado al final
       const itemInvitado = document.createElement('div');
       itemInvitado.className = 'sugerencia-item sugerencia-invitado';
       itemInvitado.textContent = `👤 Registrar como Invitado ("${autorInput.value}")`;
@@ -359,7 +364,7 @@
 
     if (error) {
       console.error("Error Supabase:", error);
-      listaDiv.innerHTML = `<div class="empty-state" style="text-align:center; color:var(--text-dim);">La taberna está conectada, pero aún no hay pergaminos escritos.</div>`;
+      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna.</div>`;
       return;
     }
 
