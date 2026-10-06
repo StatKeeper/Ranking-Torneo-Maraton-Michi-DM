@@ -209,14 +209,14 @@
 
 <script src="js/datos.js"></script>
 <script>
-  // CONFIGURACIÓN DE SUPABASE
+  // CONFIGURACIÓN DE SUPABASE (Llave anon configurada)
   const SUPABASE_URL = 'https://wdctzuawvnckemvhyrem.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_qQZM9UxmRfR7G3gCv63yiA_t8TaNM2Y';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkY3R6dWF3dm5ja2Vtdmh5cmVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMDY1MzQsImV4cCI6MjEwNjg4MjUzNH0.Qqo6ea3CyRdLLkWJeOTlnKHl76ImcdmugpTW854VEnk';
   
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // 1. CARGAR DATOS Y GALARDÓN (Independiente)
+    // 1. CARGAR DATOS Y GALARDÓN
     try {
       const datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
       const cont = document.getElementById("contenedor-galardon");
@@ -295,7 +295,7 @@
       }
     });
 
-    // 2. CARGAR COMENTARIOS DE SUPABASE (Independiente y seguro)
+    // 2. CARGAR COMENTARIOS DE SUPABASE
     await cargarComentarios();
     suscripcionRealtime();
   });
