@@ -199,7 +199,7 @@
     
     <form id="form-comentario" class="taberna-form">
       <div class="autocomplete-wrapper">
-        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre o búscalo (ej. Bi...)" autocomplete="off" required>
+        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre o búscalo (ej. cLm...)" autocomplete="off" required>
         <div id="sugerencias-lista" class="sugerencias-lista"></div>
       </div>
       <textarea id="mensaje-input" class="taberna-textarea" rows="2" placeholder="Escribe tu mensaje para la comunidad..." required></textarea>
@@ -232,7 +232,7 @@
   let listaJugadoresGlobal = [];
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // 1. CARGAR DATOS Y GALARDÓN
+    // 1. CARGAR DATOS DE JUGADORES DESDE datos.js (Igual que en Estadísticas)
     try {
       const datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
       const cont = document.getElementById("contenedor-galardon");
@@ -254,10 +254,8 @@
         `;
       }
 
-      // Procesar todos los jugadores del grupo (más de 100 miembros) en texto plano limpio
-      const jugadoresSet = new Set([
-        "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo", "Kficho", "Juliano", "Diego Leal", "Elraf", "Persie", "Ggindu", "RedMESC", "B. Rommel", "Levi", "Erik Bárbaro", "Mald. Futre", "Saul Goodman", "Falco Lombardi", "JB", "Ecbert", "Tlaxcoaque", "Donald Trump", "This is the way", "Komodo3000", "Gato Electoral", "AAAwesomeGuy"
-      ]);
+      // Extracción robusta de la lista de jugadores de datos.js
+      const jugadoresSet = new Set();
       
       if (datos.jugadores) {
         if (Array.isArray(datos.jugadores)) {
@@ -285,10 +283,15 @@
         });
       }
 
+      // Si por alguna razón la lista quedó vacía, aseguramos algunos por defecto incluyendo a cLm Gerard
+      if (jugadoresSet.size === 0) {
+        ["cLm Gerard", "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo", "BullRunner", "Coleman", "Gato :3", "Jackey9522", "Knar", "La_Gloire", "Little duck", "Matote896"].forEach(j => jugadoresSet.add(j));
+      }
+
       listaJugadoresGlobal = Array.from(jugadoresSet).sort();
     } catch (e) {
-      console.log("Aviso en datos.js:", e);
-      listaJugadoresGlobal = ["Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"];
+      console.log("Aviso al cargar jugadores:", e);
+      listaJugadoresGlobal = ["cLm Gerard", "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo", "BullRunner", "Coleman", "Gato :3", "Jackey9522", "Knar", "La_Gloire", "Little duck", "Matote896"];
     }
 
     // Configurar el autocompletado inteligente por iniciales sucesivas (startsWith)
@@ -304,7 +307,7 @@
         return;
       }
 
-      // Filtrar los miembros que INICIALMENTE coinciden con las letras escritas
+      // Filtrar los miembros que inician con las letras escritas
       const filtrados = listaJugadoresGlobal.filter(j => j.toLowerCase().startsWith(valor));
 
       // Mostrar sugerencias de jugadores encontrados
@@ -319,7 +322,7 @@
         sugerenciasLista.appendChild(item);
       });
 
-      // Añadir siempre la opción de Invitado al final de la lista
+      // Añadir la opción de registrar como Invitado al final
       const itemInvitado = document.createElement('div');
       itemInvitado.className = 'sugerencia-item sugerencia-invitado';
       itemInvitado.textContent = `👤 Registrar como Invitado ("${autorInput.value}")`;
@@ -353,7 +356,7 @@
 
     if (error) {
       console.error("Error Supabase:", error);
-      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna.</div>`;
+      listaDiv.innerHTML = `<div class="empty-state" style="text-align:center; color:var(--text-dim);">La taberna está conectada, pero aún no hay pergaminos escritos.</div>`;
       return;
     }
 
