@@ -5947,6 +5947,13 @@
       "jornada": "Fecha 04",
       "imagenEvaluacion": "imagenes/candidatos_2026-09_fecha04.png",
       "imagenGalardon": "imagenes/galardon_2026-09_fecha04.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 04",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha04.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha04.png"
     }
   ],
   "civEquivalencias": [],
@@ -6356,6 +6363,13 @@
       "jornada": "Fecha 27",
       "jugador": "[cLm] KFICHO",
       "civ": "Godos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 04",
+      "jugador": "[cLm] Renjifo",
+      "civ": "Mongoles"
     }
   ]
 }
