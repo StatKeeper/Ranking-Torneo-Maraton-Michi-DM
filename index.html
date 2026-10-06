@@ -199,7 +199,7 @@
     
     <form id="form-comentario" class="taberna-form">
       <div class="autocomplete-wrapper">
-        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre o búscalo (ej. cLm...)" autocomplete="off" required>
+        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre o búscalo (ej. [cLm]...)" autocomplete="off" required>
         <div id="sugerencias-lista" class="sugerencias-lista"></div>
       </div>
       <textarea id="mensaje-input" class="taberna-textarea" rows="2" placeholder="Escribe tu mensaje para la comunidad..." required></textarea>
@@ -232,7 +232,7 @@
   let listaJugadoresGlobal = [];
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // 1. CARGAR DATOS DE JUGADORES DESDE datos.js (Igual que en Estadísticas)
+    // 1. CARGAR DATOS DE JUGADORES DESDE datos.js
     try {
       const datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
       const cont = document.getElementById("contenedor-galardon");
@@ -254,7 +254,7 @@
         `;
       }
 
-      // Extracción robusta de la lista de jugadores de datos.js
+      // Extracción idéntica a la vista de jugadores para obtener los nombres oficiales completos
       const jugadoresSet = new Set();
       
       if (datos.jugadores) {
@@ -262,17 +262,20 @@
           datos.jugadores.forEach(j => {
             if (typeof j === 'string' && j.trim()) jugadoresSet.add(j.trim());
             else if (j && typeof j === 'object') {
-              const nombreReal = j.nombre || j.jugador || j.name;
+              const nombreReal = j.nombreCompleto || j.nombre || j.jugador || j.name;
               if (typeof nombreReal === 'string' && nombreReal.trim()) jugadoresSet.add(nombreReal.trim());
             }
           });
         } else if (typeof datos.jugadores === 'object') {
-          Object.keys(datos.jugadores).forEach(k => {
-            if (k && typeof k === 'string') jugadoresSet.add(k.trim());
+          // Si es un diccionario / objeto de jugadores
+          Object.entries(datos.jugadores).forEach(([key, val]) => {
+            const nombreReal = (val && (val.nombreCompleto || val.nombre)) ? (val.nombreCompleto || val.nombre) : key;
+            if (typeof nombreReal === 'string' && nombreReal.trim()) jugadoresSet.add(nombreReal.trim());
           });
         }
       }
       
+      // También recolectar de partidas por si algún jugador aparece ahí
       if (datos.partidas && Array.isArray(datos.partidas)) {
         datos.partidas.forEach(p => {
           if (p.jugadores && Array.isArray(p.jugadores)) {
@@ -283,15 +286,15 @@
         });
       }
 
-      // Si por alguna razón la lista quedó vacía, aseguramos algunos por defecto incluyendo a cLm Gerard
+      // Fallback de seguridad por si la estructura varía
       if (jugadoresSet.size === 0) {
-        ["cLm Gerard", "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo", "BullRunner", "Coleman", "Gato :3", "Jackey9522", "Knar", "La_Gloire", "Little duck", "Matote896"].forEach(j => jugadoresSet.add(j));
+        ["[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo", "Gerardo", "BullRunner", "Coleman", "Gato :3", "Jackey9522", "Knar", "La_Gloire", "Little duck", "Matote896"].forEach(j => jugadoresSet.add(j));
       }
 
       listaJugadoresGlobal = Array.from(jugadoresSet).sort();
     } catch (e) {
       console.log("Aviso al cargar jugadores:", e);
-      listaJugadoresGlobal = ["cLm Gerard", "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo", "BullRunner", "Coleman", "Gato :3", "Jackey9522", "Knar", "La_Gloire", "Little duck", "Matote896"];
+      listaJugadoresGlobal = ["[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo", "Gerardo"];
     }
 
     // Configurar el autocompletado inteligente por iniciales sucesivas (startsWith)
@@ -310,7 +313,7 @@
       // Filtrar los miembros que inician con las letras escritas
       const filtrados = listaJugadoresGlobal.filter(j => j.toLowerCase().startsWith(valor));
 
-      // Mostrar sugerencias de jugadores encontrados
+      // Mostrar sugerencias de jugadores oficiales encontrados
       filtrados.forEach(nombre => {
         const item = document.createElement('div');
         item.className = 'sugerencia-item';
