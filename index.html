@@ -209,9 +209,9 @@
 
 <script src="js/datos.js"></script>
 <script>
-  // CONFIGURACIÓN DE SUPABASE (Tus credenciales reales)
+  // CONFIGURACIÓN DE SUPABASE
   const SUPABASE_URL = 'https://wdctzuawvnckemvhyrem.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_qQZM9UxmRfR7G3gCv63yAi_t8TAnMvH_S1Q...'; // <-- Asegúrate de pegar aquí tu Publishable Key completa sin cortar
+  const SUPABASE_ANON_KEY = 'sb_publishable_qQZM9UxmRfR7G3gCv63yiA_t8TaNM2Y';
   
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -248,14 +248,16 @@
 
     // --- AUTOCOMPLETADO ROBUSTO DE JUGADORES ---
     const jugadoresSet = new Set([
-      "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo", "Matagigantes"
-    ]); // Lista base de respaldo para que nunca falte autocompletado
+      "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"
+    ]);
 
     if (datos) {
-      if (Array.isArray(datos.jugadores)) {
-        datos.jugadores.forEach(j => { if (typeof j === 'string') jugadoresSet.add(j); else if (j.nombre) jugadoresSet.add(j.nombre); });
-      } else if (datos.jugadores && typeof datos.jugadores === 'object') {
-        Object.keys(datos.jugadores).forEach(j => jugadoresSet.add(j));
+      if (datos.jugadores) {
+        if (Array.isArray(datos.jugadores)) {
+          datos.jugadores.forEach(j => { if (typeof j === 'string') jugadoresSet.add(j); else if (j.nombre) jugadoresSet.add(j.nombre); });
+        } else if (typeof datos.jugadores === 'object') {
+          Object.keys(datos.jugadores).forEach(j => jugadoresSet.add(j));
+        }
       }
       if (datos.partidas && Array.isArray(datos.partidas)) {
         datos.partidas.forEach(p => {
@@ -314,7 +316,7 @@
 
     if (error) {
       console.error("Error Supabase:", error);
-      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna. Verifica tu Publishable Key en el código.</div>`;
+      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna.</div>`;
       return;
     }
 
