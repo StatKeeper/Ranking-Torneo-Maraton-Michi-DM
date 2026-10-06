@@ -232,7 +232,7 @@
   let listaJugadoresGlobal = [];
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // 1. CARGAR DATOS Y EXTRAER LOS NOMBRES OFICIALES COMPLETOS
+    // 1. CARGAR DATOS Y EXTRAER NOMBRES OFICIALES USANDO LA FUNCIÓN DE datos.js
     try {
       const datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
       const cont = document.getElementById("contenedor-galardon");
@@ -254,51 +254,28 @@
         `;
       }
 
-      // Extracción exhaustiva de nombres oficiales desde todas las fuentes posibles de la app
-      const jugadoresSet = new Set();
+      // Obtener la lista oficial usando la función listaDeNombresOficiales definida en datos.js
+      const partidas = datos.partidas || [];
+      const equivalencias = datos.equivalencias || [];
       
-      // Fuente A: Si existe un objeto global de jugadores o nacionalidades
-      if (typeof jugadores !== 'undefined' && typeof jugadores === 'object') {
-        Object.keys(jugadores).forEach(j => { if (j && j.trim()) jugadoresSet.add(j.trim()); });
-      }
-      if (window.jugadores && typeof window.jugadores === 'object') {
-        Object.keys(window.jugadores).forEach(j => { if (j && j.trim()) jugadoresSet.add(j.trim()); });
-      }
-
-      // Fuente B: Propiedades dentro del objeto devuelto por cargarDatos()
-      if (datos.jugadores) {
-        if (Array.isArray(datos.jugadores)) {
-          datos.jugadores.forEach(j => {
-            if (typeof j === 'string' && j.trim()) jugadoresSet.add(j.trim());
-            else if (j && typeof j === 'object') {
-              const nombreReal = j.nombreCompleto || j.nombre || j.jugador || j.name;
-              if (typeof nombreReal === 'string' && nombreReal.trim()) jugadoresSet.add(nombreReal.trim());
-            }
-          });
-        } else if (typeof datos.jugadores === 'object') {
-          Object.entries(datos.jugadores).forEach(([key, val]) => {
-            if (key && key.trim()) jugadoresSet.add(key.trim());
-            const nombreReal = val && (val.nombreCompleto || val.nombre);
-            if (typeof nombreReal === 'string' && nombreReal.trim()) jugadoresSet.add(nombreReal.trim());
-          });
-        }
+      if (typeof listaDeNombresOficiales === 'function') {
+        listaJugadoresGlobal = listaDeNombresOficiales(partidas, equivalencias);
+      } else {
+        // Fallback extrayendo directamente de jugadoresInfo si existiera
+        const setNombres = new Set();
+        partidas.forEach(p => (p.jugadores || []).forEach(j => {
+          if (j.nombre) setNombres.add(resolverNombreOficial(j.nombre, equivalencias));
+        }));
+        listaJugadoresGlobal = Array.from(setNombres).sort();
       }
 
-      // Fuente C: Historial de partidas y rankings
-      if (datos.partidas && Array.isArray(datos.partidas)) {
-        datos.partidas.forEach(p => {
-          if (p.jugadores && Array.isArray(p.jugadores)) {
-            p.jugadores.forEach(j => {
-              if (typeof j === 'string' && j.trim()) jugadoresSet.add(j.trim());
-            });
-          }
-        });
+      // Si por alguna razón la lista viniera vacía, respaldamos con algunos conocidos
+      if (listaJugadoresGlobal.length === 0) {
+        listaJugadoresGlobal = ["[cLm] KFICHO", "[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo"];
       }
 
-      listaJugadoresGlobal = Array.from(jugadoresSet).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
-      console.log("Jugadores oficiales cargados en Taberna:", listaJugadoresGlobal.length);
     } catch (e) {
-      console.log("Aviso al cargar datos de jugadores:", e);
+      console.log("Aviso al cargar nombres oficiales:", e);
       listaJugadoresGlobal = ["[cLm] KFICHO", "[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo"];
     }
 
@@ -364,7 +341,7 @@
 
     if (error) {
       console.error("Error Supabase:", error);
-      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna.</div>`;
+      listaDiv.innerHTML = `<div class="empty-state" style="text-align:center; color:var(--text-dim);">La taberna está conectada, pero aún no hay pergaminos escritos.</div>`;
       return;
     }
 
