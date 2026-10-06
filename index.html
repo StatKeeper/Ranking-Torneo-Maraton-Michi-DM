@@ -215,19 +215,14 @@
   
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  (async function init() {
-    let datos = {};
+  document.addEventListener("DOMContentLoaded", async () => {
+    // 1. CARGAR DATOS Y GALARDÓN (Independiente)
     try {
-      datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
-    } catch (e) {
-      console.log("Cargando datos locales de respaldo...");
-    }
-
-    // Cargar galardón principal
-    try {
+      const datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
       const cont = document.getElementById("contenedor-galardon");
       const lista = datos.jornadasImagenes || [];
       const conGalardon = lista.filter(j => j.imagenGalardon);
+      
       if (conGalardon.length === 0) {
         cont.innerHTML = `<div class="empty-state">Todavía no se ha publicado ningún galardón.</div>`;
       } else {
@@ -242,16 +237,11 @@
           <div class="subetiqueta">${NOMBRES_MES[ultima.mes]} ${ultima.anio}</div>
         `;
       }
-    } catch(err) {
-      console.error(err);
-    }
 
-    // --- AUTOCOMPLETADO ROBUSTO DE JUGADORES ---
-    const jugadoresSet = new Set([
-      "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"
-    ]);
-
-    if (datos) {
+      // Autocompletado con jugadores oficiales
+      const jugadoresSet = new Set([
+        "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"
+      ]);
       if (datos.jugadores) {
         if (Array.isArray(datos.jugadores)) {
           datos.jugadores.forEach(j => { if (typeof j === 'string') jugadoresSet.add(j); else if (j.nombre) jugadoresSet.add(j.nombre); });
@@ -264,9 +254,13 @@
           if (p.jugadores && Array.isArray(p.jugadores)) p.jugadores.forEach(j => jugadoresSet.add(j));
         });
       }
+      window.listaJugadoresGlobal = Array.from(jugadoresSet).sort();
+    } catch (e) {
+      console.log("Aviso en datos.js:", e);
+      window.listaJugadoresGlobal = ["Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"];
     }
-    const listaJugadores = Array.from(jugadoresSet).sort();
 
+    // Configurar Autocompletado de Inputs
     const autorInput = document.getElementById('autor-input');
     const sugerenciasBox = document.getElementById('sugerencias-box');
 
@@ -277,7 +271,7 @@
         sugerenciasBox.style.display = 'none';
         return;
       }
-      const filtrados = listaJugadores.filter(j => j.toLowerCase().includes(val));
+      const filtrados = window.listaJugadoresGlobal.filter(j => j.toLowerCase().includes(val));
       if (filtrados.length > 0) {
         filtrados.forEach(jugador => {
           const div = document.createElement('div');
@@ -301,10 +295,10 @@
       }
     });
 
-    // --- CARGAR Y ESCUCHAR COMENTARIOS DE SUPABASE ---
+    // 2. CARGAR COMENTARIOS DE SUPABASE (Independiente y seguro)
     await cargarComentarios();
     suscripcionRealtime();
-  })();
+  });
 
   async function cargarComentarios() {
     const listaDiv = document.getElementById('comentarios-lista');
