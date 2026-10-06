@@ -80,6 +80,38 @@
     border-color: var(--gold, #d4af37);
     outline: none;
   }
+  
+  /* Contenedor del Autocompletado */
+  .autocomplete-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .sugerencias-lista {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #0f1115;
+    border: 1px solid var(--gold, #d4af37);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 180px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+  }
+  .sugerencia-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: var(--text, #eee);
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .sugerencia-item:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--gold, #d4af37);
+  }
+
   .taberna-btn {
     background: linear-gradient(to bottom, #b8860b, #8b6508);
     color: #fff;
@@ -161,11 +193,9 @@
     <h2 class="taberna-titulo">🍺 La Taberna del Torneo</h2>
     
     <form id="form-comentario" class="taberna-form">
-      <div>
-        <select id="autor-select" class="taberna-input" required>
-          <option value="" disabled selected>Selecciona tu miembro oficial...</option>
-        </select>
-        <input type="text" id="autor-invitado-input" class="taberna-input" placeholder="Escribe tu nombre de invitado..." style="display: none; margin-top: 8px;" autocomplete="off">
+      <div class="autocomplete-wrapper">
+        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre o búscalo (ej. Re...)" autocomplete="off" required>
+        <div id="sugerencias-lista" class="sugerencias-lista"></div>
       </div>
       <textarea id="mensaje-input" class="taberna-textarea" rows="2" placeholder="Escribe tu mensaje para la comunidad..." required></textarea>
       <button type="submit" class="taberna-btn">Enviar a la Taberna</button>
@@ -194,6 +224,8 @@
   
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  let listaJugadoresGlobal = [];
+
   document.addEventListener("DOMContentLoaded", async () => {
     // 1. CARGAR DATOS Y GALARDÓN
     try {
@@ -217,55 +249,82 @@
         `;
       }
 
-      // Obtener lista oficial actualizada de jugadores del grupo
+      // Procesar exclusivamente nombres en texto plano (filtra objetos para evitar [object Object])
       const jugadoresSet = new Set([
         "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"
       ]);
+      
       if (datos.jugadores) {
         if (Array.isArray(datos.jugadores)) {
-          datos.jugadores.forEach(j => { if (typeof j === 'string') jugadoresSet.add(j); else if (j.nombre) jugadoresSet.add(j.nombre); });
+          datos.jugadores.forEach(j => {
+            if (typeof j === 'string' && j.trim()) jugadoresSet.add(j.trim());
+            else if (j && typeof j === 'object') {
+              const nombreReal = j.nombre || j.jugador || j.name;
+              if (typeof nombreReal === 'string' && nombreReal.trim()) jugadoresSet.add(nombreReal.trim());
+            }
+          });
         } else if (typeof datos.jugadores === 'object') {
-          Object.keys(datos.jugadores).forEach(j => jugadoresSet.add(j));
+          Object.keys(datos.jugadores).forEach(k => {
+            if (k && typeof k === 'string') jugadoresSet.add(k.trim());
+          });
         }
       }
+      
       if (datos.partidas && Array.isArray(datos.partidas)) {
         datos.partidas.forEach(p => {
-          if (p.jugadores && Array.isArray(p.jugadores)) p.jugadores.forEach(j => jugadoresSet.add(j));
+          if (p.jugadores && Array.isArray(p.jugadores)) {
+            p.jugadores.forEach(j => {
+              if (typeof j === 'string' && j.trim()) jugadoresSet.add(j.trim());
+            });
+          }
         });
       }
-      window.listaJugadoresGlobal = Array.from(jugadoresSet).sort();
+
+      listaJugadoresGlobal = Array.from(jugadoresSet).sort();
     } catch (e) {
       console.log("Aviso en datos.js:", e);
-      window.listaJugadoresGlobal = ["Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"];
+      listaJugadoresGlobal = ["Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo"];
     }
 
-    // Llenar el selector dinámicamente con miembros oficiales e invitado
-    const autorSelect = document.getElementById('autor-select');
-    const invitadoInput = document.getElementById('autor-invitado-input');
+    // Configurar input de autocompletado filtrando por iniciales sucesivas (startsWith)
+    const autorInput = document.getElementById('autor-input');
+    const sugerenciasLista = document.getElementById('sugerencias-lista');
 
-    autorSelect.innerHTML = `<option value="" disabled selected>Selecciona tu miembro oficial...</option>`;
-    window.listaJugadoresGlobal.forEach(jugador => {
-      const opt = document.createElement('option');
-      opt.value = jugador;
-      opt.textContent = `⚔️ ${jugador}`;
-      autorSelect.appendChild(opt);
+    autorInput.addEventListener('input', (e) => {
+      const valor = e.target.value.toLowerCase();
+      sugerenciasLista.innerHTML = '';
+
+      if (!valor) {
+        sugerenciasLista.style.display = 'none';
+        return;
+      }
+
+      // Filtra estrictamente los nombres que INICIAN con las letras escritas
+      const filtrados = listaJugadoresGlobal.filter(j => j.toLowerCase().startsWith(valor));
+
+      if (filtrados.length === 0) {
+        sugerenciasLista.style.display = 'none';
+        return;
+      }
+
+      filtrados.forEach(nombre => {
+        const item = document.createElement('div');
+        item.className = 'sugerencia-item';
+        item.textContent = `⚔️ ${nombre}`;
+        item.addEventListener('click', () => {
+          autorInput.value = nombre;
+          sugerenciasLista.style.display = 'none';
+        });
+        sugerenciasLista.appendChild(item);
+      });
+
+      sugerenciasLista.style.display = 'block';
     });
 
-    const optInvitado = document.createElement('option');
-    optInvitado.value = "INVITADO";
-    optInvitado.textContent = "👤 Invitado (Escribir nombre personalizado)";
-    autorSelect.appendChild(optInvitado);
-
-    // Controlar visibilidad del campo invitado
-    autorSelect.addEventListener('change', (e) => {
-      if (e.target.value === 'INVITADO') {
-        invitadoInput.style.display = 'block';
-        invitadoInput.required = true;
-        invitadoInput.focus();
-      } else {
-        invitadoInput.style.display = 'none';
-        invitadoInput.required = false;
-        invitadoInput.value = '';
+    // Ocultar sugerencias al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.autocomplete-wrapper')) {
+        sugerenciasLista.style.display = 'none';
       }
     });
 
@@ -316,17 +375,7 @@
   document.getElementById('form-comentario').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const autorSelect = document.getElementById('autor-select');
-    const invitadoInput = document.getElementById('autor-invitado-input');
-    const seleccion = autorSelect.value;
-    
-    let autor = '';
-    if (seleccion === 'INVITADO') {
-      autor = invitadoInput.value.trim();
-    } else {
-      autor = seleccion;
-    }
-
+    const autor = document.getElementById('autor-input').value.trim();
     const mensaje = document.getElementById('mensaje-input').value.trim();
 
     if (!autor || !mensaje) return;
@@ -343,10 +392,7 @@
       alert('Error al enviar el mensaje: ' + error.message);
     } else {
       document.getElementById('mensaje-input').value = '';
-      autorSelect.value = '';
-      invitadoInput.style.display = 'none';
-      invitadoInput.value = '';
-      invitadoInput.required = false;
+      document.getElementById('autor-input').value = '';
     }
 
     btn.disabled = false;
