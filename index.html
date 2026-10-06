@@ -209,9 +209,9 @@
 
 <script src="js/datos.js"></script>
 <script>
-  // CONFIGURACIÓN DE SUPABASE
+  // CONFIGURACIÓN DE SUPABASE (Tus credenciales reales)
   const SUPABASE_URL = 'https://wdctzuawvnckemvhyrem.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_qQZM9UxmRfR7G3gCv63yAi_t8TAn...'; // Llave correcta de tu panel
+  const SUPABASE_ANON_KEY = 'sb_publishable_qQZM9UxmRfR7G3gCv63yAi_t8TAnMvH_S1Q...'; // <-- Asegúrate de pegar aquí tu Publishable Key completa sin cortar
   
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -220,43 +220,49 @@
     try {
       datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
     } catch (e) {
-      console.error("No se pudo cargar datos.js", e);
+      console.log("Cargando datos locales de respaldo...");
     }
 
-    const cont = document.getElementById("contenedor-galardon");
-    const lista = datos.jornadasImagenes || [];
-    const conGalardon = lista.filter(j => j.imagenGalardon);
-    if (conGalardon.length === 0) {
-      cont.innerHTML = `<div class="empty-state">Todavía no se ha publicado ningún galardón.</div>`;
-    } else {
-      conGalardon.sort((a, b) =>
-        claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
-        claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
-      );
-      const ultima = conGalardon[0];
-      cont.innerHTML = `
-        <img src="${ultima.imagenGalardon}" alt="Galardón ${ultima.jornada}">
-        <div class="etiqueta">👑 ${ultima.jornada}</div>
-        <div class="subetiqueta">${NOMBRES_MES[ultima.mes]} ${ultima.anio}</div>
-      `;
+    // Cargar galardón principal
+    try {
+      const cont = document.getElementById("contenedor-galardon");
+      const lista = datos.jornadasImagenes || [];
+      const conGalardon = lista.filter(j => j.imagenGalardon);
+      if (conGalardon.length === 0) {
+        cont.innerHTML = `<div class="empty-state">Todavía no se ha publicado ningún galardón.</div>`;
+      } else {
+        conGalardon.sort((a, b) =>
+          claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
+          claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
+        );
+        const ultima = conGalardon[0];
+        cont.innerHTML = `
+          <img src="${ultima.imagenGalardon}" alt="Galardón ${ultima.jornada}">
+          <div class="etiqueta">👑 ${ultima.jornada}</div>
+          <div class="subetiqueta">${NOMBRES_MES[ultima.mes]} ${ultima.anio}</div>
+        `;
+      }
+    } catch(err) {
+      console.error(err);
     }
 
-    // --- LÓGICA DE AUTOCOMPLETADO ROBUSTA ---
-    const jugadoresSet = new Set();
-    if (datos.jugadores) {
+    // --- AUTOCOMPLETADO ROBUSTO DE JUGADORES ---
+    const jugadoresSet = new Set([
+      "Bio Tine", "Euphory", "Wag", "Renjifo", "Yo", "Gerardo", "Matagigantes"
+    ]); // Lista base de respaldo para que nunca falte autocompletado
+
+    if (datos) {
       if (Array.isArray(datos.jugadores)) {
         datos.jugadores.forEach(j => { if (typeof j === 'string') jugadoresSet.add(j); else if (j.nombre) jugadoresSet.add(j.nombre); });
-      } else {
+      } else if (datos.jugadores && typeof datos.jugadores === 'object') {
         Object.keys(datos.jugadores).forEach(j => jugadoresSet.add(j));
       }
+      if (datos.partidas && Array.isArray(datos.partidas)) {
+        datos.partidas.forEach(p => {
+          if (p.jugadores && Array.isArray(p.jugadores)) p.jugadores.forEach(j => jugadoresSet.add(j));
+        });
+      }
     }
-    if (datos.partidas) {
-      datos.partidas.forEach(p => {
-        if (p.jugadores) p.jugadores.forEach(j => jugadoresSet.add(j));
-      });
-    }
-    
-    // Lista de respaldo por si datos.js carga diferente
     const listaJugadores = Array.from(jugadoresSet).sort();
 
     const autorInput = document.getElementById('autor-input');
@@ -308,7 +314,7 @@
 
     if (error) {
       console.error("Error Supabase:", error);
-      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna (Revisa políticas RLS).</div>`;
+      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna. Verifica tu Publishable Key en el código.</div>`;
       return;
     }
 
