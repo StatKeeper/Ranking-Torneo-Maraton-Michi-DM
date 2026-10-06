@@ -15,9 +15,6 @@
 <meta name="apple-mobile-web-app-title" content="Maratón Michi">
 <link rel="apple-touch-icon" href="imagenes/icono-192.png">
 
-<!-- Supabase JS Client -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <!-- Registro del Service Worker -->
 <script>
   if ('serviceWorker' in navigator) {
@@ -38,132 +35,6 @@
     margin-top: 14px; font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.05rem;
   }
   .galardon-destacado .subetiqueta { color: var(--text-dim); font-size: 0.8rem; margin-top: 4px; }
-
-  /* Estilos de la Taberna (AoE II Theme) */
-  .taberna-container {
-    max-width: 700px;
-    margin: 40px auto 20px;
-    background: rgba(20, 22, 28, 0.95);
-    border: 1px solid var(--gold, #d4af37);
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-  }
-  .taberna-titulo {
-    font-family: 'Cinzel', serif;
-    color: var(--gold, #d4af37);
-    font-size: 1.3rem;
-    text-align: center;
-    margin-bottom: 15px;
-    border-bottom: 1px solid var(--line, #333);
-    padding-bottom: 10px;
-  }
-  .taberna-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-    position: relative;
-  }
-  .taberna-input, .taberna-textarea {
-    background: #0f1115;
-    border: 1px solid var(--line, #444);
-    color: var(--text, #eee);
-    padding: 10px 12px;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .taberna-input:focus, .taberna-textarea:focus {
-    border-color: var(--gold, #d4af37);
-    outline: none;
-  }
-
-  /* Contenedor del Autocompletado */
-  .autocomplete-wrapper {
-    position: relative;
-    width: 100%;
-  }
-  .sugerencias-lista {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #0f1115;
-    border: 1px solid var(--gold, #d4af37);
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 100;
-    display: none;
-  }
-  .sugerencia-item {
-    padding: 9px 12px;
-    cursor: pointer;
-    color: var(--text, #eee);
-    font-size: 0.9rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .sugerencia-item:hover {
-    background: rgba(212, 175, 55, 0.2);
-    color: var(--gold, #d4af37);
-  }
-  .sugerencia-invitado {
-    color: var(--gold, #d4af37);
-    font-weight: bold;
-    background: rgba(212, 175, 55, 0.08);
-  }
-
-  .taberna-btn {
-    background: linear-gradient(to bottom, #b8860b, #8b6508);
-    color: #fff;
-    border: 1px solid #d4af37;
-    padding: 10px;
-    border-radius: 4px;
-    font-family: 'Cinzel', serif;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .taberna-btn:hover {
-    background: linear-gradient(to bottom, #d4af37, #b8860b);
-  }
-  .comentarios-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
-  .comentario-card {
-    background: rgba(25, 28, 36, 0.8);
-    border-left: 3px solid var(--gold, #d4af37);
-    padding: 10px 14px;
-    border-radius: 4px;
-  }
-  .comentario-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-  }
-  .comentario-autor {
-    font-family: 'Cinzel', serif;
-    color: var(--gold, #d4af37);
-    font-weight: bold;
-  }
-  .comentario-fecha {
-    color: var(--text-dim, #888);
-  }
-  .comentario-texto {
-    color: var(--text, #ddd);
-    font-size: 0.95rem;
-    word-break: break-word;
-  }
 </style>
 </head>
 <body>
@@ -192,24 +63,6 @@
   <div id="contenedor-galardon" class="galardon-destacado">
     <div class="empty-state">Cargando…</div>
   </div>
-
-  <!-- SECCIÓN: LA TABERNA (Comentarios en tiempo real) -->
-  <section class="taberna-container">
-    <h2 class="taberna-titulo">🍺 La Taberna del Torneo</h2>
-    
-    <form id="form-comentario" class="taberna-form">
-      <div class="autocomplete-wrapper">
-        <input type="text" id="autor-input" class="taberna-input" placeholder="Escribe tu nombre oficial o búscalo (ej. [cLm]...)" autocomplete="off" required>
-        <div id="sugerencias-lista" class="sugerencias-lista"></div>
-      </div>
-      <textarea id="mensaje-input" class="taberna-textarea" rows="2" placeholder="Escribe tu mensaje para la comunidad..." required></textarea>
-      <button type="submit" class="taberna-btn">Enviar a la Taberna</button>
-    </form>
-
-    <div id="comentarios-lista" class="comentarios-lista">
-      <div class="empty-state" style="text-align:center; color:var(--text-dim);">Leyendo los pergaminos de la taberna…</div>
-    </div>
-  </section>
 </main>
 
 <nav class="mobile-nav">
@@ -223,196 +76,29 @@
 
 <script src="js/datos.js"></script>
 <script>
-  // CONFIGURACIÓN DE SUPABASE
-  const SUPABASE_URL = 'https://wdctzuawvnckemvhyrem.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkY3R6dWF3vnckemvhyremIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMDY1MzQsImV4cCI6MjEwNjg4MjUzNH0.Qqo6ea3CyRdLLkWJeOTlnKHl76ImcdmugpTW854VEnk';
-  
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+(async function init() {
+  const datos = await cargarDatos();
+  const cont = document.getElementById("contenedor-galardon");
 
-  let listaJugadoresGlobal = [];
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    // 1. CARGAR DATOS Y EXTRAER NOMBRES OFICIALES USANDO LA FUNCIÓN DE datos.js
-    try {
-      const datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
-      const cont = document.getElementById("contenedor-galardon");
-      const lista = datos.jornadasImagenes || [];
-      const conGalardon = lista.filter(j => j.imagenGalardon);
-      
-      if (conGalardon.length === 0) {
-        cont.innerHTML = `<div class="empty-state">Todavía no se ha publicado ningún galardón.</div>`;
-      } else {
-        conGalardon.sort((a, b) =>
-          claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
-          claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
-        );
-        const ultima = conGalardon[0];
-        cont.innerHTML = `
-          <img src="${ultima.imagenGalardon}" alt="Galardón ${ultima.jornada}">
-          <div class="etiqueta">👑 ${ultima.jornada}</div>
-          <div class="subetiqueta">${NOMBRES_MES[ultima.mes]} ${ultima.anio}</div>
-        `;
-      }
-
-      // Obtener la lista oficial usando la función listaDeNombresOficiales definida en datos.js
-      const partidas = datos.partidas || [];
-      const equivalencias = datos.equivalencias || [];
-      
-      if (typeof listaDeNombresOficiales === 'function') {
-        listaJugadoresGlobal = listaDeNombresOficiales(partidas, equivalencias);
-      } else {
-        // Fallback extrayendo directamente de jugadoresInfo si existiera
-        const setNombres = new Set();
-        partidas.forEach(p => (p.jugadores || []).forEach(j => {
-          if (j.nombre) setNombres.add(resolverNombreOficial(j.nombre, equivalencias));
-        }));
-        listaJugadoresGlobal = Array.from(setNombres).sort();
-      }
-
-      // Si por alguna razón la lista viniera vacía, respaldamos con algunos conocidos
-      if (listaJugadoresGlobal.length === 0) {
-        listaJugadoresGlobal = ["[cLm] KFICHO", "[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo"];
-      }
-
-    } catch (e) {
-      console.log("Aviso al cargar nombres oficiales:", e);
-      listaJugadoresGlobal = ["[cLm] KFICHO", "[cLm] Renjifo", "[cLm] Gerard", "Bio Tine", "Euphory", "Wag", "Yo"];
-    }
-
-    // Configurar el autocompletado inteligente por iniciales sucesivas (startsWith)
-    const autorInput = document.getElementById('autor-input');
-    const sugerenciasLista = document.getElementById('sugerencias-lista');
-
-    autorInput.addEventListener('input', (e) => {
-      const valor = e.target.value.toLowerCase().trim();
-      sugerenciasLista.innerHTML = '';
-
-      if (!valor) {
-        sugerenciasLista.style.display = 'none';
-        return;
-      }
-
-      // Filtrar los miembros oficiales que inician con las letras escritas
-      const filtrados = listaJugadoresGlobal.filter(j => j.toLowerCase().startsWith(valor));
-
-      // Mostrar sugerencias oficiales
-      filtrados.forEach(nombre => {
-        const item = document.createElement('div');
-        item.className = 'sugerencia-item';
-        item.textContent = `⚔️ ${nombre}`;
-        item.addEventListener('click', () => {
-          autorInput.value = nombre;
-          sugerenciasLista.style.display = 'none';
-        });
-        sugerenciasLista.appendChild(item);
-      });
-
-      // Añadir opción de Invitado al final
-      const itemInvitado = document.createElement('div');
-      itemInvitado.className = 'sugerencia-item sugerencia-invitado';
-      itemInvitado.textContent = `👤 Registrar como Invitado ("${autorInput.value}")`;
-      itemInvitado.addEventListener('click', () => {
-        sugerenciasLista.style.display = 'none';
-      });
-      sugerenciasLista.appendChild(itemInvitado);
-
-      sugerenciasLista.style.display = 'block';
-    });
-
-    // Ocultar sugerencias si se hace clic fuera
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.autocomplete-wrapper')) {
-        sugerenciasLista.style.display = 'none';
-      }
-    });
-
-    // 2. CARGAR COMENTARIOS DE SUPABASE
-    await cargarComentarios();
-    suscripcionRealtime();
-  });
-
-  async function cargarComentarios() {
-    const listaDiv = document.getElementById('comentarios-lista');
-    const { data, error } = await supabaseClient
-      .from('taberna_comentarios')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
-
-    if (error) {
-      console.error("Error Supabase:", error);
-      listaDiv.innerHTML = `<div class="empty-state" style="text-align:center; color:var(--text-dim);">La taberna está conectada, pero aún no hay pergaminos escritos.</div>`;
-      return;
-    }
-
-    renderizarComentarios(data);
+  const lista = datos.jornadasImagenes || [];
+  const conGalardon = lista.filter(j => j.imagenGalardon);
+  if (conGalardon.length === 0) {
+    cont.innerHTML = `<div class="empty-state">Todavía no se ha publicado ningún galardón.</div>`;
+    return;
   }
 
-  function renderizarComentarios(comentarios) {
-    const listaDiv = document.getElementById('comentarios-lista');
-    if (!comentarios || comentarios.length === 0) {
-      listaDiv.innerHTML = `<div class="empty-state" style="text-align:center; color:var(--text-dim);">La taberna está silenciosa. ¡Sé el primero en hablar!</div>`;
-      return;
-    }
+  conGalardon.sort((a, b) =>
+    claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
+    claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
+  );
+  const ultima = conGalardon[0];
 
-    listaDiv.innerHTML = comentarios.map(c => {
-      const fecha = new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      return `
-        <div class="comentario-card">
-          <div class="comentario-header">
-            <span class="comentario-autor">⚔️ ${escapeHTML(c.autor)}</span>
-            <span class="comentario-fecha">${fecha}</span>
-          </div>
-          <div class="comentario-texto">${escapeHTML(c.mensaje)}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  // --- ENVÍO DE COMENTARIOS ---
-  document.getElementById('form-comentario').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const autor = document.getElementById('autor-input').value.trim();
-    const mensaje = document.getElementById('mensaje-input').value.trim();
-
-    if (!autor || !mensaje) return;
-
-    const btn = e.target.querySelector('button');
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
-
-    const { error } = await supabaseClient
-      .from('taberna_comentarios')
-      .insert([{ autor, mensaje }]);
-
-    if (error) {
-      alert('Error al enviar el mensaje: ' + error.message);
-    } else {
-      document.getElementById('mensaje-input').value = '';
-      document.getElementById('autor-input').value = '';
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'Enviar a la Taberna';
-  });
-
-  // --- TIEMPO REAL (REALTIME) ---
-  function suscripcionRealtime() {
-    supabaseClient
-      .channel('public:taberna_comentarios')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'taberna_comentarios' }, payload => {
-        cargarComentarios();
-      })
-      .subscribe();
-  }
-
-  function escapeHTML(str) {
-    if (!str) return '';
-    return str.toString().replace(/[&<>'"]/g, 
-      tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-    );
-  }
+  cont.innerHTML = `
+    <img src="${ultima.imagenGalardon}" alt="Galardón ${ultima.jornada}">
+    <div class="etiqueta">👑 ${ultima.jornada}</div>
+    <div class="subetiqueta">${NOMBRES_MES[ultima.mes]} ${ultima.anio}</div>
+  `;
+})();
 </script>
 </body>
 </html>
