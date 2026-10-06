@@ -209,16 +209,21 @@
 
 <script src="js/datos.js"></script>
 <script>
-  // CONFIGURACIÓN DE SUPABASE (Credenciales configuradas)
+  // CONFIGURACIÓN DE SUPABASE
   const SUPABASE_URL = 'https://wdctzuawvnckemvhyrem.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_qQZM9UxmRfR7G3gCv63yAi_t8TAn...';
+  const SUPABASE_ANON_KEY = 'sb_publishable_qQZM9UxmRfR7G3gCv63yAi_t8TAn...'; // Llave correcta de tu panel
   
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   (async function init() {
-    const datos = await cargarDatos();
-    const cont = document.getElementById("contenedor-galardon");
+    let datos = {};
+    try {
+      datos = typeof cargarDatos === 'function' ? await cargarDatos() : {};
+    } catch (e) {
+      console.error("No se pudo cargar datos.js", e);
+    }
 
+    const cont = document.getElementById("contenedor-galardon");
     const lista = datos.jornadasImagenes || [];
     const conGalardon = lista.filter(j => j.imagenGalardon);
     if (conGalardon.length === 0) {
@@ -229,7 +234,6 @@
         claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
       );
       const ultima = conGalardon[0];
-
       cont.innerHTML = `
         <img src="${ultima.imagenGalardon}" alt="Galardón ${ultima.jornada}">
         <div class="etiqueta">👑 ${ultima.jornada}</div>
@@ -237,23 +241,29 @@
       `;
     }
 
-    // --- LÓGICA DE AUTOCOMPLETADO DE JUGADORES ---
+    // --- LÓGICA DE AUTOCOMPLETADO ROBUSTA ---
     const jugadoresSet = new Set();
     if (datos.jugadores) {
-      Object.keys(datos.jugadores).forEach(j => jugadoresSet.add(j));
+      if (Array.isArray(datos.jugadores)) {
+        datos.jugadores.forEach(j => { if (typeof j === 'string') jugadoresSet.add(j); else if (j.nombre) jugadoresSet.add(j.nombre); });
+      } else {
+        Object.keys(datos.jugadores).forEach(j => jugadoresSet.add(j));
+      }
     }
     if (datos.partidas) {
       datos.partidas.forEach(p => {
         if (p.jugadores) p.jugadores.forEach(j => jugadoresSet.add(j));
       });
     }
+    
+    // Lista de respaldo por si datos.js carga diferente
     const listaJugadores = Array.from(jugadoresSet).sort();
 
     const autorInput = document.getElementById('autor-input');
     const sugerenciasBox = document.getElementById('sugerencias-box');
 
     autorInput.addEventListener('input', (e) => {
-      const val = e.target.value.toLowerCase();
+      const val = e.target.value.toLowerCase().trim();
       sugerenciasBox.innerHTML = '';
       if (!val) {
         sugerenciasBox.style.display = 'none';
@@ -284,7 +294,7 @@
     });
 
     // --- CARGAR Y ESCUCHAR COMENTARIOS DE SUPABASE ---
-    cargarComentarios();
+    await cargarComentarios();
     suscripcionRealtime();
   })();
 
@@ -297,7 +307,8 @@
       .limit(50);
 
     if (error) {
-      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c;">Error al cargar la taberna.</div>`;
+      console.error("Error Supabase:", error);
+      listaDiv.innerHTML = `<div class="empty-state" style="color:#e74c3c; text-align:center;">Error al conectar con la taberna (Revisa políticas RLS).</div>`;
       return;
     }
 
@@ -316,7 +327,7 @@
       return `
         <div class="comentario-card">
           <div class="comentario-header">
-            <span class="comentario-autor">⚔️️ ${escapeHTML(c.autor)}</span>
+            <span class="comentario-autor">⚔️ ${escapeHTML(c.autor)}</span>
             <span class="comentario-fecha">${fecha}</span>
           </div>
           <div class="comentario-texto">${escapeHTML(c.mensaje)}</div>
@@ -362,7 +373,8 @@
   }
 
   function escapeHTML(str) {
-    return str.replace(/[&<>'"]/g, 
+    if (!str) return '';
+    return str.toString().replace(/[&<>'"]/g, 
       tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
     );
   }
