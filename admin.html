@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WNLR39PS');</script>
+<!-- End Google Tag Manager -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Administración — Comunidad AoE II</title>
@@ -23,6 +31,10 @@
 </script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNLR39PS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <header class="topbar">
   <div class="brand">
@@ -755,59 +767,63 @@ function renderizarCuadroHonorAdmin() {
     cont.innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
     return;
   }
-  const ordenadas = [...lista].sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
-  
-  cont.innerHTML = ordenadas.map(h => `
-    <div class="match-item">
-      <span>${h.anio} · ${NOMBRES_MES[h.mes]} · <strong>${h.jornada}</strong> → 👑 ${h.jugador}${h.civ ? ` (${h.civ})` : ''}</span>
-      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonorPorClave(${h.anio}, '${h.mes}', '${h.jornada}')">🗑</button>
-    </div>
-  `).join("");
+  const ordenados = [...lista].sort((a, b) => numeroDeJornada(b.jornada) - numeroDeJornada(a.jornada));
+  cont.innerHTML = `
+    <p class="hint">Cuadro de Honor en ${NOMBRES_MES[mes]} ${anio}:</p>
+    ${ordenados.map(h => `
+      <div class="match-item">
+        <span><strong>${h.jornada}</strong> — ${h.jugador} (${h.civ})</span>
+        <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor('${claveJornada(h.anio, h.mes, h.jornada)}')">🗑</button>
+      </div>
+    `).join("")}
+  `;
 }
 
 function guardarHonor() {
-  const anio = parseInt(document.getElementById("input-honor-anio").value, 10);
+  const anio = parseInt(document.getElementById("input-honor-anio").value.trim(), 10);
   const mes = document.getElementById("input-honor-mes").value;
   const jornada = document.getElementById("input-honor-jornada").value.trim();
   const jugador = document.getElementById("input-honor-jugador").value.trim();
   const civ = document.getElementById("input-honor-civ").value.trim();
 
   if (!anio || !jornada || !jugador) {
-    alert("Completa Año, Jornada y Jugador.");
+    alert("Completa Año, Jornada y Nombre del jugador.");
     return;
   }
-
   if (!DATOS.cuadroHonor) DATOS.cuadroHonor = [];
-  const clave = claveHonor(anio, mes, jornada);
-  const idx = DATOS.cuadroHonor.findIndex(h => claveHonor(h.anio, h.mes, h.jornada) === clave);
 
-  const nuevoRegistro = { anio, mes, jornada, jugador, civ };
-  if (idx !== -1) {
-    DATOS.cuadroHonor[idx] = nuevoRegistro;
+  const clave = claveJornada(anio, mes, jornada);
+  const existente = DATOS.cuadroHonor.find(h => claveJornada(h.anio, h.mes, h.jornada) === clave);
+  const nuevo = { anio, mes, jornada, jugador, civ };
+  if (existente) {
+    Object.assign(existente, nuevo);
   } else {
-    DATOS.cuadroHonor.push(nuevoRegistro);
+    DATOS.cuadroHonor.push(nuevo);
   }
 
-  document.getElementById("input-honor-jornada").value = "";
-  document.getElementById("input-honor-jugador").value = "";
-  document.getElementById("input-honor-civ").value = "";
   poblarAdminFiltrosHonor();
   renderizarCuadroHonorAdmin();
+  alert("Cuadro de Honor guardado. No olvides descargar y subir el archivo.");
 }
 
-function eliminarHonorPorClave(anio, mes, jornada) {
-  const clave = claveHonor(anio, mes, jornada);
-  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => claveHonor(h.anio, h.mes, h.jornada) !== clave);
+function eliminarHonor(clave) {
+  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => claveJornada(h.anio, h.mes, h.jornada) !== clave);
   renderizarCuadroHonorAdmin();
 }
 
 function descargarJSON() {
-  const blob = new Blob([JSON.stringify(DATOS, null, 2)], { type: "application/json" });
-  const enlace = document.createElement("a");
-  enlace.href = URL.createObjectURL(blob);
-  enlace.download = "data.json";
-  enlace.click();
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DATOS, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "data.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  cargarDesdeServidor();
+});
 </script>
 </body>
 </html>
