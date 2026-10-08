@@ -5421,6 +5421,79 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha06-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 06",
+      "numeroPartida": 1,
+      "duracionSeg": 2445,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "georgianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 34934,
+          "edificiosArrasados": 79565,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "bizantinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 29031,
+          "edificiosArrasados": 80681,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 20164,
+          "edificiosArrasados": 84401,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "derrota",
+          "civ": "vikingos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 34352,
+          "edificiosArrasados": 61467,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "georgianos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 23202,
+          "edificiosArrasados": 81457,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "bizantinos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 14227,
+          "edificiosArrasados": 46289,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -6143,6 +6216,13 @@
       "jornada": "Fecha 05",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha05.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha05.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 06",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha06.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha06.png"
     }
   ],
   "civEquivalencias": [],
@@ -6566,6 +6646,13 @@
       "jornada": "Fecha 05",
       "jugador": "P@K()",
       "civ": "Etíopes"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 06",
+      "jugador": "P@K()",
+      "civ": "Vikingos"
     }
   ]
 }
