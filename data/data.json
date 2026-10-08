@@ -6136,6 +6136,13 @@
       "jornada": "Fecha 04",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha04.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha04.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 05",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha05.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha05.png"
     }
   ],
   "civEquivalencias": [],
@@ -6552,6 +6559,13 @@
       "jornada": "Fecha 04",
       "jugador": "[cLm] Renjifo",
       "civ": "Mongoles"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 05",
+      "jugador": "P@K()",
+      "civ": "Bizantinos"
     }
   ]
 }
