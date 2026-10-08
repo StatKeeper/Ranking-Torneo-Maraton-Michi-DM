@@ -5330,6 +5330,97 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha05-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 05",
+      "numeroPartida": 2,
+      "duracionSeg": 16466,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "teutones",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 82548,
+          "edificiosArrasados": 494257,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "shu",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 99928,
+          "edificiosArrasados": 236195,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "dravídicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 42859,
+          "edificiosArrasados": 482048,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "indostanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 32903,
+          "edificiosArrasados": 454032,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "indostanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6931,
+          "edificiosArrasados": 516329,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "teutones",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 38666,
+          "edificiosArrasados": 363437,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "shu",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 78851,
+          "edificiosArrasados": 311925,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "dravídicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4403,
+          "edificiosArrasados": 453008,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
