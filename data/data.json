@@ -5494,6 +5494,78 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha07-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 07",
+      "numeroPartida": 1,
+      "duracionSeg": 9816,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 33609,
+          "edificiosArrasados": 320312,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "eslavos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 31530,
+          "edificiosArrasados": 360114,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Kanar",
+          "resultado": "victoria",
+          "civ": "cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 26246,
+          "edificiosArrasados": 272092,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 41158,
+          "edificiosArrasados": 174932,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 26787,
+          "edificiosArrasados": 303974,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "eslavos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 18627,
+          "edificiosArrasados": 287968,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -6223,6 +6295,13 @@
       "jornada": "Fecha 06",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha06.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha06.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 07",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha07.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha07.png"
     }
   ],
   "civEquivalencias": [],
@@ -6653,6 +6732,13 @@
       "jornada": "Fecha 06",
       "jugador": "P@K()",
       "civ": "Vikingos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 07",
+      "jugador": "robincule",
+      "civ": "Eslavos"
     }
   ]
 }
