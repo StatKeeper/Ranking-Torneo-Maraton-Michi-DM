@@ -6343,6 +6343,277 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-08-Fecha10-P1",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 10",
+      "numeroPartida": 1,
+      "duracionSeg": 2780,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "vietnamitas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 35091,
+          "edificiosArrasados": 80047,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "indostanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 25439,
+          "edificiosArrasados": 58277,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "borgoñeses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 37707,
+          "edificiosArrasados": 77955,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "magiares",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 40622,
+          "edificiosArrasados": 52884,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "vietnamitas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 31192,
+          "edificiosArrasados": 63675,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "indostanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 34179,
+          "edificiosArrasados": 58907,
+          "bonos": []
+        },
+        {
+          "nombre": "BullRunner",
+          "resultado": "derrota",
+          "civ": "borgoñeses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 32935,
+          "edificiosArrasados": 75477,
+          "bonos": []
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "derrota",
+          "civ": "magiares",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 33432,
+          "edificiosArrasados": 79706,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha10-P2",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 10",
+      "numeroPartida": 2,
+      "duracionSeg": 4484,
+      "jugadores": [
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 50938,
+          "edificiosArrasados": 216890,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "vietnamitas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 25826,
+          "edificiosArrasados": 103974,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 73325,
+          "edificiosArrasados": 116324,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "georgianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 25565,
+          "edificiosArrasados": 138793,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 25855,
+          "edificiosArrasados": 136070,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "vietnamitas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 19969,
+          "edificiosArrasados": 87690,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12945,
+          "edificiosArrasados": 110008,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "georgianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 21195,
+          "edificiosArrasados": 90606,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-08-Fecha10-P3",
+      "anio": 2026,
+      "mes": "08",
+      "jornada": "Fecha 10",
+      "numeroPartida": 3,
+      "duracionSeg": 8588,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "incas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 31200,
+          "edificiosArrasados": 179653,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "indostanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 67691,
+          "edificiosArrasados": 190448,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 28302,
+          "edificiosArrasados": 195410,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "magiares",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 45515,
+          "edificiosArrasados": 180611,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "incas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 45935,
+          "edificiosArrasados": 130215,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "indostanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 57664,
+          "edificiosArrasados": 204942,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "polacos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 22852,
+          "edificiosArrasados": 193441,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "magiares",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 55127,
+          "edificiosArrasados": 189745,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
