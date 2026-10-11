@@ -10838,6 +10838,97 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-09-Fecha26-P2",
+      "anio": 2026,
+      "mes": "09",
+      "jornada": "Fecha 26",
+      "numeroPartida": 2,
+      "duracionSeg": 7101,
+      "jugadores": [
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "teutones",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 33826,
+          "edificiosArrasados": 214903,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "mayas",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 49277,
+          "edificiosArrasados": 195352,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "bohemios",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 25969,
+          "edificiosArrasados": 250067,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "turcos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 28809,
+          "edificiosArrasados": 180998,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "teutones",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2652,
+          "edificiosArrasados": 221671,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "mayas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 53012,
+          "edificiosArrasados": 160235,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "derrota",
+          "civ": "bohemios",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2990,
+          "edificiosArrasados": 147563,
+          "bonos": []
+        },
+        {
+          "nombre": "Matote896",
+          "resultado": "derrota",
+          "civ": "turcos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 28227,
+          "edificiosArrasados": 177453,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
