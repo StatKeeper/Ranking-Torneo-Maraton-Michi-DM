@@ -7048,6 +7048,95 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha08-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 08",
+      "numeroPartida": 1,
+      "duracionSeg": 4817,
+      "jugadores": [
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "sarracenos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 35000,
+          "edificiosArrasados": 85000,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "victoria",
+          "civ": "tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 32000,
+          "edificiosArrasados": 80000,
+          "bonos": []
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "victoria",
+          "civ": "cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 30000,
+          "edificiosArrasados": 78000,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "turcos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 33000,
+          "edificiosArrasados": 82000,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 28000,
+          "edificiosArrasados": 75000,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "sarracenos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 29000,
+          "edificiosArrasados": 72000,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "tártaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 26000,
+          "edificiosArrasados": 68000,
+          "bonos": []
+        },
+        {
+          "nombre": "Halt_",
+          "resultado": "derrota",
+          "civ": "turcos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 36000,
+          "edificiosArrasados": 88000,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -7784,6 +7873,13 @@
       "jornada": "Fecha 07",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha07.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha07.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 08",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha08.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha08.png"
     }
   ],
   "civEquivalencias": [],
@@ -8221,6 +8317,13 @@
       "jornada": "Fecha 07",
       "jugador": "robincule",
       "civ": "Eslavos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 08",
+      "jugador": "Erik Tha Barbaro",
+      "civ": "Sarracenos"
     }
   ]
 }
