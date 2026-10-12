@@ -10929,6 +10929,241 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-07-Fecha01-P1",
+      "anio": 2026,
+      "mes": "07",
+      "jornada": "Fecha 01",
+      "numeroPartida": 1,
+      "duracionSeg": 5789,
+      "jugadores": [
+        {
+          "nombre": "Erik Barbaro",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-07-Fecha02-P1",
+      "anio": 2026,
+      "mes": "07",
+      "jornada": "Fecha 02",
+      "numeroPartida": 1,
+      "duracionSeg": 8901,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Ustukuddus",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-07-Fecha02-P2",
+      "anio": 2026,
+      "mes": "07",
+      "jornada": "Fecha 02",
+      "numeroPartida": 2,
+      "duracionSeg": 5168,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ustukuddus",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
