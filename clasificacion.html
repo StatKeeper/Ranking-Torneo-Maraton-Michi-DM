@@ -91,7 +91,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="btn secondary" onclick="descargarImagen()">📷 Descargar Imagen</button>
   </div>
 
-  <!-- Contenedor general de captura que incluye el título, los filtros de mes/año/jornada y la tabla completa -->
+  <!-- Contenedor general de captura que incluye el título, los filtros de mes/año/jornada/partida y la tabla completa -->
   <div id="captura-clasificacion" style="background: var(--panel); padding: 16px; border-radius: var(--radius); border: 1px solid var(--line);">
     <div style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.1rem; font-weight:600; margin-bottom:12px;">TABLA DE POSICIONES</div>
     
@@ -99,6 +99,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <select id="filtro-anio"></select>
       <select id="filtro-mes"></select>
       <select id="filtro-jornada"></select>
+      <select id="filtro-partida"></select>
       <span class="meta" id="resumen-periodo"></span>
     </div>
 
@@ -192,11 +193,12 @@ function poblarFiltros() {
     ? anios.map(a => `<option value="${a}">${a}</option>`).join("")
     : `<option value="">Sin datos</option>`;
 
-  selAnio.addEventListener("change", () => { poblarMeses(); poblarJornadas(); renderizar(); });
+  selAnio.addEventListener("change", () => { poblarMeses(); poblarJornadas(); poblarPartidas(); renderizar(); });
   poblarMeses();
 
-  document.getElementById("filtro-mes").addEventListener("change", () => { poblarJornadas(); renderizar(); });
-  document.getElementById("filtro-jornada").addEventListener("change", renderizar);
+  document.getElementById("filtro-mes").addEventListener("change", () => { poblarJornadas(); poblarPartidas(); renderizar(); });
+  document.getElementById("filtro-jornada").addEventListener("change", () => { poblarPartidas(); renderizar(); });
+  document.getElementById("filtro-partida").addEventListener("change", renderizar);
 }
 
 function poblarMeses() {
@@ -217,6 +219,30 @@ function poblarJornadas() {
   const selJornada = document.getElementById("filtro-jornada");
   selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
     jornadas.map(j => `<option value="${j}">Hasta ${j}</option>`).join("");
+  poblarPartidas();
+}
+
+function poblarPartidas() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const jornada = document.getElementById("filtro-jornada").value;
+  const selPartida = document.getElementById("filtro-partida");
+
+  if (!jornada) {
+    selPartida.innerHTML = `<option value="">Todas las partidas (acumulado)</option>`;
+    return;
+  }
+
+  const partidasEnFecha = PARTIDAS.filter(p => 
+    p.anio == anio && 
+    String(p.mes).padStart(2, "0") === mes && 
+    p.jornada === jornada
+  ).map(p => parseInt(p.numeroPartida, 10)).filter(n => !isNaN(n)).sort((a, b) => a - b);
+
+  const unicasPartidas = [...new Set(partidasEnFecha)];
+
+  selPartida.innerHTML = `<option value="">Todas las partidas (hasta la fecha)</option>` +
+    unicasPartidas.map(num => `<option value="${num}">Partida ${num}</option>`).join("");
 }
 
 function celdaBono(valor) {
@@ -430,6 +456,7 @@ function renderizar() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
   const jornadaFiltro = document.getElementById("filtro-jornada").value;
+  const partidaFiltro = document.getElementById("filtro-partida").value;
 
   if (!anio || !mes) {
     document.getElementById("contenedor-standings").innerHTML = `<div class="empty-state">No hay partidas registradas todavía.</div>`;
@@ -443,7 +470,7 @@ function renderizar() {
   const totalPartidasMes = partidasDelMes.length;
   document.getElementById("indicador-partidas-mes").textContent = `📊 Partidas jugadas en el mes: ${totalPartidasMes}`;
 
-  const { filas: filasCompletas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornadaFiltro || null);
+  const { filas: filasCompletas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornadaFiltro || null, partidaFiltro || null);
   
   const filas = filasCompletas;
 
