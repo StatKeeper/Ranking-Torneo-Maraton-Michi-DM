@@ -1,5 +1,10 @@
 {
-  "equivalencias": [],
+  "equivalencias": [
+    {
+      "antiguo": "[cLm] diego.leal5",
+      "oficial": "[cLm]diego.leal5"
+    }
+  ],
   "partidas": [
     {
       "id": "2026-08-Fecha01-P1",
