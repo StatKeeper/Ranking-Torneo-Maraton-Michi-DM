@@ -215,7 +215,7 @@ function calcularVarPorPartida(partidas, equivalencias) {
   return varsPorPartida;
 }
 
-function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJornada = null) {
+function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJornada = null, hastaPartida = null) {
   const filtradas = partidas.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
   if (filtradas.length === 0) return { filas: [], jornadaMostrada: "", ultimaPartida: null };
 
@@ -223,8 +223,18 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
   
   let limiteIdx = ordenadas.length;
   if (hastaJornada) {
-    const numHasta = numeroDeJornada(hastaJornada);
-    limiteIdx = ordenadas.findIndex(p => numeroDeJornada(p.jornada) > numHasta);
+    const numHastaJor = numeroDeJornada(hastaJornada);
+    const numHastaPart = hastaPartida ? parseInt(hastaPartida, 10) : null;
+
+    limiteIdx = ordenadas.findIndex(p => {
+      const jorActual = numeroDeJornada(p.jornada);
+      const partActual = parseInt(p.numeroPartida, 10) || 0;
+
+      if (jorActual > numHastaJor) return true;
+      if (jorActual === numHastaJor && numHastaPart !== null && partActual > numHastaPart) return true;
+      return false;
+    });
+
     if (limiteIdx === -1) limiteIdx = ordenadas.length;
   }
 
@@ -349,7 +359,7 @@ function calcularGrandPrixAnual(partidas, equivalencias, anio) {
   let rankingMesAnteriorMap = {};
 
   mesesDelAnio.forEach((m) => {
-    const { filas } = calcularTablaClasificacion(partidas, equivalencias, anio, m, null);
+    const { filas } = calcularTablaClasificacion(partidas, equivalencias, anio, m, null, null);
     const rankingMesActualMap = {};
 
     filas.forEach((f, index) => {
