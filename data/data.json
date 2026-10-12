@@ -12143,6 +12143,13 @@
       "jornada": "Fecha 08",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha08.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha08.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 09",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha09.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha09.png"
     }
   ],
   "civEquivalencias": [],
