@@ -4,6 +4,11 @@ const NOMBRES_MES = {
   "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
 };
 
+const PUNTOS_GP_TABLA = {
+  1: 100, 2: 85, 3: 75, 4: 65, 5: 55,
+  6: 45,  7: 40, 8: 35, 9: 30, 10: 25
+};
+
 async function cargarDatos() {
   try {
     const resp = await fetch(`data/data.json?t=${Date.now()}`, { cache: "no-store" });
@@ -333,6 +338,57 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
   return { filas, jornadaMostrada: ultimaPartida ? ultimaPartida.jornada : "", ultimaPartida };
 }
 
+function calcularGrandPrixAnual(partidas, equivalencias, anio) {
+  const mesesDelAnio = [...new Set(
+    partidas.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
+  )].sort();
+
+  if (mesesDelAnio.length === 0) return { meses: [], rankingGP: [] };
+
+  const datosJugadores = {};
+  let rankingMesAnteriorMap = {};
+
+  mesesDelAnio.forEach((m) => {
+    const { filas } = calcularTablaClasificacion(partidas, equivalencias, anio, m, null);
+    const rankingMesActualMap = {};
+
+    filas.forEach((f, index) => {
+      const posFinal = index + 1;
+      const nombre = f.nombre;
+      rankingMesActualMap[nombre] = posFinal;
+
+      let ptsGP = 0;
+      if (f.partidas >= 1) {
+        ptsGP = PUNTOS_GP_TABLA[posFinal] || 10;
+      }
+
+      if (!datosJugadores[nombre]) {
+        datosJugadores[nombre] = { nombre, puntosPorMes: {}, total: 0, posPrev: null, posAct: null, variacion: 0 };
+      }
+
+      datosJugadores[nombre].puntosPorMes[m] = ptsGP;
+      datosJugadores[nombre].total += ptsGP;
+    });
+
+    if (Object.keys(rankingMesAnteriorMap).length > 0) {
+      // Usado para cálculos progresivos de mes a mes si se requiere
+    }
+    rankingMesAnteriorMap = rankingMesActualMap;
+  });
+
+  const rankingGP = Object.values(datosJugadores).sort((a, b) => b.total - a.total);
+
+  rankingGP.forEach((item, index) => {
+    const posActual = index + 1;
+    item.posAct = posActual;
+    
+    const posAnt = rankingMesAnteriorMap[item.nombre] || posActual;
+    item.variacion = posAnt - posActual;
+  });
+
+  return { meses: mesesDelAnio, rankingGP };
+}
+
 function compararJugadores(nombres, partidas, equivalencias) {
   const statsG = calcularEstadisticasJugadores(partidas, equivalencias);
   return nombres.map(n => statsG[n] || {
@@ -427,9 +483,9 @@ function calcularCompanerosYRivales(nombreJugador, partidas, equivalencias) {
 function descargarElementoComoImagen(elemento, nombreArchivo = "captura.png", colorFondo = "#14161c") {
   if (typeof html2canvas === "undefined") {
     alert("La librería de descarga de imagen no se pudo cargar.");
-    return;
+    return Promise.reject("html2canvas no disponible");
   }
-  html2canvas(elemento, { backgroundColor: colorFondo, scale: 2 }).then(canvas => {
+  return html2canvas(elemento, { backgroundColor: colorFondo, scale: 2 }).then(canvas => {
     const enlace = document.createElement("a");
     enlace.download = nombreArchivo;
     enlace.href = canvas.toDataURL("image/png");
