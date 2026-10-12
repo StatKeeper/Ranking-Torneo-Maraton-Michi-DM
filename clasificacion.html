@@ -532,7 +532,30 @@ function descargarImagenHonor() {
 
 function descargarImagenGP() {
   const el = document.getElementById("captura-grand-prix");
-  descargarElementoComoImagen(el, `Grand_Prix_Maraton_Michi_${document.getElementById("filtro-anio").value}.png`, "#14161c");
+  const anchoOriginal = el.style.width;
+  const overflowOriginal = el.style.overflow;
+
+  const wrappers = el.querySelectorAll('div');
+  const estilosWrappers = [];
+
+  wrappers.forEach(w => {
+    estilosWrappers.push({ node: w, overflow: w.style.overflow, width: w.style.width });
+    w.style.overflow = "visible";
+    w.style.width = "max-content";
+  });
+
+  el.style.width = "950px";
+  el.style.overflow = "visible";
+
+  descargarElementoComoImagen(el, `Grand_Prix_Maraton_Michi_${document.getElementById("filtro-anio").value}.png`, "#14161c")
+    .finally(() => {
+      el.style.width = anchoOriginal;
+      el.style.overflow = overflowOriginal;
+      wrappers.forEach((w, idx) => {
+        w.style.overflow = estilosWrappers[idx].overflow;
+        w.style.width = estilosWrappers[idx].width;
+      });
+    });
 }
 
 (async function init() {
