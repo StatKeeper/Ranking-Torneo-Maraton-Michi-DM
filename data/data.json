@@ -11164,6 +11164,79 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-07-Fecha02-P3",
+      "anio": 2026,
+      "mes": "07",
+      "jornada": "Fecha 02",
+      "numeroPartida": 3,
+      "duracionSeg": 4043,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "123 Dabs",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
