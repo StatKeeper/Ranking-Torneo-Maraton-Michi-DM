@@ -370,9 +370,6 @@ function calcularGrandPrixAnual(partidas, equivalencias, anio) {
       datosJugadores[nombre].total += ptsGP;
     });
 
-    if (Object.keys(rankingMesAnteriorMap).length > 0) {
-      // Usado para cálculos progresivos de mes a mes si se requiere
-    }
     rankingMesAnteriorMap = rankingMesActualMap;
   });
 
@@ -485,7 +482,14 @@ function descargarElementoComoImagen(elemento, nombreArchivo = "captura.png", co
     alert("La librería de descarga de imagen no se pudo cargar.");
     return Promise.reject("html2canvas no disponible");
   }
-  return html2canvas(elemento, { backgroundColor: colorFondo, scale: 2 }).then(canvas => {
+  return html2canvas(elemento, { 
+    backgroundColor: colorFondo, 
+    scale: 2,
+    useCORS: true,
+    windowWidth: elemento.scrollWidth + 100,
+    scrollX: 0,
+    scrollY: 0
+  }).then(canvas => {
     const enlace = document.createElement("a");
     enlace.download = nombreArchivo;
     enlace.href = canvas.toDataURL("image/png");
