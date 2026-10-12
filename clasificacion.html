@@ -152,6 +152,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
   </div>
+
+  <!-- PANEL GRAND PRIX (GP) -->
+  <div class="panel" style="margin-top:18px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">🏎️ Grand Prix Ranking Maratón Michi DM</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="descargarImagenGP()">📷 Descargar Imagen</button>
+    </div>
+    
+    <div id="captura-grand-prix" style="padding:12px; background: var(--panel);">
+      <div id="titulo-gp-captura" style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.1rem; font-weight:600; margin-bottom:12px; text-align:left;">
+        🏎️ Grand Prix Ranking Maratón Michi DM
+      </div>
+      
+      <div id="contenedor-grand-prix">
+        <div class="empty-state">Cargando Grand Prix…</div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <nav class="mobile-nav">
@@ -347,6 +365,67 @@ function renderizarCuadroHonor() {
   `;
 }
 
+function renderizarGrandPrix() {
+  const anio = document.getElementById("filtro-anio").value;
+  const cont = document.getElementById("contenedor-grand-prix");
+  const tituloCaptura = document.getElementById("titulo-gp-captura");
+
+  if (!anio) {
+    cont.innerHTML = `<div class="empty-state">Selecciona un año.</div>`;
+    return;
+  }
+
+  if (tituloCaptura) {
+    tituloCaptura.textContent = `🏎️ Grand Prix Ranking Maratón Michi DM ${anio}`;
+  }
+
+  const { meses, rankingGP } = calcularGrandPrixAnual(PARTIDAS, EQUIVALENCIAS, anio);
+
+  if (rankingGP.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay datos para el Grand Prix en este año.</div>`;
+    return;
+  }
+
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table class="tabla-detallada">
+        <thead>
+          <tr>
+            <th>Posición</th>
+            <th>Var</th>
+            <th style="text-align:left;">Jugador</th>
+            ${meses.map(m => `<th>${NOMBRES_MES[m]}</th>`).join("")}
+            <th style="color:var(--gold); font-weight:700;">Acumulado</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rankingGP.map((item, i) => {
+            const varClass = item.variacion > 0 ? "var-up" : item.variacion < 0 ? "var-down" : "";
+            const varTexto = item.variacion > 0 ? `+${item.variacion}` : `${item.variacion}`;
+            
+            let posColor = "var(--text)";
+            if (i + 1 <= 5) posColor = "var(--win)";
+            else if (i + 1 <= 10) posColor = "var(--gold)";
+            else if (i + 1 <= 15) posColor = "#e67e22";
+
+            return `
+              <tr>
+                <td style="font-weight:700; color:${posColor};">${i + 1}</td>
+                <td class="${varClass}">${varTexto}</td>
+                <td class="jugador"><a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>${meses.map(m => {
+                  const pts = item.puntosPorMes[m] !== undefined ? item.puntosPorMes[m] : 0;
+                  return `<td style="${pts > 0 ? 'font-weight:600;' : 'color:var(--text-dim);'}">${pts}</td>`;
+                }).join("")}
+                <td style="font-weight:700; color:var(--win); background:rgba(255,255,255,0.03);">${item.total}</td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
 function renderizar() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
@@ -356,6 +435,7 @@ function renderizar() {
     document.getElementById("contenedor-standings").innerHTML = `<div class="empty-state">No hay partidas registradas todavía.</div>`;
     document.getElementById("indicador-partidas-mes").textContent = "";
     renderizarCuadroHonor();
+    renderizarGrandPrix();
     return;
   }
 
@@ -432,6 +512,7 @@ function renderizar() {
   }
 
   renderizarCuadroHonor();
+  renderizarGrandPrix();
 }
 
 function descargarImagen() {
@@ -447,6 +528,11 @@ function descargarImagen() {
 function descargarImagenHonor() {
   const el = document.getElementById("captura-cuadro-honor");
   descargarElementoComoImagen(el, "cuadro-de-honor.png", "#14161c");
+}
+
+function descargarImagenGP() {
+  const el = document.getElementById("captura-grand-prix");
+  descargarElementoComoImagen(el, `Grand_Prix_Maraton_Michi_${document.getElementById("filtro-anio").value}.png`, "#14161c");
 }
 
 (async function init() {
