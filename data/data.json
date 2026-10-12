@@ -11237,6 +11237,169 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha09-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 09",
+      "numeroPartida": 1,
+      "duracionSeg": 5478,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 41358,
+          "edificiosArrasados": 167396,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 31600,
+          "edificiosArrasados": 128875,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 31019,
+          "edificiosArrasados": 170007,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 18823,
+          "edificiosArrasados": 111357,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 33098,
+          "edificiosArrasados": 132191,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "thejordymon",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 24357,
+          "edificiosArrasados": 140755,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha09-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 09",
+      "numeroPartida": 2,
+      "duracionSeg": 2131,
+      "jugadores": [
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 22823,
+          "edificiosArrasados": 51862,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "HASSAKU",
+          "resultado": "victoria",
+          "civ": "Tártaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 46047,
+          "edificiosArrasados": 61411,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 34343,
+          "edificiosArrasados": 45534,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "victoria",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 29822,
+          "edificiosArrasados": 39808,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 41972,
+          "edificiosArrasados": 60874,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 44322,
+          "edificiosArrasados": 73936,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 31319,
+          "edificiosArrasados": 53500,
+          "bonos": []
+        },
+        {
+          "nombre": "exxpecialista",
+          "resultado": "derrota",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 28398,
+          "edificiosArrasados": 29956,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -12424,6 +12587,13 @@
       "jornada": "Fecha 08",
       "jugador": "Erik Tha Barbaro",
       "civ": "Sarracenos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 09",
+      "jugador": "GGINDU",
+      "civ": "Godos"
     }
   ]
 }
