@@ -14,7 +14,7 @@
     },
     {
       "antiguo": "B.Rommel",
-      "oficial": "bLItzKrleG*RoMMeL"
+      "oficial": "[cLm] bLiTzKrIeG*RoMMeL"
     },
     {
       "antiguo": "Erik Barbaro",
@@ -61,10 +61,6 @@
       "oficial": "Ustukhuddus"
     },
     {
-      "antiguo": "B. Rommel",
-      "oficial": "bLItzKrleG*RoMMeL"
-    },
-    {
       "antiguo": "Bullrunner",
       "oficial": "BullRunner"
     },
@@ -75,6 +71,10 @@
     {
       "antiguo": "Pako",
       "oficial": "P@K()"
+    },
+    {
+      "antiguo": "bLItzKrleG*RoMMeL",
+      "oficial": "[cLm] bLiTzKrIeG*RoMMeL"
     }
   ],
   "partidas": [
@@ -12232,6 +12232,10 @@
     "勇战到底": {
       "pais": "",
       "civFavorita": ""
+    },
+    "[cLm] bLiTzKrIeG*RoMMeL": {
+      "pais": "PE",
+      "civFavorita": "Sarracenos"
     }
   },
   "jornadasImagenes": [
