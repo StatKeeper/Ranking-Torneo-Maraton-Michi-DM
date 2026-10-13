@@ -83,6 +83,14 @@
     {
       "antiguo": "bLiTzKrIeG*RoMmEL",
       "oficial": "[cLm] bLiTzKrIeG*RoMMeL"
+    },
+    {
+      "antiguo": "Ww. Choko krispi",
+      "oficial": "Ww. Choko_krispi"
+    },
+    {
+      "antiguo": "Ww.Choko_krispi",
+      "oficial": "Ww. Choko_krispi"
     }
   ],
   "partidas": [
@@ -12244,6 +12252,10 @@
     "[cLm] bLiTzKrIeG*RoMMeL": {
       "pais": "PE",
       "civFavorita": "Sarracenos"
+    },
+    "Ww. Choko_krispi": {
+      "pais": "EC",
+      "civFavorita": ""
     }
   },
   "jornadasImagenes": [
