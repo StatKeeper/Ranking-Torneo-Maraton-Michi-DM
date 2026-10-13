@@ -11413,6 +11413,279 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha10-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 10",
+      "numeroPartida": 1,
+      "duracionSeg": 3168,
+      "jugadores": [
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 39661,
+          "edificiosArrasados": 79572,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 28968,
+          "edificiosArrasados": 112511,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 24457,
+          "edificiosArrasados": 85842,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 33927,
+          "edificiosArrasados": 93788,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11644,
+          "edificiosArrasados": 47383,
+          "bonos": []
+        },
+        {
+          "nombre": "WHIT3ROS3",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 32556,
+          "edificiosArrasados": 81571,
+          "bonos": []
+        },
+        {
+          "nombre": "league of legends",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 41019,
+          "edificiosArrasados": 78988,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 19886,
+          "edificiosArrasados": 110615,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha10-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 10",
+      "numeroPartida": 2,
+      "duracionSeg": 4391,
+      "jugadores": [
+        {
+          "nombre": "WHIT3ROS3",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 29639,
+          "edificiosArrasados": 123506,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 28596,
+          "edificiosArrasados": 122481,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Romanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 44676,
+          "edificiosArrasados": 124496,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 22209,
+          "edificiosArrasados": 113257,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Bereberes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 40202,
+          "edificiosArrasados": 116422,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 29906,
+          "edificiosArrasados": 87085,
+          "bonos": []
+        },
+        {
+          "nombre": "Yaroslav",
+          "resultado": "derrota",
+          "civ": "Romanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 37747,
+          "edificiosArrasados": 130083,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Goku Prime",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 21441,
+          "edificiosArrasados": 121557,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha10-P3",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 10",
+      "numeroPartida": 3,
+      "duracionSeg": 4680,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 35013,
+          "edificiosArrasados": 91514,
+          "bonos": []
+        },
+        {
+          "nombre": "donald trump",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 36435,
+          "edificiosArrasados": 158483,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Portugueses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 37953,
+          "edificiosArrasados": 141381,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Yaroslav",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 45288,
+          "edificiosArrasados": 135164,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 31260,
+          "edificiosArrasados": 129230,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 33350,
+          "edificiosArrasados": 120174,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Portugueses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 42443,
+          "edificiosArrasados": 90380,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 19780,
+          "edificiosArrasados": 86356,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -12163,6 +12436,13 @@
       "jornada": "Fecha 09",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha09.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha09.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 10",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha10.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha10.png"
     }
   ],
   "civEquivalencias": [],
@@ -12614,6 +12894,13 @@
       "jornada": "Fecha 09",
       "jugador": "GGINDU",
       "civ": "Godos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 10",
+      "jugador": "[cLm] Renjifo",
+      "civ": "Bulgaros"
     }
   ]
 }
