@@ -11766,6 +11766,270 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha11-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 11",
+      "numeroPartida": 1,
+      "duracionSeg": 4620,
+      "jugadores": [
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Malayos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "cumplear",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Malayos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha11-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 11",
+      "numeroPartida": 2,
+      "duracionSeg": 3218,
+      "jugadores": [
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 23954,
+          "edificiosArrasados": 86054,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Vídicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 30331,
+          "edificiosArrasados": 85815,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 46659,
+          "edificiosArrasados": 107641,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Francos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 33679,
+          "edificiosArrasados": 88355,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 31885,
+          "edificiosArrasados": 97638,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Vídicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 25251,
+          "edificiosArrasados": 74147,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Polacos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 37864,
+          "edificiosArrasados": 74728,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Francos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 29294,
+          "edificiosArrasados": 96125,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha11-P3",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 11",
+      "numeroPartida": 3,
+      "duracionSeg": 3797,
+      "jugadores": [
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 37900,
+          "edificiosArrasados": 116099,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 27460,
+          "edificiosArrasados": 81225,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "Portugueses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 32052,
+          "edificiosArrasados": 147803,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Romanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 33522,
+          "edificiosArrasados": 116434,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Tártaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 40146,
+          "edificiosArrasados": 105516,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Portugueses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 15105,
+          "edificiosArrasados": 62550,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 13701,
+          "edificiosArrasados": 91996,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Romanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 43130,
+          "edificiosArrasados": 110659,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -12531,6 +12795,13 @@
       "jornada": "Fecha 10",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha10.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha10.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 11",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha11.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha11.png"
     }
   ],
   "civEquivalencias": [],
@@ -12989,6 +13260,13 @@
       "jornada": "Fecha 10",
       "jugador": "[cLm] Renjifo",
       "civ": "Bulgaros"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 11",
+      "jugador": "P@K()",
+      "civ": "Españoles"
     }
   ]
 }
