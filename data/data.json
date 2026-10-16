@@ -53,10 +53,6 @@
       "oficial": "[cLm]diego.leal5"
     },
     {
-      "antiguo": "Wag",
-      "oficial": "[cLm] WaG"
-    },
-    {
       "antiguo": "Ustukuddus",
       "oficial": "Ustukhuddus"
     },
@@ -91,6 +87,10 @@
     {
       "antiguo": "Ww.Choko_krispi",
       "oficial": "Ww. Choko_krispi"
+    },
+    {
+      "antiguo": "[cLm] WaG",
+      "oficial": "WaG"
     }
   ],
   "partidas": [
@@ -12030,6 +12030,310 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha12-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 12",
+      "numeroPartida": 1,
+      "duracionSeg": 4148,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 26802,
+          "edificiosArrasados": 80965,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Malayos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 19532,
+          "edificiosArrasados": 165549,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[B] AZAR300",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 65719,
+          "edificiosArrasados": 71245,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 11652,
+          "edificiosArrasados": 79774,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "derrota",
+          "civ": "Malayos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 20478,
+          "edificiosArrasados": 119770,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 50190,
+          "edificiosArrasados": 66235,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha12-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 12",
+      "numeroPartida": 2,
+      "duracionSeg": 7669,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Portugueses",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Godos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "derrota",
+          "civ": "Portugueses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "Godos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha12-P3",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 12",
+      "numeroPartida": 3,
+      "duracionSeg": 3879,
+      "jugadores": [
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha12-P4",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 12",
+      "numeroPartida": 4,
+      "duracionSeg": 3327,
+      "jugadores": [
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Maya",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 44535,
+          "edificiosArrasados": 90272,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Tártaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 39907,
+          "edificiosArrasados": 108263,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 33416,
+          "edificiosArrasados": 133732,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "cartunesots",
+          "resultado": "victoria",
+          "civ": "Incas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 39690,
+          "edificiosArrasados": 80018,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "derrota",
+          "civ": "Maya",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 74767,
+          "edificiosArrasados": 94010,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 47859,
+          "edificiosArrasados": 85882,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 12779,
+          "edificiosArrasados": 122444,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Incas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 30594,
+          "edificiosArrasados": 74680,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -12802,6 +13106,13 @@
       "jornada": "Fecha 11",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha11.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha11.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 12",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha12.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha12.png"
     }
   ],
   "civEquivalencias": [],
@@ -13267,6 +13578,13 @@
       "jornada": "Fecha 11",
       "jugador": "P@K()",
       "civ": "Españoles"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 12",
+      "jugador": "yo",
+      "civ": "Malayos"
     }
   ]
 }
