@@ -12334,6 +12334,78 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha13-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 13",
+      "numeroPartida": 1,
+      "duracionSeg": 8045,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 85030,
+          "edificiosArrasados": 268336,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 29588,
+          "edificiosArrasados": 237208,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 30922,
+          "edificiosArrasados": 287390,
+          "bonos": [
+            "E",
+            "M",
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 12150,
+          "edificiosArrasados": 188866,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Bereberes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 42002,
+          "edificiosArrasados": 282173,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 17219,
+          "edificiosArrasados": 143598,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -13113,6 +13185,13 @@
       "jornada": "Fecha 12",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha12.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha12.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 13",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha13.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha13.png"
     }
   ],
   "civEquivalencias": [],
@@ -13585,6 +13664,13 @@
       "jornada": "Fecha 12",
       "jugador": "yo",
       "civ": "Malayos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 13",
+      "jugador": "P@K()",
+      "civ": "Chinos"
     }
   ]
 }
