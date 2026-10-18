@@ -17602,96 +17602,6 @@
           "bonos": []
         }
       ]
-    },
-    {
-      "id": "2026-10-Fecha14-P1",
-      "anio": 2026,
-      "mes": "10",
-      "jornada": "Fecha 14",
-      "numeroPartida": 1,
-      "duracionSeg": 6295,
-      "jugadores": [
-        {
-          "nombre": "Elraf",
-          "resultado": "victoria",
-          "civ": "Lituanos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 6501,
-          "edificiosArrasados": 199524,
-          "bonos": [
-            "M"
-          ]
-        },
-        {
-          "nombre": "yo",
-          "resultado": "victoria",
-          "civ": "Bohemios",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 1122,
-          "edificiosArrasados": 189976,
-          "bonos": [
-            "R",
-            "O",
-            "S"
-          ]
-        },
-        {
-          "nombre": "[cLm] Gerard",
-          "resultado": "victoria",
-          "civ": "Búlgaros",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 5693,
-          "edificiosArrasados": 178347,
-          "bonos": []
-        },
-        {
-          "nombre": "Knar",
-          "resultado": "victoria",
-          "civ": "Birmanos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 16088,
-          "edificiosArrasados": 377281,
-          "bonos": [
-            "E"
-          ]
-        },
-        {
-          "nombre": "Papita Huayro",
-          "resultado": "derrota",
-          "civ": "Bohemios",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 6126,
-          "edificiosArrasados": 140371,
-          "bonos": []
-        },
-        {
-          "nombre": "啊彤",
-          "resultado": "derrota",
-          "civ": "Búlgaros",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 4802,
-          "edificiosArrasados": 165714,
-          "bonos": []
-        },
-        {
-          "nombre": "Pako",
-          "resultado": "derrota",
-          "civ": "Lituanos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 3580,
-          "edificiosArrasados": 151296,
-          "bonos": []
-        },
-        {
-          "nombre": "GrouchySmurf",
-          "resultado": "derrota",
-          "civ": "Birmanos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 4652,
-          "edificiosArrasados": 149488,
-          "bonos": []
-        }
-      ]
     }
   ],
   "jugadoresInfo": {
@@ -17932,7 +17842,7 @@
       "civFavorita": ""
     },
     "Knar": {
-      "pais": "",
+      "pais": "US",
       "civFavorita": ""
     },
     "Komodo3000": {
@@ -18478,13 +18388,6 @@
       "jornada": "Fecha 13",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha13.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha13.png"
-    },
-    {
-      "anio": 2026,
-      "mes": "10",
-      "jornada": "Fecha 14",
-      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha14.png",
-      "imagenGalardon": "imagenes/galardon_2026-10_fecha14.png"
     }
   ],
   "civEquivalencias": [],
@@ -18964,13 +18867,6 @@
       "jornada": "Fecha 13",
       "jugador": "P@K()",
       "civ": "Chinos"
-    },
-    {
-      "anio": 2026,
-      "mes": "10",
-      "jornada": "Fecha 14",
-      "jugador": "Knar",
-      "civ": "Birmanos"
     }
   ]
 }
