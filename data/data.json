@@ -17692,6 +17692,149 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha15-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 15",
+      "numeroPartida": 1,
+      "duracionSeg": 7496,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Mongoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9113,
+          "edificiosArrasados": 268920,
+          "bonos": [
+            "E",
+            "M",
+            "O"
+          ]
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Godos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7768,
+          "edificiosArrasados": 219984,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8545,
+          "edificiosArrasados": 232153,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Godos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5268,
+          "edificiosArrasados": 183115,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Mongoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7970,
+          "edificiosArrasados": 225478,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7777,
+          "edificiosArrasados": 206245,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha15-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 15",
+      "numeroPartida": 2,
+      "duracionSeg": 5550,
+      "jugadores": [
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7557,
+          "edificiosArrasados": 222762,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Coreanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4437,
+          "edificiosArrasados": 145414,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4581,
+          "edificiosArrasados": 152706,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3983,
+          "edificiosArrasados": 139744,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5262,
+          "edificiosArrasados": 161901,
+          "bonos": []
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "derrota",
+          "civ": "Etíopes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7824,
+          "edificiosArrasados": 199687,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -18485,6 +18628,13 @@
       "jornada": "Fecha 14",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha14.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha14.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 15",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha15.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha15.png"
     }
   ],
   "civEquivalencias": [],
@@ -18971,6 +19121,13 @@
       "jornada": "Fecha 14",
       "jugador": "Knar",
       "civ": "Birmanos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 15",
+      "jugador": "[cLm] Gerard",
+      "civ": "Mongoles"
     }
   ]
 }
