@@ -17835,6 +17835,97 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha16-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 16",
+      "numeroPartida": 1,
+      "duracionSeg": 6845,
+      "jugadores": [
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10213,
+          "edificiosArrasados": 337770,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2894,
+          "edificiosArrasados": 195852,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5142,
+          "edificiosArrasados": 182224,
+          "bonos": []
+        },
+        {
+          "nombre": "Yaroslav",
+          "resultado": "victoria",
+          "civ": "Mongoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5440,
+          "edificiosArrasados": 204360,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3259,
+          "edificiosArrasados": 210901,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1680,
+          "edificiosArrasados": 180110,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Mongoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5642,
+          "edificiosArrasados": 198040,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12313,
+          "edificiosArrasados": 329354,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -18635,6 +18726,13 @@
       "jornada": "Fecha 15",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha15.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha15.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 16",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha16.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha16.png"
     }
   ],
   "civEquivalencias": [],
@@ -19128,6 +19226,13 @@
       "jornada": "Fecha 15",
       "jugador": "[cLm] Gerard",
       "civ": "Mongoles"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 16",
+      "jugador": "Saul Goodman",
+      "civ": "Jemeres"
     }
   ]
 }
