@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #14161c;
-  --panel: #1c2027;
-  --panel-raised: #232833;
-  --line: #2c313c;
-  --gold: #c69b3d;
-  --gold-dim: #8a6d2c;
-  --patina: #3f7069;
-  --patina-bright: #5fa89e;
-  --text: #e9e4d8;
-  --text-dim: #9498a3;
-  --win: #5fa87a;
-  --loss: #b0554f;
-  --radius: 3px;
+  --bg: #f8f6f0;            /* Fondo general pergamino claro estilo AoE II Companion */
+  --panel: #ffffff;         /* Fondo de paneles y tarjetas blanco puro */
+  --panel-raised: #f2eee5;  /* Fondo de encabezados y elementos elevados */
+  --line: #e2dcd0;          /* Líneas de rejilla y bordes suavemente marcados */
+  --gold: #a37015;          /* Oro/Madera oscuro para encabezados y nombres clave */
+  --gold-dim: #7a520c;      /* Tono oro más profundo para detalles */
+  --patina: #2c5e56;        /* Tono azul/verde medieval */
+  --patina-bright: #1d7266; /* Enlaces y contrastes principales */
+  --text: #2c2825;          /* Texto principal en gris/negro muy oscuro */
+  --text-dim: #6d675d;      /* Texto secundario y metadatos */
+  --win: #2d804e;           /* Verde de victoria contrastado para fondo claro */
+  --loss: #c0392b;          /* Rojo de derrota contrastado para fondo claro */
+  --radius: 4px;
 }
 
 * { box-sizing: border-box; }
@@ -41,7 +41,7 @@ a:hover { text-decoration: underline; }
 
 /* ---------- Cabecera ---------- */
 .topbar {
-  background: linear-gradient(180deg, #1a1e26 0%, #14161c 100%);
+  background: #f1ebd8;
   border-bottom: 2px solid var(--gold-dim);
   padding: 18px 20px 14px;
 }
@@ -54,7 +54,7 @@ a:hover { text-decoration: underline; }
 }
 .topbar .brand h1 {
   font-size: 1.3rem;
-  color: var(--gold);
+  color: var(--gold-dim);
 }
 .topbar .brand .sub {
   font-size: 0.75rem;
@@ -111,13 +111,14 @@ main {
   flex-wrap: wrap;
 }
 .filters select {
-  background: var(--panel-raised);
+  background: #ffffff;
   color: var(--text);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 6px 10px;
   font-family: inherit;
   font-size: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 /* ---------- Tabla de clasificación ---------- */
@@ -126,6 +127,7 @@ main {
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--panel);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
 }
 .standings-row {
   display: grid;
@@ -139,8 +141,8 @@ main {
 .standings-row:last-child { border-bottom: none; }
 .standings-row:hover { background: var(--panel-raised); }
 .standings-row.rank-1 { border-left-color: var(--gold); }
-.standings-row.rank-2 { border-left-color: #a3a8b3; }
-.standings-row.rank-3 { border-left-color: #a06a3d; }
+.standings-row.rank-2 { border-left-color: #7f8c8d; }
+.standings-row.rank-3 { border-left-color: #d35400; }
 
 .rank-num {
   font-family: 'Cinzel', serif;
@@ -198,7 +200,7 @@ main {
   font-family: 'Cinzel', serif;
   font-size: 1.4rem;
   font-weight: 700;
-  color: var(--bg);
+  color: #ffffff;
   flex-shrink: 0;
 }
 .profile-header h1 { font-size: 1.4rem; }
@@ -277,13 +279,14 @@ main {
   border-radius: var(--radius);
   padding: 16px;
   margin-bottom: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 .panel h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--gold); }
 .panel p.hint { font-size: 0.8rem; color: var(--text-dim); margin: 0 0 10px; }
 
 textarea, input[type=text], input[type=number] {
   width: 100%;
-  background: var(--bg);
+  background: #ffffff;
   color: var(--text);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -296,7 +299,7 @@ textarea { min-height: 140px; resize: vertical; }
 .btn {
   display: inline-block;
   background: var(--gold);
-  color: #17130a;
+  color: #ffffff;
   border: none;
   border-radius: var(--radius);
   padding: 9px 16px;
@@ -305,9 +308,9 @@ textarea { min-height: 140px; resize: vertical; }
   cursor: pointer;
   font-family: 'Inter', sans-serif;
 }
-.btn:hover { background: #d9ac48; }
+.btn:hover { background: var(--gold-dim); }
 .btn.secondary { background: var(--panel-raised); color: var(--text); border: 1px solid var(--line); }
-.btn.secondary:hover { background: var(--line); }
+.btn.secondary:hover { background: #e6e0d3; }
 
 .empty-state {
   text-align: center;
@@ -324,11 +327,12 @@ textarea { min-height: 140px; resize: vertical; }
     display: flex;
     position: fixed;
     bottom: 0; left: 0; width: 100%;
-    background: var(--panel);
+    background: #ffffff;
     border-top: 1px solid var(--line);
     justify-content: space-around;
     padding: 8px 0;
     z-index: 100;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
   }
   .mobile-nav a {
     display: flex;
