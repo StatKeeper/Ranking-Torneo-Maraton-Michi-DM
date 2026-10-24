@@ -18016,6 +18016,168 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha18-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 18",
+      "numeroPartida": 1,
+      "duracionSeg": 4446,
+      "jugadores": [
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4578,
+          "edificiosArrasados": 162386,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7619,
+          "edificiosArrasados": 233184,
+          "bonos": [
+            "E",
+            "M",
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Godos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2012,
+          "edificiosArrasados": 132800,
+          "bonos": []
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6933,
+          "edificiosArrasados": 176145,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3760,
+          "edificiosArrasados": 122245,
+          "bonos": []
+        },
+        {
+          "nombre": "Mark-Semi-Noob",
+          "resultado": "derrota",
+          "civ": "Godos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4617,
+          "edificiosArrasados": 154210,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha18-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 18",
+      "numeroPartida": 2,
+      "duracionSeg": 10236,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 11682,
+          "edificiosArrasados": 269325,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Yaroslav",
+          "resultado": "victoria",
+          "civ": "Italianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10159,
+          "edificiosArrasados": 281634,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Coreanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4534,
+          "edificiosArrasados": 152595,
+          "bonos": []
+        },
+        {
+          "nombre": "勇战到底",
+          "resultado": "victoria",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 13653,
+          "edificiosArrasados": 327803,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9464,
+          "edificiosArrasados": 281680,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Italianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8068,
+          "edificiosArrasados": 212152,
+          "bonos": []
+        },
+        {
+          "nombre": "Ww. Choko_krispi",
+          "resultado": "derrota",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 12370,
+          "edificiosArrasados": 323205,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Coreanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11109,
+          "edificiosArrasados": 280542,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -18830,6 +18992,13 @@
       "jornada": "Fecha 17",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha17.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha17.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 18",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha18.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha18.png"
     }
   ],
   "civEquivalencias": [],
@@ -19337,6 +19506,13 @@
       "jornada": "Fecha 17",
       "jugador": "Bio Tine",
       "civ": "Incas"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 18",
+      "jugador": "[cLm] Gerard",
+      "civ": "Godos"
     }
   ]
 }
