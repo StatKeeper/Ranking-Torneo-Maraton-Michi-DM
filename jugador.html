@@ -176,7 +176,7 @@ function pintarPerfil(nombre) {
       <div class="avatar" style="${codigoPais ? 'overflow:hidden; padding:0;' : ''}">${contenidoAvatar}</div>
       <div>
         <h1>${stats.nombre}</h1>
-        <div class="tagline">${stats.partidas} partidas jugadas (${porcentajeParticipacion}% de participación) · ${winRate}% victorias${civFavorita ? ` · ⭐ Favorita: ${civFavorita}` : ""}</div>
+        <div class="tagline">${stats.partidas} partidas jugadas · ${winRate}% victorias${civFavorita ? ` · ⭐ Favorita: ${civFavorita}` : ""}</div>
       </div>
     </div>
 
@@ -184,6 +184,7 @@ function pintarPerfil(nombre) {
       <div class="stat-tile"><span class="num">${stats.puntos}</span><span class="label">Puntos</span></div>
       <div class="stat-tile"><span class="num">${stats.victorias}</span><span class="label">Victorias</span></div>
       <div class="stat-tile"><span class="num">${stats.derrotas}</span><span class="label">Derrotas</span></div>
+      <div class="stat-tile"><span class="num" style="color:var(--patina-bright);">${porcentajeParticipacion}%</span><span class="label">Participación Ranking Maratón Michi DM</span></div>
       <div class="stat-tile"><span class="num">${formatearDuracion(stats.segundosTotales)}</span><span class="label">Tiempo Total</span></div>
       <div class="stat-tile"><span class="num">${formatearDuracion(promTiempo)}</span><span class="label">Promedio Tiempo Total</span></div>
       <div class="stat-tile"><span class="num">${stats.unidadesAsesinadas}</span><span class="label">Unidades Asesinadas</span></div>
