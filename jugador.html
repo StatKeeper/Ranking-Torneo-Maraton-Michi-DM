@@ -17,7 +17,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <!-- Configuración PWA e Ícono de Inicio -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#14161c">
+<meta name="theme-color" content="#f8f6f0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Maratón Michi">
@@ -146,6 +146,7 @@ function poblarFiltrosPeriodo() {
 function pintarPerfil(nombre) {
   const cont = document.getElementById("contenido-perfil");
   const partidasActivas = partidasFiltradas();
+  const totalPartidasGlobales = partidasActivas.length;
   const stats = calcularEstadisticasJugadores(partidasActivas, EQUIVALENCIAS)[nombre];
 
   if (!stats) {
@@ -155,6 +156,7 @@ function pintarPerfil(nombre) {
   }
 
   const winRate = stats.partidas > 0 ? Math.round((stats.victorias / stats.partidas) * 100) : 0;
+  const porcentajeParticipacion = totalPartidasGlobales > 0 ? Math.round((stats.partidas / totalPartidasGlobales) * 100) : 0;
   const promTiempo = stats.partidas > 0 ? Math.round(stats.segundosTotales / stats.partidas) : 0;
   const inicial = stats.nombre.replace(/\[.*?\]/g, "").trim().charAt(0).toUpperCase() || "?";
   const info = JUGADORES_INFO[stats.nombre] || {};
@@ -174,7 +176,7 @@ function pintarPerfil(nombre) {
       <div class="avatar" style="${codigoPais ? 'overflow:hidden; padding:0;' : ''}">${contenidoAvatar}</div>
       <div>
         <h1>${stats.nombre}</h1>
-        <div class="tagline">${stats.partidas} partidas jugadas · ${winRate}% victorias${civFavorita ? ` · ⭐ Favorita: ${civFavorita}` : ""}</div>
+        <div class="tagline">${stats.partidas} partidas jugadas (${porcentajeParticipacion}% de participación) · ${winRate}% victorias${civFavorita ? ` · ⭐ Favorita: ${civFavorita}` : ""}</div>
       </div>
     </div>
 
@@ -287,7 +289,7 @@ document.getElementById("input-buscar").addEventListener("change", (e) => {
 
 function descargarImagenPerfil() {
   const el = document.getElementById("contenido-perfil");
-  descargarElementoComoImagen(el, "perfil-jugador.png", "#14161c");
+  descargarElementoComoImagen(el, "perfil-jugador.png", "#f8f6f0");
 }
 
 (async function init() {
