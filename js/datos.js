@@ -487,7 +487,7 @@ function calcularCompanerosYRivales(nombreJugador, partidas, equivalencias) {
   return { aliados: listaAliados, adversarios: listaAdversarios };
 }
 
-function descargarElementoComoImagen(elemento, nombreArchivo = "captura.png", colorFondo = "#14161c") {
+function descargarElementoComoImagen(elemento, nombreArchivo = "captura.png", colorFondo = "#f8f6f0") {
   if (typeof html2canvas === "undefined") {
     alert("La librería de descarga de imagen no se pudo cargar.");
     return Promise.reject("html2canvas no disponible");
