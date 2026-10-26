@@ -18257,24 +18257,26 @@
       "mes": "10",
       "jornada": "Fecha 19",
       "numeroPartida": 2,
-      "duracionSeg": 0,
+      "duracionSeg": 3032,
       "jugadores": [
         {
           "nombre": "[cLm] Renjifo",
           "resultado": "victoria",
           "civ": "Malíes",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 0,
-          "edificiosArrasados": 1448,
-          "bonos": []
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2223,
+          "edificiosArrasados": 93728,
+          "bonos": [
+            "S"
+          ]
         },
         {
           "nombre": "Knar",
           "resultado": "victoria",
           "civ": "Britanos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 0,
-          "edificiosArrasados": 1555,
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3158,
+          "edificiosArrasados": 118742,
           "bonos": [
             "E"
           ]
@@ -18283,39 +18285,116 @@
           "nombre": "P@K()",
           "resultado": "victoria",
           "civ": "Magiares",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 0,
-          "edificiosArrasados": 1363,
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1883,
+          "edificiosArrasados": 79378,
           "bonos": []
         },
         {
           "nombre": "Papita Huayro",
           "resultado": "derrota",
           "civ": "Malíes",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 0,
-          "edificiosArrasados": 1497,
-          "bonos": []
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3219,
+          "edificiosArrasados": 104527,
+          "bonos": [
+            "M"
+          ]
         },
         {
           "nombre": "GJ Euphory",
           "resultado": "derrota",
           "civ": "Britanos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 0,
-          "edificiosArrasados": 1393,
-          "bonos": []
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2899,
+          "edificiosArrasados": 109218,
+          "bonos": [
+            "R"
+          ]
         },
         {
           "nombre": "[cLm] KFICHO",
           "resultado": "derrota",
           "civ": "Magiares",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 0,
-          "edificiosArrasados": 1357,
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1232,
+          "edificiosArrasados": 67297,
           "bonos": [
-            "R"
+            "O"
           ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha20-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 20",
+      "numeroPartida": 1,
+      "duracionSeg": 5097,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6199,
+          "edificiosArrasados": 157296,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5916,
+          "edificiosArrasados": 212376,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "[cLm] Falco Lombardi",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5755,
+          "edificiosArrasados": 189709,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Mr.Magic",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4159,
+          "edificiosArrasados": 146567,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 8759,
+          "edificiosArrasados": 175422,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Bereberes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2840,
+          "edificiosArrasados": 98007,
+          "bonos": []
         }
       ]
     }
@@ -19146,6 +19225,13 @@
       "jornada": "Fecha 19",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha19.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha19.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 20",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha20.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha20.png"
     }
   ],
   "civEquivalencias": [],
@@ -19665,8 +19751,15 @@
       "anio": 2026,
       "mes": "10",
       "jornada": "Fecha 19",
-      "jugador": "Papita Huayro",
-      "civ": "Hunos"
+      "jugador": "truc.itsm",
+      "civ": "Italianos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 20",
+      "jugador": "Bio Tine",
+      "civ": "Bulgaros"
     }
   ]
 }
