@@ -18397,6 +18397,96 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha21-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 21",
+      "numeroPartida": 1,
+      "duracionSeg": 4778,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Yurchen",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2825,
+          "edificiosArrasados": 103190,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4053,
+          "edificiosArrasados": 105422,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7103,
+          "edificiosArrasados": 192373,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "WaG",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5221,
+          "edificiosArrasados": 127549,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5037,
+          "edificiosArrasados": 157997,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "THameed",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5839,
+          "edificiosArrasados": 143639,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Yurchen",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2937,
+          "edificiosArrasados": 93285,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4708,
+          "edificiosArrasados": 97215,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -19232,6 +19322,13 @@
       "jornada": "Fecha 20",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha20.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha20.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 21",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha21.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha21.png"
     }
   ],
   "civEquivalencias": [],
@@ -19760,6 +19857,13 @@
       "jornada": "Fecha 20",
       "jugador": "Bio Tine",
       "civ": "Bulgaros"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 21",
+      "jugador": "P@K()",
+      "civ": "Malíes"
     }
   ]
 }
