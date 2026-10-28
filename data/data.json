@@ -18487,6 +18487,169 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha22-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 22",
+      "numeroPartida": 1,
+      "duracionSeg": 3607,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Borgoñeses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1704,
+          "edificiosArrasados": 98724,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4314,
+          "edificiosArrasados": 164406,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Magiares",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1394,
+          "edificiosArrasados": 110315,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Magiares",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1455,
+          "edificiosArrasados": 92877,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3993,
+          "edificiosArrasados": 148844,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Borgoñeses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1393,
+          "edificiosArrasados": 70098,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha22-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 22",
+      "numeroPartida": 2,
+      "duracionSeg": 7665,
+      "jugadores": [
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 19233,
+          "edificiosArrasados": 418249,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 498,
+          "edificiosArrasados": 175933,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6951,
+          "edificiosArrasados": 259818,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9309,
+          "edificiosArrasados": 221008,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4982,
+          "edificiosArrasados": 219040,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 15591,
+          "edificiosArrasados": 366601,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "derrota",
+          "civ": "Mapuches",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6798,
+          "edificiosArrasados": 226573,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5715,
+          "edificiosArrasados": 180223,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -19329,6 +19492,13 @@
       "jornada": "Fecha 21",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha21.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha21.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 22",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha22.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha22.png"
     }
   ],
   "civEquivalencias": [],
@@ -19864,6 +20034,13 @@
       "jornada": "Fecha 21",
       "jugador": "P@K()",
       "civ": "Malíes"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 22",
+      "jugador": "[cLm] Renjifo",
+      "civ": "Borgoñeses"
     }
   ]
 }
