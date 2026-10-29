@@ -122,17 +122,17 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   </div>
 
   <div class="panel">
-    <h3>⑥ Nacionalidad y civilización favorita</h3>
+    <h3>⑥ Nacionalidad, Categoría y Civilización Favorita</h3>
     <p class="hint">
-      Escribe el nombre oficial exacto del jugador, su código de país de 2 letras
-      (ej. Perú = PE, Argentina = AR, México = MX, España = ES, Colombia = CO, Chile = CL)
-      y, si quieres, su civilización favorita. Ambos campos son editables en cualquier momento.
+      Asigna la categoría digitando: <strong>1</strong> (Comunidad), <strong>2</strong> (Liga) o <strong>3</strong> (Invitado).
+      También puedes poner el código de país de 2 letras (PE, AR, MX, etc.) y su civilización favorita.
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
       <input type="text" id="input-pais-jugador" placeholder="Nombre oficial (ej. GJ Euphory)" style="flex:2; min-width:180px;" list="lista-nombres-sugeridos">
-      <input type="text" id="input-pais-codigo" maxlength="2" placeholder="PE" style="flex:0 0 70px; text-transform:uppercase;">
-      <input type="text" id="input-civ-favorita" placeholder="Civilización favorita (opc.)" style="flex:1.5; min-width:160px;" list="lista-civs-sugeridas">
-      <button class="btn secondary" onclick="agregarPais()">Guardar</button>
+      <input type="text" id="input-categoria-jugador" maxlength="1" placeholder="1, 2 o 3" style="flex:0 0 80px; text-align:center;">
+      <input type="text" id="input-pais-codigo" maxlength="2" placeholder="PE" style="flex:0 0 60px; text-transform:uppercase;">
+      <input type="text" id="input-civ-favorita" placeholder="Civilización favorita (opc.)" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
+      <button class="btn secondary" onclick="agregarPais()">Guardar Jugador</button>
     </div>
     <div id="lista-paises"></div>
   </div>
@@ -257,7 +257,7 @@ async function cargarDesdeServidor() {
       DATOS.jugadoresInfo = {};
       if (DATOS.paises && typeof DATOS.paises === "object") {
         Object.entries(DATOS.paises).forEach(([nombre, pais]) => {
-          DATOS.jugadoresInfo[nombre] = { pais, civFavorita: "" };
+          DATOS.jugadoresInfo[nombre] = { pais, civFavorita: "", categoria: 1 };
         });
         delete DATOS.paises;
       }
@@ -554,22 +554,16 @@ function renderizarPaises() {
     return;
   }
 
-  const ordenados = [...nombres].sort((a, b) => {
-    const infoA = DATOS.jugadoresInfo[a] || {};
-    const infoB = DATOS.jugadoresInfo[b] || {};
-    const incompletaA = (!infoA.pais || !infoA.civFavorita) ? 0 : 1;
-    const incompletaB = (!infoB.pais || !infoB.civFavorita) ? 0 : 1;
-    if (incompletaA !== incompletaB) return incompletaA - incompletaB;
-    return a.localeCompare(b);
-  });
+  const ordenados = [...nombres].sort((a, b) => a.localeCompare(b));
 
   cont.innerHTML = `
-    <p class="hint">${nombres.length} jugadores registrados en total. Los que les falta país y/o civilización aparecen primero.</p>
+    <p class="hint">${nombres.length} jugadores registrados en total.</p>
     <div style="overflow-x:auto;">
       <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
         <thead>
           <tr style="text-align:left; color:var(--gold); border-bottom:1px solid var(--line);">
             <th style="padding:6px 8px;">Jugador</th>
+            <th style="padding:6px 8px;">Categoría (1: Com | 2: Liga | 3: Inv)</th>
             <th style="padding:6px 8px;">País</th>
             <th style="padding:6px 8px;">Civ. favorita</th>
             <th style="padding:6px 8px;"></th>
@@ -578,14 +572,21 @@ function renderizarPaises() {
         <tbody>
           ${ordenados.map(nombre => {
             const info = DATOS.jugadoresInfo[nombre] || {};
-            const faltaAlgo = !info.pais || !info.civFavorita;
+            const cat = info.categoria || 1;
             return `
-              <tr style="border-bottom:1px solid var(--line); ${faltaAlgo ? 'background:rgba(176,85,79,0.08);' : ''}">
-                <td style="padding:6px 8px;">${nombre}</td>
+              <tr style="border-bottom:1px solid var(--line);">
+                <td style="padding:6px 8px; font-weight:600;">${nombre}</td>
                 <td style="padding:6px 8px;">
-                  ${info.pais ? `<img src="https://flagcdn.com/w40/${info.pais.toLowerCase()}.png" style="width:20px; vertical-align:middle; margin-right:4px; border-radius:2px;">${info.pais}` : `<span style="color:var(--loss);">falta</span>`}
+                  <select style="padding:2px 6px; font-size:0.78rem;" onchange="cambiarCategoriaDirecta('${nombre.replace(/'/g,"\\'")}', this.value)">
+                    <option value="1" ${cat == 1 ? 'selected' : ''}>1 - Comunidad</option>
+                    <option value="2" ${cat == 2 ? 'selected' : ''}>2 - Participante Liga</option>
+                    <option value="3" ${cat == 3 ? 'selected' : ''}>3 - Invitado Liga</option>
+                  </select>
                 </td>
-                <td style="padding:6px 8px;">${info.civFavorita || `<span style="color:var(--loss);">falta</span>`}</td>
+                <td style="padding:6px 8px;">
+                  ${info.pais ? `<img src="https://flagcdn.com/w40/${info.pais.toLowerCase()}.png" style="width:20px; vertical-align:middle; margin-right:4px; border-radius:2px;">${info.pais}` : `<span style="color:var(--text-dim);">—</span>`}
+                </td>
+                <td style="padding:6px 8px;">${info.civFavorita || `<span style="color:var(--text-dim);">—</span>`}</td>
                 <td style="padding:6px 8px; text-align:right;">
                   <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="precargarPais('${nombre.replace(/'/g,"\\'")}')">✎</button>
                   <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="eliminarPais('${nombre.replace(/'/g,"\\'")}')">🗑</button>
@@ -599,9 +600,16 @@ function renderizarPaises() {
   `;
 }
 
+function cambiarCategoriaDirecta(nombre, nuevaCat) {
+  if (!DATOS.jugadoresInfo) DATOS.jugadoresInfo = {};
+  if (!DATOS.jugadoresInfo[nombre]) DATOS.jugadoresInfo[nombre] = {};
+  DATOS.jugadoresInfo[nombre].categoria = parseInt(nuevaCat, 10) || 1;
+}
+
 function precargarPais(nombre) {
   const info = DATOS.jugadoresInfo[nombre] || {};
   document.getElementById("input-pais-jugador").value = nombre;
+  document.getElementById("input-categoria-jugador").value = info.categoria || 1;
   document.getElementById("input-pais-codigo").value = info.pais || "";
   document.getElementById("input-civ-favorita").value = info.civFavorita || "";
   document.getElementById("input-pais-jugador").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -609,18 +617,26 @@ function precargarPais(nombre) {
 
 function agregarPais() {
   const nombre = document.getElementById("input-pais-jugador").value.trim();
+  const catInput = document.getElementById("input-categoria-jugador").value.trim();
   const codigo = document.getElementById("input-pais-codigo").value.trim().toUpperCase();
   const civFavorita = document.getElementById("input-civ-favorita").value.trim();
-  if (!nombre || (codigo && codigo.length !== 2)) {
-    alert("Escribe el nombre oficial. Si pones país, debe ser de exactamente 2 letras.");
+  
+  if (!nombre) {
+    alert("Escribe el nombre oficial del jugador.");
     return;
   }
+
+  const categoriaNum = parseInt(catInput, 10) || (DATOS.jugadoresInfo[nombre]?.categoria || 1);
+
   if (!DATOS.jugadoresInfo) DATOS.jugadoresInfo = {};
   DATOS.jugadoresInfo[nombre] = {
+    categoria: categoriaNum,
     pais: codigo || (DATOS.jugadoresInfo[nombre]?.pais || ""),
     civFavorita: civFavorita || (DATOS.jugadoresInfo[nombre]?.civFavorita || "")
   };
+
   document.getElementById("input-pais-jugador").value = "";
+  document.getElementById("input-categoria-jugador").value = "";
   document.getElementById("input-pais-codigo").value = "";
   document.getElementById("input-civ-favorita").value = "";
   actualizarListasSugerencias();
@@ -696,7 +712,7 @@ function renderizarFechasImagenes() {
     <p class="hint">Fechas con imágenes guardadas en ${NOMBRES_MES[mes]} ${anio}:</p>
     ${ordenadas.map(j => `
       <div class="match-item">
-        <span>${j.anio} · ${NOMBRES_MES[j.mes]} ·${j.jornada}</span>
+        <span>${j.anio} · ${NOMBRES_MES[j.mes]} · ${j.jornada}</span>
         <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarFechaImagenes('${claveJornada(j.anio, j.mes, j.jornada)}')">🗑</button>
       </div>
     `).join("")}
@@ -726,8 +742,7 @@ function guardarImagenesFecha() {
   }
 
   poblarAdminFiltrosImg();
-  renderizarFechasImagenes();
-  alert("Imágenes guardadas para esta Fecha. No olvides descargar y subir el archivo.");
+  alert("Imágenes guardadas correctamente en memoria.");
 }
 
 function eliminarFechaImagenes(clave) {
@@ -764,16 +779,16 @@ function renderizarCuadroHonorAdmin() {
 
   const lista = (DATOS.cuadroHonor || []).filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes);
   if (lista.length === 0) {
-    cont.innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
+    cont.innerHTML = `<p class="hint">No hay registros de Cuadro de Honor para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
     return;
   }
-  const ordenados = [...lista].sort((a, b) => numeroDeJornada(b.jornada) - numeroDeJornada(a.jornada));
+  const ordenadas = [...lista].sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
   cont.innerHTML = `
-    <p class="hint">Cuadro de Honor en ${NOMBRES_MES[mes]} ${anio}:</p>
-    ${ordenados.map(h => `
+    <p class="hint">Registros en ${NOMBRES_MES[mes]} ${anio}:</p>
+    ${ordenadas.map(h => `
       <div class="match-item">
-        <span><strong>${h.jornada}</strong> — ${h.jugador} (${h.civ})</span>
-        <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor('${claveJornada(h.anio, h.mes, h.jornada)}')">🗑</button>
+        <span>${h.jornada}: <strong>${h.jugador}</strong> (${h.civ || 'Sin civ'})</span>
+        <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor(${h.anio}, '${h.mes}', '${h.jornada}')">🗑</button>
       </div>
     `).join("")}
   `;
@@ -787,13 +802,12 @@ function guardarHonor() {
   const civ = document.getElementById("input-honor-civ").value.trim();
 
   if (!anio || !jornada || !jugador) {
-    alert("Completa Año, Jornada y Nombre del jugador.");
+    alert("Completa Año, Jornada y Jugador.");
     return;
   }
   if (!DATOS.cuadroHonor) DATOS.cuadroHonor = [];
 
-  const clave = claveJornada(anio, mes, jornada);
-  const existente = DATOS.cuadroHonor.find(h => claveJornada(h.anio, h.mes, h.jornada) === clave);
+  const existente = DATOS.cuadroHonor.find(h => h.anio == anio && String(h.mes).padStart(2, "0") === String(mes).padStart(2, "0") && h.jornada.toLowerCase() === jornada.toLowerCase());
   const nuevo = { anio, mes, jornada, jugador, civ };
   if (existente) {
     Object.assign(existente, nuevo);
@@ -802,12 +816,11 @@ function guardarHonor() {
   }
 
   poblarAdminFiltrosHonor();
-  renderizarCuadroHonorAdmin();
-  alert("Cuadro de Honor guardado. No olvides descargar y subir el archivo.");
+  alert("Cuadro de Honor guardado correctamente en memoria.");
 }
 
-function eliminarHonor(clave) {
-  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => claveJornada(h.anio, h.mes, h.jornada) !== clave);
+function eliminarHonor(anio, mes, jornada) {
+  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => !(h.anio == anio && String(h.mes).padStart(2, "0") === String(mes).padStart(2, "0") && h.jornada.toLowerCase() === jornada.toLowerCase()));
   renderizarCuadroHonorAdmin();
 }
 
@@ -820,10 +833,6 @@ function descargarJSON() {
   downloadAnchor.click();
   downloadAnchor.remove();
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  cargarDesdeServidor();
-});
 </script>
 </body>
 </html>
