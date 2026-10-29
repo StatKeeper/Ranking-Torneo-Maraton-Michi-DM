@@ -1,435 +1,378 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
 <!-- Google Tag Manager -->
-
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-
 })(window,document,'script','dataLayer','GTM-WNLR39PS');</script>
-
 <!-- End Google Tag Manager -->
 
-
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Candidatos y Galardones — Comunidad AoE II</title>
-
+<title>Clasificación y Ranking — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
-
 <link rel="stylesheet" href="css/estilo.css">
 
-
-
 <!-- Configuración PWA e Ícono de Inicio -->
-
 <link rel="manifest" href="manifest.json">
-
-<meta name="theme-color" content="#14161c">
-
+<meta name="theme-color" content="#f8f6f0">
 <meta name="mobile-web-app-capable" content="yes">
-
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
 <meta name="apple-mobile-web-app-title" content="Maratón Michi">
-
 <link rel="apple-touch-icon" href="imagenes/icono-192.png">
 
-
-
 <!-- Registro del Service Worker -->
-
 <script>
-
   if ('serviceWorker' in navigator) {
-
     navigator.serviceWorker.register('./sw.js');
-
   }
-
 </script>
 
-
-
-<style>
-
-  .tabla-honor { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; }
-
-  .tabla-honor th, .tabla-honor td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: middle; }
-
-  .tabla-honor th { color: var(--gold); font-weight: 600; font-size: 0.78rem; background: var(--panel-raised); }
-
-  .tabla-honor td.ganador { font-weight: 700; color: var(--win); }
-
-  .acciones-jornada { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .btn-accion { font-size: 0.72rem; padding: 4px 8px; border-radius: var(--radius); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
-
-  
-
-  /* Modal de Visualización de Imágenes */
-
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-
-  .modal-content { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); max-width: 90%; max-height: 90vh; overflow: auto; padding: 16px; text-align: center; position: relative; }
-
-  .modal-content img { max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 12px; display: block; }
-
-  .modal-close { position: absolute; top: 10px; right: 12px; background: var(--panel-raised); color: var(--text); border: 1px solid var(--line); border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-</style>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-
 <body>
-
 <!-- Google Tag Manager (noscript) -->
-
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNLR39PS"
-
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
 <!-- End Google Tag Manager (noscript) -->
 
-
-
 <header class="topbar">
-
   <div class="brand">
-
-    <span class="sub">Candidatos y Galardones</span>
-
+    <span class="sub">Clasificación y Ranking</span>
   </div>
-
   <nav class="tabs">
-
     <a href="index.html">Inicio</a>
-
-    <a href="clasificacion.html">Clasificación</a>
-
+    <a href="clasificacion.html" class="active">Clasificación</a>
     <a href="jugador.html">Jugadores</a>
-
     <a href="estadisticas.html">Estadísticas</a>
-
-    <a href="candidatos.html" class="active">Candidatos</a>
-
+    <a href="candidatos.html">Candidatos</a>
     <a href="historial.html">Historial</a>
-
     <a href="admin.html">Administración</a>
-
   </nav>
-
 </header>
 
-
-
 <main>
-
-  <div class="filters">
-
-    <select id="filtro-anio"></select>
-
-    <select id="filtro-mes"></select>
-
-  </div>
-
-
-
-  <div class="panel" style="margin-top: 10px;">
-
-    <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin-bottom:12px;">🏆 Cuadro de Honor Mensual</h3>
-
-    <div id="contenedor-cuadro-honor">
-
-      <div class="empty-state">Cargando…</div>
-
+  <div class="panel" id="seccion-tabla-posiciones">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">Tabla de Posiciones</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarTablaPosiciones()">📷 Descargar Imagen</button>
     </div>
 
-  </div>
-
-</main>
-
-
-
-<!-- Modal para ver imágenes en grande -->
-
-<div id="modal-imagen" class="modal-overlay" onclick="cerrarModal()">
-
-  <div class="modal-content" onclick="event.stopPropagation()">
-
-    <button class="modal-close" onclick="cerrarModal()">×</button>
-
-    <h3 id="modal-titulo" style="color: var(--gold); margin-bottom: 10px; font-size: 0.95rem;"></h3>
-
-    <img id="modal-img-src" src="" alt="Vista previa">
-
-    <a id="modal-btn-descargar" class="btn secondary" href="" download style="font-size: 0.8rem;">⬇ Descargar Imagen (HD)</a>
-
-  </div>
-
-</div>
-
-
-
-<nav class="mobile-nav">
-
-  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
-
-  <a href="clasificacion.html"><span class="icon">🏆</span>Ranking</a>
-
-  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
-
-  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
-
-  <a href="candidatos.html" class="active"><span class="icon">⭐</span>Candidatos</a>
-
-  <a href="historial.html"><span class="icon">📜</span>Historial</a>
-
-</nav>
-
-
-
-<script src="js/datos.js"></script>
-
-<script>
-
-let JORNADAS_IMAGENES = [], CUADRO_HONOR = [];
-
-
-
-function poblarFiltros() {
-
-  const anios = [...new Set([...JORNADAS_IMAGENES.map(j => j.anio), ...CUADRO_HONOR.map(c => c.anio)])].sort((a, b) => b - a);
-
-  const selAnio = document.getElementById("filtro-anio");
-
-  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">Sin datos</option>`;
-
-  selAnio.addEventListener("change", () => { poblarMeses(); render(); });
-
-  poblarMeses();
-
-  document.getElementById("filtro-mes").addEventListener("change", render);
-
-}
-
-
-
-function poblarMeses() {
-
-  const anio = document.getElementById("filtro-anio").value;
-
-  const mesesSet = new Set([
-
-    ...JORNADAS_IMAGENES.filter(j => j.anio == anio).map(j => String(j.mes).padStart(2, "0")),
-
-    ...CUADRO_HONOR.filter(c => c.anio == anio).map(c => String(c.mes).padStart(2, "0"))
-
-  ]);
-
-  const meses = [...mesesSet].sort().reverse();
-
-  const selMes = document.getElementById("filtro-mes");
-
-  selMes.innerHTML = meses.length ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("") : `<option value="">Sin datos</option>`;
-
-}
-
-
-
-function render() {
-
-  const anio = document.getElementById("filtro-anio").value;
-
-  const mes = document.getElementById("filtro-mes").value;
-
-  const cont = document.getElementById("contenedor-cuadro-honor");
-
-  const titulo = document.getElementById("titulo-cuadro-honor");
-
-
-
-  const nombreMes = NOMBRES_MES[mes] || "";
-
-  if (titulo) titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
-
-
-
-  if (!anio || !mes) {
-
-    cont.innerHTML = `<div class="empty-state">Selecciona un período.</div>`;
-
-    return;
-
-  }
-
-
-
-  const delMesHonor = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
-
-    .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
-
-
-
-  const delMesImgs = JORNADAS_IMAGENES.filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes);
-
-
-
-  if (delMesHonor.length === 0 && delMesImgs.length === 0) {
-
-    cont.innerHTML = `<div class="empty-state">No hay registros para ${nombreMes} ${anio}.</div>`;
-
-    return;
-
-  }
-
-
-
-  // Unificar combinando el cuadro de honor con las imágenes asociadas por jornada
-
-  const jornadasMap = {};
-
-  delMesHonor.forEach(h => {
-
-    jornadasMap[h.jornada] = { jornada: h.jornada, jugador: h.jugador, civ: h.civ, imgEval: null, imgGal: null };
-
-  });
-
-
-
-  delMesImgs.forEach(j => {
-
-    if (!jornadasMap[j.jornada]) {
-
-      jornadasMap[j.jornada] = { jornada: j.jornada, jugador: '—', civ: '—', imgEval: null, imgGal: null };
-
-    }
-
-    jornadasMap[j.jornada].imgEval = j.imagenEvaluacion;
-
-    jornadasMap[j.jornada].imgGal = j.imagenGalardon;
-
-  });
-
-
-
-  const listaJornadas = Object.values(jornadasMap).sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
-
-
-
-  cont.innerHTML = `
+    <div class="filters" style="margin-bottom:12px;">
+      <select id="filtro-anio"></select>
+      <select id="filtro-mes"></select>
+      <select id="filtro-jornada">
+        <option value="">Todo el mes (acumulado)</option>
+      </select>
+      <select id="filtro-partida" style="display:none;">
+        <option value="">Toda la jornada</option>
+      </select>
+    </div>
+
+    <div id="info-jornada" style="font-size:0.85rem; color:var(--gold); margin-bottom:8px; font-weight:600;"></div>
 
     <div style="overflow-x:auto;">
-
-      <table class="tabla-honor">
-
+      <table id="tabla-clasificacion">
         <thead>
-
           <tr>
-
-            <th>Jornada</th>
-
-            <th>Jugador de la Fecha</th>
-
-            <th>Civilización</th>
-
-            <th>Archivos Multimedia</th>
-
+            <th>Pos</th>
+            <th>Var</th>
+            <th>Jugador</th>
+            <th>Pts</th>
+            <th>V/PJ</th>
+            <th>Último Suceso</th>
+            <th>V/D</th>
+            <th>E</th>
+            <th>R</th>
+            <th>M</th>
+            <th>O</th>
+            <th>S</th>
+            <th>Rch</th>
+            <th>MG</th>
+            <th>RLP</th>
+            <th>TB</th>
           </tr>
-
         </thead>
-
-        <tbody>
-
-          ${listaJornadas.map(j => `
-
-            <tr>
-
-              <td style="font-weight:600; color:var(--text);">${j.jornada}</td>
-
-              <td class="ganador">👑 ${j.jugador || '—'}</td>
-
-              <td style="color:var(--text-dim);">${j.civ || '—'}</td>
-
-              <td>
-
-                <div class="acciones-jornada">
-
-                  ${j.imgEval ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - Evaluación', '${j.imgEval}')">📋 Ver Evaluación</button>` : ''}
-
-                  ${j.imgGal ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - Galardón', '${j.imgGal}')">👑 Ver Galardón</button>` : ''}
-
-                  ${!j.imgEval && !j.imgGal ? '<span style="font-size:0.75rem; color:var(--text-dim);">Sin imágenes</span>' : ''}
-
-                </div>
-
-              </td>
-
-            </tr>
-
-          `).join("")}
-
+        <tbody id="cuerpo-tabla-clasificacion">
+          <tr><td colspan="16" class="empty-state">Cargando datos...</td></tr>
         </tbody>
-
       </table>
-
     </div>
+  </div>
 
+  <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarCuadroHonor()">📷 Descargar Imagen</button>
+    </div>
+    <div id="contenedor-cuadro-honor">
+      <div class="empty-state">Cargando...</div>
+    </div>
+  </div>
+
+  <div class="panel" id="seccion-grand-prix" style="margin-top:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="titulo-grand-prix" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Grand Prix Anual</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarGrandPrix()">📷 Descargar Imagen</button>
+    </div>
+    <div id="contenedor-grand-prix">
+      <div class="empty-state">Cargando Grand Prix...</div>
+    </div>
+  </div>
+</main>
+
+<nav class="mobile-nav">
+  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
+  <a href="clasificacion.html" class="active"><span class="icon">🏆</span>Ranking</a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
+  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
+  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
+  <a href="historial.html"><span class="icon">📜</span>Historial</a>
+</nav>
+
+<script src="js/datos.js"></script>
+<script>
+let PARTIDAS = [];
+let EQUIVALENCIAS = [];
+let JUGADORES_INFO = {};
+let CUADRO_HONOR = [];
+
+function poblarFiltrosAnioMes() {
+  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-anio");
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+
+  actualizarMeses();
+  selAnio.addEventListener("change", () => { actualizarMeses(); actualizarJornadasYRenderizar(); });
+  document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
+  document.getElementById("filtro-jornada").addEventListener("change", (e) => {
+    actualizarPartidas(e.target.value);
+    renderizarTodo();
+  });
+  document.getElementById("filtro-partida").addEventListener("change", () => { renderizarTodo(); });
+}
+
+function actualizarMeses() {
+  const anio = document.getElementById("filtro-anio").value;
+  const meses = [...new Set(
+    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
+  )].sort().reverse();
+
+  const selMes = document.getElementById("filtro-mes");
+  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+}
+
+function actualizarJornadasYRenderizar() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const filtradas = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+
+  const jornadasSet = new Set();
+  filtradas.forEach(p => { if (p.jornada) jornadasSet.add(p.jornada); });
+
+  const jornadasOrdenadas = [...jornadasSet].sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
+
+  const selJornada = document.getElementById("filtro-jornada");
+  selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
+    jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
+
+  document.getElementById("filtro-partida").style.display = "none";
+  renderizarTodo();
+}
+
+function actualizarPartidas(jornadaValor) {
+  const selPartida = document.getElementById("filtro-partida");
+  if (!jornadaValor) {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+    return;
+  }
+
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const partidasJornada = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes && p.jornada === jornadaValor);
+
+  const numerosPartida = [...new Set(partidasJornada.map(p => p.numeroPartida))].sort((a, b) => a - b);
+  
+  if (numerosPartida.length > 1) {
+    selPartida.style.display = "inline-block";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>` +
+      numerosPartida.map(n => `<option value="${n}">Partida ${n}</option>`).join("");
+  } else {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+  }
+}
+
+function renderizarTodo() {
+  renderizarTablaPosiciones();
+  renderizarCuadroHonor();
+  renderizarGrandPrix();
+}
+
+function renderizarTablaPosiciones() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const jornada = document.getElementById("filtro-jornada").value;
+  const partida = document.getElementById("filtro-partida").value;
+
+  const tbody = document.getElementById("cuerpo-tabla-clasificacion");
+  const infoJor = document.getElementById("info-jornada");
+
+  const { filas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornada, partida);
+
+  if (ultimaPartida) {
+    infoJor.textContent = `📅 ${ultimaPartida.jornada} · Partida ${ultimaPartida.numeroPartida} (${ultimaPartida.mapa || 'Mapa estándar'})`;
+  } else {
+    infoJor.textContent = `📅 Período: ${NOMBRES_MES[mes] || ''} ${anio}`;
+  }
+
+  if (filas.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros para este período.</td></tr>`;
+    return;
+  }
+
+  const totalPartidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes).length;
+  document.getElementById("info-jornada").innerHTML += ` &nbsp; | &nbsp; Partidas jugadas en el mes: ${totalPartidasMes}`;
+
+  tbody.innerHTML = filas.map((f, idx) => {
+    const pos = idx + 1;
+    let varStr = "-";
+    if (f.variacion > 0) varStr = `<span style="color:var(--win);">+${f.variacion}</span>`;
+    else if (f.variacion < 0) varStr = `<span style="color:var(--loss);">${f.variacion}</span>`;
+    else varStr = `0`;
+
+    return `
+      <tr>
+        <td class="num">${pos}</td>
+        <td class="num">${varStr}</td>
+        <td><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
+        <td class="num" style="font-weight:700; color:var(--gold);">${f.puntos}</td>
+        <td class="num">${f.victorias}/${f.partidas}</td>
+        <td>${f.ultimoSuceso || '—'}</td>
+        <td class="num">${f.vd}</td>
+        <td class="num">${f.bonos.E}</td>
+        <td class="num">${f.bonos.R}</td>
+        <td class="num">${f.bonos.M}</td>
+        <td class="num">${f.bonos.O}</td>
+        <td class="num">${f.bonos.S}</td>
+        <td class="num" style="${f.bonos.Rch > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.Rch}</td>
+        <td class="num" style="${f.bonos.MG > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.MG}</td>
+        <td class="num" style="${f.bonos.RLP > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.RLP}</td>
+        <td class="num" style="font-weight:700;">${f.tb}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderizarCuadroHonor() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const titulo = document.getElementById("titulo-cuadro-honor");
+  const cont = document.getElementById("contenedor-cuadro-honor");
+
+  const nombreMes = NOMBRES_MES[mes] || "";
+  titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
+
+  const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
+    .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
+
+  if (delMes.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
+    return;
+  }
+
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+        <thead>
+          <tr>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jornada</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jugador de la Fecha</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Civilización</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${delMes.map(h => `
+            <tr>
+              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:600;">${h.jornada}</td>
+              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--win);">👑 <a href="jugador.html?nombre=${encodeURIComponent(h.jugador)}">${h.jugador}</a></td>
+              <td style="padding:10px; border-bottom:1px solid var(--line); color:var(--text-dim);">${h.civ || '—'}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
   `;
-
 }
 
+function renderizarGrandPrix() {
+  const anio = document.getElementById("filtro-anio").value;
+  const cont = document.getElementById("contenedor-grand-prix");
+  document.getElementById("titulo-grand-prix").textContent = `🏆 Grand Prix Ranking Maratón Michi DM ${anio}`;
 
+  const { meses, rankingGP } = calcularGrandPrixAnual(PARTIDAS, EQUIVALENCIAS, anio);
 
-function abrirModal(titulo, url) {
+  if (rankingGP.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay datos de Grand Prix para el año ${anio}.</div>`;
+    return;
+  }
 
-  document.getElementById("modal-titulo").textContent = titulo;
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Posición</th>
+            <th>Var</th>
+            <th>Jugador</th>
+            ${meses.map(m => `<th>${NOMBRES_MES[m]}</th>`).join("")}
+            <th>Acumulado</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rankingGP.map((item, idx) => {
+            const pos = idx + 1;
+            let varStr = "0";
+            if (item.variacion > 0) varStr = `<span style="color:var(--win);">+${item.variacion}</span>`;
+            else if (item.variacion < 0) varStr = `<span style="color:var(--loss);">${item.variacion}</span>`;
 
-  document.getElementById("modal-img-src").src = url;
-
-  document.getElementById("modal-btn-descargar").href = url;
-
-  document.getElementById("modal-imagen").style.display = "flex";
-
+            return `
+              <tr>
+                <td class="num" style="font-weight:700; color:var(--gold);">${pos}</td>
+                <td class="num">${varStr}</td>
+                <td><a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
+                ${meses.map(m => `<td class="num">${item.puntosPorMes[m] || 0}</td>`).join("")}
+                <td class="num" style="font-weight:700; color:var(--win);">${item.total}</td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
-
-
-function cerrarModal() {
-
-  document.getElementById("modal-imagen").style.display = "none";
-
+function descargarTablaPosiciones() {
+  descargarElementoComoImagen(document.getElementById("seccion-tabla-posiciones"), "tabla-posiciones.png", "#f8f6f0");
 }
-
-
+function descargarCuadroHonor() {
+  descargarElementoComoImagen(document.getElementById("seccion-cuadro-honor"), "cuadro-honor.png", "#f8f6f0");
+}
+function descargarGrandPrix() {
+  descargarElementoComoImagen(document.getElementById("seccion-grand-prix"), "grand-prix.png", "#f8f6f0");
+}
 
 (async function init() {
-
   const datos = await cargarDatos();
-
-  JORNADAS_IMAGENES = datos.jornadasImagenes || [];
-
+  PARTIDAS = datos.partidas;
+  EQUIVALENCIAS = datos.equivalencias;
+  JUGADORES_INFO = datos.jugadoresInfo || {};
   CUADRO_HONOR = datos.cuadroHonor || [];
-
-  poblarFiltros();
-
-  render();
-
+  poblarFiltrosAnioMes();
 })();
-
 </script>
-
 </body>
-
 </html>
