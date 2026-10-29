@@ -11,13 +11,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clasificación y Ranking — Comunidad AoE II</title>
+<title>Clasificación — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
 <!-- Configuración PWA e Ícono de Inicio -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#f8f6f0">
+<meta name="theme-color" content="#14161c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Maratón Michi">
@@ -32,74 +32,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-  /* Estilos específicos para los estados de Último Suceso */
-  .suceso-victoria {
-    color: var(--win);
-    font-weight: 600;
-  }
-  .suceso-derrota {
-    color: var(--loss);
-    background-color: rgba(180, 50, 50, 0.08);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 600;
-    display: inline-block;
-  }
-  .suceso-neutro {
-    color: var(--text);
-    font-weight: 400;
-  }
+  .tabla-detallada { width: 100%; border-collapse: collapse; font-size: 0.78rem; background: var(--panel); }
+  .tabla-detallada th, .tabla-detallada td { padding: 7px 8px; border: 1px solid var(--line); text-align: center; white-space: nowrap; }
+  .tabla-detallada th { background: var(--panel-raised); color: var(--gold); font-weight: 600; font-size: 0.72rem; }
+  .tabla-detallada td.jugador { text-align: left; font-weight: 600; }
+  .tabla-detallada td.jugador a { color: var(--text); }
+  .tabla-detallada tfoot td { background: var(--panel-raised); font-weight: 700; }
+  .var-up { color: var(--win); }
+  .var-down { color: var(--loss); }
+  .suceso-sin-participacion { color: #a15c58; }
+  .bono-cell.activo { color: var(--loss); font-weight: 700; }
+  .bono-cell.inactivo { color: var(--text-dim); }
+  .toolbar-clasif { display:flex; justify-content: space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 10px; }
 
-  /* Estilos para las 3 columnas de participación */
-  .grid-tres-columnas {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    margin-top: 14px;
-    margin-bottom: 24px;
-  }
-  .columna-participacion {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 12px;
-  }
-  .columna-participacion h4 {
-    font-size: 0.88rem;
-    color: var(--gold);
-    margin-bottom: 10px;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 6px;
-    text-align: center;
-  }
-  .tabla-mini-participacion {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-  }
-  .tabla-mini-participacion th, .tabla-mini-participacion td {
-    padding: 6px 8px;
-    border-bottom: 1px solid var(--line);
-    text-align: left;
-  }
-  .tabla-mini-participacion th {
-    background: var(--panel-raised);
-    color: var(--text-dim);
-    font-size: 0.72rem;
-  }
-  .tabla-mini-participacion td.num {
-    text-align: center;
-    font-weight: 600;
-  }
-  .bandera-mini {
-    width: 18px;
-    height: 12px;
-    object-fit: cover;
-    border-radius: 2px;
-    vertical-align: middle;
-    margin-right: 6px;
-    border: 1px solid rgba(0,0,0,0.1);
-  }
+  /* Estilos para el Cuadro de Honor y Mini-rankings tipo Excel con rejillas */
+  .tabla-honor { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; margin-bottom: 16px; }
+  .tabla-honor th, .tabla-honor td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; }
+  .tabla-honor th { color: var(--gold); font-weight: 600; font-size: 0.78rem; background: var(--panel-raised); }
+  .tabla-honor td.ganador { font-weight: 700; color: var(--win); }
+
+  .minitables-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 12px; }
+  .minitable-box { background: var(--panel-raised); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; }
+  .minitable-box h4 { font-size: 0.88rem; color: var(--gold); margin-bottom: 8px; }
+  
+  .tabla-mini-excel { width: 100%; border-collapse: collapse; font-size: 0.8rem; background: var(--panel); border: 1px solid var(--line); }
+  .tabla-mini-excel th, .tabla-mini-excel td { padding: 8px 10px; border: 1px solid var(--line); text-align: left; vertical-align: middle; }
+  .tabla-mini-excel th { background: var(--panel-raised); color: var(--gold); font-size: 0.75rem; font-weight: 600; }
+  .tabla-mini-excel td.num-celda { text-align: center; width: 45px; font-weight: 700; background: rgba(255,255,255,0.02); }
+  .tabla-mini-excel td.val-celda { text-align: center; width: 65px; font-weight: 700; color: var(--win); background: rgba(255,255,255,0.02); }
+  .sub-fila-item { padding: 3px 0; font-weight: 600; }
+  .sub-fila-item:not(:last-child) { border-bottom: 1px dashed var(--line); }
 </style>
 </head>
 <body>
@@ -110,7 +72,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub">Clasificación y Ranking</span>
+    <span class="sub">Clasificación</span>
   </div>
   <nav class="tabs">
     <a href="index.html">Inicio</a>
@@ -124,92 +86,70 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </header>
 
 <main>
-  <div class="panel" id="seccion-tabla-posiciones">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">Tabla de Posiciones</h3>
-      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarTablaPosiciones()">📷 Descargar Imagen</button>
-    </div>
+  <div class="toolbar-clasif">
+    <h3>Tabla de posiciones</h3>
+    <button class="btn secondary" onclick="descargarImagen()">📷 Descargar Imagen</button>
+  </div>
 
-    <div class="filters" style="margin-bottom:12px;">
+  <!-- Contenedor general de captura que incluye el título, los filtros de mes/año/jornada y la tabla completa -->
+  <div id="captura-clasificacion" style="background: var(--panel); padding: 16px; border-radius: var(--radius); border: 1px solid var(--line);">
+    <div style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.1rem; font-weight:600; margin-bottom:12px;">TABLA DE POSICIONES</div>
+    
+    <div class="filters" style="margin-bottom: 14px;">
       <select id="filtro-anio"></select>
       <select id="filtro-mes"></select>
-      <select id="filtro-jornada">
-        <option value="">Todo el mes (acumulado)</option>
-      </select>
-      <select id="filtro-partida" style="display:none;">
-        <option value="">Toda la jornada</option>
-      </select>
+      <select id="filtro-jornada"></select>
+      <span class="meta" id="resumen-periodo"></span>
     </div>
 
-    <div id="info-jornada" style="font-size:0.85rem; color:var(--gold); margin-bottom:8px; font-weight:600;"></div>
+    <div style="margin-bottom: 12px; border-top: 1px solid var(--line); padding-top: 12px;">
+      <h2 id="titulo-jornada" style="margin:0; font-size: 1.1rem; color: var(--gold); font-family: 'Cinzel', serif;">Tabla de posiciones</h2>
+      <div id="indicador-partidas-mes" style="font-size: 0.78rem; color: var(--text-dim); margin-top: 4px; font-weight: 600;"></div>
+    </div>
 
-    <div style="overflow-x:auto;">
-      <table id="tabla-clasificacion">
-        <thead>
-          <tr>
-            <th>Pos</th>
-            <th>Var</th>
-            <th>Jugador</th>
-            <th>Pts</th>
-            <th>V/PJ</th>
-            <th>Último Suceso</th>
-            <th>V/D</th>
-            <th>E</th>
-            <th>R</th>
-            <th>M</th>
-            <th>O</th>
-            <th>S</th>
-            <th>Rch</th>
-            <th>MG</th>
-            <th>RLP</th>
-            <th>TB</th>
-          </tr>
-        </thead>
-        <tbody id="cuerpo-tabla-clasificacion">
-          <tr><td colspan="16" class="empty-state">Cargando datos...</td></tr>
-        </tbody>
-      </table>
+    <div id="contenedor-standings">
+      <div class="empty-state">Cargando…</div>
     </div>
   </div>
 
-  <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
-      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarCuadroHonor()">📷 Descargar Imagen</button>
-    </div>
-    <div id="contenedor-cuadro-honor">
-      <div class="empty-state">Cargando...</div>
-    </div>
+  <div class="panel" style="margin-top:18px; font-size: 0.8rem; color: var(--text-dim);">
+    <h3 style="font-size:0.9rem;">📖 Leyenda de puntuación</h3>
+    <p style="margin:4px 0;"><strong style="color:var(--text);">Victoria</strong> = 3 puntos.</p>
+    <p style="margin:4px 0;">
+      <strong style="color:var(--text);">E</strong> Excelencia ·
+      <strong style="color:var(--text);">R</strong> Resistencia ·
+      <strong style="color:var(--text);">M</strong> Militar ·
+      <strong style="color:var(--text);">O</strong> Oro ·
+      <strong style="color:var(--text);">S</strong> Sociedad
+      — 1 punto cada uno (los escribes tú).
+    </p>
+    <p style="margin:4px 0;">
+      <strong style="color:var(--text);">Rch</strong> Racha: se otorga automáticamente cuando un
+      jugador gana una partida justo después de haber ganado la anterior (una derrota rompe la
+      racha) = 1 punto.
+    </p>
+    <p style="margin:4px 0;">
+      <strong style="color:var(--text);">MG</strong> Matagigantes (activo desde Fecha 06; se otorga
+      al vencer a un jugador del Top 5 estando tú fuera del Top 5: 6-10° → 1pt, 11-15° → 2pt, 16° en
+      adelante → 3pt) ·
+      <strong style="color:var(--text);">RLP</strong> Relámpago (partida ganada en menos de 60 min:
+      1-10° → 1pt, 11-15° → 2pt, 16° en adelante → 3pt)
+      — ambos se calculan automáticamente, no se ingresan a mano.
+    </p>
+    <p style="margin:4px 0;"><strong style="color:var(--text);">TB</strong> = Total de Bonos conseguidos.</p>
   </div>
 
-  <!-- NUEVA SECCIÓN: Las 3 Columnas de Participación por Mes con Respaldo Histórico -->
-  <div class="panel" id="seccion-participacion-mes" style="margin-top:20px;">
-    <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📊 Actividad y Participación del Mes</h3>
-    <p class="hint" style="margin-bottom:12px;">Jugadores ordenados por volumen de partidas en el período seleccionado (máx. 20 por categoría).</p>
-    
-    <div class="grid-tres-columnas">
-      <div class="columna-participacion">
-        <h4>Miembros de la Comunidad</h4>
-        <div id="lista-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
-      </div>
-      <div class="columna-participacion">
-        <h4>Participantes de la Liga</h4>
-        <div id="lista-participantes-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
-      </div>
-      <div class="columna-participacion">
-        <h4>Invitados de la Liga</h4>
-        <div id="lista-invitados-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
-      </div>
+  <!-- Panel del Cuadro de Honor Mensual -->
+  <div class="panel" style="margin-top:18px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="descargarImagenHonor()">📷 Descargar Imagen</button>
     </div>
-  </div>
-
-  <div class="panel" id="seccion-grand-prix" style="margin-top:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 id="titulo-grand-prix" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Grand Prix Anual</h3>
-      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarGrandPrix()">📷 Descargar Imagen</button>
-    </div>
-    <div id="contenedor-grand-prix">
-      <div class="empty-state">Cargando Grand Prix...</div>
+    <div id="captura-cuadro-honor" style="padding:12px; background: var(--panel);">
+      <div id="titulo-honor-captura" style="font-family:'Cinzel',serif; color:var(--gold); font-size:1.1rem; font-weight:600; margin-bottom:12px; text-align:left;">🏆 Cuadro de Honor — Mes</div>
+      <div id="contenedor-cuadro-honor">
+        <div class="empty-state">Cargando…</div>
+      </div>
     </div>
   </div>
 </main>
@@ -225,348 +165,297 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="js/datos.js"></script>
 <script>
-let PARTIDAS = [];
-let EQUIVALENCIAS = [];
-let JUGADORES_INFO = {};
-let CUADRO_HONOR = [];
+let PARTIDAS = [], EQUIVALENCIAS = [], CUADRO_HONOR = [];
 
-function poblarFiltrosAnioMes() {
+function poblarFiltros() {
   const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-anio");
-  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  selAnio.innerHTML = anios.length
+    ? anios.map(a => `<option value="${a}">${a}</option>`).join("")
+    : `<option value="">Sin datos</option>`;
 
-  actualizarMeses();
-  selAnio.addEventListener("change", () => { actualizarMeses(); actualizarJornadasYRenderizar(); });
-  document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
-  document.getElementById("filtro-jornada").addEventListener("change", (e) => {
-    actualizarPartidas(e.target.value);
-    renderizarTodo();
-  });
-  document.getElementById("filtro-partida").addEventListener("change", () => { renderizarTodo(); });
+  selAnio.addEventListener("change", () => { poblarMeses(); poblarJornadas(); renderizar(); });
+  poblarMeses();
+
+  document.getElementById("filtro-mes").addEventListener("change", () => { poblarJornadas(); renderizar(); });
+  document.getElementById("filtro-jornada").addEventListener("change", renderizar);
 }
 
-function actualizarMeses() {
+function poblarMeses() {
   const anio = document.getElementById("filtro-anio").value;
-  const meses = [...new Set(
-    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
-  )].sort().reverse();
-
+  const meses = [...new Set(PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  selMes.innerHTML = meses.length
+    ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("")
+    : `<option value="">Sin datos</option>`;
+  poblarJornadas();
 }
 
-function actualizarJornadasYRenderizar() {
+function poblarJornadas() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
-  const filtradas = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
-
-  const jornadasSet = new Set();
-  filtradas.forEach(p => { if (p.jornada) jornadasSet.add(p.jornada); });
-
-  const jornadasOrdenadas = [...jornadasSet].sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
-
+  const jornadas = [...new Set(PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2,"0") === mes).map(p => p.jornada))]
+    .sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
   const selJornada = document.getElementById("filtro-jornada");
   selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
-    jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
-
-  document.getElementById("filtro-partida").style.display = "none";
-  renderizarTodo();
+    jornadas.map(j => `<option value="${j}">Hasta ${j}</option>`).join("");
 }
 
-function actualizarPartidas(jornadaValor) {
-  const selPartida = document.getElementById("filtro-partida");
-  if (!jornadaValor) {
-    selPartida.style.display = "none";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
-    return;
-  }
-
-  const anio = document.getElementById("filtro-anio").value;
-  const mes = document.getElementById("filtro-mes").value;
-  const partidasJornada = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes && p.jornada === jornadaValor);
-
-  const numerosPartida = [...new Set(partidasJornada.map(p => p.numeroPartida))].sort((a, b) => a - b);
-  
-  if (numerosPartida.length > 1) {
-    selPartida.style.display = "inline-block";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>` +
-      numerosPartida.map(n => `<option value="${n}">Partida ${n}</option>`).join("");
-  } else {
-    selPartida.style.display = "none";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
-  }
-}
-
-function renderizarTodo() {
-  renderizarTablaPosiciones();
-  renderizarCuadroHonor();
-  renderizarParticipacionMes();
-  renderizarGrandPrix();
-}
-
-function renderizarTablaPosiciones() {
-  const anio = document.getElementById("filtro-anio").value;
-  const mes = document.getElementById("filtro-mes").value;
-  const jornada = document.getElementById("filtro-jornada").value;
-  const partida = document.getElementById("filtro-partida").value;
-
-  const tbody = document.getElementById("cuerpo-tabla-clasificacion");
-  const infoJor = document.getElementById("info-jornada");
-
-  const { filas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornada, partida);
-
-  if (ultimaPartida) {
-    infoJor.textContent = `📅 ${ultimaPartida.jornada} · Partida ${ultimaPartida.numeroPartida} (${ultimaPartida.mapa || 'Mapa estándar'})`;
-  } else {
-    infoJor.textContent = `📅 Período: ${NOMBRES_MES[mes] || ''} ${anio}`;
-  }
-
-  if (filas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros para este período.</td></tr>`;
-    return;
-  }
-
-  const totalPartidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes).length;
-  document.getElementById("info-jornada").innerHTML += ` &nbsp; | &nbsp; Partidas jugadas en el mes: ${totalPartidasMes}`;
-
-  tbody.innerHTML = filas.map((f, idx) => {
-    const pos = idx + 1;
-    let varStr = "-";
-    if (f.variacion > 0) varStr = `<span style="color:var(--win);">+${f.variacion}</span>`;
-    else if (f.variacion < 0) varStr = `<span style="color:var(--loss);">${f.variacion}</span>`;
-    else varStr = `0`;
-
-    // Formatear el último suceso con los colores solicitados
-    let sucesoHtml = f.ultimoSuceso || "Sin participación";
-    if (sucesoHtml.toLowerCase().includes("derrota")) {
-      sucesoHtml = `<span class="suceso-derrota">${sucesoHtml}</span>`;
-    } else if (sucesoHtml.toLowerCase().includes("victoria") || sucesoHtml.toLowerCase().includes("bono") || sucesoHtml.toLowerCase().includes("+")) {
-      sucesoHtml = `<span class="suceso-victoria">${sucesoHtml}</span>`;
-    } else {
-      sucesoHtml = `<span class="suceso-neutro">${sucesoHtml}</span>`;
-    }
-
-    return `
-      <tr>
-        <td class="num">${pos}</td>
-        <td class="num">${varStr}</td>
-        <td><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
-        <td class="num" style="font-weight:700; color:var(--gold);">${f.puntos}</td>
-        <td class="num">${f.victorias}/${f.partidas}</td>
-        <td>${sucesoHtml}</td>
-        <td class="num">${f.vd}</td>
-        <td class="num">${f.bonos.E}</td>
-        <td class="num">${f.bonos.R}</td>
-        <td class="num">${f.bonos.M}</td>
-        <td class="num">${f.bonos.O}</td>
-        <td class="num">${f.bonos.S}</td>
-        <td class="num" style="${f.bonos.Rch > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.Rch}</td>
-        <td class="num" style="${f.bonos.MG > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.MG}</td>
-        <td class="num" style="${f.bonos.RLP > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.RLP}</td>
-        <td class="num" style="font-weight:700;">${f.tb}</td>
-      </tr>
-    `;
-  }).join("");
+function celdaBono(valor) {
+  return `<span class="bono-cell ${valor > 0 ? 'activo' : 'inactivo'}">${valor}</span>`;
 }
 
 function renderizarCuadroHonor() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
-  const titulo = document.getElementById("titulo-cuadro-honor");
   const cont = document.getElementById("contenedor-cuadro-honor");
+  const tituloCaptura = document.getElementById("titulo-honor-captura");
 
   const nombreMes = NOMBRES_MES[mes] || "";
-  titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
+  const textoTitulo = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
+  if (tituloCaptura) tituloCaptura.textContent = textoTitulo;
+
+  if (!anio || !mes) {
+    cont.innerHTML = `<div class="empty-state">Selecciona un período.</div>`;
+    return;
+  }
 
   const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
     .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
 
   if (delMes.length === 0) {
-    cont.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
+    cont.innerHTML = `<div class="empty-state">No hay registros para este mes en el Cuadro de Honor.</div>`;
     return;
   }
 
+  const conteoJugadores = {};
+  const conteoCivs = {};
+
+  delMes.forEach(h => {
+    if (h.jugador) conteoJugadores[h.jugador] = (conteoJugadores[h.jugador] || 0) + 1;
+    if (h.civ) conteoCivs[h.civ] = (conteoCivs[h.civ] || 0) + 1;
+  });
+
+  function generarRankingConEmpates(conteoObj) {
+    const items = Object.entries(conteoObj).sort((a, b) => b[1] - a[1]);
+    if (items.length === 0) return [];
+
+    let ranking = [];
+    let posActual = 1;
+    let valorAnterior = null;
+    let empatadosEnEstaPos = [];
+
+    items.forEach(([nombre, cant], index) => {
+      if (index === 0) {
+        valorAnterior = cant;
+        empatadosEnEstaPos.push(nombre);
+      } else {
+        if (cant === valorAnterior) {
+          empatadosEnEstaPos.push(nombre);
+        } else {
+          ranking.push({ pos: posActual, nombres: [...empatadosEnEstaPos], valor: valorAnterior });
+          posActual = index + 1;
+          valorAnterior = cant;
+          empatadosEnEstaPos = [nombre];
+        }
+      }
+    });
+    if (empatadosEnEstaPos.length > 0) {
+      ranking.push({ pos: posActual, nombres: [...empatadosEnEstaPos], valor: valorAnterior });
+    }
+    return ranking;
+  }
+
+  const rankingJugadores = generarRankingConEmpates(conteoJugadores);
+  const rankingCivs = generarRankingConEmpates(conteoCivs);
+
   cont.innerHTML = `
     <div style="overflow-x:auto;">
-      <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+      <table class="tabla-honor">
         <thead>
           <tr>
-            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jornada</th>
-            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jugador de la Fecha</th>
-            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Civilización</th>
+            <th>Jornada</th>
+            <th>Jugador de la Fecha</th>
+            <th>Civilización</th>
           </tr>
         </thead>
         <tbody>
           ${delMes.map(h => `
             <tr>
-              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:600;">${h.jornada}</td>
-              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--win);">👑 <a href="jugador.html?nombre=${encodeURIComponent(h.jugador)}">${h.jugador}</a></td>
-              <td style="padding:10px; border-bottom:1px solid var(--line); color:var(--text-dim);">${h.civ || '—'}</td>
+              <td style="font-weight:600; color:var(--text);">${h.jornada}</td>
+              <td class="ganador">👑 ${h.jugador}</td>
+              <td style="color:var(--text-dim);">${h.civ || '—'}</td>
             </tr>
           `).join("")}
         </tbody>
       </table>
     </div>
-  `;
-}
 
-function renderizarParticipacionMes() {
-  const anio = document.getElementById("filtro-anio").value;
-  const mes = document.getElementById("filtro-mes").value;
-  const nombreMes = NOMBRES_MES[mes] || "";
-  document.getElementById("titulo-participacion-mes").textContent = `📊 Actividad y Participación — ${nombreMes} ${anio}`;
-
-  // 1. Calcular partidas del mes seleccionado
-  const partidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
-  
-  const conteoJugadores = {};
-  partidasMes.forEach(p => {
-    (p.jugadores || []).forEach(j => {
-      const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
-      conteoJugadores[nombreOficial] = (conteoJugadores[nombreOficial] || 0) + 1;
-    });
-  });
-
-  // 2. RESPALDO HISTÓRICO: Si el mes actual tiene poca o nula actividad, completamos con el acumulado general del año
-  if (Object.keys(conteoJugadores).length < 5) {
-    PARTIDAS.filter(p => p.anio == anio).forEach(p => {
-      (p.jugadores || []).forEach(j => {
-        const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
-        if (!conteoJugadores[nombreOficial]) {
-          conteoJugadores[nombreOficial] = 0.1; // Marcador histórico para que aparezcan al inicio de mes
-        }
-      });
-    });
-  }
-
-  const listaMiembros = [];
-  const listaParticipantes = [];
-  const listaInvitados = [];
-
-  Object.entries(conteoJugadores).forEach(([nombre, totalPartidas]) => {
-    const info = JUGADORES_INFO[nombre] || {};
-    const pais = info.pais ? info.pais.toLowerCase() : null;
-    const item = { nombre, partidas: Math.round(totalPartidas), pais };
-
-    if (totalPartidas >= 5) {
-      listaMiembros.push(item);
-    } else if (totalPartidas >= 2) {
-      listaParticipantes.push(item);
-    } else {
-      listaInvitados.push(item);
-    }
-  });
-
-  listaMiembros.sort((a, b) => b.partidas - a.partidas);
-  listaParticipantes.sort((a, b) => b.partidas - a.partidas);
-  listaInvitados.sort((a, b) => b.partidas - a.partidas);
-
-  pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
-  pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes);
-  pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados);
-}
-
-function pintarColumnaMiniParticipacion(elementId, lista) {
-  const contenedor = document.getElementById(elementId);
-  if (!lista || lista.length === 0) {
-    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin registros</div>`;
-    return;
-  }
-
-  const limitados = lista.slice(0, 20);
-  contenedor.innerHTML = `
-    <table class="tabla-mini-participacion">
-      <thead>
-        <tr>
-          <th>Jugador</th>
-          <th class="num">Partidas</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${limitados.map(item => {
-          const imgBandera = item.pais 
-            ? `<img src="https://flagcdn.com/w40/${item.pais}.png" class="bandera-mini" alt="${item.pais}">` 
-            : '';
-          return `
-            <tr>
-              <td>${imgBandera}<a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
-              <td class="num">${item.partidas}p</td>
-            </tr>
-          `;
-        }).join("")}
-      </tbody>
-    </table>
-  `;
-}
-
-function renderizarGrandPrix() {
-  const anio = document.getElementById("filtro-anio").value;
-  const cont = document.getElementById("contenedor-grand-prix");
-  document.getElementById("titulo-grand-prix").textContent = `🏆 Grand Prix Ranking Maratón Michi DM ${anio}`;
-
-  const { meses, rankingGP } = calcularGrandPrixAnual(PARTIDAS, EQUIVALENCIAS, anio);
-
-  if (rankingGP.length === 0) {
-    cont.innerHTML = `<div class="empty-state">No hay datos de Grand Prix para el año ${anio}.</div>`;
-    return;
-  }
-
-  cont.innerHTML = `
-    <div style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr>
-            <th>Posición</th>
-            <th>Var</th>
-            <th>Jugador</th>
-            ${meses.map(m => `<th>${NOMBRES_MES[m]}</th>`).join("")}
-            <th>Acumulado</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rankingGP.map((item, idx) => {
-            const pos = idx + 1;
-            let varStr = "0";
-            if (item.variacion > 0) varStr = `<span style="color:var(--win);">+${item.variacion}</span>`;
-            else if (item.variacion < 0) varStr = `<span style="color:var(--loss);">${item.variacion}</span>`;
-
-            return `
+    <div class="minitables-grid">
+      <div class="minitable-box">
+        <h4>🥇 Ranking de Galardones (Jugadores)</h4>
+        ${rankingJugadores.length === 0 ? `<div class="empty-state">Sin datos.</div>` : `
+          <table class="tabla-mini-excel">
+            <thead>
               <tr>
-                <td class="num" style="font-weight:700; color:var(--gold);">${pos}</td>
-                <td class="num">${varStr}</td>
-                <td><a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
-                ${meses.map(m => `<td class="num">${item.puntosPorMes[m] || 0}</td>`).join("")}
-                <td class="num" style="font-weight:700; color:var(--win);">${item.total}</td>
+                <th style="text-align:center; width:45px;">#</th>
+                <th>Jugador</th>
+                <th style="text-align:center; width:65px;">Galardones</th>
               </tr>
-            `;
-          }).join("")}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              ${rankingJugadores.map(r => `
+                <tr>
+                  <td class="num-celda" style="vertical-align: middle;">${r.pos}°</td>
+                  <td>
+                    ${r.nombres.map(n => `<div class="sub-fila-item">👑 ${n}</div>`).join("")}
+                  </td>
+                  <td class="val-celda" style="vertical-align: middle;">${r.valor}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `}
+      </div>
+
+      <div class="minitable-box">
+        <h4>🏛 Civilizaciones más Destacadas</h4>
+        ${rankingCivs.length === 0 ? `<div class="empty-state">Sin datos.</div>` : `
+          <table class="tabla-mini-excel">
+            <thead>
+              <tr>
+                <th style="text-align:center; width:45px;">#</th>
+                <th>Civilización</th>
+                <th style="text-align:center; width:65px;">Apariciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rankingCivs.map(r => `
+                <tr>
+                  <td class="num-celda" style="vertical-align: middle;">${r.pos}°</td>
+                  <td>
+                    ${r.nombres.map(c => `<div class="sub-fila-item">${c}</div>`).join("")}
+                  </td>
+                  <td class="val-celda" style="vertical-align: middle;">${r.valor}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `}
+      </div>
     </div>
   `;
 }
 
-function descargarTablaPosiciones() {
-  descargarElementoComoImagen(document.getElementById("seccion-tabla-posiciones"), "tabla-posiciones.png", "#f8f6f0");
+function renderizar() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const jornadaFiltro = document.getElementById("filtro-jornada").value;
+
+  if (!anio || !mes) {
+    document.getElementById("contenedor-standings").innerHTML = `<div class="empty-state">No hay partidas registradas todavía.</div>`;
+    document.getElementById("indicador-partidas-mes").textContent = "";
+    renderizarCuadroHonor();
+    return;
+  }
+
+  const partidasDelMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+  const totalPartidasMes = partidasDelMes.length;
+  document.getElementById("indicador-partidas-mes").textContent = `📊 Partidas jugadas en el mes: ${totalPartidasMes}`;
+
+  const { filas: filasCompletas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornadaFiltro || null);
+  
+  const filas = filasCompletas;
+
+  document.getElementById("titulo-jornada").textContent = ultimaPartida ? etiquetaPartida(ultimaPartida) : "Tabla de posiciones";
+  document.getElementById("resumen-periodo").textContent = "";
+
+  const cont = document.getElementById("contenedor-standings");
+  if (filas.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay partidas para este período.</div>`;
+  } else {
+    const totales = { E:0,R:0,M:0,O:0,S:0,Rch:0,MG:0,RLP:0 };
+    let totalPts = 0, totalTB = 0;
+    filas.forEach(f => {
+      totalPts += f.puntos; totalTB += f.tb;
+      Object.keys(totales).forEach(k => totales[k] += f.bonos[k]);
+    });
+
+    cont.innerHTML = `
+      <div style="overflow-x:auto;">
+        <table class="tabla-detallada">
+          <thead>
+            <tr>
+              <th>Pos</th><th>Var</th><th style="text-align:left;">Jugador</th><th>Pts</th><th>V/PJ</th>
+              <th style="text-align:left;">Último Suceso</th><th>V/D</th>
+              <th>E</th><th>R</th><th>M</th><th>O</th><th>S</th><th>Rch</th><th>MG</th><th>RLP</th><th>TB</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filas.map((f, i) => {
+              const varClass = f.variacion > 0 ? "var-up" : f.variacion < 0 ? "var-down" : "";
+              const varTexto = f.variacion > 0 ? `+${f.variacion}` : `${f.variacion}`;
+              return `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td class="${varClass}">${varTexto}</td>
+                  <td class="jugador"><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
+                  <td>${f.puntos}</td>
+                  <td>${f.victorias}/${f.partidas}</td>
+                  <td style="text-align:left; font-style:italic;" class="${f.ultimoSuceso === 'Sin participación' ? 'suceso-sin-participacion' : ''}">${f.ultimoSuceso}</td>
+                  <td>${f.vd}</td>
+                  <td>${celdaBono(f.bonos.E)}</td>
+                  <td>${celdaBono(f.bonos.R)}</td>
+                  <td>${celdaBono(f.bonos.M)}</td>
+                  <td>${celdaBono(f.bonos.O)}</td>
+                  <td>${celdaBono(f.bonos.S)}</td>
+                  <td>${celdaBono(f.bonos.Rch)}</td>
+                  <td>${celdaBono(f.bonos.MG)}</td>
+                  <td>${celdaBono(f.bonos.RLP)}</td>
+                  <td style="font-weight:700; color: var(--win);">${f.tb}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align:right;">Sumatoria Total:</td>
+              <td>${totalPts}</td><td>-</td><td>-</td><td>-</td>
+              <td>${totales.E}</td><td>${totales.R}</td><td>${totales.M}</td><td>${totales.O}</td>
+              <td>${totales.S}</td><td>${totales.Rch}</td><td>${totales.MG}</td><td>${totales.RLP}</td>
+              <td style="color: var(--win);">${totalTB}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    `;
+  }
+
+  renderizarCuadroHonor();
 }
-function descargarCuadroHonor() {
-  descargarElementoComoImagen(document.getElementById("seccion-cuadro-honor"), "cuadro-honor.png", "#f8f6f0");
+
+function descargarImagen() {
+  const el = document.getElementById("captura-clasificacion");
+  const anchoOriginal = el.style.width;
+  el.style.width = "950px";
+  
+  descargarElementoComoImagen(el, "clasificacion.png", "#14161c").finally(() => {
+    el.style.width = anchoOriginal;
+  });
 }
-function descargarGrandPrix() {
-  descargarElementoComoImagen(document.getElementById("seccion-grand-prix"), "grand-prix.png", "#f8f6f0");
+
+function descargarImagenHonor() {
+  const el = document.getElementById("captura-cuadro-honor");
+  descargarElementoComoImagen(el, "cuadro-de-honor.png", "#14161c");
 }
 
 (async function init() {
-  try {
-    const datos = await cargarDatos();
-    PARTIDAS = datos.partidas || [];
-    EQUIVALENCIAS = datos.equivalencias || [];
-    JUGADORES_INFO = datos.jugadoresInfo || {};
-    CUADRO_HONOR = datos.cuadroHonor || [];
-    poblarFiltrosAnioMes();
-  } catch (err) {
-    console.error("Error al inicializar:", err);
-  }
+  const datos = await cargarDatos();
+  PARTIDAS = datos.partidas;
+  EQUIVALENCIAS = datos.equivalencias;
+  CUADRO_HONOR = datos.cuadroHonor || [];
+  poblarFiltros();
+  renderizar();
 })();
 </script>
 </body>
