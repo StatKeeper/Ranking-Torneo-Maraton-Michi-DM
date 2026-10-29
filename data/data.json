@@ -19012,7 +19012,8 @@
     },
     "Knar": {
       "pais": "US",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 2
     },
     "Komodo3000": {
       "pais": "",
@@ -19211,7 +19212,8 @@
     },
     "truc.itsm": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 2
     },
     "ullaj1999": {
       "pais": "",
