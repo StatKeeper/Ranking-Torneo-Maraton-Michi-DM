@@ -18650,6 +18650,97 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha23-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 23",
+      "numeroPartida": 1,
+      "duracionSeg": 15300,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 15279,
+          "edificiosArrasados": 425857,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5608,
+          "edificiosArrasados": 189738,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 17350,
+          "edificiosArrasados": 445263,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10634,
+          "edificiosArrasados": 261896,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9337,
+          "edificiosArrasados": 241463,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 21928,
+          "edificiosArrasados": 529130,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "La_Gloire",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10560,
+          "edificiosArrasados": 385672,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Falco Lombardi",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10082,
+          "edificiosArrasados": 249530,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -19499,6 +19590,13 @@
       "jornada": "Fecha 22",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha22.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha22.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 23",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha23.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha23.png"
     }
   ],
   "civEquivalencias": [],
@@ -20041,6 +20139,13 @@
       "jornada": "Fecha 22",
       "jugador": "[cLm] Renjifo",
       "civ": "Borgoñeses"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 23",
+      "jugador": "Bio Tine",
+      "civ": "Sarracenos"
     }
   ]
 }
