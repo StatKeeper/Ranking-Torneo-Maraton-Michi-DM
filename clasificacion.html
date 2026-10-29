@@ -248,80 +248,6 @@ let EQUIVALENCIAS = [];
 let JUGADORES_INFO = {};
 let CUADRO_HONOR = [];
 
-function poblarFiltrosAnioMes() {
-  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
-  const selAnio = document.getElementById("filtro-anio");
-  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
-
-  actualizarMeses();
-  selAnio.addEventListener("change", () => { actualizarMeses(); actualizarJornadasYRenderizar(); });
-  document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
-  document.getElementById("filtro-jornada").addEventListener("change", (e) => {
-    actualizarPartidas(e.target.value);
-    renderizarTodo();
-  });
-  document.getElementById("filtro-partida").addEventListener("change", () => { renderizarTodo(); });
-}
-
-function actualizarMeses() {
-  const anio = document.getElementById("filtro-anio").value;
-  const meses = [...new Set(
-    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
-  )].sort().reverse();
-
-  const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
-}
-
-function actualizarJornadasYRenderizar() {
-  const anio = document.getElementById("filtro-anio").value;
-  const mes = document.getElementById("filtro-mes").value;
-  const filtradas = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
-
-  const jornadasSet = new Set();
-  filtradas.forEach(p => { if (p.jornada) jornadasSet.add(p.jornada); });
-
-  const jornadasOrdenadas = [...jornadasSet].sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
-
-  const selJornada = document.getElementById("filtro-jornada");
-  selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
-    jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
-
-  document.getElementById("filtro-partida").style.display = "none";
-  renderizarTodo();
-}
-
-function actualizarPartidas(jornadaValor) {
-  const selPartida = document.getElementById("filtro-partida");
-  if (!jornadaValor) {
-    selPartida.style.display = "none";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
-    return;
-  }
-
-  const anio = document.getElementById("filtro-anio").value;
-  const mes = document.getElementById("filtro-mes").value;
-  const partidasJornada = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes && p.jornada === jornadaValor);
-
-  const numerosPartida = [...new Set(partidasJornada.map(p => p.numeroPartida))].sort((a, b) => a - b);
-  
-  if (numerosPartida.length > 1) {
-    selPartida.style.display = "inline-block";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>` +
-      numerosPartida.map(n => `<option value="${n}">Partida ${n}</option>`).join("");
-  } else {
-    selPartida.style.display = "none";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
-  }
-}
-
-function renderizarTodo() {
-  renderizarTablaPosiciones();
-  renderizarParticipacionMes();
-  renderizarCuadroHonor();
-  renderizarGrandPrix();
-}
-
 function renderizarTablaPosiciones() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
@@ -354,7 +280,6 @@ function renderizarTablaPosiciones() {
     else if (f.variacion < 0) varStr = `<span style="color:var(--loss);">${f.variacion}</span>`;
     else varStr = `0`;
 
-    // Formatear el último suceso con los colores solicitados
     let sucesoHtml = f.ultimoSuceso || "Sin participación";
     if (sucesoHtml.toLowerCase().includes("derrota")) {
       sucesoHtml = `<span class="suceso-derrota">${sucesoHtml}</span>`;
@@ -403,7 +328,6 @@ function renderizarParticipacionMes() {
     });
   });
 
-  // Respaldo histórico si el mes inicia con poca actividad
   if (Object.keys(conteoJugadores).length < 5) {
     PARTIDAS.filter(p => p.anio == anio).forEach(p => {
       (p.jugadores || []).forEach(j => {
@@ -563,6 +487,80 @@ function renderizarGrandPrix() {
   `;
 }
 
+function renderizarTodo() {
+  renderizarTablaPosiciones();
+  renderizarParticipacionMes();
+  renderizarCuadroHonor();
+  renderizarGrandPrix();
+}
+
+function poblarFiltrosAnioMes() {
+  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-anio");
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+
+  actualizarMeses();
+  selAnio.addEventListener("change", () => { actualizarMeses(); actualizarJornadasYRenderizar(); });
+  document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
+  document.getElementById("filtro-jornada").addEventListener("change", (e) => {
+    actualizarPartidas(e.target.value);
+    renderizarTodo();
+  });
+  document.getElementById("filtro-partida").addEventListener("change", () => { renderizarTodo(); });
+}
+
+function actualizarMeses() {
+  const anio = document.getElementById("filtro-anio").value;
+  const meses = [...new Set(
+    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
+  )].sort().reverse();
+
+  const selMes = document.getElementById("filtro-mes");
+  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+}
+
+function actualizarJornadasYRenderizar() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const filtradas = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+
+  const jornadasSet = new Set();
+  filtradas.forEach(p => { if (p.jornada) jornadasSet.add(p.jornada); });
+
+  const jornadasOrdenadas = [...jornadasSet].sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
+
+  const selJornada = document.getElementById("filtro-jornada");
+  selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
+    jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
+
+  document.getElementById("filtro-partida").style.display = "none";
+  renderizarTodo();
+}
+
+function actualizarPartidas(jornadaValor) {
+  const selPartida = document.getElementById("filtro-partida");
+  if (!jornadaValor) {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+    return;
+  }
+
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const partidasJornada = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes && p.jornada === jornadaValor);
+
+  const numerosPartida = [...new Set(partidasJornada.map(p => p.numeroPartida))].sort((a, b) => a - b);
+  
+  if (numerosPartida.length > 1) {
+    selPartida.style.display = "inline-block";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>` +
+      numerosPartida.map(n => `<option value="${n}">Partida ${n}</option>`).join("");
+  } else {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+  }
+}
+
 function descargarTablaPosiciones() {
   descargarElementoComoImagen(document.getElementById("seccion-tabla-posiciones"), "tabla-posiciones.png", "#f8f6f0");
 }
@@ -581,6 +579,7 @@ function descargarGrandPrix() {
     JUGADORES_INFO = datos.jugadoresInfo || {};
     CUADRO_HONOR = datos.cuadroHonor || [];
     poblarFiltrosAnioMes();
+    renderizarTodo();
   } catch (err) {
     console.error("Error al inicializar:", err);
   }
