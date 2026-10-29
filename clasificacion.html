@@ -1,15 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WNLR39PS');</script>
+<!-- End Google Tag Manager -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clasificación y Ranking — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
+
+<!-- Configuración PWA e Ícono de Inicio -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f8f6f0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maratón Michi">
+<link rel="apple-touch-icon" href="imagenes/icono-192.png">
+
+<!-- Registro del Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
+  /* Estética de líneas y bordes recuperada de la versión histórica */
+  #tabla-clasificacion {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  #tabla-clasificacion th, #tabla-clasificacion td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    vertical-align: middle;
+  }
+  #tabla-clasificacion th {
+    background: var(--panel-raised);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
   /* Estilos para los estados de Último Suceso */
   .suceso-victoria {
     color: var(--win);
@@ -27,11 +67,69 @@
     color: var(--text);
     font-weight: 400;
   }
+
+  /* Estilos para las 3 columnas de participación */
+  .grid-tres-columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+    margin-bottom: 24px;
+  }
+  .columna-participacion {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .columna-participacion h4 {
+    font-size: 0.88rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 6px;
+    text-align: center;
+  }
+  .tabla-mini-participacion {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+  .tabla-mini-participacion th, .tabla-mini-participacion td {
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    text-align: left;
+  }
+  .tabla-mini-participacion th {
+    background: var(--panel-raised);
+    color: var(--text-dim);
+    font-size: 0.72rem;
+  }
+  .tabla-mini-participacion td.num {
+    text-align: center;
+    font-weight: 600;
+  }
+  .bandera-mini {
+    width: 18px;
+    height: 12px;
+    object-fit: cover;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNLR39PS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <header class="topbar">
-  <div class="brand"><span class="sub">Clasificación y Ranking</span></div>
+  <div class="brand">
+    <span class="sub">Clasificación y Ranking</span>
+  </div>
   <nav class="tabs">
     <a href="index.html">Inicio</a>
     <a href="clasificacion.html" class="active">Clasificación</a>
@@ -49,17 +147,40 @@
       <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">Tabla de Posiciones</h3>
       <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarTablaPosiciones()">📷 Descargar Imagen</button>
     </div>
+
     <div class="filters" style="margin-bottom:12px;">
       <select id="filtro-anio"></select>
       <select id="filtro-mes"></select>
-      <select id="filtro-jornada"><option value="">Todo el mes (acumulado)</option></select>
+      <select id="filtro-jornada">
+        <option value="">Todo el mes (acumulado)</option>
+      </select>
+      <select id="filtro-partida" style="display:none;">
+        <option value="">Toda la jornada</option>
+      </select>
     </div>
+
     <div id="info-jornada" style="font-size:0.85rem; color:var(--gold); margin-bottom:8px; font-weight:600;"></div>
+
     <div style="overflow-x:auto;">
       <table id="tabla-clasificacion">
         <thead>
           <tr>
-            <th>Pos</th><th>Var</th><th>Jugador</th><th>Pts</th><th>V/PJ</th><th>Último Suceso</th><th>V/D</th><th>E</th><th>R</th><th>M</th><th>O</th><th>S</th><th>Rch</th><th>MG</th><th>RLP</th><th>TB</th>
+            <th>Pos</th>
+            <th>Var</th>
+            <th>Jugador</th>
+            <th>Pts</th>
+            <th>V/PJ</th>
+            <th>Último Suceso</th>
+            <th>V/D</th>
+            <th>E</th>
+            <th>R</th>
+            <th>M</th>
+            <th>O</th>
+            <th>S</th>
+            <th>Rch</th>
+            <th>MG</th>
+            <th>RLP</th>
+            <th>TB</th>
           </tr>
         </thead>
         <tbody id="cuerpo-tabla-clasificacion">
@@ -69,12 +190,35 @@
     </div>
   </div>
 
+  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES -->
+  <div class="panel" id="seccion-participacion-mes" style="margin-top:20px;">
+    <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📊 Actividad y Participación del Mes</h3>
+    <p class="hint" style="margin-bottom:12px;">Jugadores ordenados por volumen de partidas en el período seleccionado (máx. 20 por categoría).</p>
+    
+    <div class="grid-tres-columnas">
+      <div class="columna-participacion">
+        <h4>Miembros de la Comunidad</h4>
+        <div id="lista-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+      </div>
+      <div class="columna-participacion">
+        <h4>Participantes de la Liga</h4>
+        <div id="lista-participantes-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+      </div>
+      <div class="columna-participacion">
+        <h4>Invitados de la Liga</h4>
+        <div id="lista-invitados-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
       <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarCuadroHonor()">📷 Descargar Imagen</button>
     </div>
-    <div id="contenedor-cuadro-honor"><div class="empty-state">Cargando...</div></div>
+    <div id="contenedor-cuadro-honor">
+      <div class="empty-state">Cargando...</div>
+    </div>
   </div>
 
   <div class="panel" id="seccion-grand-prix" style="margin-top:20px;">
@@ -82,166 +226,341 @@
       <h3 id="titulo-grand-prix" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Grand Prix Anual</h3>
       <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarGrandPrix()">📷 Descargar Imagen</button>
     </div>
-    <div id="contenedor-grand-prix"><div class="empty-state">Cargando Grand Prix...</div></div>
+    <div id="contenedor-grand-prix">
+      <div class="empty-state">Cargando Grand Prix...</div>
+    </div>
   </div>
 </main>
 
+<nav class="mobile-nav">
+  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
+  <a href="clasificacion.html" class="active"><span class="icon">🏆</span>Ranking</a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
+  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
+  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
+  <a href="historial.html"><span class="icon">📜</span>Historial</a>
+</nav>
+
 <script src="js/datos.js"></script>
 <script>
-let PARTIDAS = [], EQUIVALENCIAS = [], JUGADORES_INFO = {}, CUADRO_HONOR = [];
+let PARTIDAS = [];
+let EQUIVALENCIAS = [];
+let JUGADORES_INFO = {};
+let CUADRO_HONOR = [];
 
-async function iniciarPagina() {
-  try {
-    if (typeof cargarDatos === 'function') {
-      const datos = await cargarDatos();
-      PARTIDAS = datos.partidas || [];
-      EQUIVALENCIAS = datos.equivalencias || [];
-      JUGADORES_INFO = datos.jugadoresInfo || {};
-      CUADRO_HONOR = datos.cuadroHonor || [];
-    }
+function poblarFiltrosAnioMes() {
+  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-anio");
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
-    const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
-    const selAnio = document.getElementById("filtro-anio");
-    selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
-
-    actualizarMeses();
-
-    selAnio.addEventListener("change", () => { actualizarMeses(); renderizarTodo(); });
-    document.getElementById("filtro-mes").addEventListener("change", () => { renderizarTodo(); });
-    document.getElementById("filtro-jornada").addEventListener("change", () => { renderizarTodo(); });
-
+  actualizarMeses();
+  selAnio.addEventListener("change", () => { actualizarMeses(); actualizarJornadasYRenderizar(); });
+  document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
+  document.getElementById("filtro-jornada").addEventListener("change", (e) => {
+    actualizarPartidas(e.target.value);
     renderizarTodo();
-
-  } catch (error) {
-    console.error("Error al iniciar:", error);
-  }
+  });
+  document.getElementById("filtro-partida").addEventListener("change", () => { renderizarTodo(); });
 }
 
 function actualizarMeses() {
   const anio = document.getElementById("filtro-anio").value;
-  const meses = [...new Set(PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
+  const meses = [...new Set(
+    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
+  )].sort().reverse();
+
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
+  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+}
+
+function actualizarJornadasYRenderizar() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const filtradas = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+
+  const jornadasSet = new Set();
+  filtradas.forEach(p => { if (p.jornada) jornadasSet.add(p.jornada); });
+
+  const jornadasOrdenadas = [...jornadasSet].sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
+
+  const selJornada = document.getElementById("filtro-jornada");
+  selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
+    jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
+
+  document.getElementById("filtro-partida").style.display = "none";
+  renderizarTodo();
+}
+
+function actualizarPartidas(jornadaValor) {
+  const selPartida = document.getElementById("filtro-partida");
+  if (!jornadaValor) {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+    return;
+  }
+
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const partidasJornada = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes && p.jornada === jornadaValor);
+
+  const numerosPartida = [...new Set(partidasJornada.map(p => p.numeroPartida))].sort((a, b) => a - b);
+  
+  if (numerosPartida.length > 1) {
+    selPartida.style.display = "inline-block";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>` +
+      numerosPartida.map(n => `<option value="${n}">Partida ${n}</option>`).join("");
+  } else {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+  }
 }
 
 function renderizarTodo() {
+  renderizarTablaPosiciones();
+  renderizarParticipacionMes();
+  renderizarCuadroHonor();
+  renderizarGrandPrix();
+}
+
+function renderizarTablaPosiciones() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
   const jornada = document.getElementById("filtro-jornada").value;
+  const partida = document.getElementById("filtro-partida").value;
 
-  // 1. Renderizar Tabla de Posiciones
-  const { filas } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornada, "");
   const tbody = document.getElementById("cuerpo-tabla-clasificacion");
-  
-  if (filas.length > 0) {
-    tbody.innerHTML = filas.map((f, idx) => {
-      let sucesoHtml = f.ultimoSuceso || "Sin participación";
-      if (sucesoHtml.toLowerCase().includes("derrota")) {
-        sucesoHtml = `<span class="suceso-derrota">${sucesoHtml}</span>`;
-      } else if (sucesoHtml.toLowerCase().includes("victoria") || sucesoHtml.toLowerCase().includes("bono") || sucesoHtml.toLowerCase().includes("+")) {
-        sucesoHtml = `<span class="suceso-victoria">${sucesoHtml}</span>`;
-      } else {
-        sucesoHtml = `<span class="suceso-neutro">${sucesoHtml}</span>`;
-      }
+  const infoJor = document.getElementById("info-jornada");
 
-      return `
-        <tr>
-          <td class="num">${idx + 1}</td>
-          <td class="num">0</td>
-          <td><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
-          <td class="num" style="font-weight:700; color:var(--gold);">${f.puntos}</td>
-          <td class="num">${f.victorias}/${f.partidas}</td>
-          <td>${sucesoHtml}</td>
-          <td class="num">${f.vd}</td>
-          <td class="num">${f.bonos.E}</td>
-          <td class="num">${f.bonos.R}</td>
-          <td class="num">${f.bonos.M}</td>
-          <td class="num">${f.bonos.O}</td>
-          <td class="num">${f.bonos.S}</td>
-          <td class="num">${f.bonos.Rch}</td>
-          <td class="num">${f.bonos.MG}</td>
-          <td class="num">${f.bonos.RLP}</td>
-          <td class="num" style="font-weight:700;">${f.tb}</td>
-        </tr>
-      `;
-    }).join("");
+  const { filas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornada, partida);
+
+  if (ultimaPartida) {
+    infoJor.textContent = `📅 ${ultimaPartida.jornada} · Partida ${ultimaPartida.numeroPartida} (${ultimaPartida.mapa || 'Mapa estándar'})`;
   } else {
-    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros para este período.</td></tr>`;
+    infoJor.textContent = `📅 Período: ${NOMBRES_MES[mes] || ''} ${anio}`;
   }
 
-  // 2. Renderizar Cuadro de Honor
-  const tituloHonor = document.getElementById("titulo-cuadro-honor");
-  const contHonor = document.getElementById("contenedor-cuadro-honor");
+  if (filas.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros para este período.</td></tr>`;
+    return;
+  }
+
+  const totalPartidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes).length;
+  document.getElementById("info-jornada").innerHTML += ` &nbsp; | &nbsp; Partidas jugadas en el mes: ${totalPartidasMes}`;
+
+  tbody.innerHTML = filas.map((f, idx) => {
+    const pos = idx + 1;
+    let varStr = "-";
+    if (f.variacion > 0) varStr = `<span style="color:var(--win);">+${f.variacion}</span>`;
+    else if (f.variacion < 0) varStr = `<span style="color:var(--loss);">${f.variacion}</span>`;
+    else varStr = `0`;
+
+    // Formatear el último suceso con los colores solicitados
+    let sucesoHtml = f.ultimoSuceso || "Sin participación";
+    if (sucesoHtml.toLowerCase().includes("derrota")) {
+      sucesoHtml = `<span class="suceso-derrota">${sucesoHtml}</span>`;
+    } else if (sucesoHtml.toLowerCase().includes("victoria") || sucesoHtml.toLowerCase().includes("bono") || sucesoHtml.toLowerCase().includes("+")) {
+      sucesoHtml = `<span class="suceso-victoria">${sucesoHtml}</span>`;
+    } else {
+      sucesoHtml = `<span class="suceso-neutro">${sucesoHtml}</span>`;
+    }
+
+    return `
+      <tr>
+        <td class="num">${pos}</td>
+        <td class="num">${varStr}</td>
+        <td><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
+        <td class="num" style="font-weight:700; color:var(--gold);">${f.puntos}</td>
+        <td class="num">${f.victorias}/${f.partidas}</td>
+        <td>${sucesoHtml}</td>
+        <td class="num">${f.vd}</td>
+        <td class="num">${f.bonos.E}</td>
+        <td class="num">${f.bonos.R}</td>
+        <td class="num">${f.bonos.M}</td>
+        <td class="num">${f.bonos.O}</td>
+        <td class="num">${f.bonos.S}</td>
+        <td class="num" style="${f.bonos.Rch > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.Rch}</td>
+        <td class="num" style="${f.bonos.MG > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.MG}</td>
+        <td class="num" style="${f.bonos.RLP > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.RLP}</td>
+        <td class="num" style="font-weight:700;">${f.tb}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderizarParticipacionMes() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
   const nombreMes = NOMBRES_MES[mes] || "";
-  tituloHonor.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
+  document.getElementById("titulo-participacion-mes").textContent = `📊 Actividad y Participación — ${nombreMes} ${anio}`;
+
+  const partidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+  const conteoJugadores = {};
+  
+  partidasMes.forEach(p => {
+    (p.jugadores || []).forEach(j => {
+      const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+      conteoJugadores[nombreOficial] = (conteoJugadores[nombreOficial] || 0) + 1;
+    });
+  });
+
+  // Respaldo histórico si el mes inicia con poca actividad
+  if (Object.keys(conteoJugadores).length < 5) {
+    PARTIDAS.filter(p => p.anio == anio).forEach(p => {
+      (p.jugadores || []).forEach(j => {
+        const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+        if (!conteoJugadores[nombreOficial]) {
+          conteoJugadores[nombreOficial] = 0.1;
+        }
+      });
+    });
+  }
+
+  const listaMiembros = [];
+  const listaParticipantes = [];
+  const listaInvitados = [];
+
+  Object.entries(conteoJugadores).forEach(([nombre, totalPartidas]) => {
+    const info = JUGADORES_INFO[nombre] || {};
+    const pais = info.pais ? info.pais.toLowerCase() : null;
+    const item = { nombre, partidas: Math.round(totalPartidas), pais };
+
+    if (totalPartidas >= 5) {
+      listaMiembros.push(item);
+    } else if (totalPartidas >= 2) {
+      listaParticipantes.push(item);
+    } else {
+      listaInvitados.push(item);
+    }
+  });
+
+  listaMiembros.sort((a, b) => b.partidas - a.partidas);
+  listaParticipantes.sort((a, b) => b.partidas - a.partidas);
+  listaInvitados.sort((a, b) => b.partidas - a.partidas);
+
+  pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
+  pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes);
+  pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados);
+}
+
+function pintarColumnaMiniParticipacion(elementId, lista) {
+  const contenedor = document.getElementById(elementId);
+  if (!lista || lista.length === 0) {
+    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin registros</div>`;
+    return;
+  }
+
+  const limitados = lista.slice(0, 20);
+  contenedor.innerHTML = `
+    <table class="tabla-mini-participacion">
+      <thead>
+        <tr>
+          <th>Jugador</th>
+          <th class="num">Partidas</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${limitados.map(item => {
+          const imgBandera = item.pais 
+            ? `<img src="https://flagcdn.com/w40/${item.pais}.png" class="bandera-mini" alt="${item.pais}">` 
+            : '';
+          return `
+            <tr>
+              <td>${imgBandera}<a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
+              <td class="num">${item.partidas}p</td>
+            </tr>
+          `;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderizarCuadroHonor() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const titulo = document.getElementById("titulo-cuadro-honor");
+  const cont = document.getElementById("contenedor-cuadro-honor");
+
+  const nombreMes = NOMBRES_MES[mes] || "";
+  titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
 
   const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
     .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
 
   if (delMes.length === 0) {
-    contHonor.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
-  } else {
-    contHonor.innerHTML = `
-      <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
-          <thead>
-            <tr>
-              <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jornada</th>
-              <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jugador de la Fecha</th>
-              <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Civilización</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${delMes.map(h => `
-              <tr>
-                <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:600;">${h.jornada}</td>
-                <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--win);">👑 <a href="jugador.html?nombre=${encodeURIComponent(h.jugador)}">${h.jugador}</a></td>
-                <td style="padding:10px; border-bottom:1px solid var(--line); color:var(--text-dim);">${h.civ || '—'}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      </div>
-    `;
+    cont.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
+    return;
   }
 
-  // 3. Renderizar Grand Prix Anual
-  const contGP = document.getElementById("contenedor-grand-prix");
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+        <thead>
+          <tr>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jornada</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jugador de la Fecha</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Civilización</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${delMes.map(h => `
+            <tr>
+              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:600;">${h.jornada}</td>
+              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--win);">👑 <a href="jugador.html?nombre=${encodeURIComponent(h.jugador)}">${h.jugador}</a></td>
+              <td style="padding:10px; border-bottom:1px solid var(--line); color:var(--text-dim);">${h.civ || '—'}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderizarGrandPrix() {
+  const anio = document.getElementById("filtro-anio").value;
+  const cont = document.getElementById("contenedor-grand-prix");
   document.getElementById("titulo-grand-prix").textContent = `🏆 Grand Prix Ranking Maratón Michi DM ${anio}`;
-  
-  if (typeof calcularGrandPrixAnual === 'function') {
-    const { meses: mesesGP, rankingGP } = calcularGrandPrixAnual(PARTIDAS, EQUIVALENCIAS, anio);
-    if (rankingGP.length === 0) {
-      contGP.innerHTML = `<div class="empty-state">No hay datos de Grand Prix para el año ${anio}.</div>`;
-    } else {
-      contGP.innerHTML = `
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>Posición</th>
-                <th>Var</th>
-                <th>Jugador</th>
-                ${mesesGP.map(m => `<th>${NOMBRES_MES[m]}</th>`).join("")}
-                <th>Acumulado</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rankingGP.map((item, idx) => `
-                <tr>
-                  <td class="num" style="font-weight:700; color:var(--gold);">${idx + 1}</td>
-                  <td class="num">0</td>
-                  <td><a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
-                  ${mesesGP.map(m => `<td class="num">${item.puntosPorMes[m] || 0}</td>`).join("")}
-                  <td class="num" style="font-weight:700; color:var(--win);">${item.total}</td>
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
+
+  const { meses, rankingGP } = calcularGrandPrixAnual(PARTIDAS, EQUIVALENCIAS, anio);
+
+  if (rankingGP.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay datos de Grand Prix para el año ${anio}.</div>`;
+    return;
   }
+
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Posición</th>
+            <th>Var</th>
+            <th>Jugador</th>
+            ${meses.map(m => `<th>${NOMBRES_MES[m]}</th>`).join("")}
+            <th>Acumulado</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rankingGP.map((item, idx) => {
+            const pos = idx + 1;
+            let varStr = "0";
+            if (item.variacion > 0) varStr = `<span style="color:var(--win);">+${item.variacion}</span>`;
+            else if (item.variacion < 0) varStr = `<span style="color:var(--loss);">${item.variacion}</span>`;
+
+            return `
+              <tr>
+                <td class="num" style="font-weight:700; color:var(--gold);">${pos}</td>
+                <td class="num">${varStr}</td>
+                <td><a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
+                ${meses.map(m => `<td class="num">${item.puntosPorMes[m] || 0}</td>`).join("")}
+                <td class="num" style="font-weight:700; color:var(--win);">${item.total}</td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
 function descargarTablaPosiciones() {
@@ -254,7 +573,18 @@ function descargarGrandPrix() {
   descargarElementoComoImagen(document.getElementById("seccion-grand-prix"), "grand-prix.png", "#f8f6f0");
 }
 
-window.addEventListener("DOMContentLoaded", iniciarPagina);
+(async function init() {
+  try {
+    const datos = await cargarDatos();
+    PARTIDAS = datos.partidas || [];
+    EQUIVALENCIAS = datos.equivalencias || [];
+    JUGADORES_INFO = datos.jugadoresInfo || {};
+    CUADRO_HONOR = datos.cuadroHonor || [];
+    poblarFiltrosAnioMes();
+  } catch (err) {
+    console.error("Error al inicializar:", err);
+  }
+})();
 </script>
 </body>
 </html>
