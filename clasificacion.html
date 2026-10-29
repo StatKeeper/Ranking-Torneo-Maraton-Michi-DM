@@ -214,10 +214,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES (LEEN CATEGORÍAS 1, 2 y 3) -->
+  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES (MÁXIMO 20 POR CATEGORÍA) -->
   <div class="panel" id="seccion-participacion-mes" style="margin-top:20px;">
     <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📊 Actividad y Participación del Mes</h3>
-    <p class="hint" style="margin-bottom:12px;">Jugadores clasificados por categoría de membresía y ordenados por volumen de partidas.</p>
+    <p class="hint" style="margin-bottom:12px;">Jugadores clasificados por categoría (máx. 20 por bloque).</p>
     
     <div class="grid-tres-columnas">
       <div class="columna-participacion">
@@ -381,9 +381,9 @@ function renderizarParticipacionMes() {
   listaParticipantes.sort((a, b) => b.partidas - a.partidas);
   listaInvitados.sort((a, b) => b.partidas - a.partidas);
 
-  pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
-  pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes);
-  pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados);
+  pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros.slice(0, 20));
+  pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes.slice(0, 20));
+  pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados.slice(0, 20));
 }
 
 function pintarColumnaMiniParticipacion(elementId, lista) {
