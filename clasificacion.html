@@ -557,12 +557,16 @@ function descargarGrandPrix() {
 }
 
 (async function init() {
-  const datos = await cargarDatos();
-  PARTIDAS = datos.partidas;
-  EQUIVALENCIAS = datos.equivalencias;
-  JUGADORES_INFO = datos.jugadoresInfo || {};
-  CUADRO_HONOR = datos.cuadroHonor || [];
-  poblarFiltrosAnioMes();
+  try {
+    const datos = await cargarDatos();
+    PARTIDAS = datos.partidas || [];
+    EQUIVALENCIAS = datos.equivalencias || [];
+    JUGADORES_INFO = datos.jugadoresInfo || {};
+    CUADRO_HONOR = datos.cuadroHonor || [];
+    poblarFiltrosAnioMes();
+  } catch (err) {
+    console.error("Error al inicializar:", err);
+  }
 })();
 </script>
 </body>
