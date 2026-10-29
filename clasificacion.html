@@ -42,6 +42,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     border: 1px solid var(--line);
     padding: 8px 10px;
     vertical-align: middle;
+    white-space: nowrap; /* Evita saltos de línea para mantener todas las filas a la misma altura */
   }
   #tabla-clasificacion th {
     background: var(--panel-raised);
@@ -49,13 +50,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-weight: 600;
     font-size: 0.78rem;
   }
-  /* Dar espacio adecuado a la columna de Jugador para que no se amontone */
-  #tabla-clasificacion th:nth-child(3), #tabla-clasificacion td:nth-child(3) {
-    min-width: 150px;
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  /* Ancho reservado para la columna del Último Suceso para que los bonos largos entren corridos */
+  #tabla-clasificacion th:nth-child(6), #tabla-clasificacion td:nth-child(6) {
+    min-width: 220px;
   }
 
   /* Estilos para los estados de Último Suceso */
@@ -116,6 +113,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .tabla-mini-participacion td.num {
     text-align: center;
     font-weight: 600;
+    color: var(--text-dim);
+    width: 28px;
   }
   .bandera-mini {
     width: 18px;
@@ -216,7 +215,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES (DISTRIBUCIÓN EQUILIBRADA) -->
+  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES CON NUMERACIÓN -->
   <div class="panel" id="seccion-participacion-mes" style="margin-top:20px;">
     <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📊 Actividad y Participación del Mes</h3>
     <p class="hint" style="margin-bottom:12px;">Jugadores ordenados por volumen de partidas en el período seleccionado.</p>
@@ -369,18 +368,15 @@ function renderizarParticipacionMes() {
   const listaParticipantes = [];
   const listaInvitados = [];
 
-  // Ordenar a todos por mayor volumen de partidas de forma descendente
   const jugadoresOrdenados = Object.entries(conteoJugadores)
     .map(([nombre, total]) => ({ nombre, partidas: Math.round(total), realTotal: total }))
     .sort((a, b) => b.realTotal - a.realTotal);
 
-  // Distribución equilibrada en 3 bloques proporcionales según el volumen
   jugadoresOrdenados.forEach((item, index) => {
     const info = JUGADORES_INFO[item.nombre] || {};
     const pais = info.pais ? info.pais.toLowerCase() : null;
     const datosItem = { nombre: item.nombre, partidas: item.partidas, pais };
 
-    // Criterio de distribución equilibrada por tercios o umbrales de actividad
     if (item.realTotal >= 8 || (index < 6 && item.realTotal >= 5)) {
       listaMiembros.push(datosItem);
     } else if (item.realTotal >= 3 || (index < 12 && item.realTotal >= 2)) {
@@ -406,19 +402,21 @@ function pintarColumnaMiniParticipacion(elementId, lista) {
     <table class="tabla-mini-participacion">
       <thead>
         <tr>
+          <th style="width:28px; text-align:center;">#</th>
           <th>Jugador</th>
-          <th class="num">Partidas</th>
+          <th class="num" style="width:60px;">Partidas</th>
         </tr>
       </thead>
       <tbody>
-        ${lista.map(item => {
+        ${lista.map((item, idx) => {
           const imgBandera = item.pais 
             ? `<img src="https://flagcdn.com/w40/${item.pais}.png" class="bandera-mini" alt="${item.pais}">` 
             : '';
           return `
             <tr>
+              <td class="num">${idx + 1}</td>
               <td>${imgBandera}<a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
-              <td class="num">${item.partidas}p</td>
+              <td class="num" style="text-align:center;">${item.partidas}p</td>
             </tr>
           `;
         }).join("")}
