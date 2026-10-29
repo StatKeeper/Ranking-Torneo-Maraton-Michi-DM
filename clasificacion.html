@@ -125,6 +125,35 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     border: 1px solid rgba(0,0,0,0.1);
   }
 
+  /* Estilos para los dos cuadros de estadísticas inferiores (Galardones y Civilizaciones) */
+  .grid-estadisticas-honor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .subpanel-estadistica {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .tabla-estadistica {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .tabla-estadistica th, .tabla-estadistica td {
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    vertical-align: middle;
+  }
+  .tabla-estadistica th {
+    background: var(--panel-raised);
+    color: var(--gold);
+    font-size: 0.78rem;
+  }
+
   /* Líneas divisorias para la tabla del Grand Prix Anual */
   #seccion-grand-prix table {
     width: 100%;
@@ -235,6 +264,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
+  <!-- CUADRO DE HONOR Y SUS DOS ESTADÍSTICAS INFERIORES -->
   <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
@@ -242,6 +272,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div id="contenedor-cuadro-honor">
       <div class="empty-state">Cargando...</div>
+    </div>
+
+    <!-- Sub-cuadros de Ranking de Galardones y Civilizaciones más Destacadas -->
+    <div class="grid-estadisticas-honor">
+      <div class="subpanel-estadistica">
+        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">👑 Ranking de Galardones (Jugadores)</h4>
+        <div id="contenedor-ranking-galardones">
+          <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
+        </div>
+      </div>
+      <div class="subpanel-estadistica">
+        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">🏛️ Civilizaciones más Destacadas</h4>
+        <div id="contenedor-civilizaciones-destacadas">
+          <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -434,6 +480,8 @@ function renderizarCuadroHonor() {
 
   if (delMes.length === 0) {
     cont.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
+    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
+    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
     return;
   }
 
@@ -458,6 +506,68 @@ function renderizarCuadroHonor() {
         </tbody>
       </table>
     </div>
+  `;
+
+  // Calcular Estadísticas de Galardones y Civilizaciones del Mes
+  const conGalardones = {};
+  const conCivs = {};
+
+  delMes.forEach(h => {
+    const jugadorOficial = resolverNombreOficial(h.jugador, EQUIVALENCIAS);
+    conGalardones[jugadorOficial] = (conGalardones[jugadorOficial] || 0) + 1;
+
+    if (h.civ) {
+      const civOficial = resolverCivOficial(h.civ, EQUIVALENCIAS);
+      conCivs[civOficial] = (conCivs[civOficial] || 0) + 1;
+    }
+  });
+
+  // Renderizar Ranking de Galardones
+  const arrayGalardones = Object.entries(conGalardones).sort((a, b) => b[1] - a[1]);
+  const contGalardones = document.getElementById("contenedor-ranking-galardones");
+  contGalardones.innerHTML = `
+    <table class="tabla-estadistica">
+      <thead>
+        <tr>
+          <th style="width:40px; text-align:center;">#</th>
+          <th>Jugador</th>
+          <th style="width:70px; text-align:center;">Galardones</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${arrayGalardones.map(([jugador, total], idx) => `
+          <tr>
+            <td style="text-align:center; font-weight:600; color:var(--text-dim);">${idx + 1}°</td>
+            <td>👑 <a href="jugador.html?nombre=${encodeURIComponent(jugador)}">${jugador}</a></td>
+            <td style="text-align:center; font-weight:700; color:var(--win);">${total}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  // Renderizar Civilizaciones más Destacadas
+  const arrayCivs = Object.entries(conCivs).sort((a, b) => b[1] - a[1]);
+  const contCivs = document.getElementById("contenedor-civilizaciones-destacadas");
+  contCivs.innerHTML = `
+    <table class="tabla-estadistica">
+      <thead>
+        <tr>
+          <th style="width:40px; text-align:center;">#</th>
+          <th>Civilización</th>
+          <th style="width:70px; text-align:center;">Apariciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${arrayCivs.map(([civ, total], idx) => `
+          <tr>
+            <td style="text-align:center; font-weight:600; color:var(--text-dim);">${idx + 1}°</td>
+            <td>🏛️ ${civ}</td>
+            <td style="text-align:center; font-weight:700; color:var(--gold);">${total}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
   `;
 }
 
