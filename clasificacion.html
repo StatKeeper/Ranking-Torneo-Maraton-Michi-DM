@@ -153,6 +153,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     color: var(--gold);
     font-size: 0.78rem;
   }
+  .item-agrupado {
+    padding: 3px 0;
+    border-bottom: 1px dotted rgba(0,0,0,0.1);
+  }
+  .item-agrupado:last-child {
+    border-bottom: none;
+  }
 
   /* Líneas divisorias para la tabla del Grand Prix Anual */
   #seccion-grand-prix table {
@@ -264,7 +271,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- CUADRO DE HONOR Y SUS DOS ESTADÍSTICAS INFERIORES -->
+  <!-- CUADRO DE HONOR Y SUS DOS ESTADÍSTICAS INFERIORES AGRUPADAS -->
   <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
@@ -508,7 +515,7 @@ function renderizarCuadroHonor() {
     </div>
   `;
 
-  // Calcular Estadísticas de Galardones y Civilizaciones del Mes
+  // Calcular conteos
   const conGalardones = {};
   const conCivs = {};
 
@@ -522,48 +529,98 @@ function renderizarCuadroHonor() {
     }
   });
 
-  // Renderizar Ranking de Galardones
-  const arrayGalardones = Object.entries(conGalardones).sort((a, b) => b[1] - a[1]);
+  // Agrupar Galardones por valor idéntico
+  const galardonesPorPuntaje = {};
+  Object.entries(conGalardones).forEach(([jugador, total]) => {
+    if (!galardonesPorPuntaje[total]) galardonesPorPuntaje[total] = [];
+    galardonesPorPuntaje[total].push(jugador);
+  });
+
+  const galardonesOrdenados = Object.keys(galardonesPorPuntaje)
+    .map(Number)
+    .sort((a, b) => b - a);
+
+  let acumuladoG = 1;
+  const filasGalardones = galardonesOrdenados.map(total => {
+    const jugadores = galardonesPorPuntaje[total].sort((a, b) => a.localeCompare(b));
+    const posTexto = `${acumuladoG}°`;
+    acumuladoG += jugadores.length;
+
+    return {
+      posTexto,
+      total,
+      elementos: jugadores.map(j => `👑 <a href="jugador.html?nombre=${encodeURIComponent(j)}">${j}</a>`)
+    };
+  });
+
+  // Renderizar Ranking de Galardones Agrupado
   const contGalardones = document.getElementById("contenedor-ranking-galardones");
   contGalardones.innerHTML = `
     <table class="tabla-estadistica">
       <thead>
         <tr>
-          <th style="width:40px; text-align:center;">#</th>
+          <th style="width:50px; text-align:center;">#</th>
           <th>Jugador</th>
-          <th style="width:70px; text-align:center;">Galardones</th>
+          <th style="width:80px; text-align:center;">Galardones</th>
         </tr>
       </thead>
       <tbody>
-        ${arrayGalardones.map(([jugador, total], idx) => `
+        ${filasGalardones.map(f => `
           <tr>
-            <td style="text-align:center; font-weight:600; color:var(--text-dim);">${idx + 1}°</td>
-            <td>👑 <a href="jugador.html?nombre=${encodeURIComponent(jugador)}">${jugador}</a></td>
-            <td style="text-align:center; font-weight:700; color:var(--win);">${total}</td>
+            <td style="text-align:center; font-weight:700; color:var(--text-dim); vertical-align:middle;">${f.posTexto}</td>
+            <td style="padding:4px 8px;">
+              ${f.elementos.map(el => `<div class="item-agrupado">${el}</div>`).join("")}
+            </td>
+            <td style="text-align:center; font-weight:700; color:var(--win); vertical-align:middle;">${f.total}</td>
           </tr>
         `).join("")}
       </tbody>
     </table>
   `;
 
-  // Renderizar Civilizaciones más Destacadas
-  const arrayCivs = Object.entries(conCivs).sort((a, b) => b[1] - a[1]);
+  // Agrupar Civilizaciones por apariciones idénticas
+  const civsPorPuntaje = {};
+  Object.entries(conCivs).forEach(([civ, total]) => {
+    if (!civsPorPuntaje[total]) civsPorPuntaje[total] = [];
+    civsPorPuntaje[total].push(civ);
+  });
+
+  const civsOrdenadas = Object.keys(civsPorPuntaje)
+    .map(Number)
+    .sort((a, b) => b - a);
+
+  let acumuladoC = 1;
+  const filasCivs = civsOrdenadas.map(total => {
+    const civilizaciones = civsPorPuntaje[total].sort((a, b) => a.localeCompare(b));
+    const posTexto = `${acumuladoC}°`;
+    acumuladoC += civilizaciones.length;
+
+    return {
+      posTexto,
+      total,
+      elementos: civilizaciones.map(c => `🏛️ ${c}`)
+    };
+  });
+
+  // Renderizar Civilizaciones más Destacadas Agrupadas
   const contCivs = document.getElementById("contenedor-civilizaciones-destacadas");
   contCivs.innerHTML = `
     <table class="tabla-estadistica">
       <thead>
         <tr>
-          <th style="width:40px; text-align:center;">#</th>
+          <th style="width:50px; text-align:center;">#</th>
           <th>Civilización</th>
-          <th style="width:70px; text-align:center;">Apariciones</th>
+          <th style="width:80px; text-align:center;">Apariciones</th>
         </tr>
       </thead>
       <tbody>
-        ${arrayCivs.map(([civ, total], idx) => `
+        ${filasCivs.map(f => `
           <tr>
-            <td style="text-align:center; font-weight:600; color:var(--text-dim);">${idx + 1}°</td>
-            <td>🏛️ ${civ}</td>
-            <td style="text-align:center; font-weight:700; color:var(--gold);">${total}</td>
+            <td style="text-align:center; font-weight:700; color:var(--text-dim); vertical-align:middle;">${f.posTexto}</td>
+            <td style="padding:4px 8px;">
+              ${f.elementos.map(el => `<div class="item-agrupado">${el}</div>`).join("")}
+            </td>
+            <td style="text-align:center; font-weight:700; color:var(--gold); vertical-align:middle;">${f.total}</td>
           </tr>
         `).join("")}
       </tbody>
