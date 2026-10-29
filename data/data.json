@@ -18746,7 +18746,8 @@
   "jugadoresInfo": {
     ".com/@AnoMaMy_8": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "[cLm] Falco Lombardi": {
       "pais": "BO",
@@ -18782,7 +18783,8 @@
     },
     "_Google": {
       "pais": "AR",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "¢н??¢?": {
       "pais": "",
@@ -18790,19 +18792,23 @@
     },
     "123 Dabs": {
       "pais": "US",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "12Kills": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "7ommy": {
       "pais": "VN",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "AAAwesomeGuy": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Anciano": {
       "pais": "",
@@ -18810,7 +18816,8 @@
     },
     "AntiBuddy": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Arcy": {
       "pais": "",
@@ -18822,7 +18829,8 @@
     },
     "B AZAR360": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Benums": {
       "pais": "",
@@ -18842,23 +18850,28 @@
     },
     "bluebitsq78": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Boat": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "BOSTERO": {
       "pais": "AR",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "bromanbillus": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "BullRunner": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Cacha": {
       "pais": "",
@@ -18870,15 +18883,18 @@
     },
     "Coleman": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "cumplear": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "DIA DIA 02": {
       "pais": "CN",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Dirty_rat": {
       "pais": "",
@@ -18897,6 +18913,7 @@
       "civFavorita": "Jemer"
     },
     "Erik Tha Barbaro": {
+      "categoria": 1,
       "pais": "MX",
       "civFavorita": ""
     },
@@ -18906,7 +18923,8 @@
     },
     "Fireknight": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "FoNcHiO!": {
       "pais": "",
@@ -18914,7 +18932,8 @@
     },
     "frkndmly": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Furan": {
       "pais": "",
@@ -18938,11 +18957,13 @@
     },
     "GoldiGlock": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Happy": {
       "pais": "TW",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Hipoflash": {
       "pais": "CL",
@@ -18950,15 +18971,18 @@
     },
     "HTL_A3rty": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "J@@@": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Jackey9522": {
       "pais": "CN",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "JB": {
       "pais": "AR",
@@ -18970,7 +18994,8 @@
     },
     "Kartoos": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "kimchi": {
       "pais": "",
@@ -18978,12 +19003,12 @@
     },
     "king vitt": {
       "pais": "CN",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Knar": {
       "pais": "US",
-      "civFavorita": "",
-      "categoria": 2
+      "civFavorita": ""
     },
     "Komodo3000": {
       "pais": "",
@@ -18999,7 +19024,8 @@
     },
     "Little duck": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "LVA-Gleich": {
       "pais": "AR",
@@ -19007,19 +19033,23 @@
     },
     "MacGyver (RubenS)": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Majestic": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "malbieri": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Meriats": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Mojo jojo": {
       "pais": "CL",
@@ -19027,15 +19057,18 @@
     },
     "Monday 007": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "muendo": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Nova_8": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "P@K()": {
       "pais": "MX",
@@ -19047,19 +19080,23 @@
     },
     "Peon": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Peter Aio": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Player": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Quino": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "rabuegia": {
       "pais": "",
@@ -19076,15 +19113,18 @@
     },
     "Rocket Bunny": {
       "pais": "BR",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "rod": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "rushwarwarrior": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Santiago RC": {
       "pais": "",
@@ -19092,7 +19132,8 @@
     },
     "Saturno 1343": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Saul Goodman": {
       "pais": "CL",
@@ -19100,7 +19141,8 @@
     },
     "Shop kepper": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Speedracer 5.0": {
       "pais": "",
@@ -19108,7 +19150,8 @@
     },
     "Spicy License 735": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "su.li18": {
       "pais": "",
@@ -19164,8 +19207,7 @@
     },
     "truc.itsm": {
       "pais": "",
-      "civFavorita": "",
-      "categoria": 2
+      "civFavorita": ""
     },
     "ullaj1999": {
       "pais": "",
