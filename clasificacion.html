@@ -42,7 +42,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     border: 1px solid var(--line);
     padding: 8px 10px;
     vertical-align: middle;
-    white-space: nowrap; /* Evita saltos de línea para mantener todas las filas a la misma altura */
+    white-space: nowrap;
   }
   #tabla-clasificacion th {
     background: var(--panel-raised);
@@ -50,7 +50,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-weight: 600;
     font-size: 0.78rem;
   }
-  /* Ancho reservado para la columna del Último Suceso para que los bonos largos entren corridos */
   #tabla-clasificacion th:nth-child(6), #tabla-clasificacion td:nth-child(6) {
     min-width: 220px;
   }
@@ -215,10 +214,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES CON NUMERACIÓN -->
+  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES (LEEN CATEGORÍAS 1, 2 y 3) -->
   <div class="panel" id="seccion-participacion-mes" style="margin-top:20px;">
     <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📊 Actividad y Participación del Mes</h3>
-    <p class="hint" style="margin-bottom:12px;">Jugadores ordenados por volumen de partidas en el período seleccionado.</p>
+    <p class="hint" style="margin-bottom:12px;">Jugadores clasificados por categoría de membresía y ordenados por volumen de partidas.</p>
     
     <div class="grid-tres-columnas">
       <div class="columna-participacion">
@@ -353,38 +352,34 @@ function renderizarParticipacionMes() {
     });
   });
 
-  if (Object.keys(conteoJugadores).length < 5) {
-    PARTIDAS.filter(p => p.anio == anio).forEach(p => {
-      (p.jugadores || []).forEach(j => {
-        const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
-        if (!conteoJugadores[nombreOficial]) {
-          conteoJugadores[nombreOficial] = 0.1;
-        }
-      });
-    });
-  }
+  const todosLosJugadores = new Set([
+    ...Object.keys(conteoJugadores),
+    ...Object.keys(JUGADORES_INFO)
+  ]);
 
   const listaMiembros = [];
   const listaParticipantes = [];
   const listaInvitados = [];
 
-  const jugadoresOrdenados = Object.entries(conteoJugadores)
-    .map(([nombre, total]) => ({ nombre, partidas: Math.round(total), realTotal: total }))
-    .sort((a, b) => b.realTotal - a.realTotal);
-
-  jugadoresOrdenados.forEach((item, index) => {
-    const info = JUGADORES_INFO[item.nombre] || {};
+  todosLosJugadores.forEach(nombre => {
+    const info = JUGADORES_INFO[nombre] || {};
+    const categoria = parseInt(info.categoria, 10) || 1;
+    const partidas = Math.round(conteoJugadores[nombre] || 0);
     const pais = info.pais ? info.pais.toLowerCase() : null;
-    const datosItem = { nombre: item.nombre, partidas: item.partidas, pais };
+    const item = { nombre, partidas, pais };
 
-    if (item.realTotal >= 8 || (index < 6 && item.realTotal >= 5)) {
-      listaMiembros.push(datosItem);
-    } else if (item.realTotal >= 3 || (index < 12 && item.realTotal >= 2)) {
-      listaParticipantes.push(datosItem);
-    } else {
-      listaInvitados.push(datosItem);
+    if (categoria === 1) {
+      listaMiembros.push(item);
+    } else if (categoria === 2) {
+      listaParticipantes.push(item);
+    } else if (categoria === 3) {
+      listaInvitados.push(item);
     }
   });
+
+  listaMiembros.sort((a, b) => b.partidas - a.partidas);
+  listaParticipantes.sort((a, b) => b.partidas - a.partidas);
+  listaInvitados.sort((a, b) => b.partidas - a.partidas);
 
   pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
   pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes);
