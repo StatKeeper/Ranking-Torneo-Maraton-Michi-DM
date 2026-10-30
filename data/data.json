@@ -18745,6 +18745,79 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha24-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 24",
+      "numeroPartida": 1,
+      "duracionSeg": 14843,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 12863,
+          "edificiosArrasados": 331021,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 19606,
+          "edificiosArrasados": 403474,
+          "bonos": [
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Bohemios",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9964,
+          "edificiosArrasados": 325855,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "THameed",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 17139,
+          "edificiosArrasados": 488701,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10270,
+          "edificiosArrasados": 339359,
+          "bonos": []
+        },
+        {
+          "nombre": "smutzandstonez",
+          "resultado": "derrota",
+          "civ": "Bohemios",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 16811,
+          "edificiosArrasados": 296913,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -19653,6 +19726,13 @@
       "jornada": "Fecha 23",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha23.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha23.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 24",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha24.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha24.png"
     }
   ],
   "civEquivalencias": [],
@@ -20202,6 +20282,13 @@
       "jornada": "Fecha 23",
       "jugador": "Bio Tine",
       "civ": "Sarracenos"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 24",
+      "jugador": "[cLm] KFICHO",
+      "civ": "Bulgaros"
     }
   ]
 }
