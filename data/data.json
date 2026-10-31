@@ -18818,6 +18818,170 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha25-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 25",
+      "numeroPartida": 1,
+      "duracionSeg": 7921,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3028,
+          "edificiosArrasados": 193594,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10254,
+          "edificiosArrasados": 378017,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3494,
+          "edificiosArrasados": 196799,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4522,
+          "edificiosArrasados": 188542,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6503,
+          "edificiosArrasados": 239756,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4072,
+          "edificiosArrasados": 201150,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-Fecha25-P2",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 25",
+      "numeroPartida": 2,
+      "duracionSeg": 2557,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Incas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1235,
+          "edificiosArrasados": 66198,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2943,
+          "edificiosArrasados": 84788,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "victoria",
+          "civ": "Portugueses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2555,
+          "edificiosArrasados": 114137,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 813,
+          "edificiosArrasados": 66670,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1222,
+          "edificiosArrasados": 53587,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Incas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 969,
+          "edificiosArrasados": 57779,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Portugueses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1682,
+          "edificiosArrasados": 64693,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1189,
+          "edificiosArrasados": 77974,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -19733,6 +19897,13 @@
       "jornada": "Fecha 24",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha24.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha24.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 25",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha25.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha25.png"
     }
   ],
   "civEquivalencias": [],
@@ -20289,6 +20460,13 @@
       "jornada": "Fecha 24",
       "jugador": "[cLm] KFICHO",
       "civ": "Bulgaros"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 25",
+      "jugador": "Papita Huayro",
+      "civ": "Persas"
     }
   ]
 }
