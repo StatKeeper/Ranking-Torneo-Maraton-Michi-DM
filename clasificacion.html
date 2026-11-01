@@ -515,7 +515,6 @@ function renderizarCuadroHonor() {
     </div>
   `;
 
-  // Calcular conteos
   const conGalardones = {};
   const conCivs = {};
 
@@ -529,7 +528,6 @@ function renderizarCuadroHonor() {
     }
   });
 
-  // Agrupar Galardones por valor idéntico
   const galardonesPorPuntaje = {};
   Object.entries(conGalardones).forEach(([jugador, total]) => {
     if (!galardonesPorPuntaje[total]) galardonesPorPuntaje[total] = [];
@@ -553,7 +551,6 @@ function renderizarCuadroHonor() {
     };
   });
 
-  // Renderizar Ranking de Galardones Agrupado
   const contGalardones = document.getElementById("contenedor-ranking-galardones");
   contGalardones.innerHTML = `
     <table class="tabla-estadistica">
@@ -578,7 +575,6 @@ function renderizarCuadroHonor() {
     </table>
   `;
 
-  // Agrupar Civilizaciones por apariciones idénticas
   const civsPorPuntaje = {};
   Object.entries(conCivs).forEach(([civ, total]) => {
     if (!civsPorPuntaje[total]) civsPorPuntaje[total] = [];
@@ -602,7 +598,6 @@ function renderizarCuadroHonor() {
     };
   });
 
-  // Renderizar Civilizaciones más Destacadas Agrupadas
   const contCivs = document.getElementById("contenedor-civilizaciones-destacadas");
   contCivs.innerHTML = `
     <table class="tabla-estadistica">
@@ -688,7 +683,7 @@ function poblarFiltrosAnioMes() {
   selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
   actualizarMeses();
-  selAnio.addEventListener("change", () => { actualizarMeses(); actualizarJornadasYRenderizar(); });
+  selAnio.addEventListener("change", () => { actualizarMeses(); });
   document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
   document.getElementById("filtro-jornada").addEventListener("change", (e) => {
     actualizarPartidas(e.target.value);
@@ -705,6 +700,7 @@ function actualizarMeses() {
 
   const selMes = document.getElementById("filtro-mes");
   selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  actualizarJornadasYRenderizar();
 }
 
 function actualizarJornadasYRenderizar() {
