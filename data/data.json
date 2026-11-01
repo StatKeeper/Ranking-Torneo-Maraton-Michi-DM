@@ -18982,6 +18982,78 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-10-Fecha26-P1",
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 26",
+      "numeroPartida": 1,
+      "duracionSeg": 9762,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Wu",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 9619,
+          "edificiosArrasados": 290091,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7259,
+          "edificiosArrasados": 214460,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7386,
+          "edificiosArrasados": 239135,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Wu",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6331,
+          "edificiosArrasados": 172189,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8603,
+          "edificiosArrasados": 260591,
+          "bonos": []
+        },
+        {
+          "nombre": "VexusGames",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8986,
+          "edificiosArrasados": 265798,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -19904,6 +19976,13 @@
       "jornada": "Fecha 25",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha25.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha25.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 26",
+      "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha26.png",
+      "imagenGalardon": "imagenes/galardon_2026-10_fecha26.png"
     }
   ],
   "civEquivalencias": [],
@@ -20467,6 +20546,13 @@
       "jornada": "Fecha 25",
       "jugador": "Papita Huayro",
       "civ": "Persas"
+    },
+    {
+      "anio": 2026,
+      "mes": "10",
+      "jornada": "Fecha 26",
+      "jugador": "[cLm] KFICHO",
+      "civ": "Wu"
     }
   ]
 }
