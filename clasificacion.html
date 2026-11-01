@@ -342,15 +342,18 @@ function renderizarTablaPosiciones() {
     infoJor.textContent = `📅 Período: ${NOMBRES_MES[mes] || ''} ${anio}`;
   }
 
-  if (filas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros para este período.</td></tr>`;
+  // Filtrar filas para que aparezcan únicamente los jugadores que tengan al menos una victoria en su haber
+  const filasConVictoria = filas.filter(f => f.victorias > 0);
+
+  if (filasConVictoria.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros con victoria para este período.</td></tr>`;
     return;
   }
 
   const totalPartidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes).length;
   document.getElementById("info-jornada").innerHTML += ` &nbsp; | &nbsp; Partidas jugadas en el mes: ${totalPartidasMes}`;
 
-  tbody.innerHTML = filas.map((f, idx) => {
+  tbody.innerHTML = filasConVictoria.map((f, idx) => {
     const pos = idx + 1;
     let varStr = "-";
     if (f.variacion > 0) varStr = `<span style="color:var(--win);">+${f.variacion}</span>`;
