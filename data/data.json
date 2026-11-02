@@ -19054,6 +19054,98 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha27-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 27",
+      "numeroPartida": 1,
+      "duracionSeg": 5440,
+      "jugadores": [
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7369,
+          "edificiosArrasados": 192573,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Etíopes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6584,
+          "edificiosArrasados": 249942,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "HASSAKU",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3479,
+          "edificiosArrasados": 169676,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Dravídicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2353,
+          "edificiosArrasados": 104229,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Dravídicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2701,
+          "edificiosArrasados": 106051,
+          "bonos": []
+        },
+        {
+          "nombre": "WaG",
+          "resultado": "derrota",
+          "civ": "Etíopes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4927,
+          "edificiosArrasados": 181505,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2229,
+          "edificiosArrasados": 88737,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5332,
+          "edificiosArrasados": 140116,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -19983,6 +20075,13 @@
       "jornada": "Fecha 26",
       "imagenEvaluacion": "imagenes/candidatos_2026-10_fecha26.png",
       "imagenGalardon": "imagenes/galardon_2026-10_fecha26.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 01",
+      "imagenEvaluacion": "imagenes/candidatos_2026-11_fecha01.png",
+      "imagenGalardon": "imagenes/galardon_2026-11_fecha01.png"
     }
   ],
   "civEquivalencias": [],
@@ -20553,6 +20652,13 @@
       "jornada": "Fecha 26",
       "jugador": "[cLm] KFICHO",
       "civ": "Wu"
+    },
+    {
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 01",
+      "jugador": "GGINDU",
+      "civ": "Etiopes"
     }
   ]
 }
