@@ -95,6 +95,10 @@
     {
       "antiguo": "Erik Tha Barbaro",
       "oficial": "ErikThaBarbaro"
+    },
+    {
+      "antiguo": "HASSAKU",
+      "oficial": "HASSAKU"
     }
   ],
   "partidas": [
@@ -19226,7 +19230,8 @@
     },
     "Arcy": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Aureliano": {
       "pais": "AR",
@@ -19247,7 +19252,8 @@
     },
     "BlackHorse": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "bLItzKrleG*RoMMeL": {
       "pais": "PE",
