@@ -20750,20 +20750,20 @@
       "civ": "Wu"
     },
     {
-      "id": "2026-11-Fecha01",
-      "anio": 2026,
-      "mes": 11,
-      "jornada": "Fecha 01",
-      "jugador": "GGINDU",
-      "civ": "Etiopes"
-    },
-    {
       "id": "2026-11-Fecha02",
       "anio": 2026,
       "mes": 11,
       "jornada": "Fecha 02",
       "jugador": "P@K()",
       "civ": "Sicilianos"
+    },
+    {
+      "id": "2026-11-Fecha01",
+      "anio": 2026,
+      "mes": 11,
+      "jornada": "Fecha 01",
+      "jugador": "GGINDU",
+      "civ": "Etiopes"
     }
   ]
 }
