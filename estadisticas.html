@@ -71,7 +71,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="subtab-btn active" data-tab="tiempos" onclick="cambiarSubtab('tiempos')">⏱ Tiempos</button>
     <button class="subtab-btn" data-tab="civs" onclick="cambiarSubtab('civs')">🏛 Civs / WR</button>
     <button class="subtab-btn" data-tab="sinergia" onclick="cambiarSubtab('sinergia')">🤝 Sinergia</button>
-    <button class="subtab-btn" data-tab="equipos" onclick="cambiarSubtab('equipos')">🤝 Equipos / Parejas</button>
+    <button class="subtab-btn" data-tab="equipos" onclick="cambiarSubtab('equipos')">🤝 Equipos</button>
   </div>
 
   <div class="filters">
@@ -161,7 +161,7 @@ function cambiarSubtab(tab) {
 function renderizarEquiposGanadores() {
   const resultadoDiv = document.getElementById("resultado");
   const filtradas = partidasFiltradas();
-  const parejasConteo = {};
+  const equiposConteo = {};
 
   filtradas.forEach(p => {
     if (!p.jugadores || !Array.isArray(p.jugadores)) return;
@@ -171,7 +171,7 @@ function renderizarEquiposGanadores() {
     p.jugadores.forEach(j => {
       if ((j.resultado || "").toLowerCase() === "victoria") {
         const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
-        const eq = j.civ ? (j.equipo || "Equipo Principal") : (j.equipo || "Equipo Principal");
+        const eq = j.equipo || "Equipo Principal";
         if (!equiposGanadores[eq]) equiposGanadores[eq] = [];
         if (!equiposGanadores[eq].includes(nombreOficial)) {
           equiposGanadores[eq].push(nombreOficial);
@@ -179,51 +179,58 @@ function renderizarEquiposGanadores() {
       }
     });
 
-    // Por cada equipo con victoria, registrar las combinaciones de parejas/jugadores
+    // Procesar cada equipo ganador completo
     Object.values(equiposGanadores).forEach(miembros => {
-      if (miembros.length < 2) return; // Solo considerar equipos de 2 o más jugadores
-      miembros.sort();
+      if (miembros.length !== 3 && miembros.length !== 4) return; // Solo 3v3 y 4v4
       
-      // Generar pares o combinaciones de sinergia ganadora
-      for (let i = 0; i < miembros.length; i++) {
-        for (let j = i + 1; j < miembros.length; j++) {
-          const duplaKey = `${miembros[i]} & ${miembros[j]}`;
-          parejasConteo[duplaKey] = (parejasConteo[duplaKey] || 0) + 1;
-        }
+      miembros.sort();
+      const equipoKey = miembros.join(" & ");
+      
+      if (!equiposConteo[equipoKey]) {
+        equiposConteo[equipoKey] = { v3: 0, v4: 0, total: 0 };
       }
+      
+      if (miembros.length === 3) {
+        equiposConteo[equipoKey].v3 += 1;
+      } else if (miembros.length === 4) {
+        equiposConteo[equipoKey].v4 += 1;
+      }
+      equiposConteo[equipoKey].total += 1;
     });
   });
 
-  // Filtrar duplas con 2 o más victorias y ordenar de mayor a menor
-  const rankingParejas = Object.entries(parejasConteo)
-    .filter(([_, victorias]) => victorias >= 2)
-    .sort((a, b) => b[1] - a[1]);
+  // Filtrar equipos con 2 o más victorias totales y ordenar de mayor a menor
+  const rankingEquipos = Object.entries(equiposConteo)
+    .filter(([_, datos]) => datos.total >= 2)
+    .sort((a, b) => b[1].total - a[1].total);
 
-  if (rankingParejas.length === 0) {
+  if (rankingEquipos.length === 0) {
     resultadoDiv.innerHTML = `
-      <h3>🤝 Ranking de Parejas y Equipos Ganadores</h3>
-      <div class="empty-state">No hay parejas con 2 o más victorias conjuntas para este período.</div>
+      <h3>🤝 Ranking de Equipos Ganadores (3v3 y 4v4)</h3>
+      <div class="empty-state">No hay equipos de 3 o 4 integrantes con 2 o más victorias conjuntas para este período.</div>
     `;
     return;
   }
 
   resultadoDiv.innerHTML = `
-    <h3>🤝 Ranking de Parejas y Equipos Ganadores (2+ Victorias)</h3>
+    <h3>🤝 Ranking de Equipos Ganadores (3v3 y 4v4)</h3>
     <div style="overflow-x:auto; margin-top:12px;">
       <table class="compare-table">
         <thead>
           <tr>
-            <th style="width:60px; text-align:center;">#</th>
-            <th style="text-align:left;">Dupla / Jugadores</th>
-            <th style="width:100px; text-align:center;">Victorias Juntos</th>
+            <th style="width:50px; text-align:center;">#</th>
+            <th style="text-align:left;">Integrantes del Equipo</th>
+            <th style="width:110px; text-align:center;">Victorias 3v3</th>
+            <th style="width:110px; text-align:center;">Victorias 4v4</th>
           </tr>
         </thead>
         <tbody>
-          ${rankingParejas.map(([dupla, vict], idx) => `
+          ${rankingEquipos.map(([equipo, datos], idx) => `
             <tr>
               <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
-              <td style="text-align:left; font-weight:600;">${dupla}</td>
-              <td style="text-align:center; font-weight:700; color:var(--win);">${vict}</td>
+              <td style="text-align:left; font-weight:600;">${equipo}</td>
+              <td style="text-align:center; font-weight:700; color:${datos.v3 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${datos.v3}</td>
+              <td style="text-align:center; font-weight:700; color:${datos.v4 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${datos.v4}</td>
             </tr>
           `).join("")}
         </tbody>
