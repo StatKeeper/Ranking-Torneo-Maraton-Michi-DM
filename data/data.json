@@ -19060,10 +19060,82 @@
       ]
     },
     {
-      "id": "2026-11-Fecha27-P1",
+      "id": "2026-11-Fecha02-P1",
       "anio": 2026,
       "mes": "11",
-      "jornada": "Fecha 27",
+      "jornada": "Fecha 02",
+      "numeroPartida": 1,
+      "duracionSeg": 10356,
+      "jugadores": [
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 13532,
+          "edificiosArrasados": 269194,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8965,
+          "edificiosArrasados": 229480,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Milan <3",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9251,
+          "edificiosArrasados": 264237,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12195,
+          "edificiosArrasados": 250714,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 8263,
+          "edificiosArrasados": 206726,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 11963,
+          "edificiosArrasados": 268801,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha01-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 01",
       "numeroPartida": 1,
       "duracionSeg": 5440,
       "jugadores": [
@@ -19148,78 +19220,6 @@
           "unidadesAsesinadas": 5332,
           "edificiosArrasados": 140116,
           "bonos": []
-        }
-      ]
-    },
-    {
-      "id": "2026-11-Fecha02-P1",
-      "anio": 2026,
-      "mes": "11",
-      "jornada": "Fecha 02",
-      "numeroPartida": 1,
-      "duracionSeg": 10356,
-      "jugadores": [
-        {
-          "nombre": "P@K()",
-          "resultado": "victoria",
-          "civ": "Sicilianos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 13532,
-          "edificiosArrasados": 269194,
-          "bonos": [
-            "E",
-            "M",
-            "S"
-          ]
-        },
-        {
-          "nombre": "[cLm] Gerard",
-          "resultado": "victoria",
-          "civ": "Aztecas",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 8965,
-          "edificiosArrasados": 229480,
-          "bonos": [
-            "O"
-          ]
-        },
-        {
-          "nombre": "Milan <3",
-          "resultado": "victoria",
-          "civ": "Británicos",
-          "equipo": "Equipo 1",
-          "unidadesAsesinadas": 9251,
-          "edificiosArrasados": 264237,
-          "bonos": []
-        },
-        {
-          "nombre": "Papita Huayro",
-          "resultado": "derrota",
-          "civ": "Sicilianos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 12195,
-          "edificiosArrasados": 250714,
-          "bonos": []
-        },
-        {
-          "nombre": "Gato :3",
-          "resultado": "derrota",
-          "civ": "Británicos",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 8263,
-          "edificiosArrasados": 206726,
-          "bonos": []
-        },
-        {
-          "nombre": "Elraf",
-          "resultado": "derrota",
-          "civ": "Aztecas",
-          "equipo": "Equipo 2",
-          "unidadesAsesinadas": 11963,
-          "edificiosArrasados": 268801,
-          "bonos": [
-            "R"
-          ]
         }
       ]
     }
