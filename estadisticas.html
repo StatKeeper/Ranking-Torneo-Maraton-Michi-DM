@@ -40,9 +40,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .subtab-btn.active { background: var(--gold); color: #17130a; border-color: var(--gold); }
   .player-picker { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 10px; margin-bottom: 14px; }
   .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  .compare-table th, .compare-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: center; }
-  .compare-table th:first-child, .compare-table td:first-child { text-align: left; color: var(--text-dim); }
+  .compare-table th, .compare-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .compare-table th { text-align: center; }
+  .compare-table th:nth-child(2), .compare-table td:nth-child(2) { text-align: left; }
+  .compare-table th:first-child, .compare-table td:first-child { text-align: center; color: var(--text-dim); width: 60px; }
   .compare-table thead th { color: var(--gold); font-weight: 600; }
+  
+  /* Estilo para los nombres en columna vertical dentro de la celda */
+  .equipo-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .equipo-vertical span {
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -184,10 +196,10 @@ function renderizarEquiposGanadores() {
       if (miembros.length !== 3 && miembros.length !== 4) return; // Solo 3v3 y 4v4
       
       miembros.sort();
-      const equipoKey = miembros.join(" & ");
+      const equipoKey = JSON.stringify(miembros); // Guardar arreglo ordenado como clave única
       
       if (!equiposConteo[equipoKey]) {
-        equiposConteo[equipoKey] = { v3: 0, v4: 0, total: 0 };
+        equiposConteo[equipoKey] = { miembros, v3: 0, v4: 0, total: 0 };
       }
       
       if (miembros.length === 3) {
@@ -200,9 +212,9 @@ function renderizarEquiposGanadores() {
   });
 
   // Filtrar equipos con 2 o más victorias totales y ordenar de mayor a menor
-  const rankingEquipos = Object.entries(equiposConteo)
-    .filter(([_, datos]) => datos.total >= 2)
-    .sort((a, b) => b[1].total - a[1].total);
+  const rankingEquipos = Object.values(equiposConteo)
+    .filter(datos => datos.total >= 2)
+    .sort((a, b) => b.total - a.total);
 
   if (rankingEquipos.length === 0) {
     resultadoDiv.innerHTML = `
@@ -218,19 +230,23 @@ function renderizarEquiposGanadores() {
       <table class="compare-table">
         <thead>
           <tr>
-            <th style="width:50px; text-align:center;">#</th>
+            <th style="width:60px; text-align:center;">#</th>
             <th style="text-align:left;">Integrantes del Equipo</th>
-            <th style="width:110px; text-align:center;">Victorias 3v3</th>
-            <th style="width:110px; text-align:center;">Victorias 4v4</th>
+            <th style="width:120px; text-align:center;">Victorias 3v3</th>
+            <th style="width:120px; text-align:center;">Victorias 4v4</th>
           </tr>
         </thead>
         <tbody>
-          ${rankingEquipos.map(([equipo, datos], idx) => `
+          ${rankingEquipos.map((item, idx) => `
             <tr>
               <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
-              <td style="text-align:left; font-weight:600;">${equipo}</td>
-              <td style="text-align:center; font-weight:700; color:${datos.v3 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${datos.v3}</td>
-              <td style="text-align:center; font-weight:700; color:${datos.v4 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${datos.v4}</td>
+              <td style="text-align:left;">
+                <div class="equipo-vertical">
+                  ${item.miembros.map(m => `<span>• ${m}</span>`).join("")}
+                </div>
+              </td>
+              <td style="text-align:center; font-weight:700; color:${item.v3 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${item.v3}</td>
+              <td style="text-align:center; font-weight:700; color:${item.v4 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${item.v4}</td>
             </tr>
           `).join("")}
         </tbody>
