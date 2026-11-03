@@ -71,6 +71,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="subtab-btn active" data-tab="tiempos" onclick="cambiarSubtab('tiempos')">⏱ Tiempos</button>
     <button class="subtab-btn" data-tab="civs" onclick="cambiarSubtab('civs')">🏛 Civs / WR</button>
     <button class="subtab-btn" data-tab="sinergia" onclick="cambiarSubtab('sinergia')">🤝 Sinergia</button>
+    <button class="subtab-btn" data-tab="equipos" onclick="cambiarSubtab('equipos')">🤝 Equipos / Parejas</button>
   </div>
 
   <div class="filters">
@@ -78,16 +79,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <select id="filtro-mes"></select>
   </div>
 
-  <div class="panel">
-    <h3>Selecciona de 2 a 4 jugadores</h3>
-    <div class="player-picker">
+  <div class="panel" id="panel-seleccion-jugadores">
+    <h3 id="titulo-panel-accion">Selecciona de 2 a 4 jugadores</h3>
+    <div class="player-picker" id="contenedor-inputs-jugadores">
       <input type="text" id="jug-1" list="lista-nombres" placeholder="Jugador 1">
       <input type="text" id="jug-2" list="lista-nombres" placeholder="Jugador 2">
       <input type="text" id="jug-3" list="lista-nombres" placeholder="Jugador 3 (opc.)">
       <input type="text" id="jug-4" list="lista-nombres" placeholder="Jugador 4 (opc.)">
     </div>
     <datalist id="lista-nombres"></datalist>
-    <button class="btn" onclick="consultar()">Consultar</button>
+    <button class="btn" id="btn-accion-consultar" onclick="consultar()">Consultar</button>
   </div>
 
   <div id="resultado" class="panel" style="display:none;"></div>
@@ -127,7 +128,11 @@ function poblarFiltrosPeriodo() {
   selMes.innerHTML = `<option value="">Todos los meses</option>` + meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
 
   const rerenderSiHayResultado = () => {
-    if (document.getElementById("resultado").style.display !== "none") consultar();
+    if (subtabActual === "equipos") {
+      renderizarEquiposGanadores();
+    } else if (document.getElementById("resultado").style.display !== "none") {
+      consultar();
+    }
   };
   selAnio.addEventListener("change", rerenderSiHayResultado);
   selMes.addEventListener("change", rerenderSiHayResultado);
@@ -136,8 +141,95 @@ function poblarFiltrosPeriodo() {
 function cambiarSubtab(tab) {
   subtabActual = tab;
   document.querySelectorAll(".subtab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
-  document.getElementById("resultado").style.display = "none";
-  document.getElementById("btn-descargar-stats").style.display = "none";
+  
+  const panelSel = document.getElementById("panel-seleccion-jugadores");
+  const resultadoDiv = document.getElementById("resultado");
+  const btnDescargar = document.getElementById("btn-descargar-stats");
+
+  if (tab === "equipos") {
+    panelSel.style.display = "none";
+    resultadoDiv.style.display = "block";
+    btnDescargar.style.display = "inline-block";
+    renderizarEquiposGanadores();
+  } else {
+    panelSel.style.display = "block";
+    resultadoDiv.style.display = "none";
+    btnDescargar.style.display = "none";
+  }
+}
+
+function renderizarEquiposGanadores() {
+  const resultadoDiv = document.getElementById("resultado");
+  const filtradas = partidasFiltradas();
+  const parejasConteo = {};
+
+  filtradas.forEach(p => {
+    if (!p.jugadores || !Array.isArray(p.jugadores)) return;
+    
+    // Agrupar jugadores ganadores por equipo dentro de esta partida
+    const equiposGanadores = {};
+    p.jugadores.forEach(j => {
+      if ((j.resultado || "").toLowerCase() === "victoria") {
+        const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+        const eq = j.civ ? (j.equipo || "Equipo Principal") : (j.equipo || "Equipo Principal");
+        if (!equiposGanadores[eq]) equiposGanadores[eq] = [];
+        if (!equiposGanadores[eq].includes(nombreOficial)) {
+          equiposGanadores[eq].push(nombreOficial);
+        }
+      }
+    });
+
+    // Por cada equipo con victoria, registrar las combinaciones de parejas/jugadores
+    Object.values(equiposGanadores).forEach(miembros => {
+      if (miembros.length < 2) return; // Solo considerar equipos de 2 o más jugadores
+      miembros.sort();
+      
+      // Generar pares o combinaciones de sinergia ganadora
+      for (let i = 0; i < miembros.length; i++) {
+        for (let j = i + 1; j < miembros.length; j++) {
+          const duplaKey = `${miembros[i]} & ${miembros[j]}`;
+          parejasConteo[duplaKey] = (parejasConteo[duplaKey] || 0) + 1;
+        }
+      }
+    });
+  });
+
+  // Filtrar duplas con 2 o más victorias y ordenar de mayor a menor
+  const rankingParejas = Object.entries(parejasConteo)
+    .filter(([_, victorias]) => victorias >= 2)
+    .sort((a, b) => b[1] - a[1]);
+
+  if (rankingParejas.length === 0) {
+    resultadoDiv.innerHTML = `
+      <h3>🤝 Ranking de Parejas y Equipos Ganadores</h3>
+      <div class="empty-state">No hay parejas con 2 o más victorias conjuntas para este período.</div>
+    `;
+    return;
+  }
+
+  resultadoDiv.innerHTML = `
+    <h3>🤝 Ranking de Parejas y Equipos Ganadores (2+ Victorias)</h3>
+    <div style="overflow-x:auto; margin-top:12px;">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="width:60px; text-align:center;">#</th>
+            <th style="text-align:left;">Dupla / Jugadores</th>
+            <th style="width:100px; text-align:center;">Victorias Juntos</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rankingParejas.map(([dupla, vict], idx) => `
+            <tr>
+              <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
+              <td style="text-align:left; font-weight:600;">${dupla}</td>
+              <td style="text-align:center; font-weight:700; color:var(--win);">${vict}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
 function nombresSeleccionados() {
