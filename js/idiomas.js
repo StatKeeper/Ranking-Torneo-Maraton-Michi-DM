@@ -1,4 +1,4 @@
-// Diccionario de traducciones generales
+// Diccionario de traducciones completo para el sitio
 const TRADUCCIONES = {
   es: {
     nav_inicio: "Inicio",
@@ -9,8 +9,11 @@ const TRADUCCIONES = {
     nav_historial: "Historial",
     nav_admin: "Administración",
     btn_descargar: "📷 Descargar Imagen",
-    filtro_todo_mes: "Todo el mes (acumulado)",
-    filtro_toda_jornada: "Toda la jornada"
+    titulo_posiciones: "Tabla de Posiciones",
+    titulo_cuadro_honor: "🏆 Cuadro de Honor Mensual",
+    titulo_grand_prix: "🏆 Grand Prix Anual",
+    ranking_galardones: "👑 Ranking de Galardones (Jugadores)",
+    civs_destacadas: "🏛️ Civilizaciones más Destacadas"
   },
   en: {
     nav_inicio: "Home",
@@ -21,8 +24,11 @@ const TRADUCCIONES = {
     nav_historial: "History",
     nav_admin: "Admin",
     btn_descargar: "📷 Download Image",
-    filtro_todo_mes: "Full Month (Accumulated)",
-    filtro_toda_jornada: "Full Matchday"
+    titulo_posiciones: "Standings Table",
+    titulo_cuadro_honor: "🏆 Monthly Hall of Fame",
+    titulo_grand_prix: "🏆 Annual Grand Prix",
+    ranking_galardones: "👑 Awards Ranking (Players)",
+    civs_destacadas: "🏛️ Most Outstanding Civilizations"
   }
 };
 
@@ -57,7 +63,7 @@ function inyectarSelectorIdioma() {
   topbar.appendChild(divIdioma);
 }
 
-// Aplicar traducciones en los elementos del menú y la interfaz
+// Aplicar traducciones en los elementos de la interfaz
 function aplicarTraducciones() {
   const lang = obtenerIdiomaActual();
   const t = TRADUCCIONES[lang];
@@ -74,6 +80,22 @@ function aplicarTraducciones() {
     navLinks[6].textContent = t.nav_admin;
   }
 
+  // Traducir títulos principales si existen en la página
+  const hTablaPosiciones = document.querySelector("#seccion-tabla-posiciones h3");
+  if (hTablaPosiciones) hTablaPosiciones.textContent = t.titulo_posiciones;
+
+  const hCuadroHonor = document.getElementById("titulo-cuadro-honor");
+  if (hCuadroHonor) hCuadroHonor.textContent = t.titulo_cuadro_honor;
+
+  const hGrandPrix = document.getElementById("titulo-grand-prix");
+  if (hGrandPrix) hGrandPrix.textContent = t.titulo_grand_prix;
+
+  const hGalardones = document.querySelector("#contenedor-ranking-galardones")?.previousElementSibling;
+  if (hGalardones) hGalardones.textContent = t.ranking_galardones;
+
+  const hCivs = document.querySelector("#contenedor-civilizaciones-destacadas")?.previousElementSibling;
+  if (hCivs) hCivs.textContent = t.civs_destacadas;
+
   // Traducir botones de descarga de imágenes
   document.querySelectorAll(".btn.secondary").forEach(btn => {
     if (btn.textContent.includes("Descargar Imagen") || btn.textContent.includes("Download Image")) {
@@ -81,7 +103,7 @@ function aplicarTraducciones() {
     }
   });
 
-  // Evento personalizado por si la página necesita actualizar tablas
+  // Evento personalizado por si la página necesita refrescarse
   window.dispatchEvent(new CustomEvent("idiomaCambiado", { detail: { lang } }));
 }
 
