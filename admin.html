@@ -122,13 +122,14 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   </div>
 
   <div class="panel">
-    <h3>⑥ Registro y Gestión de Jugadores (Nacionalidad, Categoría y Civilización Favorita)</h3>
+    <h3>⑥ Nacionalidad, Categoría y Civilización Favorita</h3>
     <p class="hint">
-      Registra un jugador nuevo o actualiza su categoría (<strong>1</strong>: Comunidad, <strong>2</strong>: Liga, <strong>3</strong>: Invitado),
+      Escribe el nombre oficial exacto del jugador, su categoría (<strong>1</strong>: Comunidad, <strong>2</strong>: Liga, <strong>3</strong>: Invitado),
       su código de país de 2 letras (ej. Perú = PE, Argentina = AR, México = MX, etc.)
       y su civilización favorita.
     </p>
-    <!-- Botón / Formulario rápido para agregar jugadores nuevos -->
+    
+    <!-- Formulario directo para agregar jugadores nuevos -->
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; background:var(--panel-raised); padding:10px; border-radius:var(--radius); border:1px solid var(--line);">
       <input type="text" id="input-nuevo-jugador-nombre" placeholder="Nombre oficial (ej. HASSAKU)" style="flex:2; min-width:180px;" list="lista-nombres-sugeridos">
       <select id="input-nuevo-jugador-cat" style="flex:1; min-width:140px;">
@@ -136,7 +137,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
         <option value="2">2 - Participante Liga</option>
         <option value="3" selected>3 - Invitado Liga</option>
       </select>
-      <input type="text" id="input-nuevo-jugador-pais" maxlength="2" placeholder="PE" style="flex:0 0 60px; text-transform:uppercase;" title="Código de país de 2 letras">
+      <input type="text" id="input-nuevo-jugador-pais" maxlength="2" placeholder="PE" style="flex:0 0 60px; text-transform:uppercase;">
       <input type="text" id="input-nuevo-jugador-civ" placeholder="Civilización favorita" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
       <button class="btn" onclick="registrarJugadorNuevo()">➕ Registrar Jugador</button>
     </div>
@@ -665,7 +666,7 @@ function registrarJugadorNuevo() {
 
   actualizarListasSugerencias();
   renderizarPaises();
-  alert(`✔ Jugador "${nombre registrado/actualizado}" guardado con éxito.`);
+  alert(`✔ Jugador "${nombre}" guardado con éxito.`);
 }
 
 function agregarPais() {
@@ -756,7 +757,112 @@ function renderizarFechasImagenes() {
     cont.innerHTML = `<p class="hint">No hay imágenes guardadas para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
     return;
   }
-  // (El resto de funciones de renderizado original continúan abajo...)
+  cont.innerHTML = lista.map((j, i) => `
+    <div class="match-item">
+      <span>${j.anio} · ${NOMBRES_MES[String(j.mes).padStart(2, "0")]} · ${j.jornada}</span>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarImagenesFecha('${j.id}')">🗑 Eliminar</button>
+    </div>
+  `).join("");
+}
+
+function guardarImagenesFecha() {
+  const anio = document.getElementById("input-img-anio").value.trim();
+  const mes = document.getElementById("input-img-mes").value;
+  const jornada = document.getElementById("input-img-jornada").value.trim();
+  const evaluacion = document.getElementById("input-img-evaluacion").value.trim();
+  const galardon = document.getElementById("input-img-galardon").value.trim();
+
+  if (!anio || !jornada || !evaluacion || !galardon) {
+    alert("Completa todos los campos de imágenes.");
+    return;
+  }
+
+  const id = `${anio}-${mes}-${jornada.replace(/\s+/g,"")}`;
+  DATOS.jornadasImagenes = (DATOS.jornadasImagenes || []).filter(j => j.id !== id);
+  DATOS.jornadasImagenes.push({ id, anio: parseInt(anio, 10), mes: parseInt(mes, 10), jornada, evaluacion, galardon });
+
+  poblarAdminFiltrosImg();
+  alert("✔ Imágenes guardadas correctamente.");
+}
+
+function eliminarImagenesFecha(id) {
+  DATOS.jornadasImagenes = (DATOS.jornadasImagenes || []).filter(j => j.id !== id);
+  poblarAdminFiltrosImg();
+}
+
+function poblarAdminFiltrosHonor() {
+  const anios = [...new Set((DATOS.cuadroHonor || []).map(h => h.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-admin-honor-anio");
+  if (anios.length === 0) {
+    anios.push(new Date().getFullYear());
+  }
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  poblarAdminMesesHonor();
+}
+
+function poblarAdminMesesHonor() {
+  const anio = document.getElementById("filtro-admin-honor-anio").value;
+  const meses = [...new Set((DATOS.cuadroHonor || []).filter(h => h.anio == anio).map(h => String(h.mes).padStart(2, "0")))].sort().reverse();
+  const selMes = document.getElementById("filtro-admin-honor-mes");
+  if (meses.length === 0) {
+    selMes.innerHTML = `<option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option><option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option><option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>`;
+  } else {
+    selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  }
+  renderizarCuadroHonorAdmin();
+}
+
+function renderizarCuadroHonorAdmin() {
+  const cont = document.getElementById("lista-cuadro-honor");
+  const anio = document.getElementById("filtro-admin-honor-anio").value;
+  const mes = document.getElementById("filtro-admin-honor-mes").value;
+
+  const lista = (DATOS.cuadroHonor || []).filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes);
+  if (lista.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
+    return;
+  }
+  cont.innerHTML = lista.map((h, i) => `
+    <div class="match-item">
+      <span>${h.jornada}: <strong>${h.jugador}</strong> (${h.civ || '—'})</span>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor('${h.id}')">🗑 Eliminar</button>
+    </div>
+  `).join("");
+}
+
+function guardarHonor() {
+  const anio = document.getElementById("input-honor-anio").value.trim();
+  const mes = document.getElementById("input-honor-mes").value;
+  const jornada = document.getElementById("input-honor-jornada").value.trim();
+  const jugador = document.getElementById("input-honor-jugador").value.trim();
+  const civ = document.getElementById("input-honor-civ").value.trim();
+
+  if (!anio || !jornada || !jugador) {
+    alert("Completa Año, Jornada y Nombre del jugador.");
+    return;
+  }
+
+  const id = `${anio}-${mes}-${jornada.replace(/\s+/g,"")}`;
+  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => h.id !== id);
+  DATOS.cuadroHonor.push({ id, anio: parseInt(anio, 10), mes: parseInt(mes, 10), jornada, jugador, civ });
+
+  poblarAdminFiltrosHonor();
+  alert("✔ Cuadro de Honor guardado correctamente.");
+}
+
+function eliminarHonor(id) {
+  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => h.id !== id);
+  poblarAdminFiltrosHonor();
+}
+
+function descargarJSON() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DATOS, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "data.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
 }
 </script>
 </body>
