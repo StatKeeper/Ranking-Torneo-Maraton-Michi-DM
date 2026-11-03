@@ -561,6 +561,9 @@ function actualizarJornadasYRenderizar() {
   selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
     jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
 
+  // Asegura que el filtro inicie limpio en "Todo el mes" y no se quede pegado
+  selJornada.value = "";
+
   document.getElementById("filtro-partida").style.display = "none";
   renderizarTodo();
 }
