@@ -250,10 +250,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES (MÁXIMO 20 POR CATEGORÍA) -->
+  <!-- SECCIÓN DE LAS 3 COLUMNAS DE PARTICIPACIÓN DEL MES -->
   <div class="panel" id="seccion-participacion-mes" style="margin-top:20px;">
     <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📊 Actividad y Participación del Mes</h3>
-    <p class="hint" style="margin-bottom:12px;">Jugadores clasificados por categoría (máx. 20 por bloque).</p>
+    <p class="hint" style="margin-bottom:12px;">Jugadores clasificados por categoría (Comunidad completa; Liga e Invitados máx. 30).</p>
     
     <div class="grid-tres-columnas">
       <div class="columna-participacion">
@@ -433,13 +433,16 @@ function renderizarParticipacionMes() {
     }
   });
 
-  listaMiembros.sort((a, b) => b.partidas - a.partidas);
-  listaParticipantes.sort((a, b) => b.partidas - a.partidas);
-  listaInvitados.sort((a, b) => b.partidas - a.partidas);
+  // Ordenamiento estrictamente alfabético por nombre de jugador
+  const ordenarAlfabeticamente = (a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
+  listaMiembros.sort(ordenarAlfabeticamente);
+  listaParticipantes.sort(ordenarAlfabeticamente);
+  listaInvitados.sort(ordenarAlfabeticamente);
 
-  pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros.slice(0, 20));
-  pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes.slice(0, 20));
-  pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados.slice(0, 20));
+  // Miembros de la comunidad se muestran todos; Liga e Invitados hasta 30
+  pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
+  pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes.slice(0, 30));
+  pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados.slice(0, 30));
 }
 
 function pintarColumnaMiniParticipacion(elementId, lista) {
