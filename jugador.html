@@ -32,6 +32,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
+  .subtabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .subtab-btn {
+    background: var(--panel-raised); color: var(--text-dim); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 8px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  }
+  .subtab-btn.active { background: var(--gold); color: #17130a; border-color: var(--gold); }
+
   .grid-companeros {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -81,6 +88,59 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     gap: 10px;
     margin-bottom: 12px;
   }
+
+  /* Estilos para las 3 columnas de participación equilibradas */
+  .grid-tres-columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+    margin-bottom: 24px;
+  }
+  .columna-participacion {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .columna-participacion h4 {
+    font-size: 0.88rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 6px;
+    text-align: center;
+  }
+  .tabla-mini-participacion {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+  .tabla-mini-participacion th, .tabla-mini-participacion td {
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    text-align: left;
+  }
+  .tabla-mini-participacion th {
+    background: var(--panel-raised);
+    color: var(--text-dim);
+    font-size: 0.72rem;
+  }
+  .tabla-mini-participacion td.num {
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-dim);
+    width: 28px;
+  }
+  .bandera-mini {
+    width: 18px;
+    height: 12px;
+    object-fit: cover;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
 </style>
 </head>
 <body>
@@ -91,7 +151,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub">Jugadores y Comparativa</span>
+    <span class="sub">Jugadores</span>
   </div>
   <nav class="tabs">
     <a href="index.html">Inicio</a>
@@ -105,17 +165,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </header>
 
 <main>
-  <div class="panel" id="buscador">
-    <h3>Selecciona de 1 a 4 jugadores</h3>
-    <p class="hint">Deja las casillas vacías las que no vayas a usar si solo quieres ver a 1 o 2 jugadores.</p>
-    <div class="comparacion-inputs">
-      <input type="text" id="input-j1" list="lista-nombres" placeholder="Jugador 1">
-      <input type="text" id="input-j2" list="lista-nombres" placeholder="Jugador 2 (opc.)">
-      <input type="text" id="input-j3" list="lista-nombres" placeholder="Jugador 3 (opc.)">
-      <input type="text" id="input-j4" list="lista-nombres" placeholder="Jugador 4 (opc.)">
-    </div>
-    <button class="btn" onclick="ejecutarConsultaJugadores()">Consultar</button>
-    <datalist id="lista-nombres"></datalist>
+  <div class="subtabs">
+    <button class="subtab-btn active" data-tab="comparativa" onclick="cambiarSubtab('comparativa')">🔍 Comparativa</button>
+    <button class="subtab-btn" data-tab="participacion" onclick="cambiarSubtab('participacion')">📊 Actividad y Participación</button>
   </div>
 
   <div class="filters">
@@ -123,8 +175,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <select id="filtro-mes"></select>
   </div>
 
-  <div id="contenido-perfil"></div>
-  <button id="btn-descargar-perfil" class="btn secondary" style="display:none; margin-top:12px;" onclick="descargarImagenPerfil()">📷 Descargar Imagen</button>
+  <!-- VISTA 1: COMPARATIVA Y PERFIL -->
+  <div id="vista-comparativa">
+    <div class="panel" id="buscador">
+      <h3>Selecciona de 1 a 4 jugadores</h3>
+      <p class="hint">Deja las casillas vacías las que no vayas a usar si solo quieres ver a 1 o 2 jugadores.</p>
+      <div class="comparacion-inputs">
+        <input type="text" id="input-j1" list="lista-nombres" placeholder="Jugador 1">
+        <input type="text" id="input-j2" list="lista-nombres" placeholder="Jugador 2 (opc.)">
+        <input type="text" id="input-j3" list="lista-nombres" placeholder="Jugador 3 (opc.)">
+        <input type="text" id="input-j4" list="lista-nombres" placeholder="Jugador 4 (opc.)">
+      </div>
+      <button class="btn" onclick="ejecutarConsultaJugadores()">Consultar</button>
+      <datalist id="lista-nombres"></datalist>
+    </div>
+
+    <div id="contenido-perfil"></div>
+    <button id="btn-descargar-perfil" class="btn secondary" style="display:none; margin-top:12px;" onclick="descargarImagenPerfil()">📷 Descargar Imagen</button>
+  </div>
+
+  <!-- VISTA 2: ACTIVIDAD Y PARTICIPACIÓN -->
+  <div id="vista-participacion" style="display:none;">
+    <div class="panel" id="seccion-participacion-mes">
+      <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📊 Actividad y Participación del Mes</h3>
+      <p class="hint" style="margin-bottom:12px;">Jugadores clasificados por categoría (Comunidad completa; Liga e Invitados máx. 30, orden alfabético).</p>
+      
+      <div class="grid-tres-columnas">
+        <div class="columna-participacion">
+          <h4>Miembros de la Comunidad</h4>
+          <div id="lista-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+        </div>
+        <div class="columna-participacion">
+          <h4>Participantes de la Liga</h4>
+          <div id="lista-participantes-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+        </div>
+        <div class="columna-participacion">
+          <h4>Invitados de la Liga</h4>
+          <div id="lista-invitados-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <nav class="mobile-nav">
@@ -141,6 +232,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 let PARTIDAS = [];
 let EQUIVALENCIAS = [];
 let JUGADORES_INFO = {};
+let subtabActual = "comparativa";
 
 function partidasFiltradas() {
   const anio = document.getElementById("filtro-anio").value;
@@ -160,8 +252,121 @@ function poblarFiltrosPeriodo() {
   const selMes = document.getElementById("filtro-mes");
   selMes.innerHTML = `<option value="">Todos los meses</option>` + meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
 
-  selAnio.addEventListener("change", repetirConsultaActual);
-  selMes.addEventListener("change", repetirConsultaActual);
+  selAnio.addEventListener("change", actualizarVistaActiva);
+  selMes.addEventListener("change", actualizarVistaActiva);
+}
+
+function actualizarVistaActiva() {
+  if (subtabActual === "comparativa") {
+    repetirConsultaActual();
+  } else {
+    renderizarParticipacionMes();
+  }
+}
+
+function cambiarSubtab(tab) {
+  subtabActual = tab;
+  document.querySelectorAll(".subtab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  
+  const vComp = document.getElementById("vista-comparativa");
+  const vPart = document.getElementById("vista-participacion");
+  const btnDescarga = document.getElementById("btn-descargar-perfil");
+
+  if (tab === "comparativa") {
+    vComp.style.display = "block";
+    vPart.style.display = "none";
+    repetirConsultaActual();
+  } else {
+    vComp.style.display = "none";
+    vPart.style.display = "block";
+    btnDescarga.style.display = "none";
+    renderizarParticipacionMes();
+  }
+}
+
+function renderizarParticipacionMes() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const nombreMes = NOMBRES_MES[mes] || "Todos los meses";
+  document.getElementById("titulo-participacion-mes").textContent = `📊 Actividad y Participación — ${nombreMes} ${anio}`;
+
+  const partidasMes = partidasFiltradas();
+  const conteoJugadores = {};
+  
+  partidasMes.forEach(p => {
+    (p.jugadores || []).forEach(j => {
+      const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+      conteoJugadores[nombreOficial] = (conteoJugadores[nombreOficial] || 0) + 1;
+    });
+  });
+
+  const todosLosJugadores = new Set([
+    ...Object.keys(conteoJugadores),
+    ...Object.keys(JUGADORES_INFO)
+  ]);
+
+  const listaMiembros = [];
+  const listaParticipantes = [];
+  const listaInvitados = [];
+
+  todosLosJugadores.forEach(nombre => {
+    const info = JUGADORES_INFO[nombre] || {};
+    const categoria = parseInt(info.categoria, 10) || 1;
+    const partidas = Math.round(conteoJugadores[nombre] || 0);
+    const pais = info.pais ? info.pais.toLowerCase() : null;
+    const item = { nombre, partidas, pais };
+
+    if (categoria === 1) {
+      listaMiembros.push(item);
+    } else if (categoria === 2) {
+      listaParticipantes.push(item);
+    } else if (categoria === 3) {
+      listaInvitados.push(item);
+    }
+  });
+
+  const ordenarAlfabeticamente = (a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
+  listaMiembros.sort(ordenarAlfabeticamente);
+  listaParticipantes.sort(ordenarAlfabeticamente);
+  listaInvitados.sort(ordenarAlfabeticamente);
+
+  pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
+  pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes.slice(0, 30));
+  pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados.slice(0, 30));
+}
+
+function pintarColumnaMiniParticipacion(elementId, lista) {
+  const contenedor = document.getElementById(elementId);
+  if (!lista || lista.length === 0) {
+    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin registros</div>`;
+    return;
+  }
+
+  contenedor.innerHTML = `
+    <table class="tabla-mini-participacion">
+      <thead>
+        <tr>
+          <th style="width:28px; text-align:center;">#</th>
+          <th>Jugador</th>
+          <th class="num" style="width:60px;">Partidas</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${lista.map((item, idx) => {
+          const imgBandera = item.pais 
+            ? `<img src="https://flagcdn.com/w40/${item.pais}.png" class="bandera-mini" alt="${item.pais}">` 
+            : '';
+          return `
+            <tr>
+              <td class="num">${idx + 1}</td>
+              <td>${imgBandera}<a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
+              <td class="num" style="text-align:center;">${item.partidas}p</td>
+            </tr>
+          `;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
 }
 
 function repetirConsultaActual() {
