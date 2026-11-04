@@ -19222,6 +19222,96 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha03-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 03",
+      "numeroPartida": 1,
+      "duracionSeg": 4869,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Teutones",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3541,
+          "edificiosArrasados": 162866,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7503,
+          "edificiosArrasados": 297332,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 213,
+          "edificiosArrasados": 133489,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2060,
+          "edificiosArrasados": 143338,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2389,
+          "edificiosArrasados": 166124,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3396,
+          "edificiosArrasados": 128374,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Teutones",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2623,
+          "edificiosArrasados": 139939,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3224,
+          "edificiosArrasados": 151651,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
