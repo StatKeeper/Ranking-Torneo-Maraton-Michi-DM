@@ -20170,6 +20170,14 @@
       "jornada": "Fecha 01",
       "imagenEvaluacion": "imagenes/candidatos_2026-11_fecha01.png",
       "imagenGalardon": "imagenes/galardon_2026-11_fecha01.png"
+    },
+    {
+      "id": "2026-11-Fecha02",
+      "anio": 2026,
+      "mes": 11,
+      "jornada": "Fecha 02",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha02.png",
+      "galardon": "imagenes/galardon_2026-11_fecha02.png"
     }
   ],
   "civEquivalencias": [],
@@ -20748,6 +20756,14 @@
       "jornada": "Fecha 01",
       "jugador": "GGINDU",
       "civ": "Etiopes"
+    },
+    {
+      "id": "2026-11-Fecha02",
+      "anio": 2026,
+      "mes": 11,
+      "jornada": "Fecha 02",
+      "jugador": "P@K()",
+      "civ": "Sicilianos"
     }
   ]
 }
