@@ -131,6 +131,10 @@
     {
       "antiguo": "Ww. Choko krispi",
       "oficial": "Ww. Choko_krispi"
+    },
+    {
+      "antiguo": "Meriats",
+      "oficial": "[Meriats] Meriats"
     }
   ],
   "partidas": [
@@ -19505,9 +19509,9 @@
       "categoria": 3
     },
     "Arcy": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "MX",
+      "civFavorita": ""
     },
     "Aureliano": {
       "pais": "AR",
@@ -19541,9 +19545,9 @@
       "categoria": 3
     },
     "Boat": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "PR",
+      "civFavorita": ""
     },
     "BOSTERO": {
       "pais": "AR",
@@ -19619,11 +19623,6 @@
       "pais": "",
       "civFavorita": ""
     },
-    "frkndmly": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
-    },
     "Furan": {
       "pais": "",
       "civFavorita": ""
@@ -19633,7 +19632,8 @@
       "civFavorita": ""
     },
     "GGAMER": {
-      "pais": "",
+      "categoria": 3,
+      "pais": "US",
       "civFavorita": ""
     },
     "GGINDU": {
@@ -19682,12 +19682,13 @@
       "civFavorita": ""
     },
     "Kartoos": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "US",
+      "civFavorita": ""
     },
     "kimchi": {
-      "pais": "",
+      "categoria": 3,
+      "pais": "AR",
       "civFavorita": ""
     },
     "king vitt": {
@@ -19701,7 +19702,8 @@
       "categoria": 2
     },
     "Komodo3000": {
-      "pais": "",
+      "categoria": 1,
+      "pais": "MX",
       "civFavorita": ""
     },
     "La_Gloire": {
@@ -19732,9 +19734,9 @@
       "categoria": 3
     },
     "malbieri": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "BR",
+      "civFavorita": ""
     },
     "Meriats": {
       "pais": "",
@@ -19751,9 +19753,9 @@
       "categoria": 3
     },
     "muendo": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "TR",
+      "civFavorita": ""
     },
     "Nova_8": {
       "pais": "",
@@ -20005,6 +20007,16 @@
     "平生不修善果 只爱石油军火": {
       "categoria": 3,
       "pais": "CN",
+      "civFavorita": ""
+    },
+    "frkndmly": {
+      "categoria": 3,
+      "pais": "TR",
+      "civFavorita": ""
+    },
+    "[Meriats] Meriats": {
+      "categoria": 3,
+      "pais": "CA",
       "civFavorita": ""
     }
   },
