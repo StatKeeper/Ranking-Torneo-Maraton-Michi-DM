@@ -19312,6 +19312,97 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha03-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 03",
+      "numeroPartida": 2,
+      "duracionSeg": 2762,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Bereberes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1544,
+          "edificiosArrasados": 76551,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 311,
+          "edificiosArrasados": 53403,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Cacha",
+          "resultado": "derrota",
+          "civ": "Lituanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1237,
+          "edificiosArrasados": 57720,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3585,
+          "edificiosArrasados": 107571,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2424,
+          "edificiosArrasados": 79791,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 369,
+          "edificiosArrasados": 74036,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2448,
+          "edificiosArrasados": 103150,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Lituanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 555,
+          "edificiosArrasados": 49437,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
