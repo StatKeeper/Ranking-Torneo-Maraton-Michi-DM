@@ -20359,6 +20359,14 @@
       "jornada": "Fecha 02",
       "evaluacion": "imagenes/candidatos_2026-11_fecha02.png",
       "galardon": "imagenes/galardon_2026-11_fecha02.png"
+    },
+    {
+      "id": "2026-11-Fecha03",
+      "anio": 2026,
+      "mes": 11,
+      "jornada": "Fecha 03",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha03.png",
+      "galardon": "imagenes/galardon_2026-11_fecha03.png"
     }
   ],
   "civEquivalencias": [],
@@ -20945,6 +20953,14 @@
       "jornada": "Fecha 02",
       "jugador": "P@K()",
       "civ": "Sicilianos"
+    },
+    {
+      "id": "2026-11-Fecha03",
+      "anio": 2026,
+      "mes": 11,
+      "jornada": "Fecha 03",
+      "jugador": "GGINDU",
+      "civ": "Lituanos"
     }
   ]
 }
