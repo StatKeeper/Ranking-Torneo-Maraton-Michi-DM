@@ -95,6 +95,10 @@
     {
       "antiguo": "HASSAKU",
       "oficial": "HASSAKU"
+    },
+    {
+      "antiguo": "Bio Tine",
+      "oficial": "BioTiNe"
     }
   ],
   "partidas": [
@@ -19500,9 +19504,9 @@
       "civFavorita": ""
     },
     "BlackHorse": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "US",
+      "civFavorita": ""
     },
     "bLItzKrleG*RoMMeL": {
       "pais": "PE",
@@ -19534,7 +19538,8 @@
       "categoria": 3
     },
     "Cacha": {
-      "pais": "",
+      "categoria": 1,
+      "pais": "MX",
       "civFavorita": ""
     },
     "carlinhos": {
@@ -19557,7 +19562,8 @@
       "categoria": 3
     },
     "Dirty_rat": {
-      "pais": "",
+      "categoria": 1,
+      "pais": "CL",
       "civFavorita": ""
     },
     "Donald Trump": {
@@ -19616,9 +19622,9 @@
       "civFavorita": ""
     },
     "GoldiGlock": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 1,
+      "pais": "US",
+      "civFavorita": "_GoldiGlock_"
     },
     "Happy": {
       "pais": "TW",
@@ -19958,6 +19964,16 @@
     "Yaroslav": {
       "categoria": 2,
       "pais": "CZ",
+      "civFavorita": ""
+    },
+    "12kills": {
+      "categoria": 3,
+      "pais": "AR",
+      "civFavorita": ""
+    },
+    "ANCIANO": {
+      "categoria": 3,
+      "pais": "AR",
       "civFavorita": ""
     }
   },
@@ -20371,7 +20387,16 @@
       "galardon": "imagenes/galardon_2026-11_fecha03.png"
     }
   ],
-  "civEquivalencias": [],
+  "civEquivalencias": [
+    {
+      "antiguo": "12Kills",
+      "oficial": "12kills"
+    },
+    {
+      "antiguo": "Anciano",
+      "oficial": "ANCIANO"
+    }
+  ],
   "cuadroHonor": [
     {
       "anio": 2026,
