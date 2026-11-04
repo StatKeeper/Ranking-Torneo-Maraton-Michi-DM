@@ -19832,7 +19832,8 @@
     },
     "Tailfeather28": {
       "pais": "US",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 2
     },
     "Tartus": {
       "pais": "",
@@ -19956,6 +19957,11 @@
     "Milan <3": {
       "categoria": 3,
       "pais": "",
+      "civFavorita": ""
+    },
+    "Yaroslav": {
+      "categoria": 3,
+      "pais": "CZ",
       "civFavorita": ""
     }
   },
