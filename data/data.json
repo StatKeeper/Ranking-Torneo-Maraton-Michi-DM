@@ -99,6 +99,22 @@
     {
       "antiguo": "Bio Tine",
       "oficial": "BioTiNe"
+    },
+    {
+      "antiguo": "GoldiGlock",
+      "oficial": "_GoldiGlock_"
+    },
+    {
+      "antiguo": "12Kills",
+      "oficial": "12kills"
+    },
+    {
+      "antiguo": "AAAwesomeGuy",
+      "oficial": "AAAwesomeGuy"
+    },
+    {
+      "antiguo": "Benums",
+      "oficial": "benums"
     }
   ],
   "partidas": [
@@ -19457,23 +19473,14 @@
       "civFavorita": "",
       "categoria": 3
     },
-    "12Kills": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
-    },
     "7ommy": {
       "pais": "VN",
       "civFavorita": "",
       "categoria": 3
     },
     "AAAwesomeGuy": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
-    },
-    "Anciano": {
-      "pais": "",
+      "categoria": 3,
+      "pais": "US",
       "civFavorita": ""
     },
     "AntiBuddy": {
@@ -19588,9 +19595,9 @@
       "civFavorita": ""
     },
     "Fireknight": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "US",
+      "civFavorita": ""
     },
     "FoNcHiO!": {
       "pais": "",
@@ -19912,10 +19919,6 @@
       "civFavorita": "",
       "categoria": 3
     },
-    "Ww.Choko_krispi": {
-      "pais": "",
-      "civFavorita": ""
-    },
     "Xchopan": {
       "pais": "",
       "civFavorita": "",
@@ -19974,6 +19977,11 @@
     "ANCIANO": {
       "categoria": 3,
       "pais": "AR",
+      "civFavorita": ""
+    },
+    "benums": {
+      "categoria": 3,
+      "pais": "MX",
       "civFavorita": ""
     }
   },
@@ -20387,16 +20395,7 @@
       "galardon": "imagenes/galardon_2026-11_fecha03.png"
     }
   ],
-  "civEquivalencias": [
-    {
-      "antiguo": "12Kills",
-      "oficial": "12kills"
-    },
-    {
-      "antiguo": "Anciano",
-      "oficial": "ANCIANO"
-    }
-  ],
+  "civEquivalencias": [],
   "cuadroHonor": [
     {
       "anio": 2026,
