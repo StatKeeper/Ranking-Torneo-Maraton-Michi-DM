@@ -123,6 +123,10 @@
     {
       "antiguo": "This is the way",
       "oficial": "This_Is_The_Way"
+    },
+    {
+      "antiguo": "Ggindu",
+      "oficial": "GGINDU"
     }
   ],
   "partidas": [
@@ -19886,7 +19890,7 @@
       "civFavorita": ""
     },
     "truc.itsm": {
-      "categoria": 3,
+      "categoria": 2,
       "pais": "VN",
       "civFavorita": ""
     },
