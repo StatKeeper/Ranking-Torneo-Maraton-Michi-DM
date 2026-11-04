@@ -19649,7 +19649,7 @@
       "civFavorita": ""
     },
     "GoldiGlock": {
-      "categoria": 1,
+      "categoria": 3,
       "pais": "US",
       "civFavorita": "_GoldiGlock_"
     },
@@ -19842,7 +19842,8 @@
     },
     "Speedracer 5.0": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Spicy License 735": {
       "pais": "",
@@ -19851,15 +19852,18 @@
     },
     "su.li18": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Taco": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "TAG_Brian": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Tailfeather28": {
       "pais": "US",
@@ -19872,7 +19876,8 @@
     },
     "THameed": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "The Punisher": {
       "pais": "AR",
@@ -19887,17 +19892,14 @@
       "pais": "",
       "civFavorita": ""
     },
-    "Tres Tres Tres": {
-      "pais": "",
-      "civFavorita": ""
-    },
     "Trotamundos": {
       "pais": "",
       "civFavorita": ""
     },
     "Troy.exe": {
       "pais": "PA",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "truc.itsm": {
       "categoria": 2,
@@ -19918,7 +19920,8 @@
     },
     "villager 12": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Wag": {
       "pais": "MX",
@@ -19926,7 +19929,8 @@
     },
     "Wall": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "Warrior Chief": {
       "pais": "",
@@ -19959,11 +19963,13 @@
     },
     "主不修善果 只爱石油军": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "勇战到底": {
       "pais": "",
-      "civFavorita": ""
+      "civFavorita": "",
+      "categoria": 3
     },
     "[cLm] bLiTzKrIeG*RoMMeL": {
       "pais": "PE",
