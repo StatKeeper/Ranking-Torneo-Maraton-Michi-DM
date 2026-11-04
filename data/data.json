@@ -139,6 +139,10 @@
     {
       "antiguo": "B AZAR360",
       "oficial": "[B] AZAR300"
+    },
+    {
+      "antiguo": "h3RoZ_Mystic",
+      "oficial": "h3RoZ_MyStic"
     }
   ],
   "partidas": [
@@ -20034,9 +20038,9 @@
       "pais": "US",
       "civFavorita": ""
     },
-    "Goku Prime": {
+    "h3RoZ_MyStic": {
       "categoria": 3,
-      "pais": "AU",
+      "pais": "US",
       "civFavorita": ""
     }
   },
