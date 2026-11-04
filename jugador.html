@@ -425,10 +425,12 @@ function agruparYConstruirTablaPaises(elementId, listaItems) {
     mapaPaises[p].cantidad += 1;
   });
 
-  // Convertir a array y ordenar de mayor a menor cantidad de jugadores
+  // Convertir a array y ordenar mandando "sin-pais" al final siempre
   const paisesOrdenados = Object.values(mapaPaises).sort((a, b) => {
+    if (a.pais === "sin-pais") return 1;
+    if (b.pais === "sin-pais") return -1;
     if (b.cantidad !== a.cantidad) {
-      return b.cantidad - a.cantidad; // Mayor a menor
+      return b.cantidad - a.cantidad; // Mayor a menor cantidad
     }
     return a.pais.localeCompare(b.pais); // Alfabético si empatan
   });
