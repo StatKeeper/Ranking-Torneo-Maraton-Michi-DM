@@ -157,10 +157,9 @@ function render() {
     if (!jornadasMap[j.jornada]) {
       jornadasMap[j.jornada] = { jornada: j.jornada, jugador: '—', civ: '—', imgEval: null, imgGal: null };
     }
-    jornadasMap[j.jornada].imgEval = j.imagenEvaluacion;
+    jornadasMap[j.jornada].imgEval = j.imagenCandidatos || j.imagenEvaluacion;
     jornadasMap[j.jornada].imgGal = j.imagenGalardon;
   });
-
   const listaJornadas = Object.values(jornadasMap).sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
 
   cont.innerHTML = `
