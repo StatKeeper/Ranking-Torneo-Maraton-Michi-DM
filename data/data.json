@@ -119,6 +119,10 @@
     {
       "antiguo": "robincule",
       "oficial": "robincule"
+    },
+    {
+      "antiguo": "This is the way",
+      "oficial": "This_Is_The_Way"
     }
   ],
   "partidas": [
@@ -19986,6 +19990,11 @@
     "benums": {
       "categoria": 3,
       "pais": "MX",
+      "civFavorita": ""
+    },
+    "This_Is_The_Way": {
+      "categoria": 1,
+      "pais": "PE",
       "civFavorita": ""
     }
   },
