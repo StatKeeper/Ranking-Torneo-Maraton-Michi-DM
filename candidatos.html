@@ -147,8 +147,7 @@ function render() {
     return;
   }
 
-  // Unificar combinando el cuadro de honor con las imágenes asociadas por jornada
-  // Unificar combinando el cuadro de honor y las imágenes de forma segura
+  // Unificar combinando el cuadro de honor y las imágenes de forma segura con compatibilidad total de claves
   const jornadasMap = {};
 
   // 1. Primero registramos todas las jornadas que tengan imágenes configuradas
@@ -157,8 +156,8 @@ function render() {
       jornada: j.jornada,
       jugador: '—',
       civ: '—',
-      imgEval: j.imagenCandidatos || j.imagenEvaluacion || null,
-      imgGal: j.imagenGalardon || null
+      imgEval: j.evaluacion || j.imagenCandidatos || j.imagenEvaluacion || null,
+      imgGal: j.galardon || j.imagenGalardon || null
     };
   });
 
