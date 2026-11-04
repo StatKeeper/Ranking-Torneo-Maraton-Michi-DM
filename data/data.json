@@ -139,6 +139,10 @@
     {
       "antiguo": "B AZAR360",
       "oficial": "[B] AZAR300"
+    },
+    {
+      "antiguo": "ullaj1999",
+      "oficial": "ullah1999"
     }
   ],
   "partidas": [
@@ -19733,9 +19737,9 @@
       "categoria": 3
     },
     "Majestic": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "CA",
+      "civFavorita": ""
     },
     "malbieri": {
       "categoria": 3,
@@ -19762,9 +19766,9 @@
       "civFavorita": ""
     },
     "Nova_8": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "IQ",
+      "civFavorita": ""
     },
     "P@K()": {
       "pais": "MX",
@@ -19780,16 +19784,11 @@
       "categoria": 3
     },
     "Peter Aio": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "TW",
+      "civFavorita": ""
     },
     "Player": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
-    },
-    "Quino": {
       "pais": "",
       "civFavorita": "",
       "categoria": 3
@@ -19915,7 +19914,8 @@
       "civFavorita": ""
     },
     "VicRoldanG": {
-      "pais": "",
+      "categoria": 3,
+      "pais": "MX",
       "civFavorita": ""
     },
     "villager 12": {
@@ -20042,6 +20042,21 @@
     "Goku Prime": {
       "categoria": 3,
       "pais": "AU",
+      "civFavorita": ""
+    },
+    "ullah1999": {
+      "categoria": 1,
+      "pais": "ES",
+      "civFavorita": ""
+    },
+    "_Peon": {
+      "categoria": 3,
+      "pais": "CA",
+      "civFavorita": ""
+    },
+    "quino": {
+      "categoria": 3,
+      "pais": "DE",
       "civFavorita": ""
     }
   },
