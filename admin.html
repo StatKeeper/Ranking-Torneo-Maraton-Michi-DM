@@ -864,6 +864,13 @@ function descargarJSON() {
   downloadAnchor.click();
   downloadAnchor.remove();
 }
+
+// Inicialización automática y segura al cargar el panel
+window.addEventListener("DOMContentLoaded", () => {
+  if (typeof cargarDesdeServidor === "function") {
+    cargarDesdeServidor();
+  }
+});
 </script>
 <script src="js/idiomas.js"></script>
 </body>
