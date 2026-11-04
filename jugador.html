@@ -133,12 +133,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     width: 28px;
   }
   .bandera-mini {
-    width: 18px;
-    height: 12px;
+    width: 20px;
+    height: 14px;
     object-fit: cover;
     border-radius: 2px;
     vertical-align: middle;
-    margin-right: 6px;
+    margin-right: 8px;
     border: 1px solid rgba(0,0,0,0.1);
   }
 </style>
@@ -168,6 +168,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="subtabs">
     <button class="subtab-btn active" data-tab="comparativa" onclick="cambiarSubtab('comparativa')">🔍 Comparativa</button>
     <button class="subtab-btn" data-tab="participacion" onclick="cambiarSubtab('participacion')">📋 Nombres y Participación</button>
+    <button class="subtab-btn" data-tab="nacionalidades" onclick="cambiarSubtab('nacionalidades')">🌍 Países y Banderas</button>
   </div>
 
   <div class="filters">
@@ -216,6 +217,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
   </div>
+
+  <!-- VISTA 3: NACIONALIDADES Y BANDERAS -->
+  <div id="vista-nacionalidades" style="display:none;">
+    <div class="panel" id="seccion-nacionalidades-mes">
+      <h3 id="titulo-nacionalidades-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">🌍 Resumen de Países por Banderas</h3>
+      <p class="hint" style="margin-bottom:12px;">Conteo total de participantes agrupados por nacionalidad de mayor a menor.</p>
+      
+      <div class="grid-tres-columnas">
+        <div class="columna-participacion">
+          <h4>Miembros de la Comunidad</h4>
+          <div id="paises-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+        </div>
+        <div class="columna-participacion">
+          <h4>Participantes de la Liga</h4>
+          <div id="paises-participantes-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+        </div>
+        <div class="columna-participacion">
+          <h4>Invitados de la Liga</h4>
+          <div id="paises-invitados-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <nav class="mobile-nav">
@@ -259,8 +283,10 @@ function poblarFiltrosPeriodo() {
 function actualizarVistaActiva() {
   if (subtabActual === "comparativa") {
     repetirConsultaActual();
-  } else {
+  } else if (subtabActual === "participacion") {
     renderizarParticipacionMes();
+  } else {
+    renderizarNacionalidadesMes();
   }
 }
 
@@ -270,17 +296,23 @@ function cambiarSubtab(tab) {
   
   const vComp = document.getElementById("vista-comparativa");
   const vPart = document.getElementById("vista-participacion");
+  const vNac = document.getElementById("vista-nacionalidades");
   const btnDescarga = document.getElementById("btn-descargar-perfil");
+
+  vComp.style.display = "none";
+  vPart.style.display = "none";
+  vNac.style.display = "none";
+  btnDescarga.style.display = "none";
 
   if (tab === "comparativa") {
     vComp.style.display = "block";
-    vPart.style.display = "none";
     repetirConsultaActual();
-  } else {
-    vComp.style.display = "none";
+  } else if (tab === "participacion") {
     vPart.style.display = "block";
-    btnDescarga.style.display = "none";
     renderizarParticipacionMes();
+  } else {
+    vNac.style.display = "block";
+    renderizarNacionalidadesMes();
   }
 }
 
@@ -330,10 +362,105 @@ function renderizarParticipacionMes() {
   listaParticipantes.sort(ordenarAlfabeticamente);
   listaInvitados.sort(ordenarAlfabeticamente);
 
-  // Mostrar todos los registros sin límites en las tres columnas
   pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
   pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes);
   pintarColumnaMiniParticipacion("lista-invitados-liga", listaInvitados);
+}
+
+function renderizarNacionalidadesMes() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const nombreMes = NOMBRES_MES[mes] || "Todos los meses";
+  document.getElementById("titulo-nacionalidades-mes").textContent = `🌍 Resumen de Países por Banderas — ${nombreMes} ${anio}`;
+
+  const partidasMes = partidasFiltradas();
+  const conteoJugadores = {};
+  
+  partidasMes.forEach(p => {
+    (p.jugadores || []).forEach(j => {
+      const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+      conteoJugadores[nombreOficial] = (conteoJugadores[nombreOficial] || 0) + 1;
+    });
+  });
+
+  const todosLosJugadores = new Set([
+    ...Object.keys(conteoJugadores),
+    ...Object.keys(JUGADORES_INFO)
+  ]);
+
+  const miembrosRaw = [];
+  const participantesRaw = [];
+  const invitadosRaw = [];
+
+  todosLosJugadores.forEach(nombre => {
+    const info = JUGADORES_INFO[nombre] || {};
+    const categoria = parseInt(info.categoria, 10) || 1;
+    const pais = info.pais ? info.pais.toLowerCase() : "sin-pais";
+    const item = { nombre, pais };
+
+    if (categoria === 1) miembrosRaw.push(item);
+    else if (categoria === 2) participantesRaw.push(item);
+    else if (categoria === 3) invitadosRaw.push(item);
+  });
+
+  agruparYConstruirTablaPaises("paises-miembros-comunidad", miembrosRaw);
+  agruparYConstruirTablaPaises("paises-participantes-liga", participantesRaw);
+  agruparYConstruirTablaPaises("paises-invitados-liga", invitadosRaw);
+}
+
+function agruparYConstruirTablaPaises(elementId, listaItems) {
+  const contenedor = document.getElementById(elementId);
+  if (!listaItems || listaItems.length === 0) {
+    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin registros</div>`;
+    return;
+  }
+
+  // Agrupar por país
+  const mapaPaises = {};
+  listaItems.forEach(item => {
+    const p = item.pais;
+    if (!mapaPaises[p]) {
+      mapaPaises[p] = { pais: p, cantidad: 0 };
+    }
+    mapaPaises[p].cantidad += 1;
+  });
+
+  // Convertir a array y ordenar de mayor a menor cantidad de jugadores
+  const paisesOrdenados = Object.values(mapaPaises).sort((a, b) => {
+    if (b.cantidad !== a.cantidad) {
+      return b.cantidad - a.cantidad; // Mayor a menor
+    }
+    return a.pais.localeCompare(b.pais); // Alfabético si empatan
+  });
+
+  contenedor.innerHTML = `
+    <table class="tabla-mini-participacion">
+      <thead>
+        <tr>
+          <th style="width:28px; text-align:center;">#</th>
+          <th>País / Nacionalidad</th>
+          <th class="num" style="width:75px;">Participantes</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${paisesOrdenados.map((item, idx) => {
+          let labelPais = "Sin nacionalidad";
+          let imgBandera = "";
+          if (item.pais !== "sin-pais") {
+            labelPais = item.pais.toUpperCase();
+            imgBandera = `<img src="https://flagcdn.com/w40/${item.pais}.png" class="bandera-mini" alt="${item.pais}">`;
+          }
+          return `
+            <tr>
+              <td class="num">${idx + 1}</td>
+              <td>${imgBandera}${labelPais}</td>
+              <td class="num" style="text-align:center;">${item.cantidad}</td>
+            </tr>
+          `;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
 }
 
 function pintarColumnaMiniParticipacion(elementId, lista) {
