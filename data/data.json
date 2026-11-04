@@ -19789,9 +19789,9 @@
       "civFavorita": ""
     },
     "robincule": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 2
+      "categoria": 2,
+      "pais": "IN",
+      "civFavorita": ""
     },
     "Rocket Bunny": {
       "pais": "BR",
@@ -19864,12 +19864,9 @@
       "pais": "AR",
       "civFavorita": ""
     },
-    "This is the way": {
-      "pais": "",
-      "civFavorita": ""
-    },
     "Tlaxcoaque": {
-      "pais": "",
+      "categoria": 1,
+      "pais": "MX",
       "civFavorita": ""
     },
     "TR.!": {
