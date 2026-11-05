@@ -101,7 +101,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
       <input type="text" id="input-antiguo" placeholder="Nombre como se registró" style="flex:1; min-width:160px;">
-      <input type="text" id="input-oficial" placeholder="Nick oficial" style="flex:1; min-width:160px;">
+      <input type="text" id="input-oficial" placeholder="Nick oficial" style="flex:1; min-width:160px;" list="lista-nombres-sugeridos">
       <button class="btn secondary" onclick="agregarEquivalencia()">Vincular</button>
     </div>
     <div id="lista-equivalencias"></div>
@@ -111,20 +111,21 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
     <h3>⑤ Nacionalidad, Categoría, Civilización y Nicks Vinculados</h3>
     <p class="hint">
       Gestiona los datos de los jugadores, su categoría (<strong>1</strong>: Comunidad, <strong>2</strong>: Liga, <strong>3</strong>: Invitado),
-      país, civilización favorita y visualiza de forma integrada sus nombres alternos o antiguos asociados.
+      país, civilización favorita y unifica nombres antiguos con sus respectivos nicks oficiales desde ambos lados.
     </p>
     
-    <!-- Formulario directo para registrar / modificar jugadores nuevos -->
+    <!-- Formulario completo integrado para registrar, configurar y unificar nicks -->
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; background:var(--panel-raised); padding:10px; border-radius:var(--radius); border:1px solid var(--line);">
-      <input type="text" id="input-nuevo-jugador-nombre" placeholder="Nombre oficial (ej. HASSAKU)" style="flex:2; min-width:180px;" list="lista-nombres-sugeridos">
-      <select id="input-nuevo-jugador-cat" style="flex:1; min-width:140px;">
+      <input type="text" id="input-nuevo-jugador-nombre" placeholder="Nick oficial (ej. HASSAKU)" style="flex:2; min-width:160px;" list="lista-nombres-sugeridos">
+      <input type="text" id="input-nuevo-jugador-antiguo" placeholder="Nombre como se registró (antiguo)" style="flex:2; min-width:160px;">
+      <select id="input-nuevo-jugador-cat" style="flex:1; min-width:120px;">
         <option value="1">1 - Comunidad</option>
         <option value="2">2 - Participante Liga</option>
         <option value="3" selected>3 - Invitado Liga</option>
       </select>
-      <input type="text" id="input-nuevo-jugador-pais" maxlength="2" placeholder="PE" style="flex:0 0 60px; text-transform:uppercase;">
-      <input type="text" id="input-nuevo-jugador-civ" placeholder="Civilización favorita" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
-      <button class="btn" onclick="registrarJugadorNuevo()">➕ Registrar Jugador</button>
+      <input type="text" id="input-nuevo-jugador-pais" maxlength="2" placeholder="PE" style="flex:0 0 50px; text-transform:uppercase;">
+      <input type="text" id="input-nuevo-jugador-civ" placeholder="Civilización favorita" style="flex:1.5; min-width:130px;" list="lista-civs-sugeridas">
+      <button class="btn" onclick="registrarJugadorNuevoCompleto()">➕ Guardar / Unificar</button>
     </div>
 
     <div id="lista-paises"></div>
@@ -138,7 +139,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
       <input type="text" id="input-civ-antigua" placeholder="Como se escribió (ej. Gurjara)" style="flex:1; min-width:160px;">
-      <input type="text" id="input-civ-oficial" placeholder="Nombre oficial (ej. Gurjaras)" style="flex:1; min-width:160px;">
+      <input type="text" id="input-civ-oficial" placeholder="Nombre oficial (ej. Gurjaras)" style="flex:1; min-width:160px;" list="lista-civs-sugeridas">
       <button class="btn secondary" onclick="agregarCivEquivalencia()">Vincular</button>
     </div>
     <div id="lista-civ-equivalencias"></div>
@@ -486,7 +487,6 @@ function renderizarEquivalencias() {
       <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarEquivalencia(${i})">🗑</button>
     </div>
   `).join("");
-  // Re-renderizar la tabla de países para reflejar al instante los nicks alternos agrupados
   renderizarPaises();
 }
 
@@ -563,12 +563,11 @@ function renderizarPaises() {
     return;
   }
 
-  // Mapear nicks alternos (equivalencias) por cada jugador oficial
   const mapAlternos = {};
   (DATOS.equivalencias || []).forEach(eq => {
     const ofic = eq.oficial;
     if (!mapAlternos[ofic]) mapAlternos[ofic] = [];
-    mapAlternos[ofic].push(eq.antiguo);
+    mapAlternos[ofic].push({ antiguo: eq.antiguo, index: DATOS.equivalencias.indexOf(eq) });
   });
 
   const ordenados = [...nombres].sort((a, b) => {
@@ -601,7 +600,7 @@ function renderizarPaises() {
             const cat = info.categoria || 1;
             const alternos = mapAlternos[nombre] || [];
             const alternosHtml = alternos.length > 0 
-              ? alternos.map(alt => `<span style="background:var(--panel-raised); padding:2px 6px; border-radius:4px; margin-right:4px; display:inline-block; border:1px solid var(--line); font-size:0.75rem;">${alt}</span>`).join("")
+              ? alternos.map(altObj => `<span style="background:var(--panel-raised); padding:2px 6px; border-radius:4px; margin-right:4px; margin-bottom:2px; display:inline-block; border:1px solid var(--line); font-size:0.75rem;">${altObj.antiguo} <a href="javascript:void(0);" onclick="eliminarEquivalencia(${altObj.index})" style="color:var(--loss); text-decoration:none; margin-left:4px; font-weight:bold;" title="Desvincular">×</a></span>`).join("")
               : `<span style="color:var(--text-dim); font-style:italic; font-size:0.75rem;">Ninguno</span>`;
 
             return `
@@ -641,20 +640,22 @@ function cambiarCategoriaDirecta(nombre, nuevaCat) {
 function precargarPais(nombre) {
   const info = DATOS.jugadoresInfo[nombre] || {};
   document.getElementById("input-nuevo-jugador-nombre").value = nombre;
+  document.getElementById("input-nuevo-jugador-antiguo").value = "";
   document.getElementById("input-nuevo-jugador-cat").value = info.categoria || 1;
   document.getElementById("input-nuevo-jugador-pais").value = info.pais || "";
   document.getElementById("input-nuevo-jugador-civ").value = info.civFavorita || "";
   document.getElementById("input-nuevo-jugador-nombre").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-function registrarJugadorNuevo() {
+function registrarJugadorNuevoCompleto() {
   const nombre = document.getElementById("input-nuevo-jugador-nombre").value.trim();
+  const antiguo = document.getElementById("input-nuevo-jugador-antiguo").value.trim();
   const categoria = parseInt(document.getElementById("input-nuevo-jugador-cat").value, 10) || 1;
   const pais = document.getElementById("input-nuevo-jugador-pais").value.trim().toUpperCase();
   const civFavorita = document.getElementById("input-nuevo-jugador-civ").value.trim();
 
   if (!nombre) {
-    alert("Escribe el nombre del jugador.");
+    alert("Escribe el nombre oficial del jugador.");
     return;
   }
   if (pais && pais.length !== 2) {
@@ -669,13 +670,26 @@ function registrarJugadorNuevo() {
     civFavorita: civFavorita || (DATOS.jugadoresInfo[nombre]?.civFavorita || "")
   };
 
+  // Si se ingresó un nombre antiguo, vincularlo automáticamente
+  if (antiguo) {
+    if (!DATOS.equivalencias) DATOS.equivalencias = [];
+    const existente = DATOS.equivalencias.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
+    if (existente) {
+      existente.oficial = nombre;
+    } else {
+      DATOS.equivalencias.push({ antiguo, oficial: nombre });
+    }
+  }
+
   document.getElementById("input-nuevo-jugador-nombre").value = "";
+  document.getElementById("input-nuevo-jugador-antiguo").value = "";
   document.getElementById("input-nuevo-jugador-pais").value = "";
   document.getElementById("input-nuevo-jugador-civ").value = "";
 
   actualizarListasSugerencias();
+  renderizarEquivalencias();
   renderizarPaises();
-  alert(`✔ Jugador "${nombre}" guardado con éxito.`);
+  alert(`✔ Jugador "${nombre}" guardado ${antiguo ? 'y nombre antiguo vinculado' : ''} con éxito.`);
 }
 
 function eliminarPais(nombre) {
