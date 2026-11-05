@@ -139,6 +139,10 @@
     {
       "antiguo": "Erik Barbaro",
       "oficial": "ErikThaBarbaro"
+    },
+    {
+      "antiguo": "Trotamundos",
+      "oficial": "TroTamundoS"
     }
   ],
   "partidas": [
@@ -20425,7 +20429,7 @@
       "civFavorita": ""
     },
     "TroTamundoS": {
-      "categoria": 3,
+      "categoria": 1,
       "pais": "ES",
       "civFavorita": ""
     },
