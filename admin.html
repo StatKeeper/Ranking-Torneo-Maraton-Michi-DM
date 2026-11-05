@@ -108,11 +108,10 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   </div>
 
   <div class="panel">
-    <h3>⑤ Nacionalidad, Categoría y Civilización Favorita</h3>
+    <h3>⑤ Nacionalidad, Categoría, Civilización y Nicks Vinculados</h3>
     <p class="hint">
-      Escribe el nombre oficial exacto del jugador, su categoría (<strong>1</strong>: Comunidad, <strong>2</strong>: Liga, <strong>3</strong>: Invitado),
-      su código de país de 2 letras (ej. Perú = PE, Argentina = AR, México = MX, etc.)
-      y su civilización favorita.
+      Gestiona los datos de los jugadores, su categoría (<strong>1</strong>: Comunidad, <strong>2</strong>: Liga, <strong>3</strong>: Invitado),
+      país, civilización favorita y visualiza de forma integrada sus nombres alternos o antiguos asociados.
     </p>
     
     <!-- Formulario directo para registrar / modificar jugadores nuevos -->
@@ -487,6 +486,8 @@ function renderizarEquivalencias() {
       <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarEquivalencia(${i})">🗑</button>
     </div>
   `).join("");
+  // Re-renderizar la tabla de países para reflejar al instante los nicks alternos agrupados
+  renderizarPaises();
 }
 
 function agregarEquivalencia() {
@@ -562,6 +563,14 @@ function renderizarPaises() {
     return;
   }
 
+  // Mapear nicks alternos (equivalencias) por cada jugador oficial
+  const mapAlternos = {};
+  (DATOS.equivalencias || []).forEach(eq => {
+    const ofic = eq.oficial;
+    if (!mapAlternos[ofic]) mapAlternos[ofic] = [];
+    mapAlternos[ofic].push(eq.antiguo);
+  });
+
   const ordenados = [...nombres].sort((a, b) => {
     const infoA = DATOS.jugadoresInfo[a] || {};
     const infoB = DATOS.jugadoresInfo[b] || {};
@@ -577,7 +586,8 @@ function renderizarPaises() {
       <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
         <thead>
           <tr style="text-align:left; color:var(--gold); border-bottom:1px solid var(--line);">
-            <th style="padding:6px 8px;">Jugador</th>
+            <th style="padding:6px 8px;">Jugador Oficial</th>
+            <th style="padding:6px 8px;">Nicks Alternos / Anteriores Vinculados</th>
             <th style="padding:6px 8px;">Categoría (1: Com | 2: Liga | 3: Inv)</th>
             <th style="padding:6px 8px;">País</th>
             <th style="padding:6px 8px;">Civ. favorita</th>
@@ -589,9 +599,15 @@ function renderizarPaises() {
             const info = DATOS.jugadoresInfo[nombre] || {};
             const faltaAlgo = !info.pais || !info.civFavorita;
             const cat = info.categoria || 1;
+            const alternos = mapAlternos[nombre] || [];
+            const alternosHtml = alternos.length > 0 
+              ? alternos.map(alt => `<span style="background:var(--panel-raised); padding:2px 6px; border-radius:4px; margin-right:4px; display:inline-block; border:1px solid var(--line); font-size:0.75rem;">${alt}</span>`).join("")
+              : `<span style="color:var(--text-dim); font-style:italic; font-size:0.75rem;">Ninguno</span>`;
+
             return `
               <tr style="border-bottom:1px solid var(--line); ${faltaAlgo ? 'background:rgba(176,85,79,0.08);' : ''}">
                 <td style="padding:6px 8px; font-weight:600;">${nombre}</td>
+                <td style="padding:6px 8px;">${alternosHtml}</td>
                 <td style="padding:6px 8px;">
                   <select style="padding:2px 6px; font-size:0.78rem;" onchange="cambiarCategoriaDirecta('${nombre.replace(/'/g,"\\'")}', this.value)">
                     <option value="1" ${cat == 1 ? 'selected' : ''}>1 - Comunidad</option>
