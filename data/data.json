@@ -20175,18 +20175,18 @@
       "categoria": 3
     },
     "rushwarwarrior": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "BR",
+      "civFavorita": ""
     },
     "Santiago RC": {
       "pais": "",
       "civFavorita": ""
     },
     "Saturno 1343": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "AR",
+      "civFavorita": ""
     },
     "Saul Goodman": {
       "pais": "CL",
@@ -20198,9 +20198,9 @@
       "categoria": 3
     },
     "Speedracer 5.0": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "US",
+      "civFavorita": ""
     },
     "Spicy License 735": {
       "pais": "",
@@ -20218,9 +20218,9 @@
       "categoria": 3
     },
     "TAG_Brian": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "AR",
+      "civFavorita": ""
     },
     "Tailfeather28": {
       "pais": "US",
@@ -20228,7 +20228,8 @@
       "categoria": 2
     },
     "Tartus": {
-      "pais": "",
+      "categoria": 3,
+      "pais": "CN",
       "civFavorita": ""
     },
     "THameed": {
@@ -20277,9 +20278,9 @@
       "civFavorita": ""
     },
     "villager 12": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "US",
+      "civFavorita": ""
     },
     "Wag": {
       "pais": "MX",
@@ -20291,9 +20292,9 @@
       "categoria": 3
     },
     "Warrior Chief": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "CA",
+      "civFavorita": ""
     },
     "WNxkl": {
       "pais": "",
@@ -20301,9 +20302,9 @@
       "categoria": 3
     },
     "Xchopan": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "CL",
+      "civFavorita": ""
     },
     "Yin": {
       "pais": "",
@@ -20311,9 +20312,9 @@
       "categoria": 3
     },
     "Your true papa": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 3,
+      "pais": "TW",
+      "civFavorita": ""
     },
     "主不修善果 只爱石油军": {
       "pais": "",
@@ -20416,6 +20417,21 @@
     "yo": {
       "categoria": 3,
       "pais": "CN",
+      "civFavorita": ""
+    },
+    "MUL SHOP KEPPER_HAHA": {
+      "categoria": 3,
+      "pais": "",
+      "civFavorita": ""
+    },
+    "TroTamundoS": {
+      "categoria": 3,
+      "pais": "ES",
+      "civFavorita": ""
+    },
+    "WNXKL": {
+      "categoria": 3,
+      "pais": "HK",
       "civFavorita": ""
     }
   },
