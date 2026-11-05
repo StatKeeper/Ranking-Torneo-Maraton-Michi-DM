@@ -20318,10 +20318,6 @@
       "civFavorita": "",
       "categoria": 3
     },
-    "yo": {
-      "pais": "TW",
-      "civFavorita": ""
-    },
     "Your true papa": {
       "pais": "",
       "civFavorita": "",
@@ -20423,6 +20419,11 @@
     "quino": {
       "categoria": 3,
       "pais": "DE",
+      "civFavorita": ""
+    },
+    "yo": {
+      "categoria": 3,
+      "pais": "CN",
       "civFavorita": ""
     }
   },
@@ -21438,10 +21439,10 @@
       "civ": "Lituanos"
     },
     {
-      "id": "2026-11-Fecha044",
+      "id": "2026-11-Fecha04",
       "anio": 2026,
       "mes": 11,
-      "jornada": "Fecha 044",
+      "jornada": "Fecha 04",
       "jugador": "yo",
       "civ": "Jemeres"
     }
