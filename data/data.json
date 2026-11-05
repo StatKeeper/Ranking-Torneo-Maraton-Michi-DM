@@ -19451,6 +19451,368 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha04-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 04",
+      "numeroPartida": 1,
+      "duracionSeg": 2917,
+      "jugadores": [
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Etíopes",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 2193,
+          "edificiosArrasados": 87250,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 1184,
+          "edificiosArrasados": 72988,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Armenios",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 1432,
+          "edificiosArrasados": 68827,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 2313,
+          "edificiosArrasados": 98727,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Etíopes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2539,
+          "edificiosArrasados": 114238,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Armenios",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1143,
+          "edificiosArrasados": 83068,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3345,
+          "edificiosArrasados": 129420,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Astro23",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1529,
+          "edificiosArrasados": 71663,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha04-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 04",
+      "numeroPartida": 2,
+      "duracionSeg": 2453,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Etíopes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 826,
+          "edificiosArrasados": 52710,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Shu",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 855,
+          "edificiosArrasados": 82686,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Eslavos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 850,
+          "edificiosArrasados": 44454,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1144,
+          "edificiosArrasados": 68516,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Eslavos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1535,
+          "edificiosArrasados": 87339,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Etíopes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3151,
+          "edificiosArrasados": 118178,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Shu",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 116,
+          "edificiosArrasados": 55143,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1642,
+          "edificiosArrasados": 68898,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha04-P3",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 04",
+      "numeroPartida": 3,
+      "duracionSeg": 3630,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Mayas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 548,
+          "edificiosArrasados": 104579,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Portugueses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1482,
+          "edificiosArrasados": 109735,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Wu",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1320,
+          "edificiosArrasados": 92347,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3897,
+          "edificiosArrasados": 210522,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Portugueses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 830,
+          "edificiosArrasados": 75272,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "Wu",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1622,
+          "edificiosArrasados": 84596,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Mayas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1135,
+          "edificiosArrasados": 109106,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "derrota",
+          "civ": "Persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2083,
+          "edificiosArrasados": 104696,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha04-P4",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 04",
+      "numeroPartida": 4,
+      "duracionSeg": 2570,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Indostaníes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 761,
+          "edificiosArrasados": 57109,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2771,
+          "edificiosArrasados": 96805,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "LVA - Gleich",
+          "resultado": "victoria",
+          "civ": "Malayos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1194,
+          "edificiosArrasados": 63208,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Teutones",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2742,
+          "edificiosArrasados": 118790,
+          "bonos": [
+            "E",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 426,
+          "edificiosArrasados": 52705,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Teutones",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2206,
+          "edificiosArrasados": 84575,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Malayos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2008,
+          "edificiosArrasados": 75907,
+          "bonos": []
+        },
+        {
+          "nombre": "Mr.Magic",
+          "resultado": "derrota",
+          "civ": "Indostaníes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 994,
+          "edificiosArrasados": 36735,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -20472,6 +20834,14 @@
       "jornada": "Fecha 03",
       "evaluacion": "imagenes/candidatos_2026-11_fecha03.png",
       "galardon": "imagenes/galardon_2026-11_fecha03.png"
+    },
+    {
+      "id": "2026-11-Fecha04",
+      "anio": 2026,
+      "mes": 11,
+      "jornada": "Fecha 04",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha04.png",
+      "galardon": "imagenes/galardon_2026-11_fecha04.png"
     }
   ],
   "civEquivalencias": [],
@@ -21066,6 +21436,14 @@
       "jornada": "Fecha 03",
       "jugador": "GGINDU",
       "civ": "Lituanos"
+    },
+    {
+      "id": "2026-11-Fecha044",
+      "anio": 2026,
+      "mes": 11,
+      "jornada": "Fecha 044",
+      "jugador": "yo",
+      "civ": "Jemeres"
     }
   ]
 }
