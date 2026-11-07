@@ -20020,9 +20020,9 @@
       "categoria": 3
     },
     "BullRunner": {
-      "pais": "",
-      "civFavorita": "",
-      "categoria": 3
+      "categoria": 2,
+      "pais": "BR",
+      "civFavorita": ""
     },
     "Cacha": {
       "categoria": 1,
