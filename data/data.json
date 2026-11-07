@@ -19809,6 +19809,96 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha05-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 05",
+      "numeroPartida": 1,
+      "duracionSeg": 6277,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Godos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7257,
+          "edificiosArrasados": 174608,
+          "bonos": []
+        },
+        {
+          "nombre": "Rocket Bunny",
+          "resultado": "victoria",
+          "civ": "Tártaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6735,
+          "edificiosArrasados": 176599,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Francos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5424,
+          "edificiosArrasados": 170650,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2781,
+          "edificiosArrasados": 100694,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Francos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4662,
+          "edificiosArrasados": 157328,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Godos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7310,
+          "edificiosArrasados": 169905,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "derrota",
+          "civ": "Tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7574,
+          "edificiosArrasados": 189298,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Mr.Magic",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5394,
+          "edificiosArrasados": 170167,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -20852,6 +20942,14 @@
       "jornada": "Fecha 04",
       "evaluacion": "imagenes/candidatos_2026-11_fecha04.png",
       "galardon": "imagenes/galardon_2026-11_fecha04.png"
+    },
+    {
+      "id": "2026-11-Fecha05",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 05",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha05.png",
+      "galardon": "imagenes/galardon_2026-11_fecha05.png"
     }
   ],
   "civEquivalencias": [],
@@ -21454,6 +21552,14 @@
       "jornada": "Fecha 04",
       "jugador": "yo",
       "civ": "Jemeres"
+    },
+    {
+      "id": "2026-11-Fecha05",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 05",
+      "jugador": "P@K()",
+      "civ": "Francos"
     }
   ]
 }
