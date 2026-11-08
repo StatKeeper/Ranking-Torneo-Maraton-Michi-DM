@@ -19899,6 +19899,168 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha06-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 06",
+      "numeroPartida": 1,
+      "duracionSeg": 2866,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1832,
+          "edificiosArrasados": 83152,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Francos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1987,
+          "edificiosArrasados": 66783,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2755,
+          "edificiosArrasados": 89164,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "Polacos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 2537,
+          "edificiosArrasados": 99280,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Cobra",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 1144,
+          "edificiosArrasados": 52059,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "derrota",
+          "civ": "Francos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 1929,
+          "edificiosArrasados": 75771,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha06-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 06",
+      "numeroPartida": 2,
+      "duracionSeg": 5503,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Italianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5192,
+          "edificiosArrasados": 149888,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3986,
+          "edificiosArrasados": 115621,
+          "bonos": []
+        },
+        {
+          "nombre": "WaG",
+          "resultado": "derrota",
+          "civ": "Portugueses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2386,
+          "edificiosArrasados": 88889,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Etíopes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8173,
+          "edificiosArrasados": 193493,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Italianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5287,
+          "edificiosArrasados": 155693,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Portugueses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3336,
+          "edificiosArrasados": 136523,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4256,
+          "edificiosArrasados": 113444,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Etíopes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 11593,
+          "edificiosArrasados": 273503,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -20950,6 +21112,14 @@
       "jornada": "Fecha 05",
       "evaluacion": "imagenes/candidatos_2026-11_fecha05.png",
       "galardon": "imagenes/galardon_2026-11_fecha05.png"
+    },
+    {
+      "id": "2026-11-Fecha06",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 06",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha06.png",
+      "galardon": "imagenes/galardon_2026-11_fecha06.png"
     }
   ],
   "civEquivalencias": [],
@@ -21560,6 +21730,14 @@
       "jornada": "Fecha 05",
       "jugador": "P@K()",
       "civ": "Francos"
+    },
+    {
+      "id": "2026-11-Fecha06",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 06",
+      "jugador": "Knar",
+      "civ": "Malíes"
     }
   ]
 }
