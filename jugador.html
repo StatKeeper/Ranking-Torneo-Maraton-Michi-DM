@@ -198,8 +198,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- VISTA 2: NOMBRES Y PARTICIPACIÓN -->
   <div id="vista-participacion" style="display:none;">
     <div class="panel" id="seccion-participacion-mes">
-      <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📋 Nombres y Participación</h3>
-      <p class="hint" style="margin-bottom:12px;">Todos los jugadores registrados clasificados por categoría en orden alfabético.</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+        <div>
+          <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📋 Nombres y Participación</h3>
+          <p class="hint" style="margin-bottom:0;" id="subtitulo-participacion-desc">Todos los jugadores registrados clasificados por categoría en orden alfabético.</p>
+        </div>
+        <div>
+          <select id="select-orden-participacion" onchange="renderizarParticipacionMes()" style="padding: 6px 10px; font-size: 0.8rem;">
+            <option value="alfabetico">🔤 Orden Alfabético</option>
+            <option value="partidas">📊 Partidas Jugadas (Mayor a menor)</option>
+          </select>
+        </div>
+      </div>
       
       <div class="grid-tres-columnas">
         <div class="columna-participacion">
@@ -322,6 +332,14 @@ function renderizarParticipacionMes() {
   const nombreMes = NOMBRES_MES[mes] || "Todos los meses";
   document.getElementById("titulo-participacion-mes").textContent = `📋 Nombres y Participación — ${nombreMes} ${anio}`;
 
+  const tipoOrden = document.getElementById("select-orden-participacion").value;
+  const descSub = document.getElementById("subtitulo-participacion-desc");
+  if (tipoOrden === "partidas") {
+    descSub.textContent = "Todos los jugadores registrados clasificados por categoría ordenados por cantidad de partidas jugadas (mayor a menor).";
+  } else {
+    descSub.textContent = "Todos los jugadores registrados clasificados por categoría en orden alfabético.";
+  }
+
   const partidasMes = partidasFiltradas();
   const conteoJugadores = {};
   
@@ -357,10 +375,20 @@ function renderizarParticipacionMes() {
     }
   });
 
-  const ordenarAlfabeticamente = (a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
-  listaMiembros.sort(ordenarAlfabeticamente);
-  listaParticipantes.sort(ordenarAlfabeticamente);
-  listaInvitados.sort(ordenarAlfabeticamente);
+  // Función de ordenamiento dinámica según selección
+  const criterioOrden = (a, b) => {
+    if (tipoOrden === "partidas") {
+      if (b.partidas !== a.partidas) {
+        return b.partidas - a.partidas; // Mayor número de partidas primero
+      }
+    }
+    // Criterio secundario o principal por defecto: alfabético
+    return a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
+  };
+
+  listaMiembros.sort(criterioOrden);
+  listaParticipantes.sort(criterioOrden);
+  listaInvitados.sort(criterioOrden);
 
   pintarColumnaMiniParticipacion("lista-miembros-comunidad", listaMiembros);
   pintarColumnaMiniParticipacion("lista-participantes-liga", listaParticipantes);
@@ -415,7 +443,6 @@ function agruparYConstruirTablaPaises(elementId, listaItems) {
     return;
   }
 
-  // Agrupar por país
   const mapaPaises = {};
   listaItems.forEach(item => {
     const p = item.pais;
@@ -425,14 +452,13 @@ function agruparYConstruirTablaPaises(elementId, listaItems) {
     mapaPaises[p].cantidad += 1;
   });
 
-  // Convertir a array y ordenar mandando "sin-pais" al final siempre
   const paisesOrdenados = Object.values(mapaPaises).sort((a, b) => {
     if (a.pais === "sin-pais") return 1;
     if (b.pais === "sin-pais") return -1;
     if (b.cantidad !== a.cantidad) {
-      return b.cantidad - a.cantidad; // Mayor a menor cantidad
+      return b.cantidad - a.cantidad;
     }
-    return a.pais.localeCompare(b.pais); // Alfabético si empatan
+    return a.pais.localeCompare(b.pais);
   });
 
   contenedor.innerHTML = `
