@@ -20061,6 +20061,169 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha07-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 07",
+      "numeroPartida": 1,
+      "duracionSeg": 10290,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Varegos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 9500,
+          "edificiosArrasados": 269126,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 9310,
+          "edificiosArrasados": 226230,
+          "bonos": []
+        },
+        {
+          "nombre": "Levi",
+          "resultado": "victoria",
+          "civ": "Eslavos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 8166,
+          "edificiosArrasados": 230519,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Mongoles",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 14225,
+          "edificiosArrasados": 345559,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12767,
+          "edificiosArrasados": 323856,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "Varegos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7381,
+          "edificiosArrasados": 203904,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Mongoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 9221,
+          "edificiosArrasados": 238180,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Eslavos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6761,
+          "edificiosArrasados": 183266,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha07-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 07",
+      "numeroPartida": 2,
+      "duracionSeg": 2330,
+      "jugadores": [
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Teutones",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1386,
+          "edificiosArrasados": 65650,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Turcos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 732,
+          "edificiosArrasados": 65529,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Eslavos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1096,
+          "edificiosArrasados": 71863,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "yo",
+          "resultado": "derrota",
+          "civ": "Turcos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1602,
+          "edificiosArrasados": 73451,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Teutones",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 775,
+          "edificiosArrasados": 53728,
+          "bonos": []
+        },
+        {
+          "nombre": "generalberthier",
+          "resultado": "derrota",
+          "civ": "Eslavos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 595,
+          "edificiosArrasados": 27438,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -21120,6 +21283,14 @@
       "jornada": "Fecha 06",
       "evaluacion": "imagenes/candidatos_2026-11_fecha06.png",
       "galardon": "imagenes/galardon_2026-11_fecha06.png"
+    },
+    {
+      "id": "2026-11-Fecha07",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 07",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha07.png",
+      "galardon": "imagenes/galardon_2026-11_fecha07.png"
     }
   ],
   "civEquivalencias": [],
@@ -21738,6 +21909,14 @@
       "jornada": "Fecha 06",
       "jugador": "Knar",
       "civ": "Malíes"
+    },
+    {
+      "id": "2026-11-Fecha07",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 07",
+      "jugador": "robincule",
+      "civ": "Mongoles"
     }
   ]
 }
