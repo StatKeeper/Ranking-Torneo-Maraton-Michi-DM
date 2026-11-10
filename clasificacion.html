@@ -11,13 +11,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="nav_clasificacion">Clasificación — Comunidad AoE II</title>
+<title>Clasificación y Ranking — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
 <!-- Configuración PWA e Ícono de Inicio -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#14161c">
+<meta name="theme-color" content="#f8f6f0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Maratón Michi">
@@ -32,50 +32,99 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-  .tabla-clasificacion { 
-    width: 100%; 
-    border-collapse: collapse; 
-    font-size: 0.82rem; 
-    white-space: nowrap; 
+  /* Estética de líneas y bordes para la Tabla de Posiciones */
+  #tabla-clasificacion {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
   }
-  .tabla-clasificacion th, 
-  .tabla-clasificacion td { 
-    padding: 6px 8px; 
-    border: 1px solid var(--line); 
-    text-align: center; 
+  #tabla-clasificacion th, #tabla-clasificacion td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    vertical-align: middle;
+    white-space: nowrap;
   }
-  .tabla-clasificacion th { 
-    background: var(--panel-raised); 
-    color: var(--gold); 
-    font-weight: 600; 
-    font-size: 0.72rem; 
+  #tabla-clasificacion th {
+    background: var(--panel-raised);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.78rem;
   }
-  .tabla-clasificacion td:nth-child(3) { 
-    text-align: left; 
+  #tabla-clasificacion th:nth-child(6), #tabla-clasificacion td:nth-child(6) {
+    min-width: 220px;
   }
-  .tabla-clasificacion th:nth-child(3) { 
-    text-align: left; 
+
+  /* Estilos para los estados de Último Suceso */
+  .suceso-victoria {
+    color: var(--win);
+    font-weight: 600;
   }
-  .var-up { 
-    color: var(--win); 
-    font-weight: 600; 
+  .suceso-derrota {
+    color: var(--loss);
+    background-color: rgba(180, 50, 50, 0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-block;
   }
-  .var-down { 
-    color: var(--loss); 
-    font-weight: 600; 
+  .suceso-neutro {
+    color: var(--text);
+    font-weight: 400;
   }
-  .circulo-pos { 
-    display: inline-block; 
-    width: 10px; 
-    height: 10px; 
-    border-radius: 50%; 
-    margin-right: 6px; 
-    vertical-align: middle; 
+
+  /* Estilos para los dos cuadros de estadísticas inferiores (Galardones y Civilizaciones) */
+  .grid-estadisticas-honor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
   }
-  .circulo-verde { background: #3c914e; }
-  .circulo-amarillo { background: #c9a227; }
-  .circulo-naranja { background: #d97736; }
-  .circulo-gris { background: #717682; }
+  .subpanel-estadistica {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .tabla-estadistica {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .tabla-estadistica th, .tabla-estadistica td {
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    vertical-align: middle;
+  }
+  .tabla-estadistica th {
+    background: var(--panel-raised);
+    color: var(--gold);
+    font-size: 0.78rem;
+  }
+  .item-agrupado {
+    padding: 3px 0;
+    border-bottom: 1px dotted rgba(0,0,0,0.1);
+  }
+  .item-agrupado:last-child {
+    border-bottom: none;
+  }
+
+  /* Líneas divisorias para la tabla del Grand Prix Anual */
+  #seccion-grand-prix table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  #seccion-grand-prix th, #seccion-grand-prix td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    vertical-align: middle;
+  }
+  #seccion-grand-prix th {
+    background: var(--panel-raised);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
 </style>
 </head>
 <body>
@@ -86,537 +135,485 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub" data-i18n="nav_clasificacion">Clasificación</span>
+    <span class="sub">Clasificación y Ranking</span>
   </div>
   <nav class="tabs">
-    <a href="index.html" data-i18n="nav_inicio">Inicio</a>
-    <a href="clasificacion.html" class="active" data-i18n="nav_clasificacion">Clasificación</a>
-    <a href="jugador.html" data-i18n="nav_jugadores">Jugadores</a>
-    <a href="estadisticas.html" data-i18n="nav_estadisticas">Estadísticas</a>
-    <a href="candidatos.html" data-i18n="nav_candidatos">Candidatos</a>
-    <a href="historial.html" data-i18n="nav_historial">Historial</a>
-    <a href="admin.html" data-i18n="nav_admin">Administración</a>
+    <a href="index.html">Inicio</a>
+    <a href="clasificacion.html" class="active">Clasificación</a>
+    <a href="jugador.html">Jugadores</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="candidatos.html">Candidatos</a>
+    <a href="historial.html">Historial</a>
+    <a href="admin.html">Administración</a>
   </nav>
 </header>
 
 <main>
-  <!-- TABLA MENSUAL -->
   <div class="panel" id="seccion-tabla-posiciones">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;" data-i18n="titulo_posiciones">Tabla de Posiciones</h3>
-      <button class="btn secondary" onclick="descargarTablaMensual()" style="font-size:0.75rem;" data-i18n="btn_descargar">📷 Descargar Imagen</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">Tabla de Posiciones</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarTablaPosiciones()">📷 Descargar Imagen</button>
     </div>
-    
-    <div class="filters">
+
+    <div class="filters" style="margin-bottom:12px;">
       <select id="filtro-anio"></select>
       <select id="filtro-mes"></select>
-      <select id="filtro-tipo-rango">
-        <option value="acumulado" data-i18n="opt_todo_el_mes">Todo el mes (acumulado)</option>
-        <option value="jornada" data-i18n="opt_por_jornada">Ver por Fecha específica</option>
+      <select id="filtro-jornada">
+        <option value="">Todo el mes (acumulado)</option>
       </select>
-      <select id="filtro-jornada" style="display:none;"></select>
+      <select id="filtro-partida" style="display:none;">
+        <option value="">Toda la jornada</option>
+      </select>
     </div>
 
-    <div id="info-jornada" style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 10px;"></div>
-    
-    <div id="contenedor-tabla" style="overflow-x:auto;">
-      <div class="empty-state" data-i18n="cargando">Cargando…</div>
+    <div id="info-jornada" style="font-size:0.85rem; color:var(--gold); margin-bottom:8px; font-weight:600;"></div>
+
+    <div style="overflow-x:auto;">
+      <table id="tabla-clasificacion">
+        <thead>
+          <tr>
+            <th>Pos</th>
+            <th>Var</th>
+            <th>Jugador</th>
+            <th>Pts</th>
+            <th>V/PJ</th>
+            <th>Último Suceso</th>
+            <th>V/D</th>
+            <th>E</th>
+            <th>R</th>
+            <th>M</th>
+            <th>O</th>
+            <th>S</th>
+            <th>Rch</th>
+            <th>MG</th>
+            <th>RLP</th>
+            <th>TB</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla-clasificacion">
+          <tr><td colspan="16" class="empty-state">Cargando datos...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- CUADRO DE HONOR -->
-  <div class="panel" style="margin-top: 20px;" id="seccion-cuadro-honor">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;" data-i18n="titulo_cuadro_honor">🏆 Cuadro de Honor Mensual</h3>
-      <button class="btn secondary" onclick="descargarCuadroHonor()" style="font-size:0.75rem;" data-i18n="btn_descargar">📷 Descargar Imagen</button>
+  <!-- CUADRO DE HONOR Y SUS DOS ESTADÍSTICAS INFERIORES AGRUPADAS -->
+  <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarCuadroHonor()">📷 Descargar Imagen</button>
     </div>
-    
-    <div id="contenedor-cuadro-honor" style="overflow-x:auto;"></div>
-    
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:20px;" id="contenedor-galardones-civs">
-      <div>
-        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;" data-i18n="ranking_galardones">👑 Ranking de Galardones (Jugadores)</h4>
-        <div id="contenedor-ranking-galardones"></div>
+    <div id="contenedor-cuadro-honor">
+      <div class="empty-state">Cargando...</div>
+    </div>
+
+    <!-- Sub-cuadros de Ranking de Galardones y Civilizaciones más Destacadas -->
+    <div class="grid-estadisticas-honor">
+      <div class="subpanel-estadistica">
+        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">👑 Ranking de Galardones (Jugadores)</h4>
+        <div id="contenedor-ranking-galardones">
+          <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
+        </div>
       </div>
-      <div>
-        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;" data-i18n="civs_destacadas">🏛️ Civilizaciones más Destacadas</h4>
-        <div id="contenedor-civilizaciones-destacadas"></div>
+      <div class="subpanel-estadistica">
+        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">🏛️ Civilizaciones más Destacadas</h4>
+        <div id="contenedor-civilizaciones-destacadas">
+          <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- GRAND PRIX ANUAL -->
-  <div class="panel" style="margin-top: 20px;" id="seccion-grand-prix">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <h3 id="titulo-grand-prix" style="font-size:0.95rem; color:var(--gold); margin:0;" data-i18n="titulo_grand_prix">🏆 Grand Prix Anual</h3>
-      <button class="btn secondary" onclick="descargarGrandPrix()" style="font-size:0.75rem;" data-i18n="btn_descargar">📷 Descargar Imagen</button>
+  <div class="panel" id="seccion-grand-prix" style="margin-top:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="titulo-grand-prix" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Grand Prix Anual</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarGrandPrix()">📷 Descargar Imagen</button>
     </div>
-    
-    <div class="filters">
-      <select id="filtro-grand-prix-anio"></select>
+    <div id="contenedor-grand-prix">
+      <div class="empty-state">Cargando Grand Prix...</div>
     </div>
-    
-    <div id="contenedor-grand-prix" style="overflow-x:auto; margin-top:10px;"></div>
   </div>
 </main>
 
 <nav class="mobile-nav">
-  <a href="index.html"><span class="icon">🏠</span><span data-i18n="nav_inicio">Inicio</span></a>
-  <a href="clasificacion.html" class="active"><span class="icon">🏆</span><span data-i18n="nav_clasificacion">Ranking</span></a>
-  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span><span data-i18n="nav_jugadores">Jugadores</span></a>
-  <a href="estadisticas.html"><span class="icon">📈</span><span data-i18n="nav_estadisticas">Stats</span></a>
-  <a href="candidatos.html"><span class="icon">⭐</span><span data-i18n="nav_candidatos">Candidatos</span></a>
-  <a href="historial.html"><span class="icon">📜</span><span data-i18n="nav_historial">Historial</span></a>
+  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
+  <a href="clasificacion.html" class="active"><span class="icon">🏆</span>Ranking</a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
+  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
+  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
+  <a href="historial.html"><span class="icon">📜</span>Historial</a>
 </nav>
 
 <script src="js/datos.js"></script>
 <script>
 let PARTIDAS = [];
 let EQUIVALENCIAS = [];
-let CIV_EQUIV = [];
 let JUGADORES_INFO = {};
 let CUADRO_HONOR = [];
 
-function poblarFiltros() {
-  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
-  const selAnio = document.getElementById("filtro-anio");
-  const selGPAnio = document.getElementById("filtro-grand-prix-anio");
-  const idiomaActual = localStorage.getItem('idioma_sitio') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">${txtSinDatos}</option>`;
-  selGPAnio.innerHTML = selAnio.innerHTML;
-
-  selAnio.addEventListener("change", () => { 
-    poblarMeses(); 
-    poblarJornadas(); 
-    render(); 
-  });
-  
-  selGPAnio.addEventListener("change", renderGrandPrix);
-
-  poblarMeses();
-  
-  document.getElementById("filtro-mes").addEventListener("change", () => { 
-    poblarJornadas(); 
-    render(); 
-  });
-  
-  document.getElementById("filtro-tipo-rango").addEventListener("change", (e) => {
-    document.getElementById("filtro-jornada").style.display = e.target.value === "jornada" ? "inline-block" : "none";
-    render();
-  });
-  
-  document.getElementById("filtro-jornada").addEventListener("change", render);
-}
-
-function poblarMeses() {
-  const anio = document.getElementById("filtro-anio").value;
-  const meses = [...new Set(PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
-  const selMes = document.getElementById("filtro-mes");
-  const idiomaActual = localStorage.getItem('idioma_sitio') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selMes.innerHTML = meses.length ? meses.map(m => {
-    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
-    return `<option value="${m}">${nombreM}</option>`;
-  }).join("") : `<option value="">${txtSinDatos}</option>`;
-  
-  poblarJornadas();
-}
-
-function poblarJornadas() {
+function renderizarTablaPosiciones() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
-  const jornadas = [...new Set(PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2,"0") === mes).map(p => p.jornada))]
-    .sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
-  
-  const selJornada = document.getElementById("filtro-jornada");
-  selJornada.innerHTML = jornadas.map(j => `<option value="${j}">${j}</option>`).join("");
-}
+  const jornada = document.getElementById("filtro-jornada").value;
+  const partida = document.getElementById("filtro-partida").value;
 
-function obtenerColorCirculo(pos) {
-  if (pos <= 5) return "circulo-verde";
-  if (pos <= 10) return "circulo-amarillo";
-  if (pos <= 15) return "circulo-naranja";
-  return "circulo-gris";
-}
+  const tbody = document.getElementById("cuerpo-tabla-clasificacion");
+  const infoJor = document.getElementById("info-jornada");
 
-function render() {
-  const anio = document.getElementById("filtro-anio").value;
-  const mes = document.getElementById("filtro-mes").value;
-  const tipoRango = document.getElementById("filtro-tipo-rango").value;
-  const jornadaFiltro = document.getElementById("filtro-jornada").value;
-  const cont = document.getElementById("contenedor-tabla");
-  const infoJornada = document.getElementById("info-jornada");
-  const idiomaActual = localStorage.getItem('idioma_sitio') || 'es';
+  const { filas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornada, partida);
 
-  const txtSinPartidas = idiomaActual === 'en' ? 'No matches registered.' : 'No hay partidas registradas.';
-  if (!anio || !mes) {
-    cont.innerHTML = `<div class="empty-state">${txtSinPartidas}</div>`;
-    infoJornada.textContent = "";
-    return;
-  }
-
-  const partidasDelMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes)
-    .sort((a, b) => claveOrden(a) - claveOrden(b));
-
-  if (partidasDelMes.length === 0) {
-    const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || mes);
-    cont.innerHTML = `<div class="empty-state">${idiomaActual === 'en' ? `No matches in ${nombreMes} ${anio}.` : `No hay partidas en ${nombreMes} ${anio}.`}</div>`;
-    infoJornada.textContent = "";
-    renderCuadroHonor(anio, mes);
-    renderGrandPrix();
-    return;
-  }
-
-  let partidasParaAcumulado = [...partidasDelMes];
-
-  if (tipoRango === "jornada" && jornadaFiltro) {
-    const indexJor = partidasDelMes.findIndex(p => p.jornada === jornadaFiltro);
-    if (indexJor >= 0) {
-      const pActual = partidasDelMes[indexJor];
-      partidasParaAcumulado = partidasDelMes.slice(0, indexJor + 1);
-      const txtRound = idiomaActual === 'en' ? `📅 Round ${pActual.jornada} · Match ${pActual.numeroPartida}` : `📅 ${pActual.jornada} · Partida ${pActual.numeroPartida}`;
-      const txtMap = pActual.mapa ? ` (${pActual.mapa})` : '';
-      const txtTotalPart = idiomaActual === 'en' ? `Matches played in the month: ${partidasDelMes.length}` : `Partidas jugadas en el mes: ${partidasDelMes.length}`;
-      infoJornada.innerHTML = `${txtRound}${txtMap} &nbsp;|&nbsp; ${txtTotalPart}`;
-    }
+  if (ultimaPartida) {
+    infoJor.textContent = `📅 ${ultimaPartida.jornada} · Partida ${ultimaPartida.numeroPartida} (${ultimaPartida.mapa || 'Mapa estándar'})`;
   } else {
-    const txtTotalPart = idiomaActual === 'en' ? `Matches played in the month: ${partidasDelMes.length}` : `Partidas jugadas en el mes: ${partidasDelMes.length}`;
-    infoJornada.innerHTML = txtTotalPart;
+    infoJor.textContent = `📅 Período: ${NOMBRES_MES[mes] || ''} ${anio}`;
   }
 
-  const ranking = calcularRankingAcumulado(partidasParaAcumulado, EQUIVALENCIAS);
-  const varsPorPartida = calcularVarPorPartida(partidasDelMes, EQUIVALENCIAS);
+  // Filtrar filas para que aparezcan únicamente los jugadores que tengan al menos una victoria en su haber
+  const filasConVictoria = filas.filter(f => f.victorias > 0);
 
-  let varsUltimaPartida = {};
-  if (tipoRango === "jornada" && jornadaFiltro) {
-    const pSeleccionada = partidasDelMes.find(p => p.jornada === jornadaFiltro);
-    if (pSeleccionada) varsUltimaPartida = varsPorPartida[pSeleccionada.id] || {};
-  } else if (partidasDelMes.length > 0) {
-    const ultimaP = partidasDelMes[partidasDelMes.length - 1];
-    varsUltimaPartida = varsPorPartida[ultimaP.id] || {};
+  if (filasConVictoria.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros con victoria para este período.</td></tr>`;
+    return;
   }
 
-  const thPos = 'Pos';
-  const thVar = 'Var';
-  const thJugador = idiomaActual === 'en' ? 'Player' : 'Jugador';
-  const thPts = 'Pts';
-  const thVPJ = idiomaActual === 'en' ? 'W/MP' : 'V/PJ';
-  const thUltimoSuceso = idiomaActual === 'en' ? 'Latest Event' : 'Último Suceso';
+  const totalPartidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes).length;
+  document.getElementById("info-jornada").innerHTML += ` &nbsp; | &nbsp; Partidas jugadas en el mes: ${totalPartidasMes}`;
 
-  cont.innerHTML = `
-    <table class="tabla-clasificacion">
-      <thead>
-        <tr>
-          <th>${thPos}</th>
-          <th>${thVar}</th>
-          <th>${thJugador}</th>
-          <th>${thPts}</th>
-          <th>${thVPJ}</th>
-          <th>${thUltimoSuceso}</th>
-          <th>V/D</th>
-          <th>E</th>
-          <th>R</th>
-          <th>M</th>
-          <th>O</th>
-          <th>S</th>
-          <th>Rch</th>
-          <th>MG</th>
-          <th>RLP</th>
-          <th>TB</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${ranking.map((r, i) => {
-          const pos = i + 1;
-          const circulo = obtenerColorCirculo(pos);
-          const varVal = varsUltimaPartida[r.nombre] ?? 0;
-          const varClass = varVal > 0 ? "var-up" : varVal < 0 ? "var-down" : "";
-          const varText = varVal > 0 ? `+${varVal}` : `${varVal}`;
-          const vpj = `${r.victorias}/${r.partidasJugadas}`;
+  tbody.innerHTML = filasConVictoria.map((f, idx) => {
+    const pos = idx + 1;
+    let varStr = "-";
+    if (f.variacion > 0) varStr = `<span style="color:var(--win);">+${f.variacion}</span>`;
+    else if (f.variacion < 0) varStr = `<span style="color:var(--loss);">${f.variacion}</span>`;
+    else varStr = `0`;
 
-          return `
-            <tr>
-              <td><span class="circulo-pos ${circulo}"></span>${pos}</td>
-              <td class="${varClass}">${varText}</td>
-              <td style="font-weight:650;"><a href="jugador.html?nombre=${encodeURIComponent(r.nombre)}">${r.nombre}</a></td>
-              <td style="font-weight:700; color:var(--gold);">${r.puntos}</td>
-              <td>${vpj}</td>
-              <td>${traducirUltimoSuceso(r.ultimoSuceso, idiomaActual)}</td>
-              <td>${r.victorias}</td>
-              <td>${r.bonosE}</td>
-              <td>${r.bonosR}</td>
-              <td>${r.bonosM}</td>
-              <td>${r.bonosO}</td>
-              <td>${r.bonosS}</td>
-              <td style="${r.bonosRch > 0 ? 'color:var(--loss); font-weight:bold;' : ''}">${r.bonosRch}</td>
-              <td style="${r.bonosMG > 0 ? 'color:var(--loss); font-weight:bold;' : ''}">${r.bonosMG}</td>
-              <td>${r.bonosRLP || 0}</td>
-              <td style="font-weight:700; color:var(--gold);">${r.totalBonos}</td>
-            </tr>
-          `;
-        }).join("")}
-      </tbody>
-    </table>
-  `;
+    let sucesoHtml = f.ultimoSuceso || "Sin participación";
+    if (sucesoHtml.toLowerCase().includes("derrota")) {
+      sucesoHtml = `<span class="suceso-derrota">${sucesoHtml}</span>`;
+    } else if (sucesoHtml.toLowerCase().includes("victoria") || sucesoHtml.toLowerCase().includes("bono") || sucesoHtml.toLowerCase().includes("+")) {
+      sucesoHtml = `<span class="suceso-victoria">${sucesoHtml}</span>`;
+    } else {
+      sucesoHtml = `<span class="suceso-neutro">${sucesoHtml}</span>`;
+    }
 
-  renderCuadroHonor(anio, mes);
-  renderGrandPrix();
-  if (typeof traducirPagina === 'function') traducirPagina();
+    return `
+      <tr>
+        <td class="num">${pos}</td>
+        <td class="num">${varStr}</td>
+        <td title="${f.nombre}"><a href="jugador.html?nombre=${encodeURIComponent(f.nombre)}">${f.nombre}</a></td>
+        <td class="num" style="font-weight:700; color:var(--gold);">${f.puntos}</td>
+        <td class="num">${f.victorias}/${f.partidas}</td>
+        <td>${sucesoHtml}</td>
+        <td class="num">${f.vd}</td>
+        <td class="num">${f.bonos.E}</td>
+        <td class="num">${f.bonos.R}</td>
+        <td class="num">${f.bonos.M}</td>
+        <td class="num">${f.bonos.O}</td>
+        <td class="num">${f.bonos.S}</td>
+        <td class="num" style="${f.bonos.Rch > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.Rch}</td>
+        <td class="num" style="${f.bonos.MG > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.MG}</td>
+        <td class="num" style="${f.bonos.RLP > 0 ? 'color:var(--win); font-weight:700;' : ''}">${f.bonos.RLP}</td>
+        <td class="num" style="font-weight:700;">${f.tb}</td>
+      </tr>
+    `;
+  }).join("");
 }
 
-function traducirUltimoSuceso(suceso, lang) {
-  if (!suceso) return lang === 'en' ? 'No participation' : 'Sin participación';
-  if (suceso.includes("Sin participación")) return lang === 'en' ? 'No participation' : 'Sin participación';
-  if (lang === 'en') {
-    return suceso.replace("Derrota", "Defeat").replace("Victoria", "Victory");
-  }
-  return suceso;
-}
+function renderizarCuadroHonor() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const titulo = document.getElementById("titulo-cuadro-honor");
+  const cont = document.getElementById("contenedor-cuadro-honor");
 
-function renderCuadroHonor(anio, mes) {
-  const contHonor = document.getElementById("contenedor-cuadro-honor");
-  const tituloHonor = document.getElementById("titulo-cuadro-honor");
-  const idiomaActual = localStorage.getItem('idioma_sitio') || 'es';
-  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || mes);
-  
-  const txtHonor = idiomaActual === 'en' ? `🏆 Monthly Hall of Fame — ${nombreMes.toUpperCase()} ${anio}` : `🏆 Cuadro de Honor Mensual — ${nombreMes.toUpperCase()} ${anio}`;
-  if (tituloHonor) tituloHonor.textContent = txtHonor;
+  const nombreMes = NOMBRES_MES[mes] || "";
+  titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
 
-  const honorMes = (CUADRO_HONOR || []).filter(h => h.anio == anio && String(h.mes).padStart(2,"0") === String(mes).padStart(2,"0"))
+  const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
     .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
 
-  const thJornada = idiomaActual === 'en' ? 'Round' : 'Jornada';
-  const thJugadorFecha = idiomaActual === 'en' ? 'Player of the Round' : 'Jugador de la Fecha';
-  const thCivilizacion = idiomaActual === 'en' ? 'Civilization' : 'Civilización';
-  const txtSinHonor = idiomaActual === 'en' ? 'No honor roll registered for this month.' : 'No hay cuadro de honor registrado para este mes.';
-
-  if (honorMes.length === 0) {
-    contHonor.innerHTML = `<p class="hint">${txtSinHonor}</p>`;
-    document.getElementById("contenedor-ranking-galardones").innerHTML = "";
-    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = "";
+  if (delMes.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
+    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
+    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
     return;
   }
 
-  contHonor.innerHTML = `
-    <table class="tabla-clasificacion">
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+        <thead>
+          <tr>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jornada</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jugador de la Fecha</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Civilización</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${delMes.map(h => `
+            <tr>
+              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:600;">${h.jornada}</td>
+              <td style="padding:10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--win);">👑 <a href="jugador.html?nombre=${encodeURIComponent(h.jugador)}">${h.jugador}</a></td>
+              <td style="padding:10px; border-bottom:1px solid var(--line); color:var(--text-dim);">${h.civ || '—'}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  const conGalardones = {};
+  const conCivs = {};
+
+  delMes.forEach(h => {
+    const jugadorOficial = resolverNombreOficial(h.jugador, EQUIVALENCIAS);
+    conGalardones[jugadorOficial] = (conGalardones[jugadorOficial] || 0) + 1;
+
+    if (h.civ) {
+      const civOficial = resolverCivOficial(h.civ, EQUIVALENCIAS);
+      conCivs[civOficial] = (conCivs[civOficial] || 0) + 1;
+    }
+  });
+
+  const galardonesPorPuntaje = {};
+  Object.entries(conGalardones).forEach(([jugador, total]) => {
+    if (!galardonesPorPuntaje[total]) galardonesPorPuntaje[total] = [];
+    galardonesPorPuntaje[total].push(jugador);
+  });
+
+  const galardonesOrdenados = Object.keys(galardonesPorPuntaje)
+    .map(Number)
+    .sort((a, b) => b - a);
+
+  let acumuladoG = 1;
+  const filasGalardones = galardonesOrdenados.map(total => {
+    const jugadores = galardonesPorPuntaje[total].sort((a, b) => a.localeCompare(b));
+    const posTexto = `${acumuladoG}°`;
+    acumuladoG += jugadores.length;
+
+    return {
+      posTexto,
+      total,
+      elementos: jugadores.map(j => `👑 <a href="jugador.html?nombre=${encodeURIComponent(j)}">${j}</a>`)
+    };
+  });
+
+  const contGalardones = document.getElementById("contenedor-ranking-galardones");
+  contGalardones.innerHTML = `
+    <table class="tabla-estadistica">
       <thead>
         <tr>
-          <th style="text-align:left;">${thJornada}</th>
-          <th style="text-align:left;">${thJugadorFecha}</th>
-          <th style="text-align:left;">${thCivilizacion}</th>
+          <th style="width:50px; text-align:center;">#</th>
+          <th>Jugador</th>
+          <th style="width:80px; text-align:center;">Galardones</th>
         </tr>
       </thead>
       <tbody>
-        ${honorMes.map(h => `
+        ${filasGalardones.map(f => `
           <tr>
-            <td style="text-align:left; font-weight:600;">${h.jornada}</td>
-            <td style="text-align:left; font-weight:700; color:var(--win);">👑 ${h.jugador}</td>
-            <td style="text-align:left; color:var(--text-dim);">${h.civ || '—'}</td>
+            <td style="text-align:center; font-weight:700; color:var(--text-dim); vertical-align:middle;">${f.posTexto}</td>
+            <td style="padding:4px 8px;">
+              ${f.elementos.map(el => `<div class="item-agrupado">${el}</div>`).join("")}
+            </td>
+            <td style="text-align:center; font-weight:700; color:var(--win); vertical-align:middle;">${f.total}</td>
           </tr>
         `).join("")}
       </tbody>
     </table>
   `;
 
-  renderRankingGalardones(honorMes, idiomaActual);
-  renderCivsDestacadas(honorMes, idiomaActual);
-}
-
-function renderRankingGalardones(honorMes, lang) {
-  const cont = document.getElementById("contenedor-ranking-galardones");
-  const conteo = {};
-  
-  honorMes.forEach(h => {
-    if (h.jugador && h.jugador !== '—') {
-      conteo[h.jugador] = (conteo[h.jugador] || 0) + 1;
-    }
+  const civsPorPuntaje = {};
+  Object.entries(conCivs).forEach(([civ, total]) => {
+    if (!civsPorPuntaje[total]) civsPorPuntaje[total] = [];
+    civsPorPuntaje[total].push(civ);
   });
 
-  const ordenados = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
-  if (ordenados.length === 0) {
-    cont.innerHTML = `<p class="hint">${lang === 'en' ? 'No data' : 'Sin datos'}</p>`;
-    return;
-  }
+  const civsOrdenadas = Object.keys(civsPorPuntaje)
+    .map(Number)
+    .sort((a, b) => b - a);
 
-  const agrupaPorCantidad = {};
-  ordenados.forEach(([jugador, cant]) => {
-    if (!agrupaPorCantidad[cant]) agrupaPorCantidad[cant] = [];
-    agrupaPorCantidad[cant].push(jugador);
+  let acumuladoC = 1;
+  const filasCivs = civsOrdenadas.map(total => {
+    const civilizaciones = civsPorPuntaje[total].sort((a, b) => a.localeCompare(b));
+    const posTexto = `${acumuladoC}°`;
+    acumuladoC += civilizaciones.length;
+
+    return {
+      posTexto,
+      total,
+      elementos: civilizaciones.map(c => `🏛️ ${c}`)
+    };
   });
 
-  const thPos = '#';
-  const thJugador = lang === 'en' ? 'Player' : 'Jugador';
-  const thGalardones = lang === 'en' ? 'Awards' : 'Galardones';
-
-  let html = `
-    <table class="tabla-clasificacion">
+  const contCivs = document.getElementById("contenedor-civilizaciones-destacadas");
+  contCivs.innerHTML = `
+    <table class="tabla-estadistica">
       <thead>
         <tr>
-          <th>${thPos}</th>
-          <th style="text-align:left;">${thJugador}</th>
-          <th>${thGalardones}</th>
+          <th style="width:50px; text-align:center;">#</th>
+          <th>Civilización</th>
+          <th style="width:80px; text-align:center;">Apariciones</th>
         </tr>
       </thead>
       <tbody>
-  `;
-
-  let puestoActual = 1;
-  Object.entries(agrupaPorCantidad).sort((a, b) => Number(b[0]) - Number(a[0])).forEach(([cant, jugadores]) => {
-    jugadores.forEach((jugador, idx) => {
-      html += `
-        <tr>
-          <td>${idx === 0 ? puestoActual + '°' : ''}</td>
-          <td style="text-align:left; font-weight:650;">👑 ${jugador}</td>
-          <td style="font-weight:700; color:var(--gold);">${cant}</td>
-        </tr>
-      `;
-    });
-    puestoActual += jugadores.length;
-  });
-
-  html += `</tbody></table>`;
-  cont.innerHTML = html;
-}
-
-function renderCivsDestacadas(honorMes, lang) {
-  const cont = document.getElementById("contenedor-civilizaciones-destacadas");
-  const conteo = {};
-  
-  honorMes.forEach(h => {
-    if (h.civ && h.civ !== '—') {
-      const civOfic = resolverCivOficial(h.civ, CIV_EQUIV);
-      conteo[civOfic] = (conteo[civOfic] || 0) + 1;
-    }
-  });
-
-  const ordenados = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
-  if (ordenados.length === 0) {
-    cont.innerHTML = `<p class="hint">${lang === 'en' ? 'No data' : 'Sin datos'}</p>`;
-    return;
-  }
-
-  const agrupaPorCantidad = {};
-  ordenados.forEach(([civ, cant]) => {
-    if (!agrupaPorCantidad[cant]) agrupaPorCantidad[cant] = [];
-    agrupaPorCantidad[cant].push(civ);
-  });
-
-  const thPos = '#';
-  const thCivilizacion = lang === 'en' ? 'Civilization' : 'Civilización';
-  const thApariciones = lang === 'en' ? 'Appearances' : 'Apariciones';
-
-  let html = `
-    <table class="tabla-clasificacion">
-      <thead>
-        <tr>
-          <th>${thPos}</th>
-          <th style="text-align:left;">${thCivilizacion}</th>
-          <th>${thApariciones}</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
-
-  let puestoActual = 1;
-  Object.entries(agrupaPorCantidad).sort((a, b) => Number(b[0]) - Number(a[0])).forEach(([cant, civs]) => {
-    civs.forEach((civ, idx) => {
-      html += `
-        <tr>
-          <td>${idx === 0 ? puestoActual + '°' : ''}</td>
-          <td style="text-align:left; font-weight:650;">🏛️ ${civ}</td>
-          <td style="font-weight:700; color:var(--gold);">${cant}</td>
-        </tr>
-      `;
-    });
-    puestoActual += civs.length;
-  });
-
-  html += `</tbody></table>`;
-  cont.innerHTML = html;
-}
-
-function renderGrandPrix() {
-  const anio = document.getElementById("filtro-grand-prix-anio").value;
-  const cont = document.getElementById("contenedor-grand-prix");
-  const tituloGP = document.getElementById("titulo-grand-prix");
-  const idiomaActual = localStorage.getItem('idioma_sitio') || 'es';
-
-  if (tituloGP) tituloGP.textContent = `🏆 ${idiomaActual === 'en' ? `Annual Grand Prix ${anio}` : `Grand Prix Anual ${anio}`}`;
-
-  const mesesNum = ["07", "08", "09", "10", "11", "12"];
-  const mesesNombres = idiomaActual === 'en' 
-    ? ["July", "August", "September", "October", "November", "December"] 
-    : ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-  const tablaGP = calcularGrandPrixAnual(PARTIDAS, anio, EQUIVALENCIAS);
-  if (tablaGP.length === 0) {
-    cont.innerHTML = `<p class="hint">${idiomaActual === 'en' ? 'No data for this year.' : 'No hay datos para este año.'}</p>`;
-    return;
-  }
-
-  const thPos = idiomaActual === 'en' ? 'Position' : 'Posición';
-  const thVar = 'Var';
-  const thJugador = idiomaActual === 'en' ? 'Player' : 'Jugador';
-  const thAcumulado = idiomaActual === 'en' ? 'Cumulative' : 'Acumulado';
-
-  cont.innerHTML = `
-    <table class="tabla-clasificacion">
-      <thead>
-        <tr>
-          <th>${thPos}</th>
-          <th>${thVar}</th>
-          <th style="text-align:left;">${thJugador}</th>
-          ${mesesNombres.map(m => `<th>${m}</th>`).join("")}
-          <th style="color:var(--gold);">${thAcumulado}</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${tablaGP.map((row, i) => {
-          const pos = i + 1;
-          const varVal = row.var || 0;
-          const varClass = varVal > 0 ? "var-up" : varVal < 0 ? "var-down" : "";
-          const varText = varVal > 0 ? `+${varVal}` : `${varVal}`;
-
-          return `
-            <tr>
-              <td>${pos}</td>
-              <td class="${varClass}">${varText}</td>
-              <td style="text-align:left; font-weight:650;"><a href="jugador.html?nombre=${encodeURIComponent(row.nombre)}">${row.nombre}</a></td>
-              ${mesesNum.map(m => `<td>${row.meses[m] ?? '—'}</td>`).join("")}
-              <td style="font-weight:700; color:var(--win);">${row.acumulado}</td>
-            </tr>
-          `;
-        }).join("")}
+        ${filasCivs.map(f => `
+          <tr>
+            <td style="text-align:center; font-weight:700; color:var(--text-dim); vertical-align:middle;">${f.posTexto}</td>
+            <td style="padding:4px 8px;">
+              ${f.elementos.map(el => `<div class="item-agrupado">${el}</div>`).join("")}
+            </td>
+            <td style="text-align:center; font-weight:700; color:var(--gold); vertical-align:middle;">${f.total}</td>
+          </tr>
+        `).join("")}
       </tbody>
     </table>
   `;
 }
 
-function descargarTablaMensual() { 
-  descargarElementoComoImagen(document.getElementById("seccion-tabla-posiciones"), "tabla-posiciones.png", "#1c2027"); 
+function renderizarGrandPrix() {
+  const anio = document.getElementById("filtro-anio").value;
+  const cont = document.getElementById("contenedor-grand-prix");
+  document.getElementById("titulo-grand-prix").textContent = `🏆 Grand Prix Ranking Maratón Michi DM ${anio}`;
+
+  const { meses, rankingGP } = calcularGrandPrixAnual(PARTIDAS, EQUIVALENCIAS, anio);
+
+  if (rankingGP.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No hay datos de Grand Prix para el año ${anio}.</div>`;
+    return;
+  }
+
+  cont.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Posición</th>
+            <th>Var</th>
+            <th>Jugador</th>
+            ${meses.map(m => `<th>${NOMBRES_MES[m]}</th>`).join("")}
+            <th>Acumulado</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rankingGP.map((item, idx) => {
+            const pos = idx + 1;
+            let varStr = "0";
+            if (item.variacion > 0) varStr = `<span style="color:var(--win);">+${item.variacion}</span>`;
+            else if (item.variacion < 0) varStr = `<span style="color:var(--loss);">${item.variacion}</span>`;
+
+            return `
+              <tr>
+                <td class="num" style="font-weight:700; color:var(--gold);">${pos}</td>
+                <td class="num">${varStr}</td>
+                <td><a href="jugador.html?nombre=${encodeURIComponent(item.nombre)}">${item.nombre}</a></td>
+                ${meses.map(m => `<td class="num">${item.puntosPorMes[m] || 0}</td>`).join("")}
+                <td class="num" style="font-weight:700; color:var(--win);">${item.total}</td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
-function descargarCuadroHonor() { 
-  descargarElementoComoImagen(document.getElementById("seccion-cuadro-honor"), "cuadro-honor.png", "#1c2027"); 
+function renderizarTodo() {
+  renderizarTablaPosiciones();
+  renderizarCuadroHonor();
+  renderizarGrandPrix();
 }
 
-function descargarGrandPrix() { 
-  descargarElementoComoImagen(document.getElementById("seccion-grand-prix"), "grand-prix.png", "#1c2027"); 
+function poblarFiltrosAnioMes() {
+  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
+  const selAnio = document.getElementById("filtro-anio");
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+
+  actualizarMeses();
+  selAnio.addEventListener("change", () => { actualizarMeses(); });
+  document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
+  document.getElementById("filtro-jornada").addEventListener("change", (e) => {
+    actualizarPartidas(e.target.value);
+    renderizarTodo();
+  });
+  document.getElementById("filtro-partida").addEventListener("change", () => { renderizarTodo(); });
+}
+
+function actualizarMeses() {
+  const anio = document.getElementById("filtro-anio").value;
+  const meses = [...new Set(
+    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
+  )].sort().reverse();
+
+  const selMes = document.getElementById("filtro-mes");
+  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  actualizarJornadasYRenderizar();
+}
+
+function actualizarJornadasYRenderizar() {
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const filtradas = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
+
+  const jornadasSet = new Set();
+  filtradas.forEach(p => { if (p.jornada) jornadasSet.add(p.jornada); });
+
+  const jornadasOrdenadas = [...jornadasSet].sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
+
+  const selJornada = document.getElementById("filtro-jornada");
+  selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
+    jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
+
+  // Asegura que el filtro inicie limpio en "Todo el mes" y no se quede pegado
+  selJornada.value = "";
+
+  document.getElementById("filtro-partida").style.display = "none";
+  renderizarTodo();
+}
+
+function actualizarPartidas(jornadaValor) {
+  const selPartida = document.getElementById("filtro-partida");
+  if (!jornadaValor) {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+    return;
+  }
+
+  const anio = document.getElementById("filtro-anio").value;
+  const mes = document.getElementById("filtro-mes").value;
+  const partidasJornada = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes && p.jornada === jornadaValor);
+
+  const numerosPartida = [...new Set(partidasJornada.map(p => p.numeroPartida))].sort((a, b) => a - b);
+  
+  if (numerosPartida.length > 1) {
+    selPartida.style.display = "inline-block";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>` +
+      numerosPartida.map(n => `<option value="${n}">Partida ${n}</option>`).join("");
+  } else {
+    selPartida.style.display = "none";
+    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+  }
+}
+
+function descargarTablaPosiciones() {
+  descargarElementoComoImagen(document.getElementById("seccion-tabla-posiciones"), "tabla-posiciones.png", "#f8f6f0");
+}
+function descargarCuadroHonor() {
+  descargarElementoComoImagen(document.getElementById("seccion-cuadro-honor"), "cuadro-honor.png", "#f8f6f0");
+}
+function descargarGrandPrix() {
+  descargarElementoComoImagen(document.getElementById("seccion-grand-prix"), "grand-prix.png", "#f8f6f0");
 }
 
 (async function init() {
-  const datos = await cargarDatos();
-  PARTIDAS = datos.partidas;
-  EQUIVALENCIAS = datos.equivalencias;
-  CIV_EQUIV = datos.civEquivalencias || [];
-  JUGADORES_INFO = datos.jugadoresInfo || {};
-  CUADRO_HONOR = datos.cuadroHonor || [];
-  poblarFiltros();
-  render();
-  if (typeof traducirPagina === 'function') traducirPagina();
+  try {
+    const datos = await cargarDatos();
+    PARTIDAS = datos.partidas || [];
+    EQUIVALENCIAS = datos.equivalencias || [];
+    JUGADORES_INFO = datos.jugadoresInfo || {};
+    CUADRO_HONOR = datos.cuadroHonor || [];
+    poblarFiltrosAnioMes();
+    renderizarTodo();
+  } catch (err) {
+    console.error("Error al inicializar:", err);
+  }
 })();
 </script>
 <script src="js/idiomas.js"></script>
