@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="title_index">Inicio — Comunidad AoE II</title>
+<title data-i18n="nav_inicio">Inicio — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -30,19 +30,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-  .bienvenida { text-align: center; padding: 10px 0 24px; }
-  .bienvenida h1 { font-size: 1.6rem; color: var(--text); margin-bottom: 6px; }
-  .bienvenida .lema { color: var(--text-dim); font-size: 0.95rem; }
-  .galardon-destacado { text-align: center; }
-  .galardon-destacado img {
-    max-width: 100%; max-height: 72vh; border-radius: 6px;
-    border: 1px solid var(--line); box-shadow: 0 8px 30px rgba(0,0,0,0.45);
-  }
-  .galardon-destacado .etiqueta {
-    margin-top: 14px; font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.05rem;
-  }
-  .galardon-destacado .subetiqueta { color: var(--text-dim); font-size: 0.8rem; margin-top: 4px; }
+  .card-container { display: flex; flex-direction: column; align-items: center; margin-top: 15px; }
+  .card-wrapper { max-width: 380px; width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; text-align: center; }
+  .card-wrapper img { width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 10px; display: block; }
 </style>
 </head>
 <body>
@@ -67,15 +59,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </header>
 
 <main>
-  <div class="bienvenida">
-    <h1 data-i18n="index_titulo_torneo">Ranking Maratón Michi DM</h1>
-    <div class="lema" data-i18n="index_lema">Bienvenido al portal oficial del torneo.</div>
+  <div style="text-align: center; margin-bottom: 15px;">
+    <h3 data-i18n="titulo_principal">Ranking Maratón Michi DM</h3>
+    <p class="hint" data-i18n="subtitulo_bienvenida">Bienvenido al portal oficial del torneo.</p>
   </div>
 
-  <div id="contenedor-galardon" class="galardon-destacado">
+  <div id="contenedor-inicio" class="card-container">
     <div class="empty-state" data-i18n="cargando">Cargando…</div>
   </div>
 </main>
+
+<!-- Modal para ver imágenes en grande si se requiere -->
+<div id="modal-imagen" class="modal-overlay" onclick="cerrarModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center; padding:15px;">
+  <div class="modal-content" onclick="event.stopPropagation()" style="background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); max-width:90%; max-height:90vh; overflow:auto; padding:16px; text-align:center; position:relative;">
+    <button class="modal-close" onclick="cerrarModal()" style="position:absolute; top:10px; right:12px; background:var(--panel-raised); color:var(--text); border:1px solid var(--line); border-radius:50%; width:30px; height:30px; font-weight:bold; cursor:pointer;">×</button>
+    <img id="modal-img-src" src="" alt="Vista previa" style="max-width:100%; height:auto; border-radius:var(--radius);">
+  </div>
+</div>
 
 <nav class="mobile-nav">
   <a href="index.html" class="active"><span class="icon">🏠</span><span data-i18n="nav_inicio">Inicio</span></a>
@@ -88,40 +88,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="js/datos.js"></script>
 <script>
-(async function init() {
+async function initInicio() {
   const datos = await cargarDatos();
-  const cont = document.getElementById("contenedor-galardon");
+  const jornadasImgs = datos.jornadasImagenes || [];
+  const cont = document.getElementById("contenedor-inicio");
+  const idiomaActual = localStorage.getItem('idioma_sitio') || 'es';
 
-  const lista = datos.jornadasImagenes || [];
-  const conGalardon = lista
-    .map(j => ({ ...j, urlGalardon: j.imagenGalardon || j.galardon }))
-    .filter(j => j.urlGalardon);
-
-  if (conGalardon.length === 0) {
-    cont.innerHTML = `<div class="empty-state" data-i18n="sin_galardon">Todavía no se ha publicado ningún galardón.</div>`;
-    if (typeof traducirPagina === 'function') traducirPagina();
+  if (jornadasImgs.length === 0) {
+    cont.innerHTML = `<div class="empty-state">${idiomaActual === 'en' ? 'No recent matches or awards registered.' : 'No hay partidas ni galardones recientes registrados.'}</div>`;
     return;
   }
 
-  conGalardon.sort((a, b) =>
-    claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
-    claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
-  );
-  const ultima = conGalardon[0];
+  // Ordenar para obtener la última jornada con imagen de galardón configurada
+  const ultimas = [...jornadasImgs].reverse();
+  const ultimaConImg = ultimas.find(j => j.galardon || j.imagenGalardon);
 
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') 
-    ? NOMBRES_MES_IDIOMA(ultima.mes, idiomaActual) 
-    : (NOMBRES_MES[ultima.mes] || ultima.mes);
+  if (!ultimaConImg) {
+    cont.innerHTML = `<div class="empty-state">${idiomaActual === 'en' ? 'No awards banner available.' : 'No hay banner de galardón disponible.'}</div>`;
+    return;
+  }
+
+  const imgGal = ultimaConImg.galardon || ultimaConImg.imagenGalardon;
+  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(ultimaConImg.mes, idiomaActual) : (NOMBRES_MES[ultimaConImg.mes] || "");
 
   cont.innerHTML = `
-    <img src="${ultima.urlGalardon}" alt="Galardón ${ultima.jornada}">
-    <div class="etiqueta">👑 ${ultima.jornada}</div>
-    <div class="subetiqueta">${nombreMes} ${ultima.anio}</div>
+    <div class="card-wrapper" id="card-galardon-reciente">
+      <img src="${imgGal}" alt="Galardón reciente">
+      <div style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">
+        👑 ${ultimaConImg.jornada} &nbsp;|&nbsp; ${nombreMes} ${ultimaConImg.anio}
+      </div>
+    </div>
   `;
-  
   if (typeof traducirPagina === 'function') traducirPagina();
-})();
+}
+
+function cerrarModal() {
+  document.getElementById("modal-imagen").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initInicio();
+});
 </script>
 <script src="js/idiomas.js"></script>
 </body>
