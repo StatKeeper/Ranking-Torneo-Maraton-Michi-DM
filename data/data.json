@@ -20224,6 +20224,187 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha08-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 08",
+      "numeroPartida": 1,
+      "duracionSeg": 6788,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 970,
+          "edificiosArrasados": 185907,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Armenios",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6510,
+          "edificiosArrasados": 213579,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Romanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 14749,
+          "edificiosArrasados": 426993,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4824,
+          "edificiosArrasados": 174224,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3989,
+          "edificiosArrasados": 127143,
+          "bonos": []
+        },
+        {
+          "nombre": "Willie",
+          "resultado": "derrota",
+          "civ": "Armenios",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5981,
+          "edificiosArrasados": 195820,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "Romanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6996,
+          "edificiosArrasados": 208024,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5335,
+          "edificiosArrasados": 145944,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha08-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 08",
+      "numeroPartida": 2,
+      "duracionSeg": 4101,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3074,
+          "edificiosArrasados": 84082,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2897,
+          "edificiosArrasados": 108114,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4739,
+          "edificiosArrasados": 150691,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Turcos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2799,
+          "edificiosArrasados": 96501,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 2130,
+          "edificiosArrasados": 84925,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 1731,
+          "edificiosArrasados": 69060,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "victoria",
+          "civ": "Turcos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 5419,
+          "edificiosArrasados": 179088,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Polacos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 5670,
+          "edificiosArrasados": 150685,
+          "bonos": [
+            "M"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -21291,6 +21472,14 @@
       "jornada": "Fecha 07",
       "evaluacion": "imagenes/candidatos_2026-11_fecha07.png",
       "galardon": "imagenes/galardon_2026-11_fecha07.png"
+    },
+    {
+      "id": "2026-11-Fecha08",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 08",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha08.png",
+      "galardon": "imagenes/galardon_2026-11_fecha08.png"
     }
   ],
   "civEquivalencias": [],
@@ -21917,6 +22106,14 @@
       "jornada": "Fecha 07",
       "jugador": "robincule",
       "civ": "Mongoles"
+    },
+    {
+      "id": "2026-11-Fecha08",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 08",
+      "jugador": "yo",
+      "civ": "Romanos"
     }
   ]
 }
