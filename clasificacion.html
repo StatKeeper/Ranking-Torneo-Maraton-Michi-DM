@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clasificación y Ranking — Comunidad AoE II</title>
+<title data-i18n="title_clasificacion">Clasificación y Ranking — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -135,34 +135,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub">Clasificación y Ranking</span>
+    <span class="sub" data-i18n="nav_clasificacion">Clasificación y Ranking</span>
   </div>
   <nav class="tabs">
-    <a href="index.html">Inicio</a>
-    <a href="clasificacion.html" class="active">Clasificación</a>
-    <a href="jugador.html">Jugadores</a>
-    <a href="estadisticas.html">Estadísticas</a>
-    <a href="candidatos.html">Candidatos</a>
-    <a href="historial.html">Historial</a>
-    <a href="admin.html">Administración</a>
+    <a href="index.html" data-i18n="nav_inicio">Inicio</a>
+    <a href="clasificacion.html" class="active" data-i18n="nav_clasificacion">Clasificación</a>
+    <a href="jugador.html" data-i18n="nav_jugadores">Jugadores</a>
+    <a href="estadisticas.html" data-i18n="nav_estadisticas">Estadísticas</a>
+    <a href="candidatos.html" data-i18n="nav_candidatos">Candidatos</a>
+    <a href="historial.html" data-i18n="nav_historial">Historial</a>
+    <a href="admin.html" data-i18n="nav_admin">Administración</a>
   </nav>
 </header>
 
 <main>
   <div class="panel" id="seccion-tabla-posiciones">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;">Tabla de Posiciones</h3>
-      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarTablaPosiciones()">📷 Descargar Imagen</button>
+      <h3 style="font-size:0.95rem; color:var(--gold); margin:0;" data-i18n="tabla_posiciones_titulo">Tabla de Posiciones</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarTablaPosiciones()" data-i18n="btn_descargar_imagen">📷 Descargar Imagen</button>
     </div>
 
     <div class="filters" style="margin-bottom:12px;">
       <select id="filtro-anio"></select>
       <select id="filtro-mes"></select>
       <select id="filtro-jornada">
-        <option value="">Todo el mes (acumulado)</option>
+        <option value="" data-i18n="opt_todo_el_mes">Todo el mes (acumulado)</option>
       </select>
       <select id="filtro-partida" style="display:none;">
-        <option value="">Toda la jornada</option>
+        <option value="" data-i18n="opt_toda_la_jornada">Toda la jornada</option>
       </select>
     </div>
 
@@ -172,13 +172,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <table id="tabla-clasificacion">
         <thead>
           <tr>
-            <th>Pos</th>
-            <th>Var</th>
-            <th>Jugador</th>
-            <th>Pts</th>
-            <th>V/PJ</th>
-            <th>Último Suceso</th>
-            <th>V/D</th>
+            <th data-i18n="th_pos">Pos</th>
+            <th data-i18n="th_var">Var</th>
+            <th data-i18n="th_jugador">Jugador</th>
+            <th data-i18n="th_pts">Pts</th>
+            <th data-i18n="th_vpj">V/PJ</th>
+            <th data-i18n="th_ultimo_suceso">Último Suceso</th>
+            <th data-i18n="th_vd">V/D</th>
             <th>E</th>
             <th>R</th>
             <th>M</th>
@@ -191,7 +191,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </tr>
         </thead>
         <tbody id="cuerpo-tabla-clasificacion">
-          <tr><td colspan="16" class="empty-state">Cargando datos...</td></tr>
+          <tr><td colspan="16" class="empty-state" data-i18n="cargando">Cargando datos...</td></tr>
         </tbody>
       </table>
     </div>
@@ -201,24 +201,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
-      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarCuadroHonor()">📷 Descargar Imagen</button>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarCuadroHonor()" data-i18n="btn_descargar_imagen">📷 Descargar Imagen</button>
     </div>
     <div id="contenedor-cuadro-honor">
-      <div class="empty-state">Cargando...</div>
+      <div class="empty-state" data-i18n="cargando">Cargando...</div>
     </div>
 
     <!-- Sub-cuadros de Ranking de Galardones y Civilizaciones más Destacadas -->
     <div class="grid-estadisticas-honor">
       <div class="subpanel-estadistica">
-        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">👑 Ranking de Galardones (Jugadores)</h4>
+        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;" data-i18n="titulo_ranking_galardones">👑 Ranking de Galardones (Jugadores)</h4>
         <div id="contenedor-ranking-galardones">
-          <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
+          <div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div>
         </div>
       </div>
       <div class="subpanel-estadistica">
-        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">🏛️ Civilizaciones más Destacadas</h4>
+        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;" data-i18n="titulo_civs_destacadas">🏛️ Civilizaciones más Destacadas</h4>
         <div id="contenedor-civilizaciones-destacadas">
-          <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
+          <div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div>
         </div>
       </div>
     </div>
@@ -227,21 +227,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="panel" id="seccion-grand-prix" style="margin-top:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 id="titulo-grand-prix" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Grand Prix Anual</h3>
-      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarGrandPrix()">📷 Descargar Imagen</button>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarGrandPrix()" data-i18n="btn_descargar_imagen">📷 Descargar Imagen</button>
     </div>
     <div id="contenedor-grand-prix">
-      <div class="empty-state">Cargando Grand Prix...</div>
+      <div class="empty-state" data-i18n="cargando_grand_prix">Cargando Grand Prix...</div>
     </div>
   </div>
 </main>
 
 <nav class="mobile-nav">
-  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
-  <a href="clasificacion.html" class="active"><span class="icon">🏆</span>Ranking</a>
-  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
-  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
-  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
-  <a href="historial.html"><span class="icon">📜</span>Historial</a>
+  <a href="index.html"><span class="icon">🏠</span><span data-i18n="nav_inicio">Inicio</span></a>
+  <a href="clasificacion.html" class="active"><span class="icon">🏆</span><span data-i18n="nav_clasificacion">Ranking</span></a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span><span data-i18n="nav_jugadores">Jugadores</span></a>
+  <a href="estadisticas.html"><span class="icon">📈</span><span data-i18n="nav_estadisticas">Stats</span></a>
+  <a href="candidatos.html"><span class="icon">⭐</span><span data-i18n="nav_candidatos">Candidatos</span></a>
+  <a href="historial.html"><span class="icon">📜</span><span data-i18n="nav_historial">Historial</span></a>
 </nav>
 
 <script src="js/datos.js"></script>
@@ -259,25 +259,30 @@ function renderizarTablaPosiciones() {
 
   const tbody = document.getElementById("cuerpo-tabla-clasificacion");
   const infoJor = document.getElementById("info-jornada");
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
   const { filas, jornadaMostrada, ultimaPartida } = calcularTablaClasificacion(PARTIDAS, EQUIVALENCIAS, anio, mes, jornada, partida);
 
+  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || mes);
+
   if (ultimaPartida) {
-    infoJor.textContent = `📅 ${ultimaPartida.jornada} · Partida ${ultimaPartida.numeroPartida} (${ultimaPartida.mapa || 'Mapa estándar'})`;
+    infoJor.textContent = `📅 ${ultimaPartida.jornada} · ${idiomaActual === 'en' ? 'Match' : 'Partida'} ${ultimaPartida.numeroPartida} (${ultimaPartida.mapa || (idiomaActual === 'en' ? 'Standard map' : 'Mapa estándar')})`;
   } else {
-    infoJor.textContent = `📅 Período: ${NOMBRES_MES[mes] || ''} ${anio}`;
+    infoJor.textContent = `📅 ${idiomaActual === 'en' ? 'Period' : 'Período'}: ${nombreMes} ${anio}`;
   }
 
-  // Filtrar filas para que aparezcan únicamente los jugadores que tengan al menos una victoria en su haber
   const filasConVictoria = filas.filter(f => f.victorias > 0);
 
+  const msgSinRegistros = idiomaActual === 'en' ? 'No records with victory for this period.' : 'No hay registros con victoria para este período.';
   if (filasConVictoria.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">No hay registros con victoria para este período.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="16" class="empty-state">${msgSinRegistros}</td></tr>`;
+    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
 
   const totalPartidasMes = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes).length;
-  document.getElementById("info-jornada").innerHTML += ` &nbsp; | &nbsp; Partidas jugadas en el mes: ${totalPartidasMes}`;
+  const txtPartidasJugadas = idiomaActual === 'en' ? 'Matches played in the month' : 'Partidas jugadas en el mes';
+  infoJor.innerHTML += ` &nbsp; | &nbsp; ${txtPartidasJugadas}: ${totalPartidasMes}`;
 
   tbody.innerHTML = filasConVictoria.map((f, idx) => {
     const pos = idx + 1;
@@ -286,10 +291,19 @@ function renderizarTablaPosiciones() {
     else if (f.variacion < 0) varStr = `<span style="color:var(--loss);">${f.variacion}</span>`;
     else varStr = `0`;
 
-    let sucesoHtml = f.ultimoSuceso || "Sin participación";
-    if (sucesoHtml.toLowerCase().includes("derrota")) {
+    let sucesoHtml = f.ultimoSuceso || (idiomaActual === 'en' ? 'No participation' : 'Sin participación');
+    
+    // Traducción dinámica de estados comunes de suceso
+    if (idiomaActual === 'en') {
+      sucesoHtml = sucesoHtml
+        .replace(/Derrota/g, 'Defeat')
+        .replace(/Victoria/g, 'Victory')
+        .replace(/Sin participación/g, 'No participation');
+    }
+
+    if (sucesoHtml.toLowerCase().includes("derrota") || sucesoHtml.toLowerCase().includes("defeat")) {
       sucesoHtml = `<span class="suceso-derrota">${sucesoHtml}</span>`;
-    } else if (sucesoHtml.toLowerCase().includes("victoria") || sucesoHtml.toLowerCase().includes("bono") || sucesoHtml.toLowerCase().includes("+")) {
+    } else if (sucesoHtml.toLowerCase().includes("victoria") || sucesoHtml.toLowerCase().includes("victory") || sucesoHtml.toLowerCase().includes("bono") || sucesoHtml.toLowerCase().includes("bonus") || sucesoHtml.toLowerCase().includes("+")) {
       sucesoHtml = `<span class="suceso-victoria">${sucesoHtml}</span>`;
     } else {
       sucesoHtml = `<span class="suceso-neutro">${sucesoHtml}</span>`;
@@ -316,6 +330,7 @@ function renderizarTablaPosiciones() {
       </tr>
     `;
   }).join("");
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function renderizarCuadroHonor() {
@@ -323,28 +338,36 @@ function renderizarCuadroHonor() {
   const mes = document.getElementById("filtro-mes").value;
   const titulo = document.getElementById("titulo-cuadro-honor");
   const cont = document.getElementById("contenedor-cuadro-honor");
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
-  const nombreMes = NOMBRES_MES[mes] || "";
-  titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
+  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || "");
+  const tituloPrefix = idiomaActual === 'en' ? '🏆 Monthly Honor Roll' : '🏆 Cuadro de Honor';
+  titulo.textContent = `${tituloPrefix} — ${nombreMes.toUpperCase()} ${anio}`;
 
   const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes)
     .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
 
+  const msgSinHonor = idiomaActual === 'en' ? `No honor roll registered for ${nombreMes} ${anio}.` : `No hay cuadro de honor registrado para ${nombreMes} ${anio}.`;
   if (delMes.length === 0) {
-    cont.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
-    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
-    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
+    cont.innerHTML = `<div class="empty-state">${msgSinHonor}</div>`;
+    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div>`;
+    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div>`;
+    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
+
+  const thJornada = idiomaActual === 'en' ? 'Round' : 'Jornada';
+  const thJugadorFecha = idiomaActual === 'en' ? 'Player of the Round' : 'Jugador de la Fecha';
+  const thCiv = idiomaActual === 'en' ? 'Civilization' : 'Civilización';
 
   cont.innerHTML = `
     <div style="overflow-x:auto;">
       <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
         <thead>
           <tr>
-            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jornada</th>
-            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Jugador de la Fecha</th>
-            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">Civilización</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">${thJornada}</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">${thJugadorFecha}</th>
+            <th style="padding:10px; border-bottom:1px solid var(--line); text-align:left; color:var(--gold);">${thCiv}</th>
           </tr>
         </thead>
         <tbody>
@@ -396,14 +419,17 @@ function renderizarCuadroHonor() {
     };
   });
 
+  const thJugadorCol = idiomaActual === 'en' ? 'Player' : 'Jugador';
+  const thGalardonesCol = idiomaActual === 'en' ? 'Awards' : 'Galardones';
+
   const contGalardones = document.getElementById("contenedor-ranking-galardones");
   contGalardones.innerHTML = `
     <table class="tabla-estadistica">
       <thead>
         <tr>
           <th style="width:50px; text-align:center;">#</th>
-          <th>Jugador</th>
-          <th style="width:80px; text-align:center;">Galardones</th>
+          <th>${thJugadorCol}</th>
+          <th style="width:80px; text-align:center;">${thGalardonesCol}</th>
         </tr>
       </thead>
       <tbody>
@@ -443,14 +469,17 @@ function renderizarCuadroHonor() {
     };
   });
 
+  const thCivCol = idiomaActual === 'en' ? 'Civilization' : 'Civilización';
+  const thAparicionesCol = idiomaActual === 'en' ? 'Appearances' : 'Apariciones';
+
   const contCivs = document.getElementById("contenedor-civilizaciones-destacadas");
   contCivs.innerHTML = `
     <table class="tabla-estadistica">
       <thead>
         <tr>
           <th style="width:50px; text-align:center;">#</th>
-          <th>Civilización</th>
-          <th style="width:80px; text-align:center;">Apariciones</th>
+          <th>${thCivCol}</th>
+          <th style="width:80px; text-align:center;">${thAparicionesCol}</th>
         </tr>
       </thead>
       <tbody>
@@ -466,30 +495,40 @@ function renderizarCuadroHonor() {
       </tbody>
     </table>
   `;
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function renderizarGrandPrix() {
   const anio = document.getElementById("filtro-anio").value;
   const cont = document.getElementById("contenedor-grand-prix");
-  document.getElementById("titulo-grand-prix").textContent = `🏆 Grand Prix Ranking Maratón Michi DM ${anio}`;
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const tituloGP = idiomaActual === 'en' ? '🏆 Annual Grand Prix' : '🏆 Grand Prix Anual';
+  document.getElementById("titulo-grand-prix").textContent = `${tituloGP} ${anio}`;
 
   const { meses, rankingGP } = calcularGrandPrixAnual(PARTIDAS, EQUIVALENCIAS, anio);
 
+  const msgSinGP = idiomaActual === 'en' ? `No Grand Prix data for the year ${anio}.` : `No hay datos de Grand Prix para el año ${anio}.`;
   if (rankingGP.length === 0) {
-    cont.innerHTML = `<div class="empty-state">No hay datos de Grand Prix para el año ${anio}.</div>`;
+    cont.innerHTML = `<div class="empty-state">${msgSinGP}</div>`;
+    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
+
+  const thPos = idiomaActual === 'en' ? 'Position' : 'Posición';
+  const thVar = idiomaActual === 'en' ? 'Var' : 'Var';
+  const thJugador = idiomaActual === 'en' ? 'Player' : 'Jugador';
+  const thAcumulado = idiomaActual === 'en' ? 'Cumulative' : 'Acumulado';
 
   cont.innerHTML = `
     <div style="overflow-x:auto;">
       <table>
         <thead>
           <tr>
-            <th>Posición</th>
-            <th>Var</th>
-            <th>Jugador</th>
-            ${meses.map(m => `<th>${NOMBRES_MES[m]}</th>`).join("")}
-            <th>Acumulado</th>
+            <th>${thPos}</th>
+            <th>${thVar}</th>
+            <th>${thJugador}</th>
+            ${meses.map(m => `<th>${(typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m)}</th>`).join("")}
+            <th>${thAcumulado}</th>
           </tr>
         </thead>
         <tbody>
@@ -513,6 +552,7 @@ function renderizarGrandPrix() {
       </table>
     </div>
   `;
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function renderizarTodo() {
@@ -542,8 +582,12 @@ function actualizarMeses() {
     PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
   )].sort().reverse();
 
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  selMes.innerHTML = meses.map(m => {
+    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
+    return `<option value="${m}">${nombreM}</option>`;
+  }).join("");
   actualizarJornadasYRenderizar();
 }
 
@@ -556,12 +600,13 @@ function actualizarJornadasYRenderizar() {
   filtradas.forEach(p => { if (p.jornada) jornadasSet.add(p.jornada); });
 
   const jornadasOrdenadas = [...jornadasSet].sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const txtTodoElMes = idiomaActual === 'en' ? 'All month (cumulative)' : 'Todo el mes (acumulado)';
 
   const selJornada = document.getElementById("filtro-jornada");
-  selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
+  selJornada.innerHTML = `<option value="">${txtTodoElMes}</option>` +
     jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
 
-  // Asegura que el filtro inicie limpio en "Todo el mes" y no se quede pegado
   selJornada.value = "";
 
   document.getElementById("filtro-partida").style.display = "none";
@@ -570,9 +615,12 @@ function actualizarJornadasYRenderizar() {
 
 function actualizarPartidas(jornadaValor) {
   const selPartida = document.getElementById("filtro-partida");
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const txtTodaJornada = idiomaActual === 'en' ? 'All round' : 'Toda la jornada';
+
   if (!jornadaValor) {
     selPartida.style.display = "none";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+    selPartida.innerHTML = `<option value="">${txtTodaJornada}</option>`;
     return;
   }
 
@@ -582,13 +630,14 @@ function actualizarPartidas(jornadaValor) {
 
   const numerosPartida = [...new Set(partidasJornada.map(p => p.numeroPartida))].sort((a, b) => a - b);
   
+  const txtPartidaLabel = idiomaActual === 'en' ? 'Match' : 'Partida';
   if (numerosPartida.length > 1) {
     selPartida.style.display = "inline-block";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>` +
-      numerosPartida.map(n => `<option value="${n}">Partida ${n}</option>`).join("");
+    selPartida.innerHTML = `<option value="">${txtTodaJornada}</option>` +
+      numerosPartida.map(n => `<option value="${n}">${txtPartidaLabel} ${n}</option>`).join("");
   } else {
     selPartida.style.display = "none";
-    selPartida.innerHTML = `<option value="">Toda la jornada</option>`;
+    selPartida.innerHTML = `<option value="">${txtTodaJornada}</option>`;
   }
 }
 
@@ -611,6 +660,7 @@ function descargarGrandPrix() {
     CUADRO_HONOR = datos.cuadroHonor || [];
     poblarFiltrosAnioMes();
     renderizarTodo();
+    if (typeof traducirPagina === 'function') traducirPagina();
   } catch (err) {
     console.error("Error al inicializar:", err);
   }
