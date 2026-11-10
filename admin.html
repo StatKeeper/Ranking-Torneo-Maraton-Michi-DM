@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="title_admin">Administración — Comunidad AoE II</title>
+<title>Administración — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -38,30 +38,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub" data-i18n="nav_admin">Administración</span>
+    <span class="sub">Administración</span>
   </div>
   <nav class="tabs">
-    <a href="index.html" data-i18n="nav_inicio">Inicio</a>
-    <a href="clasificacion.html" data-i18n="nav_clasificacion">Clasificación</a>
-    <a href="jugador.html" data-i18n="nav_jugadores">Jugadores</a>
-    <a href="estadisticas.html" data-i18n="nav_estadisticas">Estadísticas</a>
-    <a href="candidatos.html" data-i18n="nav_candidatos">Candidatos</a>
-    <a href="historial.html" data-i18n="nav_historial">Historial</a>
-    <a href="admin.html" class="active" data-i18n="nav_admin">Administración</a>
+    <a href="index.html">Inicio</a>
+    <a href="clasificacion.html">Clasificación</a>
+    <a href="jugador.html">Jugadores</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="candidatos.html">Candidatos</a>
+    <a href="historial.html">Historial</a>
+    <a href="admin.html" class="active">Administración</a>
   </nav>
 </header>
 
 <main>
   <div class="panel">
-    <h3 data-i18n="admin_h3_1">① Cargar datos actuales</h3>
-    <p class="hint" data-i18n="admin_p_1">Esto trae el data.json que ya está publicado, para trabajar sobre el historial real sin perder nada.</p>
-    <button class="btn secondary" onclick="cargarDesdeServidor()" data-i18n="admin_btn_cargar">📥 Cargar data.json publicado</button>
+    <h3>① Cargar datos actuales</h3>
+    <p class="hint">Esto trae el data.json que ya está publicado, para trabajar sobre el historial real sin perder nada.</p>
+    <button class="btn secondary" onclick="cargarDesdeServidor()">📥 Cargar data.json publicado</button>
     <span id="estado-carga" style="margin-left:10px; font-size:0.8rem; color: var(--text-dim);"></span>
   </div>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_2">② Agregar nueva partida</h3>
-    <p class="hint" data-i18n="admin_p_2">
+    <h3>② Agregar nueva partida</h3>
+    <p class="hint">
       Cabecera flexible (con o sin ":"): <code>año 2026</code>, <code>mes 08</code>,
       <code>jornada Fecha 1</code>, <code>partida 1 01:07:08</code> (número y duración juntos,
       o por separado con <code>duracion: HH:MM:SS</code>).<br>
@@ -79,75 +79,74 @@ partida 1 01:07:08
 GJ Euphory | 3 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 3700 | 119 | Equipo 1 | Mayas
 Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"></textarea>
     <div style="margin-top:10px;">
-      <button class="btn" onclick="procesarReporte()" data-i18n="admin_btn_agregar_partida">➕ Agregar esta partida</button>
+      <button class="btn" onclick="procesarReporte()">➕ Agregar esta partida</button>
     </div>
     <div id="resultado-parseo" style="margin-top:12px;"></div>
   </div>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_3">③ Partidas cargadas (eliminar si algo se ingresó mal)</h3>
+    <h3>③ Partidas cargadas (eliminar si algo se ingresó mal)</h3>
     <div style="display:flex; gap:8px; margin-bottom:10px;">
       <select id="filtro-partidas-anio" onchange="poblarMesesPartidasFiltro(); renderizarListaPartidas();"></select>
       <select id="filtro-partidas-mes" onchange="renderizarListaPartidas();"></select>
     </div>
-    <div id="lista-partidas"><p class="hint" data-i18n="admin_msg_carga_primero">Carga los datos primero (paso ①).</p></div>
+    <div id="lista-partidas"><p class="hint">Carga los datos primero (paso ①).</p></div>
   </div>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_4">④ Corrección y unificación de nombres</h3>
-    <p class="hint" data-i18n="admin_p_4">
+    <h3>④ Corrección y unificación de nombres</h3>
+    <p class="hint">
       Vincula cualquier cantidad de nicks antiguos/alternos a un mismo nick oficial.
       Ej: "kficho" → "[cLm] KFICHO", y aparte "kficho2" → "[cLm] KFICHO" también es válido.
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-      <input type="text" id="input-antiguo" placeholder="Nombre como se registró" data-i18n-placeholder="ph_nombre_registrado" style="flex:1; min-width:160px;">
-      <input type="text" id="input-oficial" placeholder="Nick oficial" data-i18n-placeholder="ph_nick_oficial" style="flex:1; min-width:160px;" list="lista-nombres-sugeridos">
-      <button class="btn secondary" onclick="agregarEquivalencia()" data-i18n="admin_btn_vincular">Vincular</button>
+      <input type="text" id="input-antiguo" placeholder="Nombre como se registró" style="flex:1; min-width:160px;">
+      <input type="text" id="input-oficial" placeholder="Nick oficial" style="flex:1; min-width:160px;">
+      <button class="btn secondary" onclick="agregarEquivalencia()">Vincular</button>
     </div>
     <div id="lista-equivalencias"></div>
   </div>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_5">⑤ Nacionalidad, Categoría, Civilización y Nicks Vinculados</h3>
-    <p class="hint" data-i18n="admin_p_5">
+    <h3>⑤ Nacionalidad, Categoría, Civilización y Nicks Vinculados</h3>
+    <p class="hint">
       Gestiona los datos de los jugadores, su categoría (<strong>1</strong>: Comunidad, <strong>2</strong>: Liga, <strong>3</strong>: Invitado),
-      país, civilización favorita y unifica nombres antiguos con sus respectivos nicks oficiales desde ambos lados.
+      país, civilización favorita y visualiza de forma integrada sus nombres alternos o antiguos asociados.
     </p>
     
-    <!-- Formulario completo integrado para registrar, configurar y unificar nicks -->
+    <!-- Formulario directo para registrar / modificar jugadores nuevos -->
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; background:var(--panel-raised); padding:10px; border-radius:var(--radius); border:1px solid var(--line);">
-      <input type="text" id="input-nuevo-jugador-nombre" placeholder="Nick oficial (ej. HASSAKU)" data-i18n-placeholder="ph_nick_ej" style="flex:2; min-width:160px;" list="lista-nombres-sugeridos">
-      <input type="text" id="input-nuevo-jugador-antiguo" placeholder="Nombre como se registró (antiguo)" data-i18n-placeholder="ph_nombre_antiguo" style="flex:2; min-width:160px;">
-      <select id="input-nuevo-jugador-cat" style="flex:1; min-width:120px;">
-        <option value="1" data-i18n="opt_cat_1">1 - Comunidad</option>
-        <option value="2" data-i18n="opt_cat_2">2 - Participante Liga</option>
-        <option value="3" selected data-i18n="opt_cat_3">3 - Invitado Liga</option>
+      <input type="text" id="input-nuevo-jugador-nombre" placeholder="Nombre oficial (ej. HASSAKU)" style="flex:2; min-width:180px;" list="lista-nombres-sugeridos">
+      <select id="input-nuevo-jugador-cat" style="flex:1; min-width:140px;">
+        <option value="1">1 - Comunidad</option>
+        <option value="2">2 - Participante Liga</option>
+        <option value="3" selected>3 - Invitado Liga</option>
       </select>
-      <input type="text" id="input-nuevo-jugador-pais" maxlength="2" placeholder="PE" style="flex:0 0 50px; text-transform:uppercase;">
-      <input type="text" id="input-nuevo-jugador-civ" placeholder="Civilización favorita" data-i18n-placeholder="ph_civ_favorita" style="flex:1.5; min-width:130px;" list="lista-civs-sugeridas">
-      <button class="btn" onclick="registrarJugadorNuevoCompleto()" data-i18n="admin_btn_guardar_unificar">➕ Guardar / Unificar</button>
+      <input type="text" id="input-nuevo-jugador-pais" maxlength="2" placeholder="PE" style="flex:0 0 60px; text-transform:uppercase;">
+      <input type="text" id="input-nuevo-jugador-civ" placeholder="Civilización favorita" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
+      <button class="btn" onclick="registrarJugadorNuevo()">➕ Registrar Jugador</button>
     </div>
 
     <div id="lista-paises"></div>
   </div>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_6">⑥ Corrección de civilizaciones</h3>
-    <p class="hint" data-i18n="admin_p_6">
+    <h3>⑥ Corrección de civilizaciones</h3>
+    <p class="hint">
       Si escribes una civilización con typo o variante ("Gurjara" en vez de "Gurjaras"),
       vínculala aquí a su nombre oficial. Se corrige automáticamente en todas las pantallas.
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-      <input type="text" id="input-civ-antigua" placeholder="Como se escribió (ej. Gurjara)" data-i18n-placeholder="ph_civ_escrita" style="flex:1; min-width:160px;">
-      <input type="text" id="input-civ-oficial" placeholder="Nombre oficial (ej. Gurjaras)" data-i18n-placeholder="ph_civ_oficial" style="flex:1; min-width:160px;" list="lista-civs-sugeridas">
-      <button class="btn secondary" onclick="agregarCivEquivalencia()" data-i18n="admin_btn_vincular">Vincular</button>
+      <input type="text" id="input-civ-antigua" placeholder="Como se escribió (ej. Gurjara)" style="flex:1; min-width:160px;">
+      <input type="text" id="input-civ-oficial" placeholder="Nombre oficial (ej. Gurjaras)" style="flex:1; min-width:160px;">
+      <button class="btn secondary" onclick="agregarCivEquivalencia()">Vincular</button>
     </div>
     <div id="lista-civ-equivalencias"></div>
   </div>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_7">⑦ Imágenes de Candidatos (por Fecha)</h3>
-    <p class="hint" data-i18n="admin_p_7">
+    <h3>⑦ Imágenes de Candidatos (por Fecha)</h3>
+    <p class="hint">
       Cada Fecha (jornada) tiene 2 imágenes: la <strong>evaluación</strong> de candidatos y el
       <strong>galardón</strong> del ganador (el nombre del jugador ya va dentro de la imagen).
       Primero elige Año/Mes/Jornada abajo, copia el nombre de archivo sugerido, sube tus
@@ -157,18 +156,10 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
     <div style="display:grid; grid-template-columns: 100px 140px 140px; gap:8px; margin-bottom:8px;">
       <input type="number" id="input-img-anio" placeholder="2026" oninput="actualizarSugerenciaImagenes()">
       <select id="input-img-mes" onchange="actualizarSugerenciaImagenes()">
-        <option value="01" data-i18n="mes_enero">Enero</option>
-        <option value="02" data-i18n="mes_febrero">Febrero</option>
-        <option value="03" data-i18n="mes_marzo">Marzo</option>
-        <option value="04" data-i18n="mes_abril">Abril</option>
-        <option value="05" data-i18n="mes_mayo">Mayo</option>
-        <option value="06" data-i18n="mes_junio">Junio</option>
-        <option value="07" data-i18n="mes_julio">Julio</option>
-        <option value="08" data-i18n="mes_agosto">Agosto</option>
-        <option value="09" data-i18n="mes_septiembre">Septiembre</option>
-        <option value="10" data-i18n="mes_octubre">Octubre</option>
-        <option value="11" data-i18n="mes_noviembre">Noviembre</option>
-        <option value="12" data-i18n="mes_diciembre">Diciembre</option>
+        <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+        <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+        <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+        <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
       </select>
       <input type="text" id="input-img-jornada" placeholder="Fecha 05" oninput="actualizarSugerenciaImagenes()">
     </div>
@@ -177,7 +168,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
       <input type="text" id="input-img-evaluacion" placeholder="imagenes/candidatos_2026-09_fecha05.png">
       <input type="text" id="input-img-galardon" placeholder="imagenes/galardon_2026-09_fecha05.png">
     </div>
-    <button class="btn secondary" onclick="guardarImagenesFecha()" data-i18n="admin_btn_guardar_imgs">Guardar imágenes de esta Fecha</button>
+    <button class="btn secondary" onclick="guardarImagenesFecha()">Guardar imágenes de esta Fecha</button>
 
     <!-- Filtros de visualización para Imágenes -->
     <div style="display:flex; gap:8px; margin-top:16px; margin-bottom:8px;">
@@ -188,30 +179,22 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   </div>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_8">⑧ Cuadro de Honor (Jugador de la Fecha)</h3>
-    <p class="hint" data-i18n="admin_p_8">
+    <h3>⑧ Cuadro de Honor (Jugador de la Fecha)</h3>
+    <p class="hint">
       Asigna manualmente al jugador destacado y su civilización de cada Jornada para el Cuadro de Honor mensual.
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
       <input type="number" id="input-honor-anio" placeholder="2026" style="flex:1; min-width:90px;" value="2026">
       <select id="input-honor-mes" style="flex:1; min-width:110px;">
-        <option value="01" data-i18n="mes_enero">Enero</option>
-        <option value="02" data-i18n="mes_febrero">Febrero</option>
-        <option value="03" data-i18n="mes_marzo">Marzo</option>
-        <option value="04" data-i18n="mes_abril">Abril</option>
-        <option value="05" data-i18n="mes_mayo">Mayo</option>
-        <option value="06" data-i18n="mes_junio">Junio</option>
-        <option value="07" data-i18n="mes_julio">Julio</option>
-        <option value="08" data-i18n="mes_agosto">Agosto</option>
-        <option value="09" data-i18n="mes_septiembre">Septiembre</option>
-        <option value="10" data-i18n="mes_octubre">Octubre</option>
-        <option value="11" data-i18n="mes_noviembre">Noviembre</option>
-        <option value="12" data-i18n="mes_diciembre">Diciembre</option>
+        <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+        <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+        <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+        <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
       </select>
       <input type="text" id="input-honor-jornada" placeholder="Fecha 01" style="flex:1; min-width:110px;">
-      <input type="text" id="input-honor-jugador" placeholder="Nombre del jugador" data-i18n-placeholder="ph_nombre_jugador" style="flex:2; min-width:160px;" list="lista-nombres-sugeridos">
-      <input type="text" id="input-honor-civ" placeholder="Civilización (ej. Mayas)" data-i18n-placeholder="ph_civ_ej" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
-      <button class="btn secondary" onclick="guardarHonor()" data-i18n="admin_btn_guardar_honor">Guardar Honor</button>
+      <input type="text" id="input-honor-jugador" placeholder="Nombre del jugador" style="flex:2; min-width:160px;" list="lista-nombres-sugeridos">
+      <input type="text" id="input-honor-civ" placeholder="Civilización (ej. Mayas)" style="flex:1.5; min-width:140px;" list="lista-civs-sugeridas">
+      <button class="btn secondary" onclick="guardarHonor()">Guardar Honor</button>
     </div>
 
     <!-- Filtros de visualización para Cuadro de Honor -->
@@ -227,12 +210,12 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   <datalist id="lista-civs-sugeridas"></datalist>
 
   <div class="panel">
-    <h3 data-i18n="admin_h3_9">⑨ Descargar y publicar</h3>
-    <p class="hint" data-i18n="admin_p_9">
+    <h3>⑨ Descargar y publicar</h3>
+    <p class="hint">
       Descarga el archivo, y súbelo a GitHub (Add file → Upload files) reemplazando
       <code>data/data.json</code> en la raíz del repositorio.
     </p>
-    <button class="btn" onclick="descargarJSON()" data-i18n="admin_btn_descargar_json">⬇ Descargar data.json actualizado</button>
+    <button class="btn" onclick="descargarJSON()">⬇ Descargar data.json actualizado</button>
     <span id="contador-partidas" style="margin-left:10px; font-size:0.8rem; color: var(--text-dim);"></span>
   </div>
 </main>
@@ -242,10 +225,8 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
 let DATOS = { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [], cuadroHonor: [] };
 
 function actualizarContador() {
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtPartidas = idiomaActual === 'en' ? 'match(es) in memory' : 'partida(s) en memoria';
   document.getElementById("contador-partidas").textContent =
-    `${DATOS.partidas.length} ${txtPartidas}`;
+    `${DATOS.partidas.length} partida(s) en memoria`;
 }
 
 function actualizarListasSugerencias() {
@@ -270,8 +251,7 @@ function actualizarListasSugerencias() {
 
 async function cargarDesdeServidor() {
   const estado = document.getElementById("estado-carga");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  estado.textContent = idiomaActual === 'en' ? 'Loading...' : 'Cargando...';
+  estado.textContent = "Cargando...";
   try {
     const resp = await fetch(`data/data.json?t=${Date.now()}`, { cache: "no-store" });
     if (!resp.ok) throw new Error("no encontrado");
@@ -289,9 +269,9 @@ async function cargarDesdeServidor() {
         delete DATOS.paises;
       }
     }
-    estado.textContent = idiomaActual === 'en' ? `✔ Loaded: ${DATOS.partidas.length} existing matches.` : `✔ Cargado: ${DATOS.partidas.length} partidas existentes.`;
+    estado.textContent = `✔ Cargado: ${DATOS.partidas.length} partidas existentes.`;
   } catch (e) {
-    estado.textContent = idiomaActual === 'en' ? '⚠ data.json not found published yet (starting from scratch).' : '⚠ No se encontró data.json publicado todavía (se empezará desde cero).';
+    estado.textContent = "⚠ No se encontró data.json publicado todavía (se empezará desde cero).";
   }
   if (!Array.isArray(DATOS.jornadasImagenes)) DATOS.jornadasImagenes = [];
   if (!Array.isArray(DATOS.cuadroHonor)) DATOS.cuadroHonor = [];
@@ -306,7 +286,6 @@ async function cargarDesdeServidor() {
   
   poblarAdminFiltrosImg();
   poblarAdminFiltrosHonor();
-  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function convertirDuracionASegundos(str) {
@@ -320,10 +299,8 @@ function convertirDuracionASegundos(str) {
 function procesarReporte() {
   const texto = document.getElementById("input-reporte").value.trim();
   const resultadoDiv = document.getElementById("resultado-parseo");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-
   if (!texto) {
-    resultadoDiv.innerHTML = `<p style="color:var(--loss);">${idiomaActual === 'en' ? 'Paste a report first.' : 'Pega un reporte primero.'}</p>`;
+    resultadoDiv.innerHTML = `<p style="color:var(--loss);">Pega un reporte primero.</p>`;
     return;
   }
 
@@ -396,15 +373,14 @@ function procesarReporte() {
   });
 
   if (jugadores.length === 0) {
-    resultadoDiv.innerHTML = `<p style="color:var(--loss);">${idiomaActual === 'en' ? 'Could not parse any player line. Check format.' : 'No se pudo interpretar ninguna línea de jugador. Revisa el formato.'}</p>`;
+    resultadoDiv.innerHTML = `<p style="color:var(--loss);">No se pudo interpretar ninguna línea de jugador. Revisa el formato.</p>`;
     return;
   }
 
   const idNuevo = `${anio}-${mes}-${jornada.replace(/\s+/g,"")}-P${numeroPartida}`;
   if (DATOS.partidas.some(p => p.id === idNuevo)) {
-    const msgConf = idiomaActual === 'en' ? `A match with ID "${idNuevo}" already exists. Replace it?` : `Ya existe una partida con ID "${idNuevo}" (mismo año/mes/jornada/partida). ¿Reemplazarla?`;
-    if (!confirm(msgConf)) {
-      resultadoDiv.innerHTML = `<p style="color:var(--loss);">${idiomaActual === 'en' ? 'Cancelled.' : 'Cancelado.'}</p>`;
+    if (!confirm(`Ya existe una partida con ID "${idNuevo}" (mismo año/mes/jornada/partida). ¿Reemplazarla?`)) {
+      resultadoDiv.innerHTML = `<p style="color:var(--loss);">Cancelado. Cambia el número de partida o jornada.</p>`;
       return;
     }
     DATOS.partidas = DATOS.partidas.filter(p => p.id !== idNuevo);
@@ -424,21 +400,18 @@ function procesarReporte() {
   renderizarListaPartidas();
 
   resultadoDiv.innerHTML = `
-    <p style="color:var(--win);">✔ ${idiomaActual === 'en' ? 'Match added:' : 'Partida agregada:'} ${etiquetaPartida(nuevaPartida)} (${jugadores.length} ${idiomaActual === 'en' ? 'players' : 'jugadores'}).</p>
+    <p style="color:var(--win);">✔ Partida agregada: ${etiquetaPartida(nuevaPartida)} (${jugadores.length} jugadores).</p>
   `;
   document.getElementById("input-reporte").value = "";
-  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function poblarFiltrosPartidas() {
   const selAnio = document.getElementById("filtro-partidas-anio");
   const valorAnioPrevio = selAnio.value;
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
 
   if (DATOS.partidas.length === 0) {
-    selAnio.innerHTML = `<option value="">${txtSinDatos}</option>`;
-    document.getElementById("filtro-partidas-mes").innerHTML = `<option value="">${txtSinDatos}</option>`;
+    selAnio.innerHTML = `<option value="">Sin datos</option>`;
+    document.getElementById("filtro-partidas-mes").innerHTML = `<option value="">Sin datos</option>`;
     return;
   }
 
@@ -453,31 +426,23 @@ function poblarMesesPartidasFiltro() {
   const anio = document.getElementById("filtro-partidas-anio").value;
   const selMes = document.getElementById("filtro-partidas-mes");
   const valorMesPrevio = selMes.value;
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
 
   const mesesDelAnio = [...new Set(DATOS.partidas.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))]
     .sort().reverse();
 
   if (mesesDelAnio.length === 0) {
-    selMes.innerHTML = `<option value="">${txtSinDatos}</option>`;
+    selMes.innerHTML = `<option value="">Sin datos</option>`;
     return;
   }
 
-  selMes.innerHTML = mesesDelAnio.map(m => {
-    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
-    return `<option value="${m}">${nombreM}</option>`;
-  }).join("");
+  selMes.innerHTML = mesesDelAnio.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
   selMes.value = mesesDelAnio.includes(valorMesPrevio) ? valorMesPrevio : mesesDelAnio[0];
 }
 
 function renderizarListaPartidas() {
   const cont = document.getElementById("lista-partidas");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinCarga = idiomaActual === 'en' ? 'No matches loaded.' : 'No hay partidas cargadas.';
-
   if (DATOS.partidas.length === 0) {
-    cont.innerHTML = `<p class="hint">${txtSinCarga}</p>`;
+    cont.innerHTML = `<p class="hint">No hay partidas cargadas.</p>`;
     return;
   }
 
@@ -487,27 +452,21 @@ function renderizarListaPartidas() {
   const filtradas = DATOS.partidas.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes);
   const ordenadas = [...filtradas].sort((a, b) => claveOrden(b) - claveOrden(a));
 
-  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || mes);
-  const txtNoParaMes = idiomaActual === 'en' ? `No matches for ${nombreMes} ${anio}.` : `No hay partidas para ${nombreMes} ${anio}.`;
   if (ordenadas.length === 0) {
-    cont.innerHTML = `<p class="hint">${txtNoParaMes}</p>`;
+    cont.innerHTML = `<p class="hint">No hay partidas para ${NOMBRES_MES[mes] || mes} ${anio}.</p>`;
     return;
   }
-
-  const txtEliminarBtn = idiomaActual === 'en' ? '🗑 Delete' : '🗑 Eliminar';
 
   cont.innerHTML = ordenadas.map(p => `
     <div class="match-item">
       <span>${etiquetaPartida(p)} — ${p.jugadores.map(j => j.nombre).join(", ")}</span>
-      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarPartida('${p.id}')">${txtEliminarBtn}</button>
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarPartida('${p.id}')">🗑 Eliminar</button>
     </div>
   `).join("");
 }
 
 function eliminarPartida(id) {
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const msgDel = idiomaActual === 'en' ? 'Delete this match? This cannot be undone once you download and upload the file.' : '¿Eliminar esta partida? Esto no se puede deshacer una vez que descargues y subas el archivo.';
-  if (!confirm(msgDel)) return;
+  if (!confirm("¿Eliminar esta partida? Esto no se puede deshacer una vez que descargues y subas el archivo.")) return;
   DATOS.partidas = DATOS.partidas.filter(p => p.id !== id);
   actualizarContador();
   actualizarListasSugerencias();
@@ -517,11 +476,8 @@ function eliminarPartida(id) {
 
 function renderizarEquivalencias() {
   const cont = document.getElementById("lista-equivalencias");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinEquiv = idiomaActual === 'en' ? 'No linked names yet.' : 'Todavía no hay nombres vinculados.';
-
   if (DATOS.equivalencias.length === 0) {
-    cont.innerHTML = `<p class="hint">${txtSinEquiv}</p>`;
+    cont.innerHTML = `<p class="hint">Todavía no hay nombres vinculados.</p>`;
     return;
   }
   cont.innerHTML = DATOS.equivalencias.map((e, i) => `
@@ -530,16 +486,15 @@ function renderizarEquivalencias() {
       <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarEquivalencia(${i})">🗑</button>
     </div>
   `).join("");
+  // Re-renderizar la tabla de países para reflejar al instante los nicks alternos agrupados
   renderizarPaises();
 }
 
 function agregarEquivalencia() {
   const antiguo = document.getElementById("input-antiguo").value.trim();
   const oficial = document.getElementById("input-oficial").value.trim();
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-
   if (!antiguo || !oficial) {
-    alert(idiomaActual === 'en' ? 'Complete both fields.' : 'Completa ambos campos.');
+    alert("Completa ambos campos.");
     return;
   }
   const existente = DATOS.equivalencias.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
@@ -562,11 +517,8 @@ function eliminarEquivalencia(i) {
 
 function renderizarCivEquivalencias() {
   const cont = document.getElementById("lista-civ-equivalencias");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinCivEq = idiomaActual === 'en' ? 'No linked civilizations yet.' : 'Todavía no hay civilizaciones vinculadas.';
-
   if (!DATOS.civEquivalencias || DATOS.civEquivalencias.length === 0) {
-    cont.innerHTML = `<p class="hint">${txtSinCivEq}</p>`;
+    cont.innerHTML = `<p class="hint">Todavía no hay civilizaciones vinculadas.</p>`;
     return;
   }
   cont.innerHTML = DATOS.civEquivalencias.map((e, i) => `
@@ -580,10 +532,8 @@ function renderizarCivEquivalencias() {
 function agregarCivEquivalencia() {
   const antiguo = document.getElementById("input-civ-antigua").value.trim();
   const oficial = document.getElementById("input-civ-oficial").value.trim();
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-
   if (!antiguo || !oficial) {
-    alert(idiomaActual === 'en' ? 'Complete both fields.' : 'Completa ambos campos.');
+    alert("Completa ambos campos.");
     return;
   }
   if (!DATOS.civEquivalencias) DATOS.civEquivalencias = [];
@@ -608,19 +558,17 @@ function eliminarCivEquivalencia(i) {
 function renderizarPaises() {
   const cont = document.getElementById("lista-paises");
   const nombres = Object.keys(DATOS.jugadoresInfo || {});
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinJug = idiomaActual === 'en' ? 'No registered players yet.' : 'Todavía no hay jugadores registrados.';
-
   if (nombres.length === 0) {
-    cont.innerHTML = `<p class="hint">${txtSinJug}</p>`;
+    cont.innerHTML = `<p class="hint">Todavía no hay jugadores registrados.</p>`;
     return;
   }
 
+  // Mapear nicks alternos (equivalencias) por cada jugador oficial
   const mapAlternos = {};
   (DATOS.equivalencias || []).forEach(eq => {
     const ofic = eq.oficial;
     if (!mapAlternos[ofic]) mapAlternos[ofic] = [];
-    mapAlternos[ofic].push({ antiguo: eq.antiguo, index: DATOS.equivalencias.indexOf(eq) });
+    mapAlternos[ofic].push(eq.antiguo);
   });
 
   const ordenados = [...nombres].sort((a, b) => {
@@ -632,26 +580,17 @@ function renderizarPaises() {
     return a.localeCompare(b);
   });
 
-  const txtSubPaises = idiomaActual === 'en' ? `${nombres.length} registered players in total. Those missing country and/or civilization appear first.` : `${nombres.length} jugadores registrados en total. Los que les falta país y/o civilización aparecen primero.`;
-  const thOficial = idiomaActual === 'en' ? 'Official Player' : 'Jugador Oficial';
-  const thAlternos = idiomaActual === 'en' ? 'Linked Alternate / Previous Nicks' : 'Nicks Alternos / Anteriores Vinculados';
-  const thCategoria = idiomaActual === 'en' ? 'Category (1: Comm | 2: League | 3: Inv)' : 'Categoría (1: Com | 2: Liga | 3: Inv)';
-  const thPais = idiomaActual === 'en' ? 'Country' : 'País';
-  const thCivFav = idiomaActual === 'en' ? 'Favorite Civ.' : 'Civ. favorita';
-  const txtNinguno = idiomaActual === 'en' ? 'None' : 'Ninguno';
-  const txtFalta = idiomaActual === 'en' ? 'missing' : 'falta';
-
   cont.innerHTML = `
-    <p class="hint">${txtSubPaises}</p>
+    <p class="hint">${nombres.length} jugadores registrados en total. Los que les falta país y/o civilización aparecen primero.</p>
     <div style="overflow-x:auto;">
       <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
         <thead>
           <tr style="text-align:left; color:var(--gold); border-bottom:1px solid var(--line);">
-            <th style="padding:6px 8px;">${thOficial}</th>
-            <th style="padding:6px 8px;">${thAlternos}</th>
-            <th style="padding:6px 8px;">${thCategoria}</th>
-            <th style="padding:6px 8px;">${thPais}</th>
-            <th style="padding:6px 8px;">${thCivFav}</th>
+            <th style="padding:6px 8px;">Jugador Oficial</th>
+            <th style="padding:6px 8px;">Nicks Alternos / Anteriores Vinculados</th>
+            <th style="padding:6px 8px;">Categoría (1: Com | 2: Liga | 3: Inv)</th>
+            <th style="padding:6px 8px;">País</th>
+            <th style="padding:6px 8px;">Civ. favorita</th>
             <th style="padding:6px 8px;"></th>
           </tr>
         </thead>
@@ -662,8 +601,8 @@ function renderizarPaises() {
             const cat = info.categoria || 1;
             const alternos = mapAlternos[nombre] || [];
             const alternosHtml = alternos.length > 0 
-              ? alternos.map(altObj => `<span style="background:var(--panel-raised); padding:2px 6px; border-radius:4px; margin-right:4px; margin-bottom:2px; display:inline-block; border:1px solid var(--line); font-size:0.75rem;">${altObj.antiguo} <a href="javascript:void(0);" onclick="eliminarEquivalencia(${altObj.index})" style="color:var(--loss); text-decoration:none; margin-left:4px; font-weight:bold;" title="Unlink">×</a></span>`).join("")
-              : `<span style="color:var(--text-dim); font-style:italic; font-size:0.75rem;">${txtNinguno}</span>`;
+              ? alternos.map(alt => `<span style="background:var(--panel-raised); padding:2px 6px; border-radius:4px; margin-right:4px; display:inline-block; border:1px solid var(--line); font-size:0.75rem;">${alt}</span>`).join("")
+              : `<span style="color:var(--text-dim); font-style:italic; font-size:0.75rem;">Ninguno</span>`;
 
             return `
               <tr style="border-bottom:1px solid var(--line); ${faltaAlgo ? 'background:rgba(176,85,79,0.08);' : ''}">
@@ -671,15 +610,15 @@ function renderizarPaises() {
                 <td style="padding:6px 8px;">${alternosHtml}</td>
                 <td style="padding:6px 8px;">
                   <select style="padding:2px 6px; font-size:0.78rem;" onchange="cambiarCategoriaDirecta('${nombre.replace(/'/g,"\\'")}', this.value)">
-                    <option value="1" ${cat == 1 ? 'selected' : ''}>1 - ${idiomaActual === 'en' ? 'Community' : 'Comunidad'}</option>
-                    <option value="2" ${cat == 2 ? 'selected' : ''}>2 - ${idiomaActual === 'en' ? 'League Participant' : 'Participante Liga'}</option>
-                    <option value="3" ${cat == 3 ? 'selected' : ''}>3 - ${idiomaActual === 'en' ? 'League Guest' : 'Invitado Liga'}</option>
+                    <option value="1" ${cat == 1 ? 'selected' : ''}>1 - Comunidad</option>
+                    <option value="2" ${cat == 2 ? 'selected' : ''}>2 - Participante Liga</option>
+                    <option value="3" ${cat == 3 ? 'selected' : ''}>3 - Invitado Liga</option>
                   </select>
                 </td>
                 <td style="padding:6px 8px;">
-                  ${info.pais ? `<img src="https://flagcdn.com/w40/${info.pais.toLowerCase()}.png" style="width:20px; vertical-align:middle; margin-right:4px; border-radius:2px;">${info.pais}` : `<span style="color:var(--loss);">${txtFalta}</span>`}
+                  ${info.pais ? `<img src="https://flagcdn.com/w40/${info.pais.toLowerCase()}.png" style="width:20px; vertical-align:middle; margin-right:4px; border-radius:2px;">${info.pais}` : `<span style="color:var(--loss);">falta</span>`}
                 </td>
-                <td style="padding:6px 8px;">${info.civFavorita || `<span style="color:var(--loss);">${txtFalta}</span>`}</td>
+                <td style="padding:6px 8px;">${info.civFavorita || `<span style="color:var(--loss);">falta</span>`}</td>
                 <td style="padding:6px 8px; text-align:right;">
                   <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="precargarPais('${nombre.replace(/'/g,"\\'")}')">✎</button>
                   <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="eliminarPais('${nombre.replace(/'/g,"\\'")}')">🗑</button>
@@ -702,27 +641,24 @@ function cambiarCategoriaDirecta(nombre, nuevaCat) {
 function precargarPais(nombre) {
   const info = DATOS.jugadoresInfo[nombre] || {};
   document.getElementById("input-nuevo-jugador-nombre").value = nombre;
-  document.getElementById("input-nuevo-jugador-antiguo").value = "";
   document.getElementById("input-nuevo-jugador-cat").value = info.categoria || 1;
   document.getElementById("input-nuevo-jugador-pais").value = info.pais || "";
   document.getElementById("input-nuevo-jugador-civ").value = info.civFavorita || "";
   document.getElementById("input-nuevo-jugador-nombre").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-function registrarJugadorNuevoCompleto() {
+function registrarJugadorNuevo() {
   const nombre = document.getElementById("input-nuevo-jugador-nombre").value.trim();
-  const antiguo = document.getElementById("input-nuevo-jugador-antiguo").value.trim();
   const categoria = parseInt(document.getElementById("input-nuevo-jugador-cat").value, 10) || 1;
   const pais = document.getElementById("input-nuevo-jugador-pais").value.trim().toUpperCase();
   const civFavorita = document.getElementById("input-nuevo-jugador-civ").value.trim();
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
   if (!nombre) {
-    alert(idiomaActual === 'en' ? 'Type the official player name.' : 'Escribe el nombre oficial del jugador.');
+    alert("Escribe el nombre del jugador.");
     return;
   }
   if (pais && pais.length !== 2) {
-    alert(idiomaActual === 'en' ? 'Country code must be exactly 2 letters (e.g. PE, AR).' : 'El código de país debe ser exactamente de 2 letras (ej. PE, AR).');
+    alert("El código de país debe ser exactamente de 2 letras (ej. PE, AR).");
     return;
   }
 
@@ -733,25 +669,13 @@ function registrarJugadorNuevoCompleto() {
     civFavorita: civFavorita || (DATOS.jugadoresInfo[nombre]?.civFavorita || "")
   };
 
-  if (antiguo) {
-    if (!DATOS.equivalencias) DATOS.equivalencias = [];
-    const existente = DATOS.equivalencias.find(e => e.antiguo.toLowerCase() === antiguo.toLowerCase());
-    if (existente) {
-      existente.oficial = nombre;
-    } else {
-      DATOS.equivalencias.push({ antiguo, oficial: nombre });
-    }
-  }
-
   document.getElementById("input-nuevo-jugador-nombre").value = "";
-  document.getElementById("input-nuevo-jugador-antiguo").value = "";
   document.getElementById("input-nuevo-jugador-pais").value = "";
   document.getElementById("input-nuevo-jugador-civ").value = "";
 
   actualizarListasSugerencias();
-  renderizarEquivalencias();
   renderizarPaises();
-  alert(`✔ ${idiomaActual === 'en' ? `Player "${nombre}" saved ${antiguo ? 'and old name linked' : ''} successfully.` : `Jugador "${nombre}" guardado ${antiguo ? 'y nombre antiguo vinculado' : ''} con éxito.`}`);
+  alert(`✔ Jugador "${nombre}" guardado con éxito.`);
 }
 
 function eliminarPais(nombre) {
@@ -760,215 +684,189 @@ function eliminarPais(nombre) {
   renderizarPaises();
 }
 
-function sugerirNombresImagenes(anio, mes, jornada) {
-  const numJor = jornada.replace(/\D/g, "").padStart(2, "0");
-  const jorStr = numJor ? `fecha${numJor}` : "fecha01";
-  return `imagenes/candidatos_${anio}-${mes}_${jorStr}.png | imagenes/galardon_${anio}-${mes}_${jorStr}.png`;
-}
-
 function actualizarSugerenciaImagenes() {
   const anio = document.getElementById("input-img-anio").value.trim();
   const mes = document.getElementById("input-img-mes").value;
   const jornada = document.getElementById("input-img-jornada").value.trim();
   const sugerenciaEl = document.getElementById("sugerencia-nombres");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
   if (!anio || !jornada) {
-    sugerenciaEl.textContent = idiomaActual === 'en' ? 'Complete Year and Round to see the suggested name.' : 'Completa Año y Jornada para ver el nombre sugerido.';
+    sugerenciaEl.textContent = "Completa Año y Jornada para ver el nombre sugerido.";
     return;
   }
 
   const sug = sugerirNombresImagenes(anio, mes, jornada);
-  sugerenciaEl.innerHTML = `${idiomaActual === 'en' ? 'Suggested files:' : 'Archivos sugeridos:'} <code>${sug}</code>`;
+  sugerenciaEl.innerHTML = `💡 Nombre sugerido: <code>${sug.evaluacion}</code> y <code>${sug.galardon}</code>`;
+
+  const inputEval = document.getElementById("input-img-evaluacion");
+  const inputGal = document.getElementById("input-img-galardon");
+  if (!inputEval.value || inputEval.dataset.autocompletado === "1") {
+    inputEval.value = sug.evaluacion;
+    inputEval.dataset.autocompletado = "1";
+  }
+  if (!inputGal.value || inputGal.dataset.autocompletado === "1") {
+    inputGal.value = sug.galardon;
+    inputGal.dataset.autocompletado = "1";
+  }
 }
 
 function guardarImagenesFecha() {
-  const anio = document.getElementById("input-img-anio").value.trim();
+  const anio = parseInt(document.getElementById("input-img-anio").value, 10);
   const mes = document.getElementById("input-img-mes").value;
   const jornada = document.getElementById("input-img-jornada").value.trim();
   const evaluacion = document.getElementById("input-img-evaluacion").value.trim();
   const galardon = document.getElementById("input-img-galardon").value.trim();
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
   if (!anio || !jornada) {
-    alert(idiomaActual === 'en' ? 'Fill in Year and Round.' : 'Completa Año y Jornada.');
+    alert("Completa el año y la jornada.");
     return;
   }
 
   if (!Array.isArray(DATOS.jornadasImagenes)) DATOS.jornadasImagenes = [];
-  const idx = DATOS.jornadasImagenes.findIndex(j => String(j.anio) === String(anio) && String(j.mes).padStart(2,"0") === String(mes).padStart(2,"0") && j.jornada.toLowerCase() === jornada.toLowerCase());
+  const existente = DATOS.jornadasImagenes.find(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes && j.jornada.toLowerCase() === jornada.toLowerCase());
 
-  const item = { anio: parseInt(anio, 10), mes: parseInt(mes, 10), jornada, evaluacion, galardon };
-  if (idx >= 0) {
-    DATOS.jornadasImagenes[idx] = item;
+  if (existente) {
+    existente.evaluacion = evaluacion;
+    existente.galardon = galardon;
   } else {
-    DATOS.jornadasImagenes.push(item);
+    DATOS.jornadasImagenes.push({ id: `${anio}-${mes}-${jornada.replace(/\s+/g,"")}`, anio, mes, jornada, evaluacion, galardon });
   }
 
-  document.getElementById("input-img-evaluacion").value = "";
-  document.getElementById("input-img-galardon").value = "";
+  alert("✔ Imágenes guardadas correctamente para esta Fecha.");
   renderizarFechasImagenes();
-  alert(idiomaActual === 'en' ? 'Images saved for this round.' : 'Imágenes guardadas para esta Fecha.');
 }
 
 function poblarAdminFiltrosImg() {
-  const anios = [...new Set((DATOS.jornadasImagenes || []).map(j => j.anio))].sort((a, b) => b - a);
+  const anios = [...new Set(DATOS.jornadasImagenes.map(j => j.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-admin-img-anio");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">${txtSinDatos}</option>`;
+  if (anios.length === 0) {
+    selAnio.innerHTML = `<option value="">Sin datos</option>`;
+    document.getElementById("filtro-admin-img-mes").innerHTML = `<option value="">Sin datos</option>`;
+    return;
+  }
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
   poblarAdminMesesImg();
-  renderizarFechasImagenes();
 }
 
 function poblarAdminMesesImg() {
   const anio = document.getElementById("filtro-admin-img-anio").value;
-  const meses = [...new Set((DATOS.jornadasImagenes || []).filter(j => String(j.anio) === String(anio)).map(j => String(j.mes).padStart(2,"0")))].sort().reverse();
   const selMes = document.getElementById("filtro-admin-img-mes");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selMes.innerHTML = meses.length ? meses.map(m => {
-    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
-    return `<option value="${m}">${nombreM}</option>`;
-  }).join("") : `<option value="">${txtSinDatos}</option>`;
+  const meses = [...new Set(DATOS.jornadasImagenes.filter(j => j.anio == anio).map(j => String(j.mes).padStart(2, "0")))].sort().reverse();
+  if (meses.length === 0) {
+    selMes.innerHTML = `<option value="">Sin datos</option>`;
+    return;
+  }
+  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  renderizarFechasImagenes();
 }
 
 function renderizarFechasImagenes() {
   const cont = document.getElementById("lista-fechas-imagenes");
   const anio = document.getElementById("filtro-admin-img-anio").value;
   const mes = document.getElementById("filtro-admin-img-mes").value;
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
-  const imgs = (DATOS.jornadasImagenes || []).filter(j => String(j.anio) === String(anio) && String(j.mes).padStart(2,"0") === String(mes).padStart(2,"0"))
-    .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
-
-  const txtSinImgReg = idiomaActual === 'en' ? 'No images registered for this period.' : 'No hay imágenes registradas para este período.';
-  if (imgs.length === 0) {
-    cont.innerHTML = `<p class="hint">${txtSinImgReg}</p>`;
+  const filtradas = DATOS.jornadasImagenes.filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes);
+  if (filtradas.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay imágenes registradas para este período.</p>`;
     return;
   }
 
-  const txtEval = idiomaActual === 'en' ? 'Evaluation' : 'Evaluación';
-  const txtGal = idiomaActual === 'en' ? 'Award' : 'Galardón';
-  const txtDel = idiomaActual === 'en' ? 'Delete' : 'Eliminar';
-
-  cont.innerHTML = imgs.map((item, idx) => `
-    <div class="match-item" style="flex-wrap:wrap; gap:6px;">
-      <span><strong>${item.jornada}</strong> — ${txtEval}: ${item.evaluacion || '—'} | ${txtGal}: ${item.galardon || '—'}</span>
-      <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="eliminarImagenFecha(${DATOS.jornadasImagenes.indexOf(item)})">🗑 ${txtDel}</button>
+  cont.innerHTML = filtradas.map(j => `
+    <div class="match-item" style="display:flex; justify-content:space-between; align-items:center;">
+      <span><strong>${j.jornada}</strong> (${NOMBRES_MES[j.mes]} ${j.anio}) — Eval: ${j.evaluacion || '—'} | Gal: ${j.galardon || '—'}</span>
+      <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="eliminarImagenFecha('${j.id}')">🗑</button>
     </div>
   `).join("");
 }
 
-function eliminarImagenFecha(index) {
-  DATOS.jornadasImagenes.splice(index, 1);
-  poblarAdminFiltrosImg();
+function eliminarImagenFecha(id) {
+  DATOS.jornadasImagenes = DATOS.jornadasImagenes.filter(j => j.id !== id);
+  renderizarFechasImagenes();
 }
 
 function guardarHonor() {
-  const anio = document.getElementById("input-honor-anio").value.trim();
+  const anio = parseInt(document.getElementById("input-honor-anio").value, 10);
   const mes = document.getElementById("input-honor-mes").value;
   const jornada = document.getElementById("input-honor-jornada").value.trim();
   const jugador = document.getElementById("input-honor-jugador").value.trim();
   const civ = document.getElementById("input-honor-civ").value.trim();
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
   if (!anio || !jornada || !jugador) {
-    alert(idiomaActual === 'en' ? 'Fill in Year, Round and Player.' : 'Completa Año, Jornada y Jugador.');
+    alert("Completa al menos Año, Jornada y Jugador.");
     return;
   }
 
   if (!Array.isArray(DATOS.cuadroHonor)) DATOS.cuadroHonor = [];
-  const idx = DATOS.cuadroHonor.findIndex(h => String(h.anio) === String(anio) && String(h.mes).padStart(2,"0") === String(mes).padStart(2,"0") && h.jornada.toLowerCase() === jornada.toLowerCase());
+  const existente = DATOS.cuadroHonor.find(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes && h.jornada.toLowerCase() === jornada.toLowerCase());
 
-  const item = { anio: parseInt(anio, 10), mes: parseInt(mes, 10), jornada, jugador, civ };
-  if (idx >= 0) {
-    DATOS.cuadroHonor[idx] = item;
+  if (existente) {
+    existente.jugador = jugador;
+    existente.civ = civ;
   } else {
-    DATOS.cuadroHonor.push(item);
+    DATOS.cuadroHonor.push({ id: `${anio}-${mes}-${jornada.replace(/\s+/g,"")}`, anio, mes, jornada, jugador, civ });
   }
 
-  document.getElementById("input-honor-jornada").value = "";
-  document.getElementById("input-honor-jugador").value = "";
-  document.getElementById("input-honor-civ").value = "";
-  poblarAdminFiltrosHonor();
+  alert("✔ Cuadro de Honor guardado con éxito.");
   renderizarCuadroHonorAdmin();
-  alert(idiomaActual === 'en' ? 'Honor Roll saved successfully.' : 'Cuadro de Honor guardado con éxito.');
 }
 
 function poblarAdminFiltrosHonor() {
-  const anios = [...new Set((DATOS.cuadroHonor || []).map(h => h.anio))].sort((a, b) => b - a);
+  const anios = [...new Set(DATOS.cuadroHonor.map(h => h.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-admin-honor-anio");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">${txtSinDatos}</option>`;
+  if (anios.length === 0) {
+    selAnio.innerHTML = `<option value="">Sin datos</option>`;
+    document.getElementById("filtro-admin-honor-mes").innerHTML = `<option value="">Sin datos</option>`;
+    return;
+  }
+  selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
   poblarAdminMesesHonor();
-  renderizarCuadroHonorAdmin();
 }
 
 function poblarAdminMesesHonor() {
   const anio = document.getElementById("filtro-admin-honor-anio").value;
-  const meses = [...new Set((DATOS.cuadroHonor || []).filter(h => String(h.anio) === String(anio)).map(h => String(h.mes).padStart(2,"0")))].sort().reverse();
   const selMes = document.getElementById("filtro-admin-honor-mes");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selMes.innerHTML = meses.length ? meses.map(m => {
-    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
-    return `<option value="${m}">${nombreM}</option>`;
-  }).join("") : `<option value="">${txtSinDatos}</option>`;
+  const meses = [...new Set(DATOS.cuadroHonor.filter(h => h.anio == anio).map(h => String(h.mes).padStart(2, "0")))].sort().reverse();
+  if (meses.length === 0) {
+    selMes.innerHTML = `<option value="">Sin datos</option>`;
+    return;
+  }
+  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  renderizarCuadroHonorAdmin();
 }
 
 function renderizarCuadroHonorAdmin() {
   const cont = document.getElementById("lista-cuadro-honor");
   const anio = document.getElementById("filtro-admin-honor-anio").value;
   const mes = document.getElementById("filtro-admin-honor-mes").value;
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
-  const honorList = (DATOS.cuadroHonor || []).filter(h => String(h.anio) === String(anio) && String(h.mes).padStart(2,"0") === String(mes).padStart(2,"0"))
-    .sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
-
-  const txtSinHonorReg = idiomaActual === 'en' ? 'No honor roll registered for this period.' : 'No hay cuadro de honor registrado para este período.';
-  if (honorList.length === 0) {
-    cont.innerHTML = `<p class="hint">${txtSinHonorReg}</p>`;
+  const filtradas = DATOS.cuadroHonor.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes);
+  if (filtradas.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor para este período.</p>`;
     return;
   }
 
-  const txtDel = idiomaActual === 'en' ? 'Delete' : 'Eliminar';
-
-  cont.innerHTML = honorList.map((item, idx) => `
-    <div class="match-item" style="flex-wrap:wrap; gap:6px;">
-      <span><strong>${item.jornada}</strong> — 👑 ${item.jugador} (${item.civ || '—'})</span>
-      <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="eliminarHonorItem(${DATOS.cuadroHonor.indexOf(item)})">🗑 ${txtDel}</button>
+  cont.innerHTML = filtradas.map(h => `
+    <div class="match-item" style="display:flex; justify-content:space-between; align-items:center;">
+      <span><strong>${h.jornada}</strong> (${NOMBRES_MES[h.mes]} ${h.anio}) — 👑 <strong>${h.jugador}</strong> (${h.civ || 'Sin civ'})</span>
+      <button class="btn secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="eliminarHonor('${h.id}')">🗑</button>
     </div>
   `).join("");
 }
 
-function eliminarHonorItem(index) {
-  DATOS.cuadroHonor.splice(index, 1);
-  poblarAdminFiltrosHonor();
+function eliminarHonor(id) {
+  DATOS.cuadroHonor = DATOS.cuadroHonor.filter(h => h.id !== id);
+  renderizarCuadroHonorAdmin();
 }
 
 function descargarJSON() {
-  const jsonStr = JSON.stringify(DATOS, null, 2);
-  const blob = new Blob([jsonStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "data.json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DATOS, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "data.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
 }
-
-(async function init() {
-  await cargarDesdeServidor();
-  if (typeof traducirPagina === 'function') traducirPagina();
-})();
 </script>
 <script src="js/idiomas.js"></script>
 </body>
