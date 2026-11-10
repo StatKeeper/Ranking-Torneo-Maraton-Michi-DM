@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Perfil y Comparativa de jugadores — Comunidad AoE II</title>
+<title data-i18n="title_jugadores">Perfil y Comparativa de jugadores — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -151,24 +151,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub">Jugadores</span>
+    <span class="sub" data-i18n="nav_jugadores">Jugadores</span>
   </div>
   <nav class="tabs">
-    <a href="index.html">Inicio</a>
-    <a href="clasificacion.html">Clasificación</a>
-    <a href="jugador.html" class="active">Jugadores</a>
-    <a href="estadisticas.html">Estadísticas</a>
-    <a href="candidatos.html">Candidatos</a>
-    <a href="historial.html">Historial</a>
-    <a href="admin.html">Administración</a>
+    <a href="index.html" data-i18n="nav_inicio">Inicio</a>
+    <a href="clasificacion.html" data-i18n="nav_clasificacion">Clasificación</a>
+    <a href="jugador.html" class="active" data-i18n="nav_jugadores">Jugadores</a>
+    <a href="estadisticas.html" data-i18n="nav_estadisticas">Estadísticas</a>
+    <a href="candidatos.html" data-i18n="nav_candidatos">Candidatos</a>
+    <a href="historial.html" data-i18n="nav_historial">Historial</a>
+    <a href="admin.html" data-i18n="nav_admin">Administración</a>
   </nav>
 </header>
 
 <main>
   <div class="subtabs">
-    <button class="subtab-btn active" data-tab="comparativa" onclick="cambiarSubtab('comparativa')">🔍 Comparativa</button>
-    <button class="subtab-btn" data-tab="participacion" onclick="cambiarSubtab('participacion')">📋 Nombres y Participación</button>
-    <button class="subtab-btn" data-tab="nacionalidades" onclick="cambiarSubtab('nacionalidades')">🌍 Países y Banderas</button>
+    <button class="subtab-btn active" data-tab="comparativa" onclick="cambiarSubtab('comparativa')" data-i18n="sub_comparativa">🔍 Comparativa</button>
+    <button class="subtab-btn" data-tab="participacion" onclick="cambiarSubtab('participacion')" data-i18n="sub_nombres_participacion">📋 Nombres y Participación</button>
+    <button class="subtab-btn" data-tab="nacionalidades" onclick="cambiarSubtab('nacionalidades')" data-i18n="sub_paises_banderas">🌍 Países y Banderas</button>
   </div>
 
   <div class="filters">
@@ -179,20 +179,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- VISTA 1: COMPARATIVA Y PERFIL -->
   <div id="vista-comparativa">
     <div class="panel" id="buscador">
-      <h3>Selecciona de 1 a 4 jugadores</h3>
-      <p class="hint">Deja las casillas vacías las que no vayas a usar si solo quieres ver a 1 o 2 jugadores.</p>
+      <h3 data-i18n="jugadores_sel_titulo">Selecciona de 1 a 4 jugadores</h3>
+      <p class="hint" data-i18n="jugadores_sel_hint">Deja las casillas vacías las que no vayas a usar si solo quieres ver a 1 o 2 jugadores.</p>
       <div class="comparacion-inputs">
-        <input type="text" id="input-j1" list="lista-nombres" placeholder="Jugador 1">
-        <input type="text" id="input-j2" list="lista-nombres" placeholder="Jugador 2 (opc.)">
-        <input type="text" id="input-j3" list="lista-nombres" placeholder="Jugador 3 (opc.)">
-        <input type="text" id="input-j4" list="lista-nombres" placeholder="Jugador 4 (opc.)">
+        <input type="text" id="input-j1" list="lista-nombres" placeholder="Jugador 1" data-i18n-placeholder="ph_jugador1">
+        <input type="text" id="input-j2" list="lista-nombres" placeholder="Jugador 2 (opc.)" data-i18n-placeholder="ph_jugador2_opc">
+        <input type="text" id="input-j3" list="lista-nombres" placeholder="Jugador 3 (opc.)" data-i18n-placeholder="ph_jugador3_opc">
+        <input type="text" id="input-j4" list="lista-nombres" placeholder="Jugador 4 (opc.)" data-i18n-placeholder="ph_jugador4_opc">
       </div>
-      <button class="btn" onclick="ejecutarConsultaJugadores()">Consultar</button>
+      <button class="btn" onclick="ejecutarConsultaJugadores()" data-i18n="btn_consultar">Consultar</button>
       <datalist id="lista-nombres"></datalist>
     </div>
 
     <div id="contenido-perfil"></div>
-    <button id="btn-descargar-perfil" class="btn secondary" style="display:none; margin-top:12px;" onclick="descargarImagenPerfil()">📷 Descargar Imagen</button>
+    <button id="btn-descargar-perfil" class="btn secondary" style="display:none; margin-top:12px;" onclick="descargarImagenPerfil()" data-i18n="btn_descargar_imagen">📷 Descargar Imagen</button>
   </div>
 
   <!-- VISTA 2: NOMBRES Y PARTICIPACIÓN -->
@@ -200,29 +200,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="panel" id="seccion-participacion-mes">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
         <div>
-          <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">📋 Nombres y Participación</h3>
-          <p class="hint" style="margin-bottom:0;" id="subtitulo-participacion-desc">Todos los jugadores registrados clasificados por categoría en orden alfabético.</p>
+          <h3 id="titulo-participacion-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;" data-i18n="titulo_nombres_participacion">📋 Nombres y Participación</h3>
+          <p class="hint" style="margin-bottom:0;" id="subtitulo-participacion-desc" data-i18n="subtitulo_nombres_participacion">Todos los jugadores registrados clasificados por categoría en orden alfabético.</p>
         </div>
         <div>
           <select id="select-orden-participacion" onchange="renderizarParticipacionMes()" style="padding: 6px 10px; font-size: 0.8rem;">
-            <option value="alfabetico">🔤 Orden Alfabético</option>
-            <option value="partidas">📊 Partidas Jugadas (Mayor a menor)</option>
+            <option value="alfabetico" data-i18n="opt_orden_alfabetico">🔤 Orden Alfabético</option>
+            <option value="partidas" data-i18n="opt_orden_partidas">📊 Partidas Jugadas (Mayor a menor)</option>
           </select>
         </div>
       </div>
       
       <div class="grid-tres-columnas">
         <div class="columna-participacion">
-          <h4>Miembros de la Comunidad</h4>
-          <div id="lista-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+          <h4 data-i18n="col_miembros_comunidad">Miembros de la Comunidad</h4>
+          <div id="lista-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div></div>
         </div>
         <div class="columna-participacion">
-          <h4>Participantes de la Liga</h4>
-          <div id="lista-participantes-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+          <h4 data-i18n="col_participantes_liga">Participantes de la Liga</h4>
+          <div id="lista-participantes-liga"><div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div></div>
         </div>
         <div class="columna-participacion">
-          <h4>Invitados de la Liga</h4>
-          <div id="lista-invitados-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+          <h4 data-i18n="col_invitados_liga">Invitados de la Liga</h4>
+          <div id="lista-invitados-liga"><div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div></div>
         </div>
       </div>
     </div>
@@ -231,21 +231,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- VISTA 3: NACIONALIDADES Y BANDERAS -->
   <div id="vista-nacionalidades" style="display:none;">
     <div class="panel" id="seccion-nacionalidades-mes">
-      <h3 id="titulo-nacionalidades-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;">🌍 Resumen de Países por Banderas</h3>
-      <p class="hint" style="margin-bottom:12px;">Conteo total de participantes agrupados por nacionalidad de mayor a menor.</p>
+      <h3 id="titulo-nacionalidades-mes" style="font-size:0.95rem; color:var(--gold); margin-bottom:4px;" data-i18n="titulo_paises_banderas">🌍 Resumen de Países por Banderas</h3>
+      <p class="hint" style="margin-bottom:12px;" data-i18n="subtitulo_paises_banderas">Conteo total de participantes agrupados por nacionalidad de mayor a menor.</p>
       
       <div class="grid-tres-columnas">
         <div class="columna-participacion">
-          <h4>Miembros de la Comunidad</h4>
-          <div id="paises-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+          <h4 data-i18n="col_miembros_comunidad">Miembros de la Comunidad</h4>
+          <div id="paises-miembros-comunidad"><div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div></div>
         </div>
         <div class="columna-participacion">
-          <h4>Participantes de la Liga</h4>
-          <div id="paises-participantes-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+          <h4 data-i18n="col_participantes_liga">Participantes de la Liga</h4>
+          <div id="paises-participantes-liga"><div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div></div>
         </div>
         <div class="columna-participacion">
-          <h4>Invitados de la Liga</h4>
-          <div id="paises-invitados-liga"><div class="empty-state" style="font-size:0.78rem;">Sin datos</div></div>
+          <h4 data-i18n="col_invitados_liga">Invitados de la Liga</h4>
+          <div id="paises-invitados-liga"><div class="empty-state" style="font-size:0.78rem;" data-i18n="sin_datos">Sin datos</div></div>
         </div>
       </div>
     </div>
@@ -253,12 +253,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </main>
 
 <nav class="mobile-nav">
-  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
-  <a href="clasificacion.html"><span class="icon">🏆</span>Ranking</a>
-  <a href="jugador.html" class="active"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
-  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
-  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
-  <a href="historial.html"><span class="icon">📜</span>Historial</a>
+  <a href="index.html"><span class="icon">🏠</span><span data-i18n="nav_inicio">Inicio</span></a>
+  <a href="clasificacion.html"><span class="icon">🏆</span><span data-i18n="nav_clasificacion">Ranking</span></a>
+  <a href="jugador.html" class="active"><span class="icon">🧑‍🤝‍🧑</span><span data-i18n="nav_jugadores">Jugadores</span></a>
+  <a href="estadisticas.html"><span class="icon">📈</span><span data-i18n="nav_estadisticas">Stats</span></a>
+  <a href="candidatos.html"><span class="icon">⭐</span><span data-i18n="nav_candidatos">Candidatos</span></a>
+  <a href="historial.html"><span class="icon">📜</span><span data-i18n="nav_historial">Historial</span></a>
 </nav>
 
 <script src="js/datos.js"></script>
@@ -280,11 +280,19 @@ function partidasFiltradas() {
 function poblarFiltrosPeriodo() {
   const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-anio");
-  selAnio.innerHTML = `<option value="">Todos los años</option>` + anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const textTodosAnios = idiomaActual === 'en' ? 'All years' : 'Todos los años';
+  const textTodosMeses = idiomaActual === 'en' ? 'All months' : 'Todos los meses';
+
+  selAnio.innerHTML = `<option value="">${textTodosAnios}</option>` + anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
   const meses = [...new Set(PARTIDAS.map(p => String(p.mes).padStart(2, "0")))].sort();
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = `<option value="">Todos los meses</option>` + meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  selMes.innerHTML = `<option value="">${textTodosMeses}</option>` + meses.map(m => {
+    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
+    return `<option value="${m}">${nombreM}</option>`;
+  }).join("");
 
   selAnio.addEventListener("change", actualizarVistaActiva);
   selMes.addEventListener("change", actualizarVistaActiva);
@@ -329,15 +337,18 @@ function cambiarSubtab(tab) {
 function renderizarParticipacionMes() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
-  const nombreMes = NOMBRES_MES[mes] || "Todos los meses";
-  document.getElementById("titulo-participacion-mes").textContent = `📋 Nombres y Participación — ${nombreMes} ${anio}`;
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || (idiomaActual === 'en' ? 'All months' : 'Todos los meses'));
+  
+  const tituloParticipacion = idiomaActual === 'en' ? '📋 Names and Participation' : '📋 Nombres y Participación';
+  document.getElementById("titulo-participacion-mes").textContent = `${tituloParticipacion} — ${nombreMes} ${anio}`;
 
   const tipoOrden = document.getElementById("select-orden-participacion").value;
   const descSub = document.getElementById("subtitulo-participacion-desc");
   if (tipoOrden === "partidas") {
-    descSub.textContent = "Todos los jugadores registrados clasificados por categoría ordenados por cantidad de partidas jugadas (mayor a menor).";
+    descSub.textContent = idiomaActual === 'en' ? 'All registered players classified by category ordered by number of matches played (highest to lowest).' : 'Todos los jugadores registrados clasificados por categoría ordenados por cantidad de partidas jugadas (mayor a menor).';
   } else {
-    descSub.textContent = "Todos los jugadores registrados clasificados por categoría en orden alfabético.";
+    descSub.textContent = idiomaActual === 'en' ? 'All registered players classified by category in alphabetical order.' : 'Todos los jugadores registrados clasificados por categoría en orden alfabético.';
   }
 
   const partidasMes = partidasFiltradas();
@@ -375,14 +386,12 @@ function renderizarParticipacionMes() {
     }
   });
 
-  // Función de ordenamiento dinámica según selección
   const criterioOrden = (a, b) => {
     if (tipoOrden === "partidas") {
       if (b.partidas !== a.partidas) {
-        return b.partidas - a.partidas; // Mayor número de partidas primero
+        return b.partidas - a.partidas;
       }
     }
-    // Criterio secundario o principal por defecto: alfabético
     return a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
   };
 
@@ -398,8 +407,11 @@ function renderizarParticipacionMes() {
 function renderizarNacionalidadesMes() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
-  const nombreMes = NOMBRES_MES[mes] || "Todos los meses";
-  document.getElementById("titulo-nacionalidades-mes").textContent = `🌍 Resumen de Países por Banderas — ${nombreMes} ${anio}`;
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || (idiomaActual === 'en' ? 'All months' : 'Todos los meses'));
+  
+  const tituloNac = idiomaActual === 'en' ? '🌍 Country Summary by Flags' : '🌍 Resumen de Países por Banderas';
+  document.getElementById("titulo-nacionalidades-mes").textContent = `${tituloNac} — ${nombreMes} ${anio}`;
 
   const partidasMes = partidasFiltradas();
   const conteoJugadores = {};
@@ -438,8 +450,12 @@ function renderizarNacionalidadesMes() {
 
 function agruparYConstruirTablaPaises(elementId, listaItems) {
   const contenedor = document.getElementById(elementId);
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const msgSinRegistros = idiomaActual === 'en' ? 'No records' : 'Sin registros';
+
   if (!listaItems || listaItems.length === 0) {
-    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin registros</div>`;
+    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">${msgSinRegistros}</div>`;
+    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
 
@@ -461,18 +477,21 @@ function agruparYConstruirTablaPaises(elementId, listaItems) {
     return a.pais.localeCompare(b.pais);
   });
 
+  const thPaisCol = idiomaActual === 'en' ? 'Country / Nationality' : 'País / Nacionalidad';
+  const thParticipantesCol = idiomaActual === 'en' ? 'Participants' : 'Participantes';
+
   contenedor.innerHTML = `
     <table class="tabla-mini-participacion">
       <thead>
         <tr>
           <th style="width:28px; text-align:center;">#</th>
-          <th>País / Nacionalidad</th>
-          <th class="num" style="width:75px;">Participantes</th>
+          <th>${thPaisCol}</th>
+          <th class="num" style="width:75px;">${thParticipantesCol}</th>
         </tr>
       </thead>
       <tbody>
         ${paisesOrdenados.map((item, idx) => {
-          let labelPais = "Sin nacionalidad";
+          let labelPais = idiomaActual === 'en' ? 'No nationality' : 'Sin nacionalidad';
           let imgBandera = "";
           if (item.pais !== "sin-pais") {
             labelPais = item.pais.toUpperCase();
@@ -489,22 +508,30 @@ function agruparYConstruirTablaPaises(elementId, listaItems) {
       </tbody>
     </table>
   `;
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function pintarColumnaMiniParticipacion(elementId, lista) {
   const contenedor = document.getElementById(elementId);
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const msgSinRegistros = idiomaActual === 'en' ? 'No records' : 'Sin registros';
+
   if (!lista || lista.length === 0) {
-    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin registros</div>`;
+    contenedor.innerHTML = `<div class="empty-state" style="font-size:0.78rem;">${msgSinRegistros}</div>`;
+    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
+
+  const thJugadorCol = idiomaActual === 'en' ? 'Player' : 'Jugador';
+  const thPartidasCol = idiomaActual === 'en' ? 'Matches' : 'Partidas';
 
   contenedor.innerHTML = `
     <table class="tabla-mini-participacion">
       <thead>
         <tr>
           <th style="width:28px; text-align:center;">#</th>
-          <th>Jugador</th>
-          <th class="num" style="width:60px;">Partidas</th>
+          <th>${thJugadorCol}</th>
+          <th class="num" style="width:60px;">${thPartidasCol}</th>
         </tr>
       </thead>
       <tbody>
@@ -523,6 +550,7 @@ function pintarColumnaMiniParticipacion(elementId, lista) {
       </tbody>
     </table>
   `;
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function repetirConsultaActual() {
@@ -538,8 +566,10 @@ function ejecutarConsultaJugadores() {
     document.getElementById("input-j4").value.trim()
   ].filter(n => n !== "");
 
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
   if (nombres.length === 0) {
-    document.getElementById("contenido-perfil").innerHTML = `<div class="empty-state">Por favor, ingresa al menos un jugador en el Jugador 1.</div>`;
+    const msgError = idiomaActual === 'en' ? 'Please enter at least one player in Player 1.' : 'Por favor, ingresa al menos un jugador en el Jugador 1.';
+    document.getElementById("contenido-perfil").innerHTML = `<div class="empty-state">${msgError}</div>`;
     document.getElementById("btn-descargar-perfil").style.display = "none";
     return;
   }
@@ -557,9 +587,11 @@ function pintarPerfilIndividual(nombre) {
   const totalPartidasGlobales = partidasActivas.length;
   const statsMap = calcularEstadisticasJugadores(partidasActivas, EQUIVALENCIAS);
   const stats = statsMap[nombre];
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
+  const msgSinPartidas = idiomaActual === 'en' ? `No matches found for "${nombre}" in this period.` : `No se encontraron partidas para "${nombre}" en este período.`;
   if (!stats) {
-    cont.innerHTML = `<div class="empty-state">No se encontraron partidas para "${nombre}" en este período.</div>`;
+    cont.innerHTML = `<div class="empty-state">${msgSinPartidas}</div>`;
     document.getElementById("btn-descargar-perfil").style.display = "none";
     return;
   }
@@ -580,31 +612,53 @@ function pintarPerfilIndividual(nombre) {
 
   const { aliados, adversarios } = calcularCompanerosYRivales(stats.nombre, partidasActivas, EQUIVALENCIAS);
 
+  const lblPartidasJugadas = idiomaActual === 'en' ? 'matches played' : 'partidas jugadas';
+  const lblVictoriasTag = idiomaActual === 'en' ? 'victories' : 'victorias';
+  const lblFav = idiomaActual === 'en' ? 'Favorite' : 'Favorita';
+  const lblPuntos = idiomaActual === 'en' ? 'Points' : 'Puntos';
+  const lblDerrotas = idiomaActual === 'en' ? 'Defeats' : 'Derrotas';
+  const lblParticipacion = idiomaActual === 'en' ? 'Michi Marathon Ranking Participation' : 'Participación Ranking Maratón Michi DM';
+  const lblTiempoTotal = idiomaActual === 'en' ? 'Total Time' : 'Tiempo Total';
+  const lblPromTiempo = idiomaActual === 'en' ? 'Average Total Time' : 'Promedio Tiempo Total';
+  const lblUnidAses = idiomaActual === 'en' ? 'Units Killed' : 'Unidades Asesinadas';
+  const lblPromUnidAses = idiomaActual === 'en' ? 'Average Units Killed' : 'Promedio Unidades Asesinadas';
+  const lblEdifArras = idiomaActual === 'en' ? 'Buildings Destroyed' : 'Edificios Arrasados';
+  const lblPromEdifArras = idiomaActual === 'en' ? 'Average Buildings Destroyed' : 'Promedio Edificios Arrasados';
+  const lblCivsMasJugadas = idiomaActual === 'en' ? 'Most Played Civilizations' : 'Civilizaciones más jugadas';
+  const lblSinCivs = idiomaActual === 'en' ? 'No civilization data.' : 'Sin datos de civilización.';
+  const lblCompanerosRivales = idiomaActual === 'en' ? 'Allies and Rivals' : 'Compañeros y Rivales';
+  const lblAliados = idiomaActual === 'en' ? 'Allies' : 'Aliados';
+  const lblSinPartidasEq = idiomaActual === 'en' ? 'No team matches.' : 'Sin partidas en equipo.';
+  const lblAliado = idiomaActual === 'en' ? 'Ally' : 'Aliado';
+  const lblAdversarios = idiomaActual === 'en' ? 'Adversaries' : 'Adversarios';
+  const lblSinEnfDir = idiomaActual === 'en' ? 'No direct matchups.' : 'Sin enfrentamientos directos.';
+  const lblAdversario = idiomaActual === 'en' ? 'Adversary' : 'Adversario';
+
   cont.innerHTML = `
     <div class="profile-header">
       <div class="avatar" style="${codigoPais ? 'overflow:hidden; padding:0;' : ''}">${contenidoAvatar}</div>
       <div>
         <h1>${stats.nombre}</h1>
-        <div class="tagline">${stats.partidas} partidas jugadas · ${winRate}% victorias${civFavorita ? ` · ⭐ Favorita: ${civFavorita}` : ""}</div>
+        <div class="tagline">${stats.partidas} ${lblPartidasJugadas} · ${winRate}% ${lblVictoriasTag}${civFavorita ? ` · ⭐ ${lblFav}: ${civFavorita}` : ""}</div>
       </div>
     </div>
 
     <div class="stat-grid">
-      <div class="stat-tile"><span class="num">${stats.puntos}</span><span class="label">Puntos</span></div>
-      <div class="stat-tile"><span class="num">${stats.victorias}</span><span class="label">Victorias</span></div>
-      <div class="stat-tile"><span class="num">${stats.derrotas}</span><span class="label">Derrotas</span></div>
-      <div class="stat-tile"><span class="num" style="color:var(--patina-bright);">${porcentajeParticipacion}%</span><span class="label">Participación Ranking Maratón Michi DM</span></div>
-      <div class="stat-tile"><span class="num">${formatearDuracion(stats.segundosTotales)}</span><span class="label">Tiempo Total</span></div>
-      <div class="stat-tile"><span class="num">${formatearDuracion(promTiempo)}</span><span class="label">Promedio Tiempo Total</span></div>
-      <div class="stat-tile"><span class="num">${stats.unidadesAsesinadas}</span><span class="label">Unidades Asesinadas</span></div>
-      <div class="stat-tile"><span class="num">${Math.round(stats.unidadesAsesinadas / stats.partidas) || 0}</span><span class="label">Promedio Unidades Asesinadas</span></div>
-      <div class="stat-tile"><span class="num">${stats.edificiosArrasados}</span><span class="label">Edificios Arrasados</span></div>
-      <div class="stat-tile"><span class="num">${Math.round(stats.edificiosArrasados / stats.partidas) || 0}</span><span class="label">Promedio Edificios Arrasados</span></div>
+      <div class="stat-tile"><span class="num">${stats.puntos}</span><span class="label">${lblPuntos}</span></div>
+      <div class="stat-tile"><span class="num">${stats.victorias}</span><span class="label">${lblVictoriasTag.charAt(0).toUpperCase() + lblVictoriasTag.slice(1)}</span></div>
+      <div class="stat-tile"><span class="num">${stats.derrotas}</span><span class="label">${lblDerrotas}</span></div>
+      <div class="stat-tile"><span class="num" style="color:var(--patina-bright);">${porcentajeParticipacion}%</span><span class="label">${lblParticipacion}</span></div>
+      <div class="stat-tile"><span class="num">${formatearDuracion(stats.segundosTotales)}</span><span class="label">${lblTiempoTotal}</span></div>
+      <div class="stat-tile"><span class="num">${formatearDuracion(promTiempo)}</span><span class="label">${lblPromTiempo}</span></div>
+      <div class="stat-tile"><span class="num">${stats.unidadesAsesinadas}</span><span class="label">${lblUnidAses}</span></div>
+      <div class="stat-tile"><span class="num">${Math.round(stats.unidadesAsesinadas / stats.partidas) || 0}</span><span class="label">${lblPromUnidAses}</span></div>
+      <div class="stat-tile"><span class="num">${stats.edificiosArrasados}</span><span class="label">${lblEdifArras}</span></div>
+      <div class="stat-tile"><span class="num">${Math.round(stats.edificiosArrasados / stats.partidas) || 0}</span><span class="label">${lblPromEdifArras}</span></div>
     </div>
 
-    <div class="section-head"><h2>Civilizaciones más jugadas</h2></div>
+    <div class="section-head"><h2>${lblCivsMasJugadas}</h2></div>
     <div class="breakdown-list">
-      ${civsOrdenadas.length === 0 ? `<div class="empty-state">Sin datos de civilización.</div>` : civsOrdenadas.map(([civ, d]) => {
+      ${civsOrdenadas.length === 0 ? `<div class="empty-state">${lblSinCivs}</div>` : civsOrdenadas.map(([civ, d]) => {
         const wr = Math.round((d.victorias / d.jugadas) * 100);
         const pctUso = Math.round((d.jugadas / stats.partidas) * 100);
         const ancho = Math.round((d.jugadas / maxJugadas) * 100);
@@ -619,15 +673,15 @@ function pintarPerfilIndividual(nombre) {
       }).join("")}
     </div>
 
-    <div class="section-head" style="margin-top:24px;"><h2>Compañeros y Rivales</h2></div>
+    <div class="section-head" style="margin-top:24px;"><h2>${lblCompanerosRivales}</h2></div>
     <div class="grid-companeros">
       <div class="panel" style="padding:10px;">
-        <h3 style="font-size:0.88rem; color:var(--gold); margin-bottom:8px;">🤝 Aliados</h3>
-        ${aliados.length === 0 ? `<div class="empty-state">Sin partidas en equipo.</div>` : `
+        <h3 style="font-size:0.88rem; color:var(--gold); margin-bottom:8px;">🤝 ${lblAliados}</h3>
+        ${aliados.length === 0 ? `<div class="empty-state">${lblSinPartidasEq}</div>` : `
           <table class="tabla-companeros">
             <thead>
               <tr>
-                <th>Aliado</th>
+                <th>${lblAliado}</th>
                 <th class="num">PJ</th>
                 <th style="text-align:right;">% Vic.</th>
               </tr>
@@ -646,12 +700,12 @@ function pintarPerfilIndividual(nombre) {
       </div>
 
       <div class="panel" style="padding:10px;">
-        <h3 style="font-size:0.88rem; color:var(--loss); margin-bottom:8px;">⚔️ Adversarios</h3>
-        ${adversarios.length === 0 ? `<div class="empty-state">Sin enfrentamientos directos.</div>` : `
+        <h3 style="font-size:0.88rem; color:var(--loss); margin-bottom:8px;">⚔️ ${lblAdversarios}</h3>
+        ${adversarios.length === 0 ? `<div class="empty-state">${lblSinEnfDir}</div>` : `
           <table class="tabla-companeros">
             <thead>
               <tr>
-                <th>Adversario</th>
+                <th>${lblAdversario}</th>
                 <th class="num">PJ</th>
                 <th style="text-align:right;">% Vic.</th>
               </tr>
@@ -671,6 +725,7 @@ function pintarPerfilIndividual(nombre) {
     </div>
   `;
   document.getElementById("btn-descargar-perfil").style.display = "inline-block";
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function pintarComparativaVertical(nombres) {
@@ -678,16 +733,18 @@ function pintarComparativaVertical(nombres) {
   const partidasActivas = partidasFiltradas();
   const totalPartidasGlobales = partidasActivas.length;
   const statsMap = calcularEstadisticasJugadores(partidasActivas, EQUIVALENCIAS);
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
   let htmlCards = `<div class="comparativa-container">`;
 
   nombres.forEach(nombre => {
     const stats = statsMap[nombre];
+    const msgSinDatos = idiomaActual === 'en' ? 'No data found in this period.' : 'No se encontraron datos en este período.';
     if (!stats) {
       htmlCards += `
         <div class="tarjeta-comparacion">
           <h3 style="color:var(--loss);">${nombre}</h3>
-          <p class="empty-state" style="padding:10px 0;">No se encontraron datos en este período.</p>
+          <p class="empty-state" style="padding:10px 0;">${msgSinDatos}</p>
         </div>`;
       return;
     }
@@ -702,25 +759,36 @@ function pintarComparativaVertical(nombres) {
       ? `<img src="https://flagcdn.com/w160/${codigoPais.toLowerCase()}.png" alt="${codigoPais}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`
       : inicial;
 
+    const lblPartidasC = idiomaActual === 'en' ? 'matches' : 'partidas';
+    const lblVicC = idiomaActual === 'en' ? 'victories' : 'victorias';
+    const lblPuntosC = idiomaActual === 'en' ? 'Points' : 'Puntos';
+    const lblVicTagC = idiomaActual === 'en' ? 'Victories' : 'Victorias';
+    const lblDefTagC = idiomaActual === 'en' ? 'Defeats' : 'Derrotas';
+    const lblPartMichiC = idiomaActual === 'en' ? 'Michi Participation' : 'Participación Michi';
+    const lblTiempoTotC = idiomaActual === 'en' ? 'Total Time' : 'Tiempo Total';
+    const lblPromTiempoC = idiomaActual === 'en' ? 'Avg. Time' : 'Prom. Tiempo';
+    const lblUnidAsesC = idiomaActual === 'en' ? 'Units Killed' : 'Unid. Asesinadas';
+    const lblEdifArrC = idiomaActual === 'en' ? 'Buildings Destroyed' : 'Edificios Arrasados';
+
     htmlCards += `
       <div class="tarjeta-comparacion">
         <div class="profile-header" style="margin-bottom:12px; padding-bottom:10px;">
           <div class="avatar" style="width:44px; height:44px; font-size:1.1rem; ${codigoPais ? 'overflow:hidden; padding:0;' : ''}">${contenidoAvatar}</div>
           <div>
             <h1 style="font-size:1.15rem;">${stats.nombre}</h1>
-            <div class="tagline">${stats.partidas} partidas · ${winRate}% victorias</div>
+            <div class="tagline">${stats.partidas} ${lblPartidasC} · ${winRate}% ${lblVicC}</div>
           </div>
         </div>
 
         <div class="stat-grid">
-          <div class="stat-tile"><span class="num">${stats.puntos}</span><span class="label">Puntos</span></div>
-          <div class="stat-tile"><span class="num">${stats.victorias}</span><span class="label">Victorias</span></div>
-          <div class="stat-tile"><span class="num">${stats.derrotas}</span><span class="label">Derrotas</span></div>
-          <div class="stat-tile"><span class="num" style="color:var(--patina-bright);">${porcentajeParticipacion}%</span><span class="label">Participación Michi</span></div>
-          <div class="stat-tile"><span class="num">${formatearDuracion(stats.segundosTotales)}</span><span class="label">Tiempo Total</span></div>
-          <div class="stat-tile"><span class="num">${formatearDuracion(promTiempo)}</span><span class="label">Prom. Tiempo</span></div>
-          <div class="stat-tile"><span class="num">${stats.unidadesAsesinadas}</span><span class="label">Unid. Asesinadas</span></div>
-          <div class="stat-tile"><span class="num">${stats.edificiosArrasados}</span><span class="label">Edificios Arrasados</span></div>
+          <div class="stat-tile"><span class="num">${stats.puntos}</span><span class="label">${lblPuntosC}</span></div>
+          <div class="stat-tile"><span class="num">${stats.victorias}</span><span class="label">${lblVicTagC}</span></div>
+          <div class="stat-tile"><span class="num">${stats.derrotas}</span><span class="label">${lblDefTagC}</span></div>
+          <div class="stat-tile"><span class="num" style="color:var(--patina-bright);">${porcentajeParticipacion}%</span><span class="label">${lblPartMichiC}</span></div>
+          <div class="stat-tile"><span class="num">${formatearDuracion(stats.segundosTotales)}</span><span class="label">${lblTiempoTotC}</span></div>
+          <div class="stat-tile"><span class="num">${formatearDuracion(promTiempo)}</span><span class="label">${lblPromTiempoC}</span></div>
+          <div class="stat-tile"><span class="num">${stats.unidadesAsesinadas}</span><span class="label">${lblUnidAsesC}</span></div>
+          <div class="stat-tile"><span class="num">${stats.edificiosArrasados}</span><span class="label">${lblEdifArrC}</span></div>
         </div>
       </div>
     `;
@@ -729,6 +797,7 @@ function pintarComparativaVertical(nombres) {
   htmlCards += `</div>`;
   cont.innerHTML = htmlCards;
   document.getElementById("btn-descargar-perfil").style.display = "inline-block";
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function poblarBuscador() {
@@ -741,12 +810,15 @@ function poblarBuscador() {
 
   const params = new URLSearchParams(window.location.search);
   const nombreURL = params.get("nombre");
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+
   if (nombreURL && stats[nombreURL]) {
     document.getElementById("input-j1").value = nombreURL;
     pintarPerfilIndividual(nombreURL);
   } else {
+    const msgInit = idiomaActual === 'en' ? 'Enter at least one player above and press "Consult".' : 'Ingresa al menos un jugador arriba y presiona "Consultar".';
     document.getElementById("contenido-perfil").innerHTML =
-      `<div class="empty-state">Ingresa al menos un jugador arriba y presiona "Consultar".</div>`;
+      `<div class="empty-state">${msgInit}</div>`;
     document.getElementById("btn-descargar-perfil").style.display = "none";
   }
 }
@@ -762,6 +834,7 @@ function descargarImagenPerfil() {
   EQUIVALENCIAS = datos.equivalencias;
   JUGADORES_INFO = datos.jugadoresInfo || {};
   poblarBuscador();
+  if (typeof traducirPagina === 'function') traducirPagina();
 })();
 </script>
 <script src="js/idiomas.js"></script>
