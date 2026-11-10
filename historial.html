@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="title_historial">Historial — Comunidad AoE II</title>
+<title>Historial — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -54,16 +54,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub" data-i18n="nav_historial">Historial de partidas</span>
+    <span class="sub">Historial de partidas</span>
   </div>
   <nav class="tabs">
-    <a href="index.html" data-i18n="nav_inicio">Inicio</a>
-    <a href="clasificacion.html" data-i18n="nav_clasificacion">Clasificación</a>
-    <a href="jugador.html" data-i18n="nav_jugadores">Jugadores</a>
-    <a href="estadisticas.html" data-i18n="nav_estadisticas">Estadísticas</a>
-    <a href="candidatos.html" data-i18n="nav_candidatos">Candidatos</a>
-    <a href="historial.html" class="active" data-i18n="nav_historial">Historial</a>
-    <a href="admin.html" data-i18n="nav_admin">Administración</a>
+    <a href="index.html">Inicio</a>
+    <a href="clasificacion.html">Clasificación</a>
+    <a href="jugador.html">Jugadores</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="candidatos.html">Candidatos</a>
+    <a href="historial.html" class="active">Historial</a>
+    <a href="admin.html">Administración</a>
   </nav>
 </header>
 
@@ -71,21 +71,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="filters">
     <select id="filtro-anio"></select>
     <select id="filtro-mes"></select>
-    <select id="filtro-jornada">
-      <option value="" data-i18n="opt_todas_las_fechas">Todas las fechas</option>
-    </select>
+    <select id="filtro-jornada"></select>
   </div>
   <p class="hint" id="nota-limite" style="margin-bottom:12px;"></p>
   <div id="lista-historial"></div>
 </main>
 
 <nav class="mobile-nav">
-  <a href="index.html"><span class="icon">🏠</span><span data-i18n="nav_inicio">Inicio</span></a>
-  <a href="clasificacion.html"><span class="icon">🏆</span><span data-i18n="nav_clasificacion">Ranking</span></a>
-  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span><span data-i18n="nav_jugadores">Jugadores</span></a>
-  <a href="estadisticas.html"><span class="icon">📈</span><span data-i18n="nav_estadisticas">Stats</span></a>
-  <a href="candidatos.html"><span class="icon">⭐</span><span data-i18n="nav_candidatos">Candidatos</span></a>
-  <a href="historial.html" class="active"><span class="icon">📜</span><span data-i18n="nav_historial">Historial</span></a>
+  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
+  <a href="clasificacion.html"><span class="icon">🏆</span>Ranking</a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
+  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
+  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
+  <a href="historial.html" class="active"><span class="icon">📜</span>Historial</a>
 </nav>
 
 <script src="js/datos.js"></script>
@@ -96,10 +94,7 @@ let PARTIDAS = [], EQUIVALENCIAS = [];
 function poblarFiltros() {
   const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-anio");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">${txtSinDatos}</option>`;
+  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">Sin datos</option>`;
   selAnio.addEventListener("change", () => { poblarMeses(); poblarJornadas(); render(); });
   poblarMeses();
   document.getElementById("filtro-mes").addEventListener("change", () => { poblarJornadas(); render(); });
@@ -110,13 +105,7 @@ function poblarMeses() {
   const anio = document.getElementById("filtro-anio").value;
   const meses = [...new Set(PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
   const selMes = document.getElementById("filtro-mes");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
-
-  selMes.innerHTML = meses.length ? meses.map(m => {
-    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
-    return `<option value="${m}">${nombreM}</option>`;
-  }).join("") : `<option value="">${txtSinDatos}</option>`;
+  selMes.innerHTML = meses.length ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("") : `<option value="">Sin datos</option>`;
   poblarJornadas();
 }
 
@@ -126,10 +115,7 @@ function poblarJornadas() {
   const jornadas = [...new Set(PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2,"0") === mes).map(p => p.jornada))]
     .sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
   const selJornada = document.getElementById("filtro-jornada");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
-  const txtTodasFechas = idiomaActual === 'en' ? 'All dates' : 'Todas las fechas';
-
-  selJornada.innerHTML = `<option value="">${txtTodasFechas}</option>` + jornadas.map(j => `<option value="${j}">${j}</option>`).join("");
+  selJornada.innerHTML = `<option value="">Todas las fechas</option>` + jornadas.map(j => `<option value="${j}">${j}</option>`).join("");
 }
 
 function obtenerMapaPartidasInvalidas(partidas) {
@@ -160,13 +146,10 @@ function render() {
   const jornadaFiltro = document.getElementById("filtro-jornada").value;
   const cont = document.getElementById("lista-historial");
   const nota = document.getElementById("nota-limite");
-  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
-  const msgSinPartidas = idiomaActual === 'en' ? 'No matches registered yet.' : 'No hay partidas registradas todavía.';
   if (!anio || !mes) {
-    cont.innerHTML = `<div class="empty-state">${msgSinPartidas}</div>`;
+    cont.innerHTML = `<div class="empty-state">No hay partidas registradas todavía.</div>`;
     nota.textContent = "";
-    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
 
@@ -179,30 +162,17 @@ function render() {
   let filtradas = jornadaFiltro ? delPeriodo.filter(p => p.jornada === jornadaFiltro) : delPeriodo;
   filtradas = [...filtradas].sort((a, b) => claveOrden(b) - claveOrden(a));
 
-  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || mes);
-
   if (!jornadaFiltro && filtradas.length > LIMITE_PARTIDAS_DEFAULT) {
-    nota.textContent = idiomaActual === 'en' 
-      ? `Showing the last ${LIMITE_PARTIDAS_DEFAULT} matches of ${nombreMes} ${anio}. Select a specific Date to view the rest.`
-      : `Mostrando las últimas ${LIMITE_PARTIDAS_DEFAULT} partidas de ${nombreMes} ${anio}. Selecciona una Fecha específica para ver el resto.`;
+    nota.textContent = `Mostrando las últimas ${LIMITE_PARTIDAS_DEFAULT} partidas de ${NOMBRES_MES[mes]} ${anio}. Selecciona una Fecha específica para ver el resto.`;
     filtradas = filtradas.slice(0, LIMITE_PARTIDAS_DEFAULT);
   } else {
     nota.textContent = "";
   }
 
-  const msgFiltroVacio = idiomaActual === 'en' ? 'No matches for this filter.' : 'No hay partidas para este filtro.';
   if (filtradas.length === 0) {
-    cont.innerHTML = `<div class="empty-state">${msgFiltroVacio}</div>`;
-    if (typeof traducirPagina === 'function') traducirPagina();
+    cont.innerHTML = `<div class="empty-state">No hay partidas para este filtro.</div>`;
     return;
   }
-
-  const thJugador = idiomaActual === 'en' ? 'Player' : 'Jugador';
-  const thEquipo = idiomaActual === 'en' ? 'Team' : 'Equipo';
-  const thCiv = idiomaActual === 'en' ? 'Civilization' : 'Civilización';
-  const thVar = idiomaActual === 'en' ? 'Var' : 'Var';
-  const btnDescargarText = idiomaActual === 'en' ? '📷 Download' : '📷 Descargar';
-  const tagInvalidaText = idiomaActual === 'en' ? '⚠ Invalid (+3 in date)' : '⚠ Inválida (+3 en fecha)';
 
   cont.innerHTML = filtradas.map(p => {
     const varsDeEsta = varsPorPartida[p.id] || {};
@@ -214,11 +184,11 @@ function render() {
         <span class="titulo">${etiquetaPartida(p)}</span>
         <div class="acciones">
           <span class="dur">⏱ ${formatearDuracion(p.duracionSeg)}</span>
-          <button onclick="descargarImagenPartida('${p.id}')">${btnDescargarText}</button>
+          <button onclick="descargarImagenPartida('${p.id}')">📷 Descargar</button>
         </div>
       </div>
       <table class="tabla-match">
-        <thead><tr><th></th><th>${thJugador}</th><th>${thEquipo}</th><th>${thCiv}</th><th>${thVar}</th></tr></thead>
+        <thead><tr><th></th><th>Jugador</th><th>Equipo</th><th>Civilización</th><th>Var</th></tr></thead>
         <tbody>
           ${p.jugadores.map(j => {
             const nombreOf = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
@@ -232,7 +202,7 @@ function render() {
               <tr>
                 <td><span class="resultado-icono">${gano ? "👑" : "💀"}</span></td>
                 <td>
-                  <a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a>${esInvalida ? `<span class="tag-invalida">${tagInvalidaText}</span>` : ''}
+                  <a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a>${esInvalida ? `<span class="tag-invalida">⚠ Inválida (+3 en fecha)</span>` : ''}
                 </td>
                 <td>${j.equipo || "—"}</td>
                 <td>${j.civ || "—"}</td>
@@ -245,7 +215,6 @@ function render() {
     </div>
   `;
   }).join("");
-  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function descargarImagenPartida(id) {
@@ -259,7 +228,6 @@ function descargarImagenPartida(id) {
   EQUIVALENCIAS = datos.equivalencias;
   poblarFiltros();
   render();
-  if (typeof traducirPagina === 'function') traducirPagina();
 })();
 </script>
 <script src="js/idiomas.js"></script>
