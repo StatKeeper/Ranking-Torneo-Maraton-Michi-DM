@@ -60,7 +60,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <main>
   <div style="text-align: center; margin-bottom: 15px;">
-    <h3 data-i18n="titulo_principal">Ranking Maratón Michi DM</h3>
+    <h3>Ranking Maratón Michi DM</h3>
     <p class="hint" data-i18n="subtitulo_bienvenida">Bienvenido al portal oficial del torneo.</p>
   </div>
 
@@ -99,7 +99,6 @@ async function initInicio() {
     return;
   }
 
-  // Ordenar para obtener la última jornada con imagen de galardón configurada
   const ultimas = [...jornadasImgs].reverse();
   const ultimaConImg = ultimas.find(j => j.galardon || j.imagenGalardon);
 
