@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Candidatos y Galardones — Comunidad AoE II</title>
+<title data-i18n="title_candidatos">Candidatos y Galardones — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -53,16 +53,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub">Candidatos y Galardones</span>
+    <span class="sub" data-i18n="nav_candidatos">Candidatos</span>
   </div>
   <nav class="tabs">
-    <a href="index.html">Inicio</a>
-    <a href="clasificacion.html">Clasificación</a>
-    <a href="jugador.html">Jugadores</a>
-    <a href="estadisticas.html">Estadísticas</a>
-    <a href="candidatos.html" class="active">Candidatos</a>
-    <a href="historial.html">Historial</a>
-    <a href="admin.html">Administración</a>
+    <a href="index.html" data-i18n="nav_inicio">Inicio</a>
+    <a href="clasificacion.html" data-i18n="nav_clasificacion">Clasificación</a>
+    <a href="jugador.html" data-i18n="nav_jugadores">Jugadores</a>
+    <a href="estadisticas.html" data-i18n="nav_estadisticas">Estadísticas</a>
+    <a href="candidatos.html" class="active" data-i18n="nav_candidatos">Candidatos</a>
+    <a href="historial.html" data-i18n="nav_historial">Historial</a>
+    <a href="admin.html" data-i18n="nav_admin">Administración</a>
   </nav>
 </header>
 
@@ -75,7 +75,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="panel" style="margin-top: 10px;">
     <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin-bottom:12px;">🏆 Cuadro de Honor Mensual</h3>
     <div id="contenedor-cuadro-honor">
-      <div class="empty-state">Cargando…</div>
+      <div class="empty-state" data-i18n="cargando">Cargando…</div>
     </div>
   </div>
 </main>
@@ -86,17 +86,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="modal-close" onclick="cerrarModal()">×</button>
     <h3 id="modal-titulo" style="color: var(--gold); margin-bottom: 10px; font-size: 0.95rem;"></h3>
     <img id="modal-img-src" src="" alt="Vista previa">
-    <a id="modal-btn-descargar" class="btn secondary" href="" download style="font-size: 0.8rem;">⬇ Descargar Imagen (HD)</a>
+    <a id="modal-btn-descargar" class="btn secondary" href="" download style="font-size: 0.8rem;" data-i18n="btn_descargar_imagen_hd">⬇ Descargar Imagen (HD)</a>
   </div>
 </div>
 
 <nav class="mobile-nav">
-  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
-  <a href="clasificacion.html"><span class="icon">🏆</span>Ranking</a>
-  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
-  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
-  <a href="candidatos.html" class="active"><span class="icon">⭐</span>Candidatos</a>
-  <a href="historial.html"><span class="icon">📜</span>Historial</a>
+  <a href="index.html"><span class="icon">🏠</span><span data-i18n="nav_inicio">Inicio</span></a>
+  <a href="clasificacion.html"><span class="icon">🏆</span><span data-i18n="nav_clasificacion">Ranking</span></a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span><span data-i18n="nav_jugadores">Jugadores</span></a>
+  <a href="estadisticas.html"><span class="icon">📈</span><span data-i18n="nav_estadisticas">Stats</span></a>
+  <a href="candidatos.html" class="active"><span class="icon">⭐</span><span data-i18n="nav_candidatos">Candidatos</span></a>
+  <a href="historial.html"><span class="icon">📜</span><span data-i18n="nav_historial">Historial</span></a>
 </nav>
 
 <script src="js/datos.js"></script>
@@ -106,7 +106,10 @@ let JORNADAS_IMAGENES = [], CUADRO_HONOR = [];
 function poblarFiltros() {
   const anios = [...new Set([...JORNADAS_IMAGENES.map(j => j.anio), ...CUADRO_HONOR.map(c => c.anio)])].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-anio");
-  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">Sin datos</option>`;
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
+
+  selAnio.innerHTML = anios.length ? anios.map(a => `<option value="${a}">${a}</option>`).join("") : `<option value="">${txtSinDatos}</option>`;
   selAnio.addEventListener("change", () => { poblarMeses(); render(); });
   poblarMeses();
   document.getElementById("filtro-mes").addEventListener("change", render);
@@ -120,7 +123,13 @@ function poblarMeses() {
   ]);
   const meses = [...mesesSet].sort().reverse();
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = meses.length ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("") : `<option value="">Sin datos</option>`;
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
+  const txtSinDatos = idiomaActual === 'en' ? 'No data' : 'Sin datos';
+
+  selMes.innerHTML = meses.length ? meses.map(m => {
+    const nombreM = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(m, idiomaActual) : (NOMBRES_MES[m] || m);
+    return `<option value="${m}">${nombreM}</option>`;
+  }).join("") : `<option value="">${txtSinDatos}</option>`;
 }
 
 function render() {
@@ -128,12 +137,16 @@ function render() {
   const mes = document.getElementById("filtro-mes").value;
   const cont = document.getElementById("contenedor-cuadro-honor");
   const titulo = document.getElementById("titulo-cuadro-honor");
+  const idiomaActual = localStorage.getItem('idioma_torneo') || 'es';
 
-  const nombreMes = NOMBRES_MES[mes] || "";
-  if (titulo) titulo.textContent = `🏆 Cuadro de Honor — ${nombreMes.toUpperCase()} ${anio}`;
+  const nombreMes = (typeof NOMBRES_MES_IDIOMA === 'function') ? NOMBRES_MES_IDIOMA(mes, idiomaActual) : (NOMBRES_MES[mes] || "");
+  const tituloHonor = idiomaActual === 'en' ? '🏆 Monthly Honor Roll' : '🏆 Cuadro de Honor Mensual';
+  if (titulo) titulo.textContent = `${tituloHonor} — ${nombreMes.toUpperCase()} ${anio}`;
 
+  const msgSelPeriodo = idiomaActual === 'en' ? 'Select a period.' : 'Selecciona un período.';
   if (!anio || !mes) {
-    cont.innerHTML = `<div class="empty-state">Selecciona un período.</div>`;
+    cont.innerHTML = `<div class="empty-state">${msgSelPeriodo}</div>`;
+    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
 
@@ -142,15 +155,15 @@ function render() {
 
   const delMesImgs = JORNADAS_IMAGENES.filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes);
 
+  const msgSinRegistros = idiomaActual === 'en' ? `No records for ${nombreMes} ${anio}.` : `No hay registros para ${nombreMes} ${anio}.`;
   if (delMesHonor.length === 0 && delMesImgs.length === 0) {
-    cont.innerHTML = `<div class="empty-state">No hay registros para ${nombreMes} ${anio}.</div>`;
+    cont.innerHTML = `<div class="empty-state">${msgSinRegistros}</div>`;
+    if (typeof traducirPagina === 'function') traducirPagina();
     return;
   }
 
-  // Unificar combinando el cuadro de honor y las imágenes de forma segura con compatibilidad total de claves
   const jornadasMap = {};
 
-  // 1. Primero registramos todas las jornadas que tengan imágenes configuradas
   delMesImgs.forEach(j => {
     jornadasMap[j.jornada] = {
       jornada: j.jornada,
@@ -161,7 +174,6 @@ function render() {
     };
   });
 
-  // 2. Luego incorporamos o actualizamos los datos del Cuadro de Honor (jugador y civilización)
   delMesHonor.forEach(h => {
     if (!jornadasMap[h.jornada]) {
       jornadasMap[h.jornada] = { jornada: h.jornada, jugador: h.jugador, civ: h.civ, imgEval: null, imgGal: null };
@@ -172,15 +184,24 @@ function render() {
   });
 
   const listaJornadas = Object.values(jornadasMap).sort((a, b) => numeroDeJornada(a.jornada) - numeroDeJornada(b.jornada));
+  
+  const thJornada = idiomaActual === 'en' ? 'Round' : 'Jornada';
+  const thJugadorFecha = idiomaActual === 'en' ? 'Player of the Round' : 'Jugador de la Fecha';
+  const thCiv = idiomaActual === 'en' ? 'Civilization' : 'Civilización';
+  const thMultimedia = idiomaActual === 'en' ? 'Multimedia Files' : 'Archivos Multimedia';
+  const txtVerEvaluacion = idiomaActual === 'en' ? '📋 View Evaluation' : '📋 Ver Evaluación';
+  const txtVerGalardon = idiomaActual === 'en' ? '👑 View Award' : '👑 Ver Galardón';
+  const txtSinImagenes = idiomaActual === 'en' ? 'No images' : 'Sin imágenes';
+
   cont.innerHTML = `
     <div style="overflow-x:auto;">
       <table class="tabla-honor">
         <thead>
           <tr>
-            <th>Jornada</th>
-            <th>Jugador de la Fecha</th>
-            <th>Civilización</th>
-            <th>Archivos Multimedia</th>
+            <th>${thJornada}</th>
+            <th>${thJugadorFecha}</th>
+            <th>${thCiv}</th>
+            <th>${thMultimedia}</th>
           </tr>
         </thead>
         <tbody>
@@ -191,9 +212,9 @@ function render() {
               <td style="color:var(--text-dim);">${j.civ || '—'}</td>
               <td>
                 <div class="acciones-jornada">
-                  ${j.imgEval ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - Evaluación', '${j.imgEval}')">📋 Ver Evaluación</button>` : ''}
-                  ${j.imgGal ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - Galardón', '${j.imgGal}')">👑 Ver Galardón</button>` : ''}
-                  ${!j.imgEval && !j.imgGal ? '<span style="font-size:0.75rem; color:var(--text-dim);">Sin imágenes</span>' : ''}
+                  ${j.imgEval ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - ${idiomaActual === 'en' ? 'Evaluation' : 'Evaluación'}', '${j.imgEval}')">${txtVerEvaluacion}</button>` : ''}
+                  ${j.imgGal ? `<button class="btn secondary btn-accion" onclick="abrirModal('${j.jornada} - ${idiomaActual === 'en' ? 'Award' : 'Galardón'}', '${j.imgGal}')">${txtVerGalardon}</button>` : ''}
+                  ${!j.imgEval && !j.imgGal ? `<span style="font-size:0.75rem; color:var(--text-dim);">${txtSinImagenes}</span>` : ''}
                 </div>
               </td>
             </tr>
@@ -202,6 +223,7 @@ function render() {
       </table>
     </div>
   `;
+  if (typeof traducirPagina === 'function') traducirPagina();
 }
 
 function abrirModal(titulo, url) {
@@ -221,6 +243,7 @@ function cerrarModal() {
   CUADRO_HONOR = datos.cuadroHonor || [];
   poblarFiltros();
   render();
+  if (typeof traducirPagina === 'function') traducirPagina();
 })();
 </script>
 <script src="js/idiomas.js"></script>
