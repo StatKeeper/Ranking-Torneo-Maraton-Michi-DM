@@ -20405,6 +20405,169 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha09-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 09",
+      "numeroPartida": 1,
+      "duracionSeg": 2780,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Magiares",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1843,
+          "edificiosArrasados": 74409,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Astro23",
+          "resultado": "derrota",
+          "civ": "Godos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1196,
+          "edificiosArrasados": 53435,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2546,
+          "edificiosArrasados": 79206,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "derrota",
+          "civ": "Mayas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1784,
+          "edificiosArrasados": 80787,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "victoria",
+          "civ": "Weis",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 2064,
+          "edificiosArrasados": 68098,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Magiares",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 1142,
+          "edificiosArrasados": 72646,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 3473,
+          "edificiosArrasados": 116368,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "Godos",
+          "equipo": "Equipo 4",
+          "unidadesAsesinadas": 1291,
+          "edificiosArrasados": 89835,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha09-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 09",
+      "numeroPartida": 2,
+      "duracionSeg": 2198,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 629,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2363,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm]diego.leal5",
+          "resultado": "victoria",
+          "civ": "Borgoñones",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 837,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2269,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "Búlgaros",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1753,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Borgoñones",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 77,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -21480,6 +21643,14 @@
       "jornada": "Fecha 08",
       "evaluacion": "imagenes/candidatos_2026-11_fecha08.png",
       "galardon": "imagenes/galardon_2026-11_fecha08.png"
+    },
+    {
+      "id": "2026-11-Fecha09",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 09",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha09.png",
+      "galardon": "imagenes/galardon_2026-11_fecha09.png"
     }
   ],
   "civEquivalencias": [],
@@ -22114,6 +22285,14 @@
       "jornada": "Fecha 08",
       "jugador": "yo",
       "civ": "Romanos"
+    },
+    {
+      "id": "2026-11-Fecha09",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 09",
+      "jugador": "Elraf",
+      "civ": "Bulgaros"
     }
   ]
 }
