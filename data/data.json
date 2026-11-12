@@ -20568,6 +20568,80 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha10-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 10",
+      "numeroPartida": 1,
+      "duracionSeg": 10806,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12632,
+          "edificiosArrasados": 291921,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Jemeres",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 14207,
+          "edificiosArrasados": 309495,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Incas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 8630,
+          "edificiosArrasados": 299532,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10799,
+          "edificiosArrasados": 245202,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Jemeres",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9965,
+          "edificiosArrasados": 196225,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Incas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9128,
+          "edificiosArrasados": 300225,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -21651,6 +21725,14 @@
       "jornada": "Fecha 09",
       "evaluacion": "imagenes/candidatos_2026-11_fecha09.png",
       "galardon": "imagenes/galardon_2026-11_fecha09.png"
+    },
+    {
+      "id": "2026-11-Fecha10",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 10",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha10.png",
+      "galardon": "imagenes/galardon_2026-11_fecha10.png"
     }
   ],
   "civEquivalencias": [],
@@ -22293,6 +22375,14 @@
       "jornada": "Fecha 09",
       "jugador": "Elraf",
       "civ": "Bulgaros"
+    },
+    {
+      "id": "2026-11-Fecha10",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 10",
+      "jugador": "[cLm] KFICHO",
+      "civ": "Gurjaras"
     }
   ]
 }
