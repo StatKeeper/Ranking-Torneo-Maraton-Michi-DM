@@ -197,7 +197,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- CUADRO DE HONOR Y SUS DOS ESTADÍSTICAS INFERIORES AGRUPADAS -->
+  <!-- CUADRO DE HONOR (Mantiene el mes actual sincronizado con los filtros principales) -->
   <div class="panel" id="seccion-cuadro-honor" style="margin-top:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 id="titulo-cuadro-honor" style="font-size:0.95rem; color:var(--gold); margin:0;">🏆 Cuadro de Honor Mensual</h3>
@@ -206,17 +206,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="contenedor-cuadro-honor">
       <div class="empty-state">Cargando...</div>
     </div>
+  </div>
 
-    <!-- Sub-cuadros de Ranking de Galardones y Civilizaciones más Destacadas -->
-    <div class="grid-estadisticas-honor">
+  <!-- RANKING DE GALARDONES Y CIVILIZACIONES (Con filtros propios e independientes y botón de descarga propio) -->
+  <div class="panel" id="seccion-ranking-galardones" style="margin-top:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="titulo-ranking-galardones" style="font-size:0.95rem; color:var(--gold); margin:0;">👑 Ranking de Galardones y Civilizaciones Destacadas</h3>
+      <button class="btn secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="descargarEstadisticasHonor()">📷 Descargar Imagen</button>
+    </div>
+
+    <div class="filters" style="margin-bottom:12px;">
+      <select id="filtro-honor-anio" onchange="poblarHonorMeses(); renderizarEstadisticasHonor();"></select>
+      <select id="filtro-honor-mes" onchange="renderizarEstadisticasHonor();"></select>
+    </div>
+
+    <div class="grid-estadisticas-honor" style="margin-top:0;">
       <div class="subpanel-estadistica">
-        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">👑 Ranking de Galardones (Jugadores)</h4>
+        <h4 id="subtitulo-galardones" style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">👑 Ranking de Galardones (Jugadores)</h4>
         <div id="contenedor-ranking-galardones">
           <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
         </div>
       </div>
       <div class="subpanel-estadistica">
-        <h4 style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">🏛️ Civilizaciones más Destacadas</h4>
+        <h4 id="subtitulo-civilizaciones" style="font-size:0.85rem; color:var(--gold); margin-bottom:8px;">🏛️ Civilizaciones más Destacadas</h4>
         <div id="contenedor-civilizaciones-destacadas">
           <div class="empty-state" style="font-size:0.78rem;">Sin datos</div>
         </div>
@@ -268,7 +280,6 @@ function renderizarTablaPosiciones() {
     infoJor.textContent = `📅 Período: ${NOMBRES_MES[mes] || ''} ${anio}`;
   }
 
-  // Filtrar filas para que aparezcan únicamente los jugadores que tengan al menos una victoria en su haber
   const filasConVictoria = filas.filter(f => f.victorias > 0);
 
   if (filasConVictoria.length === 0) {
@@ -332,8 +343,6 @@ function renderizarCuadroHonor() {
 
   if (delMes.length === 0) {
     cont.innerHTML = `<div class="empty-state">No hay cuadro de honor registrado para ${nombreMes} ${anio}.</div>`;
-    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
-    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos</div>`;
     return;
   }
 
@@ -359,6 +368,23 @@ function renderizarCuadroHonor() {
       </table>
     </div>
   `;
+}
+
+function renderizarEstadisticasHonor() {
+  const anio = document.getElementById("filtro-honor-anio").value;
+  const mes = document.getElementById("filtro-honor-mes").value;
+  const nombreMes = NOMBRES_MES[mes] || "";
+
+  document.getElementById("subtitulo-galardones").textContent = `👑 Ranking de Galardones (Jugadores) — ${nombreMes} ${anio}`;
+  document.getElementById("subtitulo-civilizaciones").textContent = `🏛️ Civilizaciones más Destacadas — ${nombreMes} ${anio}`;
+
+  const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes);
+
+  if (delMes.length === 0) {
+    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos para ${nombreMes} ${anio}</div>`;
+    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos para ${nombreMes} ${anio}</div>`;
+    return;
+  }
 
   const conGalardones = {};
   const conCivs = {};
@@ -379,16 +405,13 @@ function renderizarCuadroHonor() {
     galardonesPorPuntaje[total].push(jugador);
   });
 
-  const galardonesOrdenados = Object.keys(galardonesPorPuntaje)
-    .map(Number)
-    .sort((a, b) => b - a);
+  const galardonesOrdenados = Object.keys(galardonesPorPuntaje).map(Number).sort((a, b) => b - a);
 
   let acumuladoG = 1;
   const filasGalardones = galardonesOrdenados.map(total => {
     const jugadores = galardonesPorPuntaje[total].sort((a, b) => a.localeCompare(b));
     const posTexto = `${acumuladoG}°`;
     acumuladoG += jugadores.length;
-
     return {
       posTexto,
       total,
@@ -396,8 +419,7 @@ function renderizarCuadroHonor() {
     };
   });
 
-  const contGalardones = document.getElementById("contenedor-ranking-galardones");
-  contGalardones.innerHTML = `
+  document.getElementById("contenedor-ranking-galardones").innerHTML = `
     <table class="tabla-estadistica">
       <thead>
         <tr>
@@ -426,16 +448,13 @@ function renderizarCuadroHonor() {
     civsPorPuntaje[total].push(civ);
   });
 
-  const civsOrdenadas = Object.keys(civsPorPuntaje)
-    .map(Number)
-    .sort((a, b) => b - a);
+  const civsOrdenadas = Object.keys(civsPorPuntaje).map(Number).sort((a, b) => b - a);
 
   let acumuladoC = 1;
   const filasCivs = civsOrdenadas.map(total => {
     const civilizaciones = civsPorPuntaje[total].sort((a, b) => a.localeCompare(b));
     const posTexto = `${acumuladoC}°`;
     acumuladoC += civilizaciones.length;
-
     return {
       posTexto,
       total,
@@ -443,8 +462,7 @@ function renderizarCuadroHonor() {
     };
   });
 
-  const contCivs = document.getElementById("contenedor-civilizaciones-destacadas");
-  contCivs.innerHTML = `
+  document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `
     <table class="tabla-estadistica">
       <thead>
         <tr>
@@ -518,6 +536,7 @@ function renderizarGrandPrix() {
 function renderizarTodo() {
   renderizarTablaPosiciones();
   renderizarCuadroHonor();
+  renderizarEstadisticasHonor();
   renderizarGrandPrix();
 }
 
@@ -526,7 +545,12 @@ function poblarFiltrosAnioMes() {
   const selAnio = document.getElementById("filtro-anio");
   selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
+  const selHonorAnio = document.getElementById("filtro-honor-anio");
+  selHonorAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+
   actualizarMeses();
+  poblarHonorMeses();
+
   selAnio.addEventListener("change", () => { actualizarMeses(); });
   document.getElementById("filtro-mes").addEventListener("change", () => { actualizarJornadasYRenderizar(); });
   document.getElementById("filtro-jornada").addEventListener("change", (e) => {
@@ -547,6 +571,17 @@ function actualizarMeses() {
   actualizarJornadasYRenderizar();
 }
 
+function poblarHonorMeses() {
+  const anio = document.getElementById("filtro-honor-anio").value;
+  const meses = [...new Set(
+    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
+  )].sort().reverse();
+
+  const selHonorMes = document.getElementById("filtro-honor-mes");
+  selHonorMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  renderizarEstadisticasHonor();
+}
+
 function actualizarJornadasYRenderizar() {
   const anio = document.getElementById("filtro-anio").value;
   const mes = document.getElementById("filtro-mes").value;
@@ -561,9 +596,7 @@ function actualizarJornadasYRenderizar() {
   selJornada.innerHTML = `<option value="">Todo el mes (acumulado)</option>` +
     jornadasOrdenadas.map(j => `<option value="${j}">${j}</option>`).join("");
 
-  // Asegura que el filtro inicie limpio en "Todo el mes" y no se quede pegado
   selJornada.value = "";
-
   document.getElementById("filtro-partida").style.display = "none";
   renderizarTodo();
 }
@@ -597,6 +630,9 @@ function descargarTablaPosiciones() {
 }
 function descargarCuadroHonor() {
   descargarElementoComoImagen(document.getElementById("seccion-cuadro-honor"), "cuadro-honor.png", "#f8f6f0");
+}
+function descargarEstadisticasHonor() {
+  descargarElementoComoImagen(document.getElementById("seccion-ranking-galardones"), "ranking-galardones.png", "#f8f6f0");
 }
 function descargarGrandPrix() {
   descargarElementoComoImagen(document.getElementById("seccion-grand-prix"), "grand-prix.png", "#f8f6f0");
