@@ -145,6 +145,7 @@
       "oficial": "TroTamundoS"
     }
   ],
+  "civEquivalencias": [],
   "partidas": [
     {
       "id": "2026-08-Fecha01-P1",
@@ -20642,6 +20643,169 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha11-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 11",
+      "numeroPartida": 1,
+      "duracionSeg": 3000,
+      "jugadores": [
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Celtas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4690,
+          "edificiosArrasados": 162863,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "victoria",
+          "civ": "Vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1682,
+          "edificiosArrasados": 79409,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 181,
+          "edificiosArrasados": 83371,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Celtas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1499,
+          "edificiosArrasados": 83990,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1115,
+          "edificiosArrasados": 57530,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2280,
+          "edificiosArrasados": 87274,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha11-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 11",
+      "numeroPartida": 2,
+      "duracionSeg": 19176,
+      "jugadores": [
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9203,
+          "edificiosArrasados": 253643,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 12374,
+          "edificiosArrasados": 327899,
+          "bonos": []
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "victoria",
+          "civ": "Malayos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7660,
+          "edificiosArrasados": 204302,
+          "bonos": []
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 17345,
+          "edificiosArrasados": 431300,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10676,
+          "edificiosArrasados": 334461,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10294,
+          "edificiosArrasados": 277498,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 17645,
+          "edificiosArrasados": 427762,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "Malayos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7754,
+          "edificiosArrasados": 261778,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -21733,9 +21897,15 @@
       "jornada": "Fecha 10",
       "evaluacion": "imagenes/candidatos_2026-11_fecha10.png",
       "galardon": "imagenes/galardon_2026-11_fecha10.png"
+    },
+    {
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 11",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha11.png",
+      "galardon": "imagenes/galardon_2026-11_fecha11.png"
     }
   ],
-  "civEquivalencias": [],
   "cuadroHonor": [
     {
       "anio": 2026,
@@ -22383,6 +22553,13 @@
       "jornada": "Fecha 10",
       "jugador": "[cLm] KFICHO",
       "civ": "Gurjaras"
+    },
+    {
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 11",
+      "jugador": "P@K()",
+      "civ": "Celtas"
     }
   ]
 }
