@@ -208,7 +208,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- RANKING DE GALARDONES Y CIVILIZACIONES (Con filtros propios e independientes y botón de descarga propio) -->
+  <!-- RANKING DE GALARDONES Y CIVILIZACIONES (Con opción anual, histórico y botón propio) -->
   <div class="panel" id="seccion-ranking-galardones" style="margin-top:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 id="titulo-ranking-galardones" style="font-size:0.95rem; color:var(--gold); margin:0;">👑 Ranking de Galardones y Civilizaciones Destacadas</h3>
@@ -371,25 +371,37 @@ function renderizarCuadroHonor() {
 }
 
 function renderizarEstadisticasHonor() {
-  const anio = document.getElementById("filtro-honor-anio").value;
-  const mes = document.getElementById("filtro-honor-mes").value;
-  const nombreMes = NOMBRES_MES[mes] || "";
+  const anioVal = document.getElementById("filtro-honor-anio").value;
+  const mesVal = document.getElementById("filtro-honor-mes").value;
 
-  document.getElementById("subtitulo-galardones").textContent = `👑 Ranking de Galardones (Jugadores) — ${nombreMes} ${anio}`;
-  document.getElementById("subtitulo-civilizaciones").textContent = `🏛️ Civilizaciones más Destacadas — ${nombreMes} ${anio}`;
+  let delPeriodo = [];
+  let etiquetaPeriodo = "";
 
-  const delMes = CUADRO_HONOR.filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes);
+  if (anioVal === "todos") {
+    etiquetaPeriodo = "Histórico (Todos los años)";
+    delPeriodo = CUADRO_HONOR;
+  } else if (mesVal === "todos") {
+    etiquetaPeriodo = `Año ${anioVal} (Acumulado)`;
+    delPeriodo = CUADRO_HONOR.filter(h => h.anio == anioVal);
+  } else {
+    const nombreMes = NOMBRES_MES[mesVal] || "";
+    etiquetaPeriodo = `${nombreMes} ${anioVal}`;
+    delPeriodo = CUADRO_HONOR.filter(h => h.anio == anioVal && String(h.mes).padStart(2, "0") === mesVal);
+  }
 
-  if (delMes.length === 0) {
-    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos para ${nombreMes} ${anio}</div>`;
-    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos para ${nombreMes} ${anio}</div>`;
+  document.getElementById("subtitulo-galardones").textContent = `👑 Ranking de Galardones (Jugadores) — ${etiquetaPeriodo}`;
+  document.getElementById("subtitulo-civilizaciones").textContent = `🏛️ Civilizaciones más Destacadas — ${etiquetaPeriodo}`;
+
+  if (delPeriodo.length === 0) {
+    document.getElementById("contenedor-ranking-galardones").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos para ${etiquetaPeriodo}</div>`;
+    document.getElementById("contenedor-civilizaciones-destacadas").innerHTML = `<div class="empty-state" style="font-size:0.78rem;">Sin datos para ${etiquetaPeriodo}</div>`;
     return;
   }
 
   const conGalardones = {};
   const conCivs = {};
 
-  delMes.forEach(h => {
+  delPeriodo.forEach(h => {
     const jugadorOficial = resolverNombreOficial(h.jugador, EQUIVALENCIAS);
     conGalardones[jugadorOficial] = (conGalardones[jugadorOficial] || 0) + 1;
 
@@ -546,7 +558,8 @@ function poblarFiltrosAnioMes() {
   selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
   const selHonorAnio = document.getElementById("filtro-honor-anio");
-  selHonorAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  selHonorAnio.innerHTML = `<option value="todos">Histórico (Todos los años)</option>` +
+    anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
   actualizarMeses();
   poblarHonorMeses();
@@ -572,13 +585,21 @@ function actualizarMeses() {
 }
 
 function poblarHonorMeses() {
-  const anio = document.getElementById("filtro-honor-anio").value;
-  const meses = [...new Set(
-    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
-  )].sort().reverse();
-
+  const anioVal = document.getElementById("filtro-honor-anio").value;
   const selHonorMes = document.getElementById("filtro-honor-mes");
-  selHonorMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+
+  if (anioVal === "todos") {
+    selHonorMes.innerHTML = `<option value="todos">Todo el período histórico</option>`;
+    selHonorMes.disabled = true;
+  } else {
+    selHonorMes.disabled = false;
+    const meses = [...new Set(
+      PARTIDAS.filter(p => p.anio == anioVal).map(p => String(p.mes).padStart(2, "0"))
+    )].sort().reverse();
+
+    selHonorMes.innerHTML = `<option value="todos">Todo el año (Acumulado)</option>` +
+      meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  }
   renderizarEstadisticasHonor();
 }
 
