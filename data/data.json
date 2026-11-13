@@ -25637,6 +25637,67 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-06-Fecha12-P5",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 12",
+      "numeroPartida": 5,
+      "duracionSeg": 4003,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Wag",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "AAAwesomeGuy",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
