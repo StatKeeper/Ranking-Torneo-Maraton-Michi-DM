@@ -20806,6 +20806,4837 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-06-Fecha01-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 01",
+      "numeroPartida": 1,
+      "duracionSeg": 14013,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "No especificada",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "victoria",
+          "civ": "No especificada",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "No especificada",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Jkaarem",
+          "resultado": "victoria",
+          "civ": "No especificada",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "No especificada",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "No especificada",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "derrota",
+          "civ": "No especificada",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha02-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 02",
+      "numeroPartida": 1,
+      "duracionSeg": 3790,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Warrior Chief",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "frkndmly",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha02-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 02",
+      "numeroPartida": 2,
+      "duracionSeg": 2774,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M",
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Ecbert",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha02-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 02",
+      "numeroPartida": 3,
+      "duracionSeg": 3638,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "S"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Jkaarem",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha03-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 03",
+      "numeroPartida": 1,
+      "duracionSeg": 4244,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Kimchi",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha03-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 03",
+      "numeroPartida": 2,
+      "duracionSeg": 3421,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M",
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Majestic",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha04-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 04",
+      "numeroPartida": 1,
+      "duracionSeg": 4113,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Jkaarem",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha04-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 04",
+      "numeroPartida": 2,
+      "duracionSeg": 7165,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Jkaarem",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha05-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 05",
+      "numeroPartida": 1,
+      "duracionSeg": 3353,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "rushwarwarrior",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha05-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 05",
+      "numeroPartida": 2,
+      "duracionSeg": 2587,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha05-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 05",
+      "numeroPartida": 3,
+      "duracionSeg": 2660,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "BlackHorse",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha06-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 06",
+      "numeroPartida": 1,
+      "duracionSeg": 3095,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha06-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 06",
+      "numeroPartida": 2,
+      "duracionSeg": 7775,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha07-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 07",
+      "numeroPartida": 1,
+      "duracionSeg": 6918,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Levi",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha08-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 08",
+      "numeroPartida": 1,
+      "duracionSeg": 4247,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Benums",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha08-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 08",
+      "numeroPartida": 2,
+      "duracionSeg": 3296,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha09-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 09",
+      "numeroPartida": 1,
+      "duracionSeg": 4766,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha09-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 09",
+      "numeroPartida": 2,
+      "duracionSeg": 4357,
+      "jugadores": [
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "GoldiGlock",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha09-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 09",
+      "numeroPartida": 3,
+      "duracionSeg": 2843,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "GoldiGlock",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha09-P4",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 09",
+      "numeroPartida": 4,
+      "duracionSeg": 2831,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "GoldiGlock",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha10-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 10",
+      "numeroPartida": 1,
+      "duracionSeg": 8413,
+      "jugadores": [
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha11-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 11",
+      "numeroPartida": 1,
+      "duracionSeg": 3562,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha11-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 11",
+      "numeroPartida": 2,
+      "duracionSeg": 4575,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha11-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 11",
+      "numeroPartida": 3,
+      "duracionSeg": 3401,
+      "jugadores": [
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M",
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha11-P4",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 11",
+      "numeroPartida": 4,
+      "duracionSeg": 5058,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha12-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 12",
+      "numeroPartida": 1,
+      "duracionSeg": 6475,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha12-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 12",
+      "numeroPartida": 2,
+      "duracionSeg": 6213,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha12-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 12",
+      "numeroPartida": 3,
+      "duracionSeg": 4446,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha12-P4",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 12",
+      "numeroPartida": 4,
+      "duracionSeg": 3325,
+      "jugadores": [
+        {
+          "nombre": "Persie",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "AAAwesomeGuy",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Wag",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha13-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 13",
+      "numeroPartida": 1,
+      "duracionSeg": 2189,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Warrior Chief",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha13-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 13",
+      "numeroPartida": 2,
+      "duracionSeg": 8809,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Levi",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha13-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 13",
+      "numeroPartida": 3,
+      "duracionSeg": 7006,
+      "jugadores": [
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha13-P4",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 13",
+      "numeroPartida": 4,
+      "duracionSeg": 11760,
+      "jugadores": [
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha13-P5",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 13",
+      "numeroPartida": 5,
+      "duracionSeg": 5926,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Xchopan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha14-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 14",
+      "numeroPartida": 1,
+      "duracionSeg": 3691,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "carlinhos",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Falco Lombardi",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha14-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 14",
+      "numeroPartida": 2,
+      "duracionSeg": 4604,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "carlinhos",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Xchopan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha14-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 14",
+      "numeroPartida": 3,
+      "duracionSeg": 7232,
+      "jugadores": [
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "J@@@@",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "S"
+          ]
+        },
+        {
+          "nombre": "GGAMER",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Xchopan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha14-P4",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 14",
+      "numeroPartida": 4,
+      "duracionSeg": 7313,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Wag",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha15-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 15",
+      "numeroPartida": 1,
+      "duracionSeg": 3782,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Your true papa",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha15-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 15",
+      "numeroPartida": 2,
+      "duracionSeg": 3558,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Your true papa",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha15-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 15",
+      "numeroPartida": 3,
+      "duracionSeg": 0,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Your true papa",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Wag",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha15-P4",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 15",
+      "numeroPartida": 4,
+      "duracionSeg": 3357,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Erik Barbaro",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Trotamundos",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "carlinhos",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha16-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 16",
+      "numeroPartida": 1,
+      "duracionSeg": 10921,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Trotamundos",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha17-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 17",
+      "numeroPartida": 1,
+      "duracionSeg": 6437,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "RedMESC",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "carlinhos",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha18-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 18",
+      "numeroPartida": 1,
+      "duracionSeg": 2672,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha18-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 18",
+      "numeroPartida": 2,
+      "duracionSeg": 2433,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha18-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 18",
+      "numeroPartida": 3,
+      "duracionSeg": 0,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Trotamundos",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha19-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 19",
+      "numeroPartida": 1,
+      "duracionSeg": 7990,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha19-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 19",
+      "numeroPartida": 2,
+      "duracionSeg": 6300,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha19-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 19",
+      "numeroPartida": 3,
+      "duracionSeg": 2676,
+      "jugadores": [
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha19-P4",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 19",
+      "numeroPartida": 4,
+      "duracionSeg": 3631,
+      "jugadores": [
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha20-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 20",
+      "numeroPartida": 1,
+      "duracionSeg": 4330,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Furan",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Your true papa",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha20-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 20",
+      "numeroPartida": 2,
+      "duracionSeg": 9067,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha21-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 21",
+      "numeroPartida": 1,
+      "duracionSeg": 0,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Wag",
+          "resultado": "victoria",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "[cite: 19]",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha22-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 22",
+      "numeroPartida": 1,
+      "duracionSeg": 3514,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Dia Dia 02",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha22-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 22",
+      "numeroPartida": 2,
+      "duracionSeg": 2583,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha22-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 22",
+      "numeroPartida": 3,
+      "duracionSeg": 7121,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Diego Leal",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha23-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 23",
+      "numeroPartida": 1,
+      "duracionSeg": 4460,
+      "jugadores": [
+        {
+          "nombre": "Kficho",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha23-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 23",
+      "numeroPartida": 2,
+      "duracionSeg": 3793,
+      "jugadores": [
+        {
+          "nombre": "Bio Tine",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha23-P3",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 23",
+      "numeroPartida": 3,
+      "duracionSeg": 0,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Ustukuddus",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Jkaarem",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha24-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 24",
+      "numeroPartida": 1,
+      "duracionSeg": 1812,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Gerard",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha25-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 25",
+      "numeroPartida": 1,
+      "duracionSeg": 3633,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha25-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 25",
+      "numeroPartida": 2,
+      "duracionSeg": 3592,
+      "jugadores": [
+        {
+          "nombre": "Pako",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Bio Tine",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Ggindu",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha26-P1",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 26",
+      "numeroPartida": 1,
+      "duracionSeg": 3447,
+      "jugadores": [
+        {
+          "nombre": "Renjifo",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Erik Barbaro",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Persie",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Pako",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-06-Fecha26-P2",
+      "anio": 2026,
+      "mes": "06",
+      "jornada": "Fecha 26",
+      "numeroPartida": 2,
+      "duracionSeg": 8538,
+      "jugadores": [
+        {
+          "nombre": "Euphory",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "B. Rommel",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Kficho",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Gato Electoral",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
