@@ -111,7 +111,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="estadisticas.html">Estadísticas</a>
     <a href="candidatos.html">Candidatos</a>
     <a href="historial.html">Historial</a>
-    <a href="balanceador.html" class="active">Balanceador</a>
     <a href="admin.html">Administración</a>
   </nav>
 </header>
@@ -121,7 +120,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h3 style="text-align:center; color:var(--gold); margin-bottom:6px;">🏆 Balanceador Maratón Michi DM</h3>
     <p class="hint" style="text-align:center; margin-bottom:14px;">Selecciona los jugadores presentes en la fecha y genera equipos balanceados según su nivel histórico.</p>
 
-    <input type="text" id="buscador-jugadores" class="search-box" placeholder="Buscar jugador..." oninput="filtrarJugadoresLista()">
+    <input type="text" id="buscador-jugadores" class="search-box" placeholder="Buscar jugador para marcar..." oninput="filtrarJugadoresLista()">
 
     <div style="display:flex; gap:10px; margin-bottom:14px;">
       <button class="btn" style="flex:1;" onclick="balancearEquipos()">⚖️ Balancear Equipos</button>
@@ -156,22 +155,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
   <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
   <a href="historial.html"><span class="icon">📜</span>Historial</a>
-  <a href="balanceador.html" class="active"><span class="icon">⚖️</span>Equipos</a>
 </nav>
 
 <script src="js/datos.js"></script>
 <script>
 let DATOS_GLOBALES = {};
 let jugadoresDisponibles = [];
+const jugadoresSeleccionadosSet = new Set(); // Memoria persistente de selección
 
-// Asignar puntuación según categoría registrada o basada en rendimiento histórico
 function obtenerPuntajeJugador(nombre) {
   const info = DATOS_GLOBALES.jugadoresInfo?.[nombre] || {};
   const cat = info.categoria || 1;
-  // Categoría 1 o invitado por defecto otorga base, podemos afinar según categoría o rendimiento
-  if (cat === 2) return 4; // Liga Pro
-  if (cat === 3) return 3; // Invitado avanzado
-  return 3; // Estándar comunidad
+  if (cat === 2) return 4;
+  if (cat === 3) return 3;
+  return 3;
 }
 
 function obtenerEtiquetaCategoria(nombre) {
@@ -187,7 +184,6 @@ async function inicializarBalanceador() {
     DATOS_GLOBALES = await cargarDatos();
     const nombresSet = new Set();
     
-    // Recopilar nombres de partidas y del registro de jugadores
     (DATOS_GLOBALES.partidas || []).forEach(p => {
       (p.jugadores || []).forEach(j => {
         if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS_GLOBALES.equivalencias || []));
@@ -211,13 +207,25 @@ function renderizarListaJugadores(nombres) {
 
   cont.innerHTML = nombres.map(nombre => {
     const rangoLabel = obtenerEtiquetaCategoria(nombre);
+    const estaCheck = jugadoresSeleccionadosSet.has(nombre) ? 'checked' : '';
     return `
       <label class="jugador-checkbox">
-        <input type="checkbox" value="${nombre}" onchange="actualizarContadorSeleccionados()">
+        <input type="checkbox" value="${nombre}" ${estaCheck} onchange="cambiarSeleccionJugador(this)">
         <span>${nombre} <span style="font-size:0.75rem; color:var(--text-dim);">${rangoLabel}</span></span>
       </label>
     `;
   }).join("");
+  
+  actualizarContadorSeleccionados();
+}
+
+function cambiarSeleccionJugador(checkbox) {
+  if (checkbox.checked) {
+    jugadoresSeleccionadosSet.add(checkbox.value);
+  } else {
+    jugadoresSeleccionadosSet.delete(checkbox.value);
+  }
+  actualizarContadorSeleccionados();
 }
 
 function filtrarJugadoresLista() {
@@ -227,23 +235,24 @@ function filtrarJugadoresLista() {
 }
 
 function actualizarContadorSeleccionados() {
-  const checks = document.querySelectorAll(".lista-jugadores-grid input[type='checkbox']:checked");
-  document.getElementById("contador-seleccionados").textContent = `Jugadores seleccionados (${checks.length})`;
+  document.getElementById("contador-seleccionados").textContent = `Jugadores seleccionados (${jugadoresSeleccionadosSet.size})`;
+}
+
+function obtenerListaSeleccionadosArray() {
+  return Array.from(jugadoresSeleccionadosSet).map(nombre => ({
+    nombre,
+    puntos: obtenerPuntajeJugador(nombre)
+  }));
 }
 
 function balancearEquipos() {
-  const checks = document.querySelectorAll(".lista-jugadores-grid input[type='checkbox']:checked");
-  const seleccionados = Array.from(checks).map(c => {
-    const nombre = c.value;
-    return { nombre, puntos: obtenerPuntajeJugador(nombre) };
-  });
+  const seleccionados = obtenerListaSeleccionadosArray();
 
   if (seleccionados.length < 2) {
     alert("Selecciona al menos 2 jugadores para poder balancear los equipos.");
     return;
   }
 
-  // Ordenar de mayor a menor puntaje para aplicar algoritmo greedy de balanceo
   seleccionados.sort((a, b) => b.puntos - a.puntos);
 
   const equipo1 = [];
@@ -265,18 +274,13 @@ function balancearEquipos() {
 }
 
 function rebalancearEquipos() {
-  const checks = document.querySelectorAll(".lista-jugadores-grid input[type='checkbox']:checked");
-  const seleccionados = Array.from(checks).map(c => {
-    const nombre = c.value;
-    return { nombre, puntos: obtenerPuntajeJugador(nombre) };
-  });
+  const seleccionados = obtenerListaSeleccionadosArray();
 
   if (seleccionados.length < 2) {
     alert("Selecciona al menos 2 jugadores.");
     return;
   }
 
-  // Mezclar aleatoriamente para dar variantes al rebalancear
   seleccionados.sort(() => Math.random() - 0.5);
   seleccionados.sort((a, b) => b.puntos - a.puntos);
 
@@ -286,7 +290,6 @@ function rebalancearEquipos() {
   let suma2 = 0;
 
   seleccionados.forEach(jugador => {
-    // Alternativa aleatoria leve para rebalanceo
     const elegirEquipo1 = suma1 === suma2 ? (Math.random() > 0.5) : (suma1 < suma2);
     if (elegirEquipo1) {
       equipo1.push(jugador);
