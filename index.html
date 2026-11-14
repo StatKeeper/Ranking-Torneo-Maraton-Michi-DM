@@ -93,6 +93,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const cont = document.getElementById("contenedor-galardon");
 
   const lista = datos.jornadasImagenes || [];
+  
   // Mapeamos para normalizar la ruta del galardón aceptando cualquiera de las dos claves
   const conGalardon = lista
     .map(j => ({ ...j, urlGalardon: j.imagenGalardon || j.galardon }))
@@ -103,16 +104,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return;
   }
 
-  conGalardon.sort((a, b) =>
-    claveOrden({ anio: b.anio, mes: b.mes, jornada: b.jornada, numeroPartida: 0 }) -
-    claveOrden({ anio: a.anio, mes: a.mes, jornada: a.jornada, numeroPartida: 0 })
-  );
+  // Ordenamos de forma robusta por año, mes y número de jornada descendente
+  conGalardon.sort((a, b) => {
+    const anioA = parseInt(a.anio, 10) || 0;
+    const anioB = parseInt(b.anio, 10) || 0;
+    if (anioA !== anioB) return anioB - anioA;
+
+    const mesA = parseInt(a.mes, 10) || 0;
+    const mesB = parseInt(b.mes, 10) || 0;
+    if (mesA !== mesB) return mesB - mesA;
+
+    const jorA = numeroDeJornada(a.jornada);
+    const jorB = numeroDeJornada(b.jornada);
+    return jorB - jorA;
+  });
+
   const ultima = conGalardon[0];
 
   cont.innerHTML = `
     <img src="${ultima.urlGalardon}" alt="Galardón ${ultima.jornada}">
     <div class="etiqueta">👑 ${ultima.jornada}</div>
-    <div class="subetiqueta">${NOMBRES_MES[ultima.mes]} ${ultima.anio}</div>
+    <div class="subetiqueta">${NOMBRES_MES[String(ultima.mes).padStart(2, "0")] || ultima.mes} ${ultima.anio}</div>
   `;
 })();
 </script>
