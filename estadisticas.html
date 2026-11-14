@@ -46,7 +46,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .compare-table th:first-child, .compare-table td:first-child { text-align: center; color: var(--text-dim); width: 60px; }
   .compare-table thead th { color: var(--gold); font-weight: 600; }
   
-  /* Estilo para los nombres en columna vertical dentro de la celda */
   .equipo-vertical {
     display: flex;
     flex-direction: column;
@@ -54,6 +53,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .equipo-vertical span {
     font-weight: 600;
+  }
+  
+  /* Estilos específicos para la sección de Civs Generales y por Jugador */
+  .civs-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .civ-card {
+    background: var(--panel-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .civ-card h4 {
+    color: var(--gold);
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lista-civ-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-bottom: 1px dashed var(--line);
+    font-size: 0.84rem;
+  }
+  .lista-civ-item:last-child {
+    border-bottom: none;
   }
 </style>
 </head>
@@ -82,11 +115,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="subtabs">
     <button class="subtab-btn active" data-tab="tiempos" onclick="cambiarSubtab('tiempos')">⏱ Tiempos</button>
     <button class="subtab-btn" data-tab="civs" onclick="cambiarSubtab('civs')">🏛 Civs / WR</button>
+    <button class="subtab-btn" data-tab="civs-global" onclick="cambiarSubtab('civs-global')">🏛️ Civs Usadas</button>
     <button class="subtab-btn" data-tab="sinergia" onclick="cambiarSubtab('sinergia')">🤝 Sinergia</button>
     <button class="subtab-btn" data-tab="equipos" onclick="cambiarSubtab('equipos')">🤝 Equipos</button>
   </div>
 
-  <div class="filters">
+  <div class="filters" id="contenedor-filtros-periodo">
     <select id="filtro-anio"></select>
     <select id="filtro-mes"></select>
   </div>
@@ -133,7 +167,7 @@ function partidasFiltradas() {
 function poblarFiltrosPeriodo() {
   const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-anio");
-  selAnio.innerHTML = `<option value="">Todos los años</option>` + anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  selAnio.innerHTML = `<option value="">Todos los años (Histórico)</option>` + anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
   const meses = [...new Set(PARTIDAS.map(p => String(p.mes).padStart(2, "0")))].sort();
   const selMes = document.getElementById("filtro-mes");
@@ -142,6 +176,8 @@ function poblarFiltrosPeriodo() {
   const rerenderSiHayResultado = () => {
     if (subtabActual === "equipos") {
       renderizarEquiposGanadores();
+    } else if (subtabActual === "civs-global") {
+      renderizarCivsGlobalesOYPorJugador();
     } else if (document.getElementById("resultado").style.display !== "none") {
       consultar();
     }
@@ -157,16 +193,132 @@ function cambiarSubtab(tab) {
   const panelSel = document.getElementById("panel-seleccion-jugadores");
   const resultadoDiv = document.getElementById("resultado");
   const btnDescargar = document.getElementById("btn-descargar-stats");
+  const filtrosPeriodo = document.getElementById("contenedor-filtros-periodo");
 
   if (tab === "equipos") {
     panelSel.style.display = "none";
+    filtrosPeriodo.style.display = "flex";
     resultadoDiv.style.display = "block";
     btnDescargar.style.display = "inline-block";
     renderizarEquiposGanadores();
+  } else if (tab === "civs-global") {
+    panelSel.style.display = "none";
+    filtrosPeriodo.style.display = "flex";
+    resultadoDiv.style.display = "block";
+    btnDescargar.style.display = "inline-block";
+    renderizarCivsGlobalesOYPorJugador();
   } else {
     panelSel.style.display = "block";
+    filtrosPeriodo.style.display = "flex";
     resultadoDiv.style.display = "none";
     btnDescargar.style.display = "none";
+  }
+}
+
+function renderizarCivsGlobalesOYPorJugador() {
+  const resultadoDiv = document.getElementById("resultado");
+  const filtradas = partidasFiltradas();
+  
+  const conteoCivsGlobal = {};
+  const conteoCivsPorJugador = {};
+
+  filtradas.forEach(p => {
+    if (!p.jugadores || !Array.isArray(p.jugadores)) return;
+    p.jugadores.forEach(j => {
+      if (!j.civ) return;
+      const civOficial = resolverCivOficial(j.civ, EQUIVALENCIAS.civEquivalencias || EQUIVALENCIAS);
+      const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+
+      // Conteo global
+      conteoCivsGlobal[civOficial] = (conteoCivsGlobal[civOficial] || 0) + 1;
+
+      // Conteo por jugador
+      if (!conteoCivsPorJugador[nombreOficial]) {
+        conteoCivsPorJugador[nombreOficial] = {};
+      }
+      conteoCivsPorJugador[nombreOficial][civOficial] = (conteoCivsPorJugador[nombreOficial][civOficial] || 0) + 1;
+    });
+  });
+
+  // Ordenar civilizaciones globales de mayor a menor uso
+  const rankingGlobal = Object.entries(conteoCivsGlobal)
+    .sort((a, b) => b[1] - a[1]);
+
+  // Ordenar lista de jugadores alfabéticamente
+  const jugadoresOrdenados = Object.keys(conteoCivsPorJugador).sort();
+
+  resultadoDiv.innerHTML = `
+    <h3>🏛️ Ranking General de Civilizaciones Más Usadas</h3>
+    <p class="hint">Frecuencia total de uso de civilizaciones en el período seleccionado (sin distinción de jugador).</p>
+    
+    ${rankingGlobal.length === 0 ? `<div class="empty-state">No hay registros de civilizaciones para este período.</div>` : `
+      <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; background:var(--panel);">
+        <table class="compare-table" style="margin:0;">
+          <thead>
+            <tr>
+              <th style="width:60px; text-align:center;">#</th>
+              <th style="text-align:left;">Civilización</th>
+              <th style="width:140px; text-align:center;">Partidas Jugadas</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rankingGlobal.map(([civ, count], idx) => `
+              <tr>
+                <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
+                <td style="text-align:left; font-weight:600;">${civ}</td>
+                <td style="text-align:center; font-weight:700; color:var(--win);">${count}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `}
+
+    <h3 style="margin-top:24px;">🧑‍🤝‍🧑 Civilizaciones Más Usadas por Jugador (Orden Alfabético)</h3>
+    <p class="hint">Consulta el desglose de civilizaciones de cada jugador. Puedes alternar el orden alfabético o por mayor uso.</p>
+
+    <div style="margin-bottom: 12px; display:flex; gap:10px; align-items:center;">
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.78rem;" onclick="alternarOrdenJugadoresCivs()">🔄 Cambiar Orden (Alfabético / Mayor Uso)</button>
+    </div>
+
+    <div class="civs-stats-grid" id="grid-civs-jugadores">
+      ${jugadoresOrdenados.map(jugador => {
+        const civsJugador = Object.entries(conteoCivsPorJugador[jugador]).sort((a, b) => b[1] - a[1]);
+        const topCiv = civsJugador[0] ? `${civsJugador[0][0]} (${civsJugador[0][1]} usos)` : "Sin registros";
+        return `
+          <div class="civ-card" data-jugador="${jugador.toLowerCase()}">
+            <h4>
+              <span>⚔️ ${jugador}</span>
+              <button class="btn secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="toggleDetalleCivs('${CSS.escape(jugador)}')">Ver detalle</button>
+            </h4>
+            <div style="font-size:0.85rem; color:var(--text-dim); margin-bottom:6px;">
+              <strong>Favorita:</strong> <span style="color:var(--gold);">${topCiv}</span>
+            </div>
+            <div id="detalle-${CSS.escape(jugador)}" style="display:none; max-height: 160px; overflow-y: auto; margin-top:8px; border-top: 1px solid var(--line); padding-top: 6px;">
+              ${civsJugador.map(([civ, count]) => `
+                <div class="lista-civ-item">
+                  <span>${civ}</span>
+                  <strong>${count} partida(s)</strong>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+let ordenAlfabeticoJugadores = true;
+function alternarOrdenJugadoresCivs() {
+  ordenAlfabeticoJugadores = !ordenAlfabeticoJugadores;
+  renderizarCivsGlobalesOYPorJugador();
+}
+
+function toggleDetalleCivs(jugadorId) {
+  const el = document.getElementById(`detalle-${jugadorId}`);
+  if (el) {
+    el.style.display = el.style.display === "none" ? "block" : "none";
   }
 }
 
@@ -178,7 +330,6 @@ function renderizarEquiposGanadores() {
   filtradas.forEach(p => {
     if (!p.jugadores || !Array.isArray(p.jugadores)) return;
     
-    // Agrupar jugadores ganadores por equipo dentro de esta partida
     const equiposGanadores = {};
     p.jugadores.forEach(j => {
       if ((j.resultado || "").toLowerCase() === "victoria") {
@@ -191,12 +342,11 @@ function renderizarEquiposGanadores() {
       }
     });
 
-    // Procesar cada equipo ganador completo
     Object.values(equiposGanadores).forEach(miembros => {
-      if (miembros.length !== 3 && miembros.length !== 4) return; // Solo 3v3 y 4v4
+      if (miembros.length !== 3 && miembros.length !== 4) return;
       
       miembros.sort();
-      const equipoKey = JSON.stringify(miembros); // Guardar arreglo ordenado como clave única
+      const equipoKey = JSON.stringify(miembros);
       
       if (!equiposConteo[equipoKey]) {
         equiposConteo[equipoKey] = { miembros, v3: 0, v4: 0, total: 0 };
@@ -211,7 +361,6 @@ function renderizarEquiposGanadores() {
     });
   });
 
-  // Filtrar equipos con 2 o más victorias totales y ordenar de mayor a menor
   const rankingEquipos = Object.values(equiposConteo)
     .filter(datos => datos.total >= 2)
     .sort((a, b) => b.total - a.total);
@@ -349,10 +498,10 @@ function descargarImagenStats() {
 (async function init() {
   const datos = await cargarDatos();
   PARTIDAS = datos.partidas;
-  EQUIVALENCIAS = datos.equivalencias;
+  EQUIVALENCIAS = datos;
   poblarFiltrosPeriodo();
   document.getElementById("lista-nombres").innerHTML =
-    listaDeNombresOficiales(PARTIDAS, EQUIVALENCIAS).map(n => `<option value="${n}">`).join("");
+    listaDeNombresOficiales(PARTIDAS, EQUIVALENCIAS.equivalencias || EQUIVALENCIAS).map(n => `<option value="${n}">`).join("");
 })();
 </script>
 </body>
