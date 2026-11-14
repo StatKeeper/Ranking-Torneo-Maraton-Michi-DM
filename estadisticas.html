@@ -175,13 +175,22 @@ function partidasFiltradas() {
 }
 
 function poblarFiltrosPeriodo() {
-  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
+  const aniosSet = new Set(PARTIDAS.map(p => p.anio));
+  const anioActual = new Date().getFullYear();
+  aniosSet.add(anioActual);
+  const anios = [...aniosSet].sort((a, b) => b - a);
+
   const selAnio = document.getElementById("filtro-anio");
   selAnio.innerHTML = `<option value="">Todos los años (Histórico)</option>` + anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
-  const meses = [...new Set(PARTIDAS.map(p => String(p.mes).padStart(2, "0")))].sort();
+  // Lista fija de los 12 meses para que enero a mayo siempre aparezcan disponibles
+  const mesesDelAnio = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = `<option value="">Todos los meses</option>` + meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  selMes.innerHTML = `<option value="">Todos los meses</option>` + mesesDelAnio.map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
+
+  // Seleccionar automáticamente el mes actual en curso por defecto
+  const mesActualStr = String(new Date().getMonth() + 1).padStart(2, "0");
+  selMes.value = mesActualStr;
 
   const rerenderSiHayResultado = () => {
     if (subtabActual === "equipos") {
