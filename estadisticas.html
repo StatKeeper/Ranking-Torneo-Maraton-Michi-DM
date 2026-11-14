@@ -55,7 +55,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-weight: 600;
   }
   
-  /* Estilos específicos para la sección de Civs Generales y por Jugador */
   .civs-stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -229,10 +228,8 @@ function renderizarCivsGlobalesOYPorJugador() {
       const civOficial = resolverCivOficial(j.civ, EQUIVALENCIAS.civEquivalencias || EQUIVALENCIAS);
       const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
 
-      // Conteo global
       conteoCivsGlobal[civOficial] = (conteoCivsGlobal[civOficial] || 0) + 1;
 
-      // Conteo por jugador
       if (!conteoCivsPorJugador[nombreOficial]) {
         conteoCivsPorJugador[nombreOficial] = {};
       }
@@ -240,11 +237,9 @@ function renderizarCivsGlobalesOYPorJugador() {
     });
   });
 
-  // Ordenar civilizaciones globales de mayor a menor uso
   const rankingGlobal = Object.entries(conteoCivsGlobal)
     .sort((a, b) => b[1] - a[1]);
 
-  // Ordenar lista de jugadores alfabéticamente
   const jugadoresOrdenados = Object.keys(conteoCivsPorJugador).sort();
 
   resultadoDiv.innerHTML = `
@@ -275,11 +270,7 @@ function renderizarCivsGlobalesOYPorJugador() {
     `}
 
     <h3 style="margin-top:24px;">🧑‍🤝‍🧑 Civilizaciones Más Usadas por Jugador (Orden Alfabético)</h3>
-    <p class="hint">Consulta el desglose de civilizaciones de cada jugador. Puedes alternar el orden alfabético o por mayor uso.</p>
-
-    <div style="margin-bottom: 12px; display:flex; gap:10px; align-items:center;">
-      <button class="btn secondary" style="padding:4px 10px; font-size:0.78rem;" onclick="alternarOrdenJugadoresCivs()">🔄 Cambiar Orden (Alfabético / Mayor Uso)</button>
-    </div>
+    <p class="hint">Consulta el desglose de civilizaciones de cada jugador.</p>
 
     <div class="civs-stats-grid" id="grid-civs-jugadores">
       ${jugadoresOrdenados.map(jugador => {
@@ -307,12 +298,6 @@ function renderizarCivsGlobalesOYPorJugador() {
       }).join("")}
     </div>
   `;
-}
-
-let ordenAlfabeticoJugadores = true;
-function alternarOrdenJugadoresCivs() {
-  ordenAlfabeticoJugadores = !ordenAlfabeticoJugadores;
-  renderizarCivsGlobalesOYPorJugador();
 }
 
 function toggleDetalleCivs(jugadorId) {
