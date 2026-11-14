@@ -263,12 +263,19 @@ async function inicializarBalanceador() {
     DATOS_GLOBALES = await cargarDatos();
     const nombresSet = new Set();
     
+    // Unificación automática aplicando resolverNombreOficial con las equivalencias
     (DATOS_GLOBALES.partidas || []).forEach(p => {
       (p.jugadores || []).forEach(j => {
-        if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS_GLOBALES.equivalencias || []));
+        if (j.nombre) {
+          const oficial = resolverNombreOficial(j.nombre, DATOS_GLOBALES);
+          if (oficial) nombresSet.add(oficial);
+        }
       });
     });
-    Object.keys(DATOS_GLOBALES.jugadoresInfo || {}).forEach(n => nombresSet.add(n));
+    Object.keys(DATOS_GLOBALES.jugadoresInfo || {}).forEach(n => {
+      const oficial = resolverNombreOficial(n, DATOS_GLOBALES);
+      if (oficial) nombresSet.add(oficial);
+    });
 
     jugadoresDisponibles = [...nombresSet].sort();
     
