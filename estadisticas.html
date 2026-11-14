@@ -126,7 +126,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="subtab-btn" data-tab="civs" onclick="cambiarSubtab('civs')">🏛 Civs / WR</button>
     <button class="subtab-btn" data-tab="sinergia" onclick="cambiarSubtab('sinergia')">🤝 Sinergia</button>
     <button class="subtab-btn" data-tab="equipos" onclick="cambiarSubtab('equipos')">🤝 Equipos</button>
-    <button class="subtab-btn" data-tab="civs-global" onclick="cambiarSubtab('civs-global')">🏛️ Civs Usadas</button>
+    <button class="subtab-btn" data-tab="civs-usadas" onclick="cambiarSubtab('civs-usadas')">🏛️ Civs Usadas</button>
   </div>
 
   <div class="filters" id="contenedor-filtros-periodo">
@@ -186,7 +186,7 @@ function poblarFiltrosPeriodo() {
   const rerenderSiHayResultado = () => {
     if (subtabActual === "equipos") {
       renderizarEquiposGanadores();
-    } else if (subtabActual === "civs-global") {
+    } else if (subtabActual === "civs-usadas") {
       renderizarCivsGlobalesOYPorJugador();
     } else if (document.getElementById("resultado").style.display !== "none") {
       consultar();
@@ -209,13 +209,13 @@ function cambiarSubtab(tab) {
     panelSel.style.display = "none";
     filtrosPeriodo.style.display = "flex";
     resultadoDiv.style.display = "block";
-    btnDescargar.style.display = "inline-block";
+    btnDescargar.style.display = "none";
     renderizarEquiposGanadores();
-  } else if (tab === "civs-global") {
+  } else if (tab === "civs-usadas") {
     panelSel.style.display = "none";
     filtrosPeriodo.style.display = "flex";
     resultadoDiv.style.display = "block";
-    btnDescargar.style.display = "none"; // Se usan botones específicos de sección
+    btnDescargar.style.display = "none";
     renderizarCivsGlobalesOYPorJugador();
   } else {
     panelSel.style.display = "block";
@@ -324,8 +324,8 @@ function renderizarCivsGlobalesOYPorJugador() {
       ${listaJugadores.map(jugador => {
         const civsJugador = Object.entries(conteoCivsPorJugador[jugador]).sort((a, b) => b[1] - a[1]);
         const topCiv = civsJugador[0] ? `${civsJugador[0][0]} (${civsJugador[0][1]} usos)` : "Sin registros";
-        const cardIdSafe = `card-civ-${btoa(jugador).replace(/=/g, "")}`;
-        const detalleIdSafe = `detalle-civ-${btoa(jugador).replace(/=/g, "")}`;
+        const cardIdSafe = `card-civ-${btoa(encodeURIComponent(jugador)).replace(/=/g, "")}`;
+        const detalleIdSafe = `detalle-civ-${btoa(encodeURIComponent(jugador)).replace(/=/g, "")}`;
         return `
           <div class="civ-card" data-jugador="${jugador.toLowerCase()}" id="${cardIdSafe}">
             <h4>
@@ -543,7 +543,7 @@ function descargarImagenStats() {
   
   if (subtabActual === "equipos") {
     renderizarEquiposGanadores();
-  } else if (subtabActual === "civs-global") {
+  } else if (subtabActual === "civs-usadas") {
     renderizarCivsGlobalesOYPorJugador();
   }
 })();
