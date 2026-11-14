@@ -87,6 +87,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .lista-civ-item:last-child {
     border-bottom: none;
   }
+  .search-admin {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--panel-raised);
+    color: var(--text);
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+  }
 </style>
 </head>
 <body>
@@ -205,7 +215,7 @@ function cambiarSubtab(tab) {
     panelSel.style.display = "none";
     filtrosPeriodo.style.display = "flex";
     resultadoDiv.style.display = "block";
-    btnDescargar.style.display = "inline-block";
+    btnDescargar.style.display = "none"; // Se usan botones específicos de sección
     renderizarCivsGlobalesOYPorJugador();
   } else {
     panelSel.style.display = "block";
@@ -218,6 +228,15 @@ function cambiarSubtab(tab) {
 function alternarOrdenCivsJugadores() {
   ordenCivsJugadoresModo = ordenCivsJugadoresModo === "alfabetico" ? "frecuencia" : "alfabetico";
   renderizarCivsGlobalesOYPorJugador();
+}
+
+function filtrarJugadoresCivsTarjeta() {
+  const filtro = document.getElementById("buscador-civs-jugador").value.toLowerCase();
+  const tarjetas = document.querySelectorAll(".civ-card");
+  tarjetas.forEach(card => {
+    const jugador = card.getAttribute("data-jugador") || "";
+    card.style.display = jugador.includes(filtro) ? "block" : "none";
+  });
 }
 
 function renderizarCivsGlobalesOYPorJugador() {
@@ -246,7 +265,6 @@ function renderizarCivsGlobalesOYPorJugador() {
   const rankingGlobal = Object.entries(conteoCivsGlobal)
     .sort((a, b) => b[1] - a[1]);
 
-  // Lista de jugadores según el modo seleccionado (Alfabético o por mayor cantidad de partidas jugadas en total)
   let listaJugadores = Object.keys(conteoCivsPorJugador);
   if (ordenCivsJugadoresModo === "alfabetico") {
     listaJugadores.sort();
@@ -259,33 +277,38 @@ function renderizarCivsGlobalesOYPorJugador() {
   }
 
   resultadoDiv.innerHTML = `
-    <h3>🏛️ Ranking General de Civilizaciones Más Usadas</h3>
-    <p class="hint">Frecuencia total de uso de civilizaciones en el período seleccionado (sin distinción de jugador).</p>
-    
-    ${rankingGlobal.length === 0 ? `<div class="empty-state">No hay registros de civilizaciones para este período.</div>` : `
-      <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 24px; background:var(--panel);">
-        <table class="compare-table" style="margin:0;">
-          <thead>
-            <tr>
-              <th style="width:60px; text-align:center;">#</th>
-              <th style="text-align:left;">Civilización</th>
-              <th style="width:140px; text-align:center;">Partidas Jugadas</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rankingGlobal.map(([civ, count], idx) => `
-              <tr>
-                <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
-                <td style="text-align:left; font-weight:600;">${civ}</td>
-                <td style="text-align:center; font-weight:700; color:var(--win);">${count}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
+    <div id="seccion-ranking-global">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+        <h3 style="margin:0;">🏛️ Ranking General de Civilizaciones Más Usadas</h3>
+        <button class="btn secondary" style="padding:4px 10px; font-size:0.78rem;" onclick="descargarElementoComoImagen(document.getElementById('seccion-ranking-global'), 'ranking-civs-general.png', '#1c2027')">📷 Descargar Ranking</button>
       </div>
-    `}
+      <p class="hint">Frecuencia total de uso de civilizaciones en el período seleccionado (sin distinción de jugador).</p>
+      
+      ${rankingGlobal.length === 0 ? `<div class="empty-state">No hay registros de civilizaciones para este período.</div>` : `
+        <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 24px; background:var(--panel);">
+          <table class="compare-table" style="margin:0;">
+            <thead>
+              <tr>
+                <th style="width:60px; text-align:center;">#</th>
+                <th style="text-align:left;">Civilización</th>
+                <th style="width:140px; text-align:center;">Partidas Jugadas</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rankingGlobal.map(([civ, count], idx) => `
+                <tr>
+                  <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
+                  <td style="text-align:left; font-weight:600;">${civ}</td>
+                  <td style="text-align:center; font-weight:700; color:var(--win);">${count}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `}
+    </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px; margin-top:24px;">
       <div>
         <h3 style="margin:0;">🧑‍🤝‍🧑 Civilizaciones Más Usadas por Jugador</h3>
         <p class="hint" style="margin:0;">Desglose individual por participante.</p>
@@ -295,20 +318,27 @@ function renderizarCivsGlobalesOYPorJugador() {
       </button>
     </div>
 
+    <input type="text" id="buscador-civs-jugador" class="search-admin" placeholder="Buscar jugador..." oninput="filtrarJugadoresCivsTarjeta()">
+
     <div class="civs-stats-grid" id="grid-civs-jugadores">
       ${listaJugadores.map(jugador => {
         const civsJugador = Object.entries(conteoCivsPorJugador[jugador]).sort((a, b) => b[1] - a[1]);
         const topCiv = civsJugador[0] ? `${civsJugador[0][0]} (${civsJugador[0][1]} usos)` : "Sin registros";
+        const cardIdSafe = `card-civ-${btoa(jugador).replace(/=/g, "")}`;
+        const detalleIdSafe = `detalle-civ-${btoa(jugador).replace(/=/g, "")}`;
         return `
-          <div class="civ-card" data-jugador="${jugador.toLowerCase()}">
+          <div class="civ-card" data-jugador="${jugador.toLowerCase()}" id="${cardIdSafe}">
             <h4>
               <span>⚔️ ${jugador}</span>
-              <button class="btn secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="toggleDetalleCivs('${CSS.escape(jugador)}')">Ver detalle</button>
+              <div style="display:flex; gap:6px;">
+                <button class="btn secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="descargarElementoComoImagen(document.getElementById('${cardIdSafe}'), 'civs-${jugador.replace(/[^a-zA-Z0-9]/g, '_')}.png', '#1c2027')">📷 Descargar</button>
+                <button class="btn secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="toggleDetalleCivs('${detalleIdSafe}')">Ver detalle</button>
+              </div>
             </h4>
             <div style="font-size:0.85rem; color:var(--text-dim); margin-bottom:6px;">
-              <strong>Favorita:</strong> <span style="color:var(--gold);">${topCiv}</span>
+              <strong>Más usada:</strong> <span style="color:var(--gold);">${topCiv}</span>
             </div>
-            <div id="detalle-${CSS.escape(jugador)}" style="display:none; max-height: 160px; overflow-y: auto; margin-top:8px; border-top: 1px solid var(--line); padding-top: 6px;">
+            <div id="${detalleIdSafe}" style="display:none; max-height: 160px; overflow-y: auto; margin-top:8px; border-top: 1px solid var(--line); padding-top: 6px;">
               ${civsJugador.map(([civ, count]) => `
                 <div class="lista-civ-item">
                   <span>${civ}</span>
@@ -323,8 +353,8 @@ function renderizarCivsGlobalesOYPorJugador() {
   `;
 }
 
-function toggleDetalleCivs(jugadorId) {
-  const el = document.getElementById(`detalle-${jugadorId}`);
+function toggleDetalleCivs(detalleId) {
+  const el = document.getElementById(detalleId);
   if (el) {
     el.style.display = el.style.display === "none" ? "block" : "none";
   }
@@ -511,7 +541,6 @@ function descargarImagenStats() {
   document.getElementById("lista-nombres").innerHTML =
     listaDeNombresOficiales(PARTIDAS, EQUIVALENCIAS).map(n => `<option value="${n}">`).join("");
   
-  // Renderizar por defecto si inicia en tiempos u otra pestaña
   if (subtabActual === "equipos") {
     renderizarEquiposGanadores();
   } else if (subtabActual === "civs-global") {
