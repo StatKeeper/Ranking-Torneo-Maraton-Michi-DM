@@ -43,7 +43,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     background: var(--panel-raised);
     color: var(--text);
     font-size: 0.9rem;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   .tabla-valores {
     background: var(--panel-raised);
@@ -57,12 +57,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 8px;
-    max-height: 300px;
+    max-height: 240px;
     overflow-y: auto;
     padding: 10px;
     background: var(--panel-raised);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    margin-bottom: 16px;
   }
   .jugador-checkbox {
     display: flex;
@@ -70,6 +71,38 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     gap: 8px;
     font-size: 0.85rem;
     cursor: pointer;
+  }
+  /* Estilos para los chips de jugadores seleccionados arriba */
+  .contenedor-chips-seleccionados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding: 8px;
+    background: var(--panel-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+  }
+  .chip-jugador {
+    background: var(--gold);
+    color: #17130a;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip-eliminar {
+    cursor: pointer;
+    font-weight: bold;
+    opacity: 0.7;
+  }
+  .chip-eliminar:hover {
+    opacity: 1;
   }
   .equipos-resultado {
     display: grid;
@@ -122,7 +155,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <input type="text" id="buscador-jugadores" class="search-box" placeholder="Buscar jugador para marcar..." oninput="filtrarJugadoresLista()">
 
-    <div style="display:flex; gap:10px; margin-bottom:14px;">
+    <!-- Panel visual de jugadores seleccionados (Chips) -->
+    <div style="margin-bottom:6px; font-size:0.85rem; font-weight:600; color:var(--gold);" id="contador-seleccionados">Jugadores seleccionados (0)</div>
+    <div id="contenedor-chips" class="contenedor-chips-seleccionados">
+      <span style="font-size:0.78rem; color:var(--text-dim); font-style:italic;">Ningún jugador seleccionado todavía.</span>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-bottom:16px;">
       <button class="btn" style="flex:1;" onclick="balancearEquipos()">⚖️ Balancear Equipos</button>
       <button class="btn secondary" onclick="rebalancearEquipos()">🔄 Rebalancear</button>
     </div>
@@ -137,8 +176,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span style="color:var(--text-dim);"><strong>B+ Campeón:</strong> 1 Pts</span>
       </div>
     </div>
-
-    <div style="margin-bottom:8px; font-size:0.85rem; font-weight:600; color:var(--gold);" id="contador-seleccionados">Jugadores seleccionados (0)</div>
     
     <div id="lista-checkboxes-jugadores" class="lista-jugadores-grid">
       <div class="empty-state">Cargando jugadores...</div>
@@ -161,7 +198,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 let DATOS_GLOBALES = {};
 let jugadoresDisponibles = [];
-const jugadoresSeleccionadosSet = new Set(); // Memoria persistente de selección
+const jugadoresSeleccionadosSet = new Set();
 
 function obtenerPuntajeJugador(nombre) {
   const info = DATOS_GLOBALES.jugadoresInfo?.[nombre] || {};
@@ -216,7 +253,7 @@ function renderizarListaJugadores(nombres) {
     `;
   }).join("");
   
-  actualizarContadorSeleccionados();
+  actualizarPanelSeleccionados();
 }
 
 function cambiarSeleccionJugador(checkbox) {
@@ -225,17 +262,37 @@ function cambiarSeleccionJugador(checkbox) {
   } else {
     jugadoresSeleccionadosSet.delete(checkbox.value);
   }
-  actualizarContadorSeleccionados();
+  actualizarPanelSeleccionados();
+}
+
+function removerJugadorChip(nombre) {
+  jugadoresSeleccionadosSet.delete(nombre);
+  // Refrescar tanto los chips como los checkboxes visibles en pantalla
+  filtrarJugadoresLista();
+}
+
+function actualizarPanelSeleccionados() {
+  document.getElementById("contador-seleccionados").textContent = `Jugadores seleccionados (${jugadoresSeleccionadosSet.size})`;
+  
+  const contenedorChips = document.getElementById("contenedor-chips");
+  if (jugadoresSeleccionadosSet.size === 0) {
+    contenedorChips.innerHTML = `<span style="font-size:0.78rem; color:var(--text-dim); font-style:italic;">Ningún jugador seleccionado todavía.</span>`;
+    return;
+  }
+
+  const arraySeleccionados = Array.from(jugadoresSeleccionadosSet).sort();
+  contenedorChips.innerHTML = arraySeleccionados.map(nombre => `
+    <span class="chip-jugador">
+      ${nombre}
+      <span class="chip-eliminar" onclick="removerJugadorChip('${nombre.replace(/'/g, "\\'")}')" title="Quitar">×</span>
+    </span>
+  `).join("");
 }
 
 function filtrarJugadoresLista() {
   const filtro = document.getElementById("buscador-jugadores").value.toLowerCase();
   const filtrados = jugadoresDisponibles.filter(j => j.toLowerCase().includes(filtro));
   renderizarListaJugadores(filtrados);
-}
-
-function actualizarContadorSeleccionados() {
-  document.getElementById("contador-seleccionados").textContent = `Jugadores seleccionados (${jugadoresSeleccionadosSet.size})`;
 }
 
 function obtenerListaSeleccionadosArray() {
