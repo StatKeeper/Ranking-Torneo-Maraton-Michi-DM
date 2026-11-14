@@ -758,17 +758,25 @@ function eliminarPais(nombre) {
   renderizarTablaAdminTiers();
 }
 
-/* LÓGICA DE TIERS MANUALES */
+/* LÓGICA DE TIERS MANUALES (AHORA INTEGRADA CON EQUIVALENCIAS) */
 let listaJugadoresAdminTiers = [];
 
 function renderizarTablaAdminTiers() {
   const nombresSet = new Set();
+  
+  // Extraer nombres de partidas aplicando la equivalencia oficial
   (DATOS.partidas || []).forEach(p => {
     (p.jugadores || []).forEach(j => {
-      if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS.equivalencias || []));
+      if (j.nombre) {
+        const oficial = resolverNombreOficial(j.nombre, DATOS.equivalencias || []);
+        nombresSet.add(oficial);
+      }
     });
   });
+
+  // Agregar también los jugadores registrados en jugadoresInfo
   Object.keys(DATOS.jugadoresInfo || {}).forEach(n => nombresSet.add(n));
+  
   listaJugadoresAdminTiers = [...nombresSet].sort();
 
   const tbody = document.getElementById("cuerpo-tabla-tiers");
