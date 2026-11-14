@@ -553,7 +553,10 @@ function renderizarTodo() {
 }
 
 function poblarFiltrosAnioMes() {
-  const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
+  const aniosSet = new Set(PARTIDAS.map(p => p.anio));
+  aniosSet.add(new Date().getFullYear());
+  const anios = [...aniosSet].sort((a, b) => b - a);
+
   const selAnio = document.getElementById("filtro-anio");
   selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
 
@@ -574,13 +577,13 @@ function poblarFiltrosAnioMes() {
 }
 
 function actualizarMeses() {
-  const anio = document.getElementById("filtro-anio").value;
-  const meses = [...new Set(
-    PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0"))
-  )].sort().reverse();
-
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  const valorMesPrevio = selMes.value;
+  const mesesDelAnio = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+
+  selMes.innerHTML = mesesDelAnio.reverse().map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
+  selMes.value = mesesDelAnio.includes(valorMesPrevio) ? valorMesPrevio : mesesDelAnio[0];
+
   actualizarJornadasYRenderizar();
 }
 
@@ -593,12 +596,10 @@ function poblarHonorMeses() {
     selHonorMes.disabled = true;
   } else {
     selHonorMes.disabled = false;
-    const meses = [...new Set(
-      PARTIDAS.filter(p => p.anio == anioVal).map(p => String(p.mes).padStart(2, "0"))
-    )].sort().reverse();
+    const mesesDelAnio = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
 
     selHonorMes.innerHTML = `<option value="todos">Todo el año (Acumulado)</option>` +
-      meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+      mesesDelAnio.reverse().map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
   }
   renderizarEstadisticasHonor();
 }
