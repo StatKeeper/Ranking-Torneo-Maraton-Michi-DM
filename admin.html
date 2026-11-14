@@ -29,6 +29,45 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     navigator.serviceWorker.register('./sw.js');
   }
 </script>
+
+<style>
+  .tabla-admin-tiers {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 10px;
+    background: var(--panel);
+  }
+  .tabla-admin-tiers th, .tabla-admin-tiers td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .tabla-admin-tiers th {
+    background: var(--panel-raised);
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .select-tier {
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--panel-raised);
+    color: var(--text);
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .search-admin {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--panel-raised);
+    color: var(--text);
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+  }
+</style>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -47,6 +86,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="estadisticas.html">Estadísticas</a>
     <a href="candidatos.html">Candidatos</a>
     <a href="historial.html">Historial</a>
+    <a href="balanceador.html">Balanceador</a>
     <a href="admin.html" class="active">Administración</a>
   </nav>
 </header>
@@ -130,8 +170,28 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
     <div id="lista-paises"></div>
   </div>
 
+  <!-- SECCIÓN DE ADMINISTRACIÓN MANUAL DE TIERS -->
   <div class="panel">
-    <h3>⑥ Corrección de civilizaciones</h3>
+    <h3>⑥ Gestión Manual de Tiers y Categorías (Balanceador)</h3>
+    <p class="hint">Asigna o modifica libremente el nivel/tier de cada jugador para el balanceador de equipos.</p>
+    <input type="text" id="buscador-admin-tiers" class="search-admin" placeholder="Buscar jugador..." oninput="filtrarTablaAdminTiers()">
+    <div style="max-height: 450px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius);">
+      <table class="tabla-admin-tiers">
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th>Categoría / Tier Actual</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla-tiers">
+          <tr><td colspan="2" class="empty-state">Carga los datos primero (paso ①).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>⑦ Corrección de civilizaciones</h3>
     <p class="hint">
       Si escribes una civilización con typo o variante ("Gurjara" en vez de "Gurjaras"),
       vínculala aquí a su nombre oficial. Se corrige automáticamente en todas las pantallas.
@@ -145,7 +205,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   </div>
 
   <div class="panel">
-    <h3>⑦ Imágenes de Candidatos (por Fecha)</h3>
+    <h3>⑧ Imágenes de Candidatos (por Fecha)</h3>
     <p class="hint">
       Cada Fecha (jornada) tiene 2 imágenes: la <strong>evaluación</strong> de candidatos y el
       <strong>galardón</strong> del ganador (el nombre del jugador ya va dentro de la imagen).
@@ -179,7 +239,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   </div>
 
   <div class="panel">
-    <h3>⑧ Cuadro de Honor (Jugador de la Fecha)</h3>
+    <h3>⑨ Cuadro de Honor (Jugador de la Fecha)</h3>
     <p class="hint">
       Asigna manualmente al jugador destacado y su civilización de cada Jornada para el Cuadro de Honor mensual.
     </p>
@@ -210,7 +270,7 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
   <datalist id="lista-civs-sugeridas"></datalist>
 
   <div class="panel">
-    <h3>⑨ Descargar y publicar</h3>
+    <h3>⑩ Descargar y publicar</h3>
     <p class="hint">
       Descarga el archivo, y súbelo a GitHub (Add file → Upload files) reemplazando
       <code>data/data.json</code> en la raíz del repositorio.
@@ -223,6 +283,14 @@ Little duck | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 6502 | 28 | Equipo 2 | Turcos"
 <script src="js/datos.js"></script>
 <script>
 let DATOS = { equivalencias: [], civEquivalencias: [], partidas: [], jugadoresInfo: {}, jornadasImagenes: [], cuadroHonor: [] };
+
+const TIER_OPCIONES = [
+  { val: "S+ Leitis", label: "S+ Leitis (5 Pts)" },
+  { val: "S Boyardo", label: "S Boyardo (4 Pts)" },
+  { val: "A+ Paladín", label: "A+ Paladín (3 Pts)" },
+  { val: "A Centurión", label: "A Centurión (2 Pts)" },
+  { val: "B+ Campeón", label: "B+ Campeón (1 Pts)" }
+];
 
 function actualizarContador() {
   document.getElementById("contador-partidas").textContent =
@@ -284,6 +352,7 @@ async function cargarDesdeServidor() {
   renderizarEquivalencias();
   renderizarCivEquivalencias();
   renderizarPaises();
+  renderizarTablaAdminTiers();
   
   poblarAdminFiltrosImg();
   poblarAdminFiltrosHonor();
@@ -399,6 +468,7 @@ function procesarReporte() {
   actualizarListasSugerencias();
   poblarFiltrosPartidas();
   renderizarListaPartidas();
+  renderizarTablaAdminTiers();
 
   resultadoDiv.innerHTML = `
     <p style="color:var(--win);">✔ Partida agregada: ${etiquetaPartida(nuevaPartida)} (${jugadores.length} jugadores).</p>
@@ -473,6 +543,7 @@ function eliminarPartida(id) {
   actualizarListasSugerencias();
   poblarFiltrosPartidas();
   renderizarListaPartidas();
+  renderizarTablaAdminTiers();
 }
 
 function renderizarEquivalencias() {
@@ -507,12 +578,14 @@ function agregarEquivalencia() {
   document.getElementById("input-oficial").value = "";
   actualizarListasSugerencias();
   renderizarEquivalencias();
+  renderizarTablaAdminTiers();
 }
 
 function eliminarEquivalencia(i) {
   DATOS.equivalencias.splice(i, 1);
   actualizarListasSugerencias();
   renderizarEquivalencias();
+  renderizarTablaAdminTiers();
 }
 
 function renderizarCivEquivalencias() {
@@ -674,6 +747,7 @@ function registrarJugadorNuevo() {
 
   actualizarListasSugerencias();
   renderizarPaises();
+  renderizarTablaAdminTiers();
   alert(`✔ Jugador "${nombre}" guardado con éxito.`);
 }
 
@@ -681,6 +755,62 @@ function eliminarPais(nombre) {
   delete DATOS.jugadoresInfo[nombre];
   actualizarListasSugerencias();
   renderizarPaises();
+  renderizarTablaAdminTiers();
+}
+
+/* LÓGICA DE TIERS MANUALES */
+let listaJugadoresAdminTiers = [];
+
+function renderizarTablaAdminTiers() {
+  const nombresSet = new Set();
+  (DATOS.partidas || []).forEach(p => {
+    (p.jugadores || []).forEach(j => {
+      if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS.equivalencias || []));
+    });
+  });
+  Object.keys(DATOS.jugadoresInfo || {}).forEach(n => nombresSet.add(n));
+  listaJugadoresAdminTiers = [...nombresSet].sort();
+
+  const tbody = document.getElementById("cuerpo-tabla-tiers");
+  if (listaJugadoresAdminTiers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="2" class="empty-state">No se encontraron jugadores.</td></tr>`;
+    return;
+  }
+
+  const filtro = document.getElementById("buscador-admin-tiers").value.toLowerCase();
+  const filtrados = listaJugadoresAdminTiers.filter(j => j.toLowerCase().includes(filtro));
+
+  if (filtrados.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="2" class="empty-state">No se encontraron jugadores con ese filtro.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtrados.map(nombre => {
+    const info = DATOS.jugadoresInfo?.[nombre] || {};
+    const tierActual = info.tierManual || "A Centurión";
+    return `
+      <tr>
+        <td><strong>${nombre}</strong></td>
+        <td>
+          <select class="select-tier" data-jugador="${nombre}" onchange="actualizarTierManual('${nombre.replace(/'/g,"\\'")}', this.value)">
+            ${TIER_OPCIONES.map(opt => `
+              <option value="${opt.val}" ${tierActual === opt.val ? 'selected' : ''}>${opt.label}</option>
+            `).join("")}
+          </select>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function filtrarTablaAdminTiers() {
+  renderizarTablaAdminTiers();
+}
+
+function actualizarTierManual(nombre, nuevoTier) {
+  if (!DATOS.jugadoresInfo) DATOS.jugadoresInfo = {};
+  if (!DATOS.jugadoresInfo[nombre]) DATOS.jugadoresInfo[nombre] = {};
+  DATOS.jugadoresInfo[nombre].tierManual = nuevoTier;
 }
 
 function actualizarSugerenciaImagenes() {
@@ -724,34 +854,29 @@ function guardarImagenesFecha() {
   if (!Array.isArray(DATOS.jornadasImagenes)) DATOS.jornadasImagenes = [];
   const numJor = numeroDeJornada(jornada);
   const jornadaNormalizada = numJor > 0 ? `Fecha ${String(numJor).padStart(2, "0")}` : jornada;
+  const idImg = `${anio}-${mes}-${jornadaNormalizada.replace(/\s+/g,"")}`;
 
-  const existente = DATOS.jornadasImagenes.find(j => j.anio == anio && String(j.mes).padStart(2,"0") === String(mes).padStart(2,"0") && j.jornada.toLowerCase() === jornadaNormalizada.toLowerCase());
+  DATOS.jornadasImagenes = DATOS.jornadasImagenes.filter(j => j.id !== idImg);
+  DATOS.jornadasImagenes.push({
+    id: idImg,
+    anio, mes,
+    jornada: jornadaNormalizada,
+    evaluacion, galardon
+  });
 
-  if (existente) {
-    existente.evaluacion = evaluacion;
-    existente.galardon = galardon;
-  } else {
-    DATOS.jornadasImagenes.push({
-      anio,
-      mes,
-      jornada: jornadaNormalizada,
-      evaluacion,
-      galardon
-    });
-  }
-
-  alert("✔ Imágenes de la fecha guardadas correctamente.");
   renderizarFechasImagenes();
+  alert(`✔ Imágenes guardadas para ${jornadaNormalizada} (${NOMBRES_MES[mes]} ${anio}).`);
 }
 
 function poblarAdminFiltrosImg() {
-  const anios = [...new Set(DATOS.partidas.map(p => p.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-admin-img-anio");
-  if (!anios.length) {
-    selAnio.innerHTML = `<option value="">Sin datos</option>`;
-    document.getElementById("filtro-admin-img-mes").innerHTML = `<option value="">Sin datos</option>`;
+  if (!DATOS.jornadasImagenes || DATOS.jornadasImagenes.length === 0) {
+    selAnio.innerHTML = `<option value="">Sin imágenes</option>`;
+    document.getElementById("filtro-admin-img-mes").innerHTML = `<option value="">Sin imágenes</option>`;
+    document.getElementById("lista-fechas-imagenes").innerHTML = `<p class="hint">No hay imágenes guardadas.</p>`;
     return;
   }
+  const anios = [...new Set(DATOS.jornadasImagenes.map(j => j.anio))].sort((a, b) => b - a);
   selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
   poblarAdminMesesImg();
 }
@@ -759,13 +884,12 @@ function poblarAdminFiltrosImg() {
 function poblarAdminMesesImg() {
   const anio = document.getElementById("filtro-admin-img-anio").value;
   const selMes = document.getElementById("filtro-admin-img-mes");
-  const meses = [...new Set(DATOS.partidas.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
-  if (!meses.length) {
-    selMes.innerHTML = `<option value="">Sin datos</option>`;
+  const meses = [...new Set((DATOS.jornadasImagenes || []).filter(j => j.anio == anio).map(j => String(j.mes).padStart(2, "0")))].sort().reverse();
+  if (meses.length === 0) {
+    selMes.innerHTML = `<option value="">Sin meses</option>`;
     return;
   }
   selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
-  renderizarFechasImagenes();
 }
 
 function renderizarFechasImagenes() {
@@ -773,42 +897,27 @@ function renderizarFechasImagenes() {
   const anio = document.getElementById("filtro-admin-img-anio").value;
   const mes = document.getElementById("filtro-admin-img-mes").value;
 
-  if (!anio || !mes) {
-    cont.innerHTML = `<p class="hint">Selecciona año y mes.</p>`;
+  const filtradas = (DATOS.jornadasImagenes || []).filter(j => j.anio == anio && String(j.mes).padStart(2, "0") === mes);
+  if (filtradas.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay registros para este período.</p>`;
     return;
   }
 
-  const jornadasMes = [...new Set(DATOS.partidas.filter(p => p.anio == anio && String(p.mes).padStart(2,"0") === mes).map(p => p.jornada))]
-    .sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
-
-  if (jornadasMes.length === 0) {
-    cont.innerHTML = `<p class="hint">No hay jornadas para este mes.</p>`;
-    return;
-  }
-
-  cont.innerHTML = jornadasMes.map(jor => {
-    const reg = (DATOS.jornadasImagenes || []).find(j => j.anio == anio && String(j.mes).padStart(2,"0") === mes && j.jornada.toLowerCase() === jor.toLowerCase()) || {};
-    return `
-      <div class="match-item" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <div>
-          <strong>${jor}</strong><br>
-          <span style="font-size:0.75rem; color:var(--text-dim);">Eval: ${reg.evaluacion || '—'} | Gal: ${reg.galardon || '—'}</span>
-        </div>
-        <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="seleccionarFechaImg('${anio}', '${mes}', '${jor}', '${reg.evaluacion || ''}', '${reg.galardon || ''}')">Editar</button>
+  cont.innerHTML = filtradas.map(j => `
+    <div class="match-item" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div>
+        <strong>${j.jornada} (${NOMBRES_MES[j.mes]} ${j.anio})</strong><br>
+        <span style="font-size:0.75rem; color:var(--text-dim);">Evaluación: ${j.evaluacion || '—'} | Galardón: ${j.galardon || '—'}</span>
       </div>
-    `;
-  }).join("");
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarImagenFecha('${j.id}')">🗑 Eliminar</button>
+    </div>
+  `).join("");
 }
 
-function seleccionarFechaImg(anio, mes, jornada, evalVal, galVal) {
-  document.getElementById("input-img-anio").value = anio;
-  document.getElementById("input-img-mes").value = mes;
-  document.getElementById("input-img-jornada").value = jornada;
-  document.getElementById("input-img-evaluacion").value = evalVal;
-  document.getElementById("input-img-evaluacion").dataset.autocompletado = "0";
-  document.getElementById("input-img-galardon").value = galVal;
-  document.getElementById("input-img-galardon").dataset.autocompletado = "0";
-  document.getElementById("input-img-anio").scrollIntoView({ behavior: "smooth", block: "center" });
+function eliminarImagenFecha(id) {
+  DATOS.jornadasImagenes = (DATOS.jornadasImagenes || []).filter(j => j.id !== id);
+  poblarAdminFiltrosImg();
+  renderizarFechasImagenes();
 }
 
 function guardarHonor() {
@@ -819,41 +928,37 @@ function guardarHonor() {
   const civ = document.getElementById("input-honor-civ").value.trim();
 
   if (!anio || !jornada || !jugador) {
-    alert("Completa año, jornada y jugador.");
+    alert("Completa el año, la jornada y el nombre del jugador.");
     return;
   }
 
   if (!Array.isArray(DATOS.cuadroHonor)) DATOS.cuadroHonor = [];
   const numJor = numeroDeJornada(jornada);
   const jornadaNormalizada = numJor > 0 ? `Fecha ${String(numJor).padStart(2, "0")}` : jornada;
+  const idHonor = `${anio}-${mes}-${jornadaNormalizada.replace(/\s+/g,"")}`;
 
-  const existente = DATOS.cuadroHonor.find(h => h.anio == anio && String(h.mes).padStart(2,"0") === String(mes).padStart(2,"0") && h.jornada.toLowerCase() === jornadaNormalizada.toLowerCase());
+  DATOS.cuadroHonor = DATOS.cuadroHonor.filter(h => h.id !== idHonor);
+  DATOS.cuadroHonor.push({
+    id: idHonor,
+    anio, mes,
+    jornada: jornadaNormalizada,
+    jugador,
+    civ: civ || ""
+  });
 
-  if (existente) {
-    existente.jugador = jugador;
-    existente.civ = civ;
-  } else {
-    DATOS.cuadroHonor.push({
-      anio,
-      mes,
-      jornada: jornadaNormalizada,
-      jugador,
-      civ
-    });
-  }
-
-  alert("✔ Cuadro de honor guardado correctamente.");
   renderizarCuadroHonorAdmin();
+  alert(`✔ Cuadro de Honor guardado para ${jornadaNormalizada} (${NOMBRES_MES[mes]} ${anio}).`);
 }
 
 function poblarAdminFiltrosHonor() {
-  const anios = [...new Set(DATOS.partidas.map(p => p.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-admin-honor-anio");
-  if (!anios.length) {
-    selAnio.innerHTML = `<option value="">Sin datos</option>`;
-    document.getElementById("filtro-admin-honor-mes").innerHTML = `<option value="">Sin datos</option>`;
+  if (!DATOS.cuadroHonor || DATOS.cuadroHonor.length === 0) {
+    selAnio.innerHTML = `<option value="">Sin registros</option>`;
+    document.getElementById("filtro-admin-honor-mes").innerHTML = `<option value="">Sin registros</option>`;
+    document.getElementById("lista-cuadro-honor").innerHTML = `<p class="hint">No hay registros en el Cuadro de Honor.</p>`;
     return;
   }
+  const anios = [...new Set(DATOS.cuadroHonor.map(h => h.anio))].sort((a, b) => b - a);
   selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
   poblarAdminMesesHonor();
 }
@@ -861,13 +966,12 @@ function poblarAdminFiltrosHonor() {
 function poblarAdminMesesHonor() {
   const anio = document.getElementById("filtro-admin-honor-anio").value;
   const selMes = document.getElementById("filtro-admin-honor-mes");
-  const meses = [...new Set(DATOS.partidas.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
-  if (!meses.length) {
-    selMes.innerHTML = `<option value="">Sin datos</option>`;
+  const meses = [...new Set((DATOS.cuadroHonor || []).filter(h => h.anio == anio).map(h => String(h.mes).padStart(2, "0")))].sort().reverse();
+  if (meses.length === 0) {
+    selMes.innerHTML = `<option value="">Sin meses</option>`;
     return;
   }
   selMes.innerHTML = meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
-  renderizarCuadroHonorAdmin();
 }
 
 function renderizarCuadroHonorAdmin() {
@@ -875,68 +979,37 @@ function renderizarCuadroHonorAdmin() {
   const anio = document.getElementById("filtro-admin-honor-anio").value;
   const mes = document.getElementById("filtro-admin-honor-mes").value;
 
-  if (!anio || !mes) {
-    cont.innerHTML = `<p class="hint">Selecciona año y mes.</p>`;
+  const filtrados = (DATOS.cuadroHonor || []).filter(h => h.anio == anio && String(h.mes).padStart(2, "0") === mes);
+  if (filtrados.length === 0) {
+    cont.innerHTML = `<p class="hint">No hay registros para este período.</p>`;
     return;
   }
 
-  const jornadasMes = [...new Set(DATOS.partidas.filter(p => p.anio == anio && String(p.mes).padStart(2,"0") === mes).map(p => p.jornada))]
-    .sort((a, b) => numeroDeJornada(a) - numeroDeJornada(b));
-
-  if (jornadasMes.length === 0) {
-    cont.innerHTML = `<p class="hint">No hay jornadas para este mes.</p>`;
-    return;
-  }
-
-  cont.innerHTML = jornadasMes.map(jor => {
-    const reg = (DATOS.cuadroHonor || []).find(h => h.anio == anio && String(h.mes).padStart(2,"0") === mes && h.jornada.toLowerCase() === jor.toLowerCase()) || {};
-    return `
-      <div class="match-item" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <div>
-          <strong>${jor}</strong><br>
-          <span style="font-size:0.78rem; color:var(--gold);">👑 ${reg.jugador || 'Sin asignar'} (${reg.civ || '—'})</span>
-        </div>
-        <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="seleccionarFechaHonor('${anio}', '${mes}', '${jor}', '${reg.jugador || ''}', '${reg.civ || ''}')">Editar</button>
+  cont.innerHTML = filtrados.map(h => `
+    <div class="match-item" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div>
+        <strong>${h.jornada} (${NOMBRES_MES[h.mes]} ${h.anio})</strong><br>
+        <span style="font-size:0.8rem; color:var(--gold);">🏆 ${h.jugador} ${h.civ ? `(${h.civ})` : ''}</span>
       </div>
-    `;
-  }).join("");
+      <button class="btn secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="eliminarHonor('${h.id}')">🗑 Eliminar</button>
+    </div>
+  `).join("");
 }
 
-function seleccionarFechaHonor(anio, mes, jornada, jugador, civ) {
-  document.getElementById("input-honor-anio").value = anio;
-  document.getElementById("input-honor-mes").value = mes;
-  document.getElementById("input-honor-jornada").value = jornada;
-  document.getElementById("input-honor-jugador").value = jugador;
-  document.getElementById("input-honor-civ").value = civ;
-  document.getElementById("input-honor-anio").scrollIntoView({ behavior: "smooth", block: "center" });
+function eliminarHonor(id) {
+  DATOS.cuadroHonor = (DATOS.cuadroHonor || []).filter(h => h.id !== id);
+  poblarAdminFiltrosHonor();
+  renderizarCuadroHonorAdmin();
 }
 
 function descargarJSON() {
-  const datosLimpios = {
-    equivalencias: DATOS.equivalencias || [],
-    civEquivalencias: DATOS.civEquivalencias || [],
-    partidas: DATOS.partidas || [],
-    jugadoresInfo: DATOS.jugadoresInfo || {},
-    jornadasImagenes: DATOS.jornadasImagenes || [],
-    cuadroHonor: DATOS.cuadroHonor || []
-  };
-
-  setTimeout(() => {
-    try {
-      const jsonStr = JSON.stringify(datosLimpios, null, 2);
-      const blob = new Blob([jsonStr], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "data.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      alert("Error al empaquetar el archivo JSON: " + e.message);
-    }
-  }, 50);
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DATOS, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "data.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
