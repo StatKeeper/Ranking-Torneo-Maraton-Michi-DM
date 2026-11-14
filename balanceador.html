@@ -241,6 +241,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="js/datos.js"></script>
 <script>
 let DATOS_GLOBALES = {};
+let EQUIVALENCIAS_REF = [];
 let jugadoresDisponibles = [];
 const jugadoresSeleccionadosSet = new Set();
 
@@ -261,19 +262,20 @@ function obtenerTierYPuntaje(nombre) {
 async function inicializarBalanceador() {
   try {
     DATOS_GLOBALES = await cargarDatos();
+    EQUIVALENCIAS_REF = DATOS_GLOBALES.equivalencias || DATOS_GLOBALES;
     const nombresSet = new Set();
     
     // Unificación automática aplicando resolverNombreOficial con las equivalencias
     (DATOS_GLOBALES.partidas || []).forEach(p => {
       (p.jugadores || []).forEach(j => {
         if (j.nombre) {
-          const oficial = resolverNombreOficial(j.nombre, DATOS_GLOBALES);
+          const oficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS_REF);
           if (oficial) nombresSet.add(oficial);
         }
       });
     });
     Object.keys(DATOS_GLOBALES.jugadoresInfo || {}).forEach(n => {
-      const oficial = resolverNombreOficial(n, DATOS_GLOBALES);
+      const oficial = resolverNombreOficial(n, EQUIVALENCIAS_REF);
       if (oficial) nombresSet.add(oficial);
     });
 
