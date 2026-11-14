@@ -153,6 +153,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 let PARTIDAS = [], EQUIVALENCIAS = [];
 let subtabActual = "tiempos";
+let ordenCivsJugadoresModo = "alfabetico"; // "alfabetico" o "frecuencia"
 
 function partidasFiltradas() {
   const anio = document.getElementById("filtro-anio").value;
@@ -214,6 +215,11 @@ function cambiarSubtab(tab) {
   }
 }
 
+function alternarOrdenCivsJugadores() {
+  ordenCivsJugadoresModo = ordenCivsJugadoresModo === "alfabetico" ? "frecuencia" : "alfabetico";
+  renderizarCivsGlobalesOYPorJugador();
+}
+
 function renderizarCivsGlobalesOYPorJugador() {
   const resultadoDiv = document.getElementById("resultado");
   const filtradas = partidasFiltradas();
@@ -225,7 +231,7 @@ function renderizarCivsGlobalesOYPorJugador() {
     if (!p.jugadores || !Array.isArray(p.jugadores)) return;
     p.jugadores.forEach(j => {
       if (!j.civ) return;
-      const civOficial = resolverCivOficial(j.civ, EQUIVALENCIAS.civEquivalencias || EQUIVALENCIAS);
+      const civOficial = resolverCivOficial(j.civ, EQUIVALENCIAS);
       const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
 
       conteoCivsGlobal[civOficial] = (conteoCivsGlobal[civOficial] || 0) + 1;
@@ -240,14 +246,24 @@ function renderizarCivsGlobalesOYPorJugador() {
   const rankingGlobal = Object.entries(conteoCivsGlobal)
     .sort((a, b) => b[1] - a[1]);
 
-  const jugadoresOrdenados = Object.keys(conteoCivsPorJugador).sort();
+  // Lista de jugadores según el modo seleccionado (Alfabético o por mayor cantidad de partidas jugadas en total)
+  let listaJugadores = Object.keys(conteoCivsPorJugador);
+  if (ordenCivsJugadoresModo === "alfabetico") {
+    listaJugadores.sort();
+  } else {
+    listaJugadores.sort((a, b) => {
+      const totalA = Object.values(conteoCivsPorJugador[a]).reduce((x, y) => x + y, 0);
+      const totalB = Object.values(conteoCivsPorJugador[b]).reduce((x, y) => x + y, 0);
+      return totalB - totalA;
+    });
+  }
 
   resultadoDiv.innerHTML = `
     <h3>🏛️ Ranking General de Civilizaciones Más Usadas</h3>
     <p class="hint">Frecuencia total de uso de civilizaciones en el período seleccionado (sin distinción de jugador).</p>
     
     ${rankingGlobal.length === 0 ? `<div class="empty-state">No hay registros de civilizaciones para este período.</div>` : `
-      <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; background:var(--panel);">
+      <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 24px; background:var(--panel);">
         <table class="compare-table" style="margin:0;">
           <thead>
             <tr>
@@ -269,11 +285,18 @@ function renderizarCivsGlobalesOYPorJugador() {
       </div>
     `}
 
-    <h3 style="margin-top:24px;">🧑‍🤝‍🧑 Civilizaciones Más Usadas por Jugador (Orden Alfabético)</h3>
-    <p class="hint">Consulta el desglose de civilizaciones de cada jugador.</p>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+      <div>
+        <h3 style="margin:0;">🧑‍🤝‍🧑 Civilizaciones Más Usadas por Jugador</h3>
+        <p class="hint" style="margin:0;">Desglose individual por participante.</p>
+      </div>
+      <button class="btn secondary" style="padding:6px 12px; font-size:0.8rem;" onclick="alternarOrdenCivsJugadores()">
+        🔄 Orden: ${ordenCivsJugadoresModo === "alfabetico" ? "Alfabético (A-Z)" : "Mayor Frecuencia"}
+      </button>
+    </div>
 
     <div class="civs-stats-grid" id="grid-civs-jugadores">
-      ${jugadoresOrdenados.map(jugador => {
+      ${listaJugadores.map(jugador => {
         const civsJugador = Object.entries(conteoCivsPorJugador[jugador]).sort((a, b) => b[1] - a[1]);
         const topCiv = civsJugador[0] ? `${civsJugador[0][0]} (${civsJugador[0][1]} usos)` : "Sin registros";
         return `
@@ -482,11 +505,18 @@ function descargarImagenStats() {
 
 (async function init() {
   const datos = await cargarDatos();
-  PARTIDAS = datos.partidas;
-  EQUIVALENCIAS = datos;
+  PARTIDAS = datos.partidas || [];
+  EQUIVALENCIAS = datos.equivalencias || [];
   poblarFiltrosPeriodo();
   document.getElementById("lista-nombres").innerHTML =
-    listaDeNombresOficiales(PARTIDAS, EQUIVALENCIAS.equivalencias || EQUIVALENCIAS).map(n => `<option value="${n}">`).join("");
+    listaDeNombresOficiales(PARTIDAS, EQUIVALENCIAS).map(n => `<option value="${n}">`).join("");
+  
+  // Renderizar por defecto si inicia en tiempos u otra pestaña
+  if (subtabActual === "equipos") {
+    renderizarEquiposGanadores();
+  } else if (subtabActual === "civs-global") {
+    renderizarCivsGlobalesOYPorJugador();
+  }
 })();
 </script>
 </body>
