@@ -169,6 +169,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="subtab-btn active" data-tab="comparativa" onclick="cambiarSubtab('comparativa')">🔍 Comparativa</button>
     <button class="subtab-btn" data-tab="participacion" onclick="cambiarSubtab('participacion')">📋 Nombres y Participación</button>
     <button class="subtab-btn" data-tab="nacionalidades" onclick="cambiarSubtab('nacionalidades')">🌍 Países y Banderas</button>
+    <button class="subtab-btn" onclick="window.location.href='balanceador.html'">⚖️ Balanceador</button>
   </div>
 
   <div class="filters">
@@ -302,7 +303,9 @@ function actualizarVistaActiva() {
 
 function cambiarSubtab(tab) {
   subtabActual = tab;
-  document.querySelectorAll(".subtab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  document.querySelectorAll(".subtab-btn").forEach(b => {
+    if(b.dataset.tab) b.classList.toggle("active", b.dataset.tab === tab);
+  });
   
   const vComp = document.getElementById("vista-comparativa");
   const vPart = document.getElementById("vista-participacion");
@@ -375,14 +378,12 @@ function renderizarParticipacionMes() {
     }
   });
 
-  // Función de ordenamiento dinámica según selección
   const criterioOrden = (a, b) => {
     if (tipoOrden === "partidas") {
       if (b.partidas !== a.partidas) {
-        return b.partidas - a.partidas; // Mayor número de partidas primero
+        return b.partidas - a.partidas;
       }
     }
-    // Criterio secundario o principal por defecto: alfabético
     return a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
   };
 
