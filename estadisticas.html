@@ -239,7 +239,6 @@ function filtrarJugadoresCivsTarjeta() {
   });
 }
 
-// Función auxiliar para descargar elementos completos expandiendo scroll temporalmente
 async function descargarRankingCompleto(elementoId, nombreArchivo) {
   const el = document.getElementById(elementoId);
   if (!el) return;
@@ -255,7 +254,6 @@ async function descargarRankingCompleto(elementoId, nombreArchivo) {
   el.style.overflowY = originalOverflow;
 }
 
-// Función auxiliar para descargar la tarjeta de jugador con el detalle abierto por completo
 async function descargarTarjetaJugadorCompleta(cardId, detalleId, nombreArchivo) {
   const cardEl = document.getElementById(cardId);
   const detalleEl = document.getElementById(detalleId);
@@ -287,8 +285,9 @@ function renderizarCivsGlobalesOYPorJugador() {
     if (!p.jugadores || !Array.isArray(p.jugadores)) return;
     p.jugadores.forEach(j => {
       if (!j.civ) return;
-      const civOficial = resolverCivOficial(j.civ, EQUIVALENCIAS);
+      // UNIFICACIÓN DE NOMBRES USANDO EL NICK OFICIAL
       const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
+      const civOficial = resolverCivOficial(j.civ, EQUIVALENCIAS);
 
       conteoCivsGlobal[civOficial] = (conteoCivsGlobal[civOficial] || 0) + 1;
 
