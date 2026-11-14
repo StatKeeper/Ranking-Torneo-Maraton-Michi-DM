@@ -554,11 +554,17 @@ function renderizarTodo() {
 
 function poblarFiltrosAnioMes() {
   const aniosSet = new Set(PARTIDAS.map(p => p.anio));
-  aniosSet.add(new Date().getFullYear());
+  const anioActual = new Date().getFullYear();
+  aniosSet.add(anioActual);
   const anios = [...aniosSet].sort((a, b) => b - a);
 
   const selAnio = document.getElementById("filtro-anio");
   selAnio.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  
+  // Seleccionar por defecto el año actual si existe, o el primero
+  if (anios.includes(anioActual)) {
+    selAnio.value = anioActual;
+  }
 
   const selHonorAnio = document.getElementById("filtro-honor-anio");
   selHonorAnio.innerHTML = `<option value="todos">Histórico (Todos los años)</option>` +
@@ -581,8 +587,20 @@ function actualizarMeses() {
   const valorMesPrevio = selMes.value;
   const mesesDelAnio = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
 
-  selMes.innerHTML = mesesDelAnio.reverse().map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
-  selMes.value = mesesDelAnio.includes(valorMesPrevio) ? valorMesPrevio : mesesDelAnio[0];
+  selMes.innerHTML = mesesDelAnio.map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
+
+  // Detectar automáticamente el mes actual en curso (ej. "11" para noviembre)
+  const mesActualStr = String(new Date().getMonth() + 1).padStart(2, "0");
+  const anioSeleccionado = document.getElementById("filtro-anio").value;
+  const anioActual = String(new Date().getFullYear());
+
+  if (valorMesPrevio && mesesDelAnio.includes(valorMesPrevio)) {
+    selMes.value = valorMesPrevio;
+  } else if (anioSeleccionado === anioActual && mesesDelAnio.includes(mesActualStr)) {
+    selMes.value = mesActualStr; // Selecciona automáticamente el mes actual
+  } else {
+    selMes.value = mesesDelAnio[mesesDelAnio.length - 1]; // Último mes como respaldo
+  }
 
   actualizarJornadasYRenderizar();
 }
@@ -599,7 +617,7 @@ function poblarHonorMeses() {
     const mesesDelAnio = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
 
     selHonorMes.innerHTML = `<option value="todos">Todo el año (Acumulado)</option>` +
-      mesesDelAnio.reverse().map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
+      mesesDelAnio.map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
   }
   renderizarEstadisticasHonor();
 }
