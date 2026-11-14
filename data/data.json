@@ -25698,6 +25698,79 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha12-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 12",
+      "numeroPartida": 1,
+      "duracionSeg": 10702,
+      "jugadores": [
+        {
+          "nombre": "Erik Tha Barbaro",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Yaroslav",
+          "resultado": "victoria",
+          "civ": "",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] Renjifo",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "derrota",
+          "civ": "",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 0,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -27175,6 +27248,14 @@
       "jornada": "Fecha 28",
       "evaluacion": "imagenes/candidatos_2026-07_fecha28.png",
       "galardon": "imagenes/galardon_2026-07_fecha28.png"
+    },
+    {
+      "id": "2026-11-Fecha12",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 12",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha12.png",
+      "galardon": "imagenes/galardon_2026-11_fecha12.png"
     }
   ],
   "cuadroHonor": [
@@ -28741,6 +28822,14 @@
       "jornada": "Fecha 28",
       "jugador": "GJ Euphory",
       "civ": "Sarracenos"
+    },
+    {
+      "id": "2026-11-Fecha12",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 12",
+      "jugador": "Yaroslav",
+      "civ": "Birmanos"
     }
   ]
 }
