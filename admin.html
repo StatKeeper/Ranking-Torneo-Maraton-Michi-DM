@@ -498,16 +498,14 @@ function poblarMesesPartidasFiltro() {
   const selMes = document.getElementById("filtro-partidas-mes");
   const valorMesPrevio = selMes.value;
 
-  const mesesDelAnio = [...new Set(DATOS.partidas.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))]
-    .sort().reverse();
+  // Lista fija de los 12 meses del año para que enero a mayo siempre aparezcan disponibles
+  const mesesDelAnio = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
 
-  if (mesesDelAnio.length === 0) {
-    selMes.innerHTML = `<option value="">Sin datos</option>`;
-    return;
-  }
-
-  selMes.innerHTML = mesesDelAnio.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("");
+  selMes.innerHTML = mesesDelAnio.reverse().map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
   selMes.value = mesesDelAnio.includes(valorMesPrevio) ? valorMesPrevio : mesesDelAnio[0];
+  
+  // Llamamos a renderizar para que pinte las partidas del mes seleccionado
+  renderizarListaPartidas();
 }
 
 function renderizarListaPartidas() {
