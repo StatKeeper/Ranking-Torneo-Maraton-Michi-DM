@@ -1003,13 +1003,28 @@ function eliminarHonor(id) {
 }
 
 function descargarJSON() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DATOS, null, 2));
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", "data.json");
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  downloadAnchor.remove();
+  try {
+    const jsonString = JSON.stringify(DATOS, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.href = url;
+    downloadAnchor.download = "data.json";
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    
+    setTimeout(() => {
+      document.body.removeChild(downloadAnchor);
+      URL.revokeObjectURL(url);
+    }, 100);
+
+    const estado = document.getElementById("estado-carga");
+    if (estado) estado.textContent = "✔ Archivo data.json descargado correctamente.";
+  } catch (e) {
+    console.error("Error al generar la descarga:", e);
+    alert("Hubo un error al generar la descarga. Revisa la consola del navegador.");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
