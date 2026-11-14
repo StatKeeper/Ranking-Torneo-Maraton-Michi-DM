@@ -83,7 +83,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
   <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
   <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
-  <a href="historial.html" class="active"><span class="icon">📜</span>Historial</a>
+  <a href="historial.html"><span class="icon">📜</span>Historial</a>
 </nav>
 
 <script src="js/datos.js"></script>
@@ -102,10 +102,13 @@ function poblarFiltros() {
 }
 
 function poblarMeses() {
-  const anio = document.getElementById("filtro-anio").value;
-  const meses = [...new Set(PARTIDAS.filter(p => p.anio == anio).map(p => String(p.mes).padStart(2, "0")))].sort().reverse();
   const selMes = document.getElementById("filtro-mes");
-  selMes.innerHTML = meses.length ? meses.map(m => `<option value="${m}">${NOMBRES_MES[m]}</option>`).join("") : `<option value="">Sin datos</option>`;
+  const mesesDelAno = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+  
+  selMes.innerHTML = mesesDelAno
+    .reverse()
+    .map(m => `<option value="${m}">${NOMBRES_MES[m] || m}</option>`).join("");
+    
   poblarJornadas();
 }
 
