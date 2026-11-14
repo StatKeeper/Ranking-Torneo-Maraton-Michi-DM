@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WNLR39PS');</script>
+<!-- End Google Tag Manager -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balanceador — Comunidad AoE II</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/estilo.css">
+
+<!-- Configuración PWA e Ícono de Inicio -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f8f6f0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maratón Michi">
+<link rel="apple-touch-icon" href="imagenes/icono-192.png">
+
+<!-- Registro del Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+
+<style>
+  .balance-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .search-box {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--panel-raised);
+    color: var(--text);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+  .tabla-valores {
+    background: var(--panel-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+  }
+  .lista-jugadores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--panel-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .jugador-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .equipos-resultado {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .equipo-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .equipo-card h4 {
+    color: var(--gold);
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNLR39PS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<header class="topbar">
+  <div class="brand">
+    <span class="sub">Balanceador</span>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Inicio</a>
+    <a href="clasificacion.html">Clasificación</a>
+    <a href="jugador.html">Jugadores</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="candidatos.html">Candidatos</a>
+    <a href="historial.html">Historial</a>
+    <a href="balanceador.html" class="active">Balanceador</a>
+    <a href="admin.html">Administración</a>
+  </nav>
+</header>
+
+<main class="balance-container">
+  <div class="panel">
+    <h3 style="text-align:center; color:var(--gold); margin-bottom:6px;">🏆 Balanceador Maratón Michi DM</h3>
+    <p class="hint" style="text-align:center; margin-bottom:14px;">Selecciona los jugadores presentes en la fecha y genera equipos balanceados según su nivel histórico.</p>
+
+    <input type="text" id="buscador-jugadores" class="search-box" placeholder="Buscar jugador..." oninput="filtrarJugadoresLista()">
+
+    <div style="display:flex; gap:10px; margin-bottom:14px;">
+      <button class="btn" style="flex:1;" onclick="balancearEquipos()">⚖️ Balancear Equipos</button>
+      <button class="btn secondary" onclick="rebalancearEquipos()">🔄 Rebalancear</button>
+    </div>
+
+    <div class="tabla-valores">
+      <strong>📊 Tabla de Valores (Categorías):</strong>
+      <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:6px; font-size:0.78rem;">
+        <span style="color:var(--win);"><strong>S+ Leitis:</strong> 5 Pts</span>
+        <span style="color:#2ecc71;"><strong>S Boyardo:</strong> 4 Pts</span>
+        <span style="color:#9b59b6;"><strong>A+ Paladín:</strong> 3 Pts</span>
+        <span style="color:#e67e22;"><strong>A Centurión:</strong> 2 Pts</span>
+        <span style="color:var(--text-dim);"><strong>B+ Campeón:</strong> 1 Pts</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px; font-size:0.85rem; font-weight:600; color:var(--gold);" id="contador-seleccionados">Jugadores seleccionados (0)</div>
+    
+    <div id="lista-checkboxes-jugadores" class="lista-jugadores-grid">
+      <div class="empty-state">Cargando jugadores...</div>
+    </div>
+  </div>
+
+  <div id="resultado-equipos" class="equipos-resultado"></div>
+</main>
+
+<nav class="mobile-nav">
+  <a href="index.html"><span class="icon">🏠</span>Inicio</a>
+  <a href="clasificacion.html"><span class="icon">🏆</span>Ranking</a>
+  <a href="jugador.html"><span class="icon">🧑‍🤝‍🧑</span>Jugadores</a>
+  <a href="estadisticas.html"><span class="icon">📈</span>Stats</a>
+  <a href="candidatos.html"><span class="icon">⭐</span>Candidatos</a>
+  <a href="historial.html"><span class="icon">📜</span>Historial</a>
+  <a href="balanceador.html" class="active"><span class="icon">⚖️</span>Equipos</a>
+</nav>
+
+<script src="js/datos.js"></script>
+<script>
+let DATOS_GLOBALES = {};
+let jugadoresDisponibles = [];
+
+// Asignar puntuación según categoría registrada o basada en rendimiento histórico
+function obtenerPuntajeJugador(nombre) {
+  const info = DATOS_GLOBALES.jugadoresInfo?.[nombre] || {};
+  const cat = info.categoria || 1;
+  // Categoría 1 o invitado por defecto otorga base, podemos afinar según categoría o rendimiento
+  if (cat === 2) return 4; // Liga Pro
+  if (cat === 3) return 3; // Invitado avanzado
+  return 3; // Estándar comunidad
+}
+
+function obtenerEtiquetaCategoria(nombre) {
+  const info = DATOS_GLOBALES.jugadoresInfo?.[nombre] || {};
+  const cat = info.categoria || 1;
+  if (cat === 2) return "(S Boyardo)";
+  if (cat === 3) return "(A+ Paladín)";
+  return "(A Centurión)";
+}
+
+async function inicializarBalanceador() {
+  try {
+    DATOS_GLOBALES = await cargarDatos();
+    const nombresSet = new Set();
+    
+    // Recopilar nombres de partidas y del registro de jugadores
+    (DATOS_GLOBALES.partidas || []).forEach(p => {
+      (p.jugadores || []).forEach(j => {
+        if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS_GLOBALES.equivalencias || []));
+      });
+    });
+    Object.keys(DATOS_GLOBALES.jugadoresInfo || {}).forEach(n => nombresSet.add(n));
+
+    jugadoresDisponibles = [...nombresSet].sort();
+    renderizarListaJugadores(jugadoresDisponibles);
+  } catch (e) {
+    console.error("Error cargando datos para el balanceador:", e);
+  }
+}
+
+function renderizarListaJugadores(nombres) {
+  const cont = document.getElementById("lista-checkboxes-jugadores");
+  if (nombres.length === 0) {
+    cont.innerHTML = `<div class="empty-state">No se encontraron jugadores.</div>`;
+    return;
+  }
+
+  cont.innerHTML = nombres.map(nombre => {
+    const rangoLabel = obtenerEtiquetaCategoria(nombre);
+    return `
+      <label class="jugador-checkbox">
+        <input type="checkbox" value="${nombre}" onchange="actualizarContadorSeleccionados()">
+        <span>${nombre} <span style="font-size:0.75rem; color:var(--text-dim);">${rangoLabel}</span></span>
+      </label>
+    `;
+  }).join("");
+}
+
+function filtrarJugadoresLista() {
+  const filtro = document.getElementById("buscador-jugadores").value.toLowerCase();
+  const filtrados = jugadoresDisponibles.filter(j => j.toLowerCase().includes(filtro));
+  renderizarListaJugadores(filtrados);
+}
+
+function actualizarContadorSeleccionados() {
+  const checks = document.querySelectorAll(".lista-jugadores-grid input[type='checkbox']:checked");
+  document.getElementById("contador-seleccionados").textContent = `Jugadores seleccionados (${checks.length})`;
+}
+
+function balancearEquipos() {
+  const checks = document.querySelectorAll(".lista-jugadores-grid input[type='checkbox']:checked");
+  const seleccionados = Array.from(checks).map(c => {
+    const nombre = c.value;
+    return { nombre, puntos: obtenerPuntajeJugador(nombre) };
+  });
+
+  if (seleccionados.length < 2) {
+    alert("Selecciona al menos 2 jugadores para poder balancear los equipos.");
+    return;
+  }
+
+  // Ordenar de mayor a menor puntaje para aplicar algoritmo greedy de balanceo
+  seleccionados.sort((a, b) => b.puntos - a.puntos);
+
+  const equipo1 = [];
+  const equipo2 = [];
+  let suma1 = 0;
+  let suma2 = 0;
+
+  seleccionados.forEach(jugador => {
+    if (suma1 <= suma2) {
+      equipo1.push(jugador);
+      suma1 += jugador.puntos;
+    } else {
+      equipo2.push(jugador);
+      suma2 += jugador.puntos;
+    }
+  });
+
+  mostrarResultadoEquipos(equipo1, equipo2, suma1, suma2);
+}
+
+function rebalancearEquipos() {
+  const checks = document.querySelectorAll(".lista-jugadores-grid input[type='checkbox']:checked");
+  const seleccionados = Array.from(checks).map(c => {
+    const nombre = c.value;
+    return { nombre, puntos: obtenerPuntajeJugador(nombre) };
+  });
+
+  if (seleccionados.length < 2) {
+    alert("Selecciona al menos 2 jugadores.");
+    return;
+  }
+
+  // Mezclar aleatoriamente para dar variantes al rebalancear
+  seleccionados.sort(() => Math.random() - 0.5);
+  seleccionados.sort((a, b) => b.puntos - a.puntos);
+
+  const equipo1 = [];
+  const equipo2 = [];
+  let suma1 = 0;
+  let suma2 = 0;
+
+  seleccionados.forEach(jugador => {
+    // Alternativa aleatoria leve para rebalanceo
+    const elegirEquipo1 = suma1 === suma2 ? (Math.random() > 0.5) : (suma1 < suma2);
+    if (elegirEquipo1) {
+      equipo1.push(jugador);
+      suma1 += jugador.puntos;
+    } else {
+      equipo2.push(jugador);
+      suma2 += jugador.puntos;
+    }
+  });
+
+  mostrarResultadoEquipos(equipo1, equipo2, suma1, suma2);
+}
+
+function mostrarResultadoEquipos(eq1, eq2, suma1, suma2) {
+  const contenedor = document.getElementById("resultado-equipos");
+  contenedor.innerHTML = `
+    <div class="equipo-card">
+      <h4>⚔️ Equipo 1 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma1}</span></h4>
+      <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
+        ${eq1.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">${obtenerEtiquetaCategoria(j.nombre)}</span></li>`).join("")}
+      </ul>
+    </div>
+    <div class="equipo-card">
+      <h4>🛡️ Equipo 2 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma2}</span></h4>
+      <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
+        ${eq2.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">${obtenerEtiquetaCategoria(j.nombre)}</span></li>`).join("")}
+      </ul>
+    </div>
+  `;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  inicializarBalanceador();
+});
+</script>
+<script src="js/idiomas.js"></script>
+</body>
+</html>
