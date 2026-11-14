@@ -106,7 +106,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     opacity: 1;
     color: var(--loss);
   }
-  /* Estilos para la tabla de Tiers automática */
+  /* Estilos para la tabla de Tiers con filas verticales */
   .grid-tiers {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -126,10 +126,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     padding-bottom: 6px;
     margin-bottom: 8px;
   }
-  .tier-lista {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    line-height: 1.5;
+  .tier-lista-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 0.84rem;
+  }
+  .tier-fila-item {
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: var(--panel-raised);
+    border: 1px solid var(--line);
   }
   .equipos-resultado {
     display: grid;
@@ -236,28 +245,26 @@ let jugadoresDisponibles = [];
 let cacheEstadisticasJugadores = {};
 const jugadoresSeleccionadosSet = new Set();
 
-// Algoritmo para asignar Tier y Puntos basado en estadísticas históricas reales
 function calcularTierYPuntaje(nombre, statsMap) {
   const stats = statsMap[nombre];
   if (!stats || stats.partidas === 0) {
-    return { tier: "B+ Campeón", puntos: 1, etiqueta: "B+ Campeón (1 Pts)" };
+    return { tier: "B+ Campeón", puntos: 1 };
   }
 
   const puntos = stats.puntos || 0;
   const victorias = stats.victorias || 0;
   const wr = stats.partidas > 0 ? (victorias / stats.partidas) * 100 : 0;
 
-  // Criterios dinámicos de clasificación
   if (puntos >= 35 || (puntos >= 25 && wr >= 65)) {
-    return { tier: "S+ Leitis", puntos: 5, etiqueta: "S+ Leitis (5 Pts)" };
+    return { tier: "S+ Leitis", puntos: 5 };
   } else if (puntos >= 20 || (puntos >= 15 && wr >= 55)) {
-    return { tier: "S Boyardo", puntos: 4, etiqueta: "S Boyardo (4 Pts)" };
+    return { tier: "S Boyardo", puntos: 4 };
   } else if (puntos >= 10 || (puntos >= 7 && wr >= 45)) {
-    return { tier: "A+ Paladín", puntos: 3, etiqueta: "A+ Paladín (3 Pts)" };
+    return { tier: "A+ Paladín", puntos: 3 };
   } else if (puntos >= 5) {
-    return { tier: "A Centurión", puntos: 2, etiqueta: "A Centurión (2 Pts)" };
+    return { tier: "A Centurión", puntos: 2 };
   } else {
-    return { tier: "B+ Campeón", puntos: 1, etiqueta: "B+ Campeón (1 Pts)" };
+    return { tier: "B+ Campeón", puntos: 1 };
   }
 }
 
@@ -267,7 +274,6 @@ async function inicializarBalanceador() {
     const partidas = DATOS_GLOBALES.partidas || [];
     const equivalencias = DATOS_GLOBALES.equivalencias || [];
     
-    // Calcular estadísticas globales de todos los jugadores a partir del historial
     cacheEstadisticasJugadores = calcularEstadisticasJugadores(partidas, equivalencias);
 
     const nombresSet = new Set();
@@ -335,8 +341,8 @@ function renderizarCuadroTiers(nombres) {
     return `
       <div class="tier-card">
         <h4>👑 ${tier} (${lista.length})</h4>
-        <div class="tier-lista">
-          ${lista.join(" · ")}
+        <div class="tier-lista-vertical">
+          ${lista.map(nombre => `<div class="tier-fila-item">${nombre}</div>`).join("")}
         </div>
       </div>
     `;
