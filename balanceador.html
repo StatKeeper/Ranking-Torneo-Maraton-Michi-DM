@@ -186,8 +186,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <main class="balance-container">
   <div class="panel">
-    <h3 style="text-align:center; color:var(--gold); margin-bottom:6px;">🏆 Balanceador y Tiers Históricos — Maratón Michi DM</h3>
-    <p class="hint" style="text-align:center; margin-bottom:14px;">Selecciona los jugadores presentes y genera equipos equilibrados según su nivel calculado automáticamente del historial.</p>
+    <h3 style="text-align:center; color:var(--gold); margin-bottom:6px;">🏆 Balanceador y Tiers — Maratón Michi DM</h3>
+    <p class="hint" style="text-align:center; margin-bottom:14px;">Selecciona los jugadores presentes y genera equipos equilibrados según sus niveles configurados.</p>
 
     <input type="text" id="buscador-jugadores" class="search-box" placeholder="Buscar jugador para marcar..." oninput="filtrarJugadoresLista()">
 
@@ -202,7 +202,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="tabla-valores">
-      <strong>📊 Puntuación y Tiers (Basado en rendimiento histórico):</strong>
+      <strong>📊 Puntuación y Tiers (Manuales desde Administración):</strong>
       <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:6px; font-size:0.78rem;">
         <span style="color:var(--win);"><strong>S+ Leitis:</strong> 5 Pts</span>
         <span style="color:#2ecc71;"><strong>S Boyardo:</strong> 4 Pts</span>
@@ -213,16 +213,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     
     <div id="lista-checkboxes-jugadores" class="lista-jugadores-grid">
-      <div class="empty-state">Cargando jugadores y calculando niveles...</div>
+      <div class="empty-state">Cargando jugadores...</div>
     </div>
   </div>
 
   <!-- SECCIÓN: CUADRO DE CLASIFICACIÓN POR TIERS -->
   <div class="panel" style="margin-top:20px;">
-    <h3 style="color:var(--gold); font-size:0.95rem; margin-bottom:4px;">📜 Clasificación de Jugadores por Tiers (Historial)</h3>
-    <p class="hint" style="margin-bottom:12px;">Niveles calculados en base al puntaje total y porcentaje de victorias en el torneo.</p>
+    <h3 style="color:var(--gold); font-size:0.95rem; margin-bottom:4px;">📜 Clasificación de Jugadores por Tiers</h3>
+    <p class="hint" style="margin-bottom:12px;">Niveles oficiales asignados desde el panel de administración.</p>
     <div id="grid-cuadro-tiers" class="grid-tiers">
-      <div class="empty-state">Calculando categorías...</div>
+      <div class="empty-state">Cargando categorías...</div>
     </div>
   </div>
 
@@ -242,48 +242,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 let DATOS_GLOBALES = {};
 let jugadoresDisponibles = [];
-let cacheEstadisticasJugadores = {};
 const jugadoresSeleccionadosSet = new Set();
 
-function calcularTierYPuntaje(nombre, statsMap) {
-  const stats = statsMap[nombre];
-  if (!stats || stats.partidas === 0) {
-    return { tier: "B+ Campeón", puntos: 1 };
-  }
+function obtenerTierYPuntaje(nombre) {
+  const info = DATOS_GLOBALES.jugadoresInfo?.[nombre] || {};
+  const tier = info.tierManual || "A Centurión";
+  let puntos = 2;
 
-  const puntos = stats.puntos || 0;
-  const victorias = stats.victorias || 0;
-  const wr = stats.partidas > 0 ? (victorias / stats.partidas) * 100 : 0;
+  if (tier === "S+ Leitis") puntos = 5;
+  else if (tier === "S Boyardo") puntos = 4;
+  else if (tier === "A+ Paladín") puntos = 3;
+  else if (tier === "A Centurión") puntos = 2;
+  else if (tier === "B+ Campeón") puntos = 1;
 
-  if (puntos >= 35 || (puntos >= 25 && wr >= 65)) {
-    return { tier: "S+ Leitis", puntos: 5 };
-  } else if (puntos >= 20 || (puntos >= 15 && wr >= 55)) {
-    return { tier: "S Boyardo", puntos: 4 };
-  } else if (puntos >= 10 || (puntos >= 7 && wr >= 45)) {
-    return { tier: "A+ Paladín", puntos: 3 };
-  } else if (puntos >= 5) {
-    return { tier: "A Centurión", puntos: 2 };
-  } else {
-    return { tier: "B+ Campeón", puntos: 1 };
-  }
+  return { tier, puntos };
 }
 
 async function inicializarBalanceador() {
   try {
     DATOS_GLOBALES = await cargarDatos();
-    const partidas = DATOS_GLOBALES.partidas || [];
-    const equivalencias = DATOS_GLOBALES.equivalencias || [];
-    
-    cacheEstadisticasJugadores = calcularEstadisticasJugadores(partidas, equivalencias);
-
     const nombresSet = new Set();
-    partidas.forEach(p => {
+    
+    (DATOS_GLOBALES.partidas || []).forEach(p => {
       (p.jugadores || []).forEach(j => {
-        if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, equivalencias));
+        if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS_GLOBALES.equivalencias || []));
       });
     });
     Object.keys(DATOS_GLOBALES.jugadoresInfo || {}).forEach(n => nombresSet.add(n));
-    Object.keys(cacheEstadisticasJugadores).forEach(n => nombresSet.add(n));
 
     jugadoresDisponibles = [...nombresSet].sort();
     
@@ -302,7 +287,7 @@ function renderizarListaJugadores(nombres) {
   }
 
   cont.innerHTML = nombres.map(nombre => {
-    const infoTier = calcularTierYPuntaje(nombre, cacheEstadisticasJugadores);
+    const infoTier = obtenerTierYPuntaje(nombre);
     const estaCheck = jugadoresSeleccionadosSet.has(nombre) ? 'checked' : '';
     return `
       <label class="jugador-checkbox">
@@ -327,7 +312,7 @@ function renderizarCuadroTiers(nombres) {
   };
 
   nombres.forEach(nombre => {
-    const infoTier = calcularTierYPuntaje(nombre, cacheEstadisticasJugadores);
+    const infoTier = obtenerTierYPuntaje(nombre);
     if (agrupacion[infoTier.tier]) {
       agrupacion[infoTier.tier].push(nombre);
     }
@@ -389,7 +374,7 @@ function filtrarJugadoresLista() {
 
 function obtenerListaSeleccionadosArray() {
   return Array.from(jugadoresSeleccionadosSet).map(nombre => {
-    const infoTier = calcularTierYPuntaje(nombre, cacheEstadisticasJugadores);
+    const infoTier = obtenerTierYPuntaje(nombre);
     return {
       nombre,
       puntos: infoTier.puntos,
