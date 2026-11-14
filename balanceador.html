@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Balanceador — Comunidad AoE II</title>
+<title>Balanceador y Tiers — Comunidad AoE II</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/estilo.css">
 
@@ -32,7 +32,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <style>
   .balance-container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
   }
   .search-box {
@@ -72,7 +72,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-size: 0.85rem;
     cursor: pointer;
   }
-  /* Estilos para los chips de jugadores seleccionados (color más claro) */
   .contenedor-chips-seleccionados {
     display: flex;
     flex-wrap: wrap;
@@ -86,7 +85,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     margin-bottom: 16px;
   }
   .chip-jugador {
-    background: #f4ecd8; /* Tono dorado muy suave y claro */
+    background: #f4ecd8;
     color: #4a3d1a;
     border: 1px solid #dcd2bc;
     padding: 3px 9px;
@@ -106,6 +105,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .chip-eliminar:hover {
     opacity: 1;
     color: var(--loss);
+  }
+  /* Estilos para la tabla de Tiers automática */
+  .grid-tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .tier-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .tier-card h4 {
+    color: var(--gold);
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+  }
+  .tier-lista {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.5;
   }
   .equipos-resultado {
     display: grid;
@@ -138,7 +162,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="topbar">
   <div class="brand">
-    <span class="sub">Balanceador</span>
+    <span class="sub">Balanceador y Tiers</span>
   </div>
   <nav class="tabs">
     <a href="index.html">Inicio</a>
@@ -153,12 +177,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <main class="balance-container">
   <div class="panel">
-    <h3 style="text-align:center; color:var(--gold); margin-bottom:6px;">🏆 Balanceador Maratón Michi DM</h3>
-    <p class="hint" style="text-align:center; margin-bottom:14px;">Selecciona los jugadores presentes en la fecha y genera equipos balanceados según su nivel histórico.</p>
+    <h3 style="text-align:center; color:var(--gold); margin-bottom:6px;">🏆 Balanceador y Tiers Históricos — Maratón Michi DM</h3>
+    <p class="hint" style="text-align:center; margin-bottom:14px;">Selecciona los jugadores presentes y genera equipos equilibrados según su nivel calculado automáticamente del historial.</p>
 
     <input type="text" id="buscador-jugadores" class="search-box" placeholder="Buscar jugador para marcar..." oninput="filtrarJugadoresLista()">
 
-    <!-- Panel visual de jugadores seleccionados (Chips) -->
     <div style="margin-bottom:6px; font-size:0.85rem; font-weight:600; color:var(--gold);" id="contador-seleccionados">Jugadores seleccionados (0)</div>
     <div id="contenedor-chips" class="contenedor-chips-seleccionados">
       <span style="font-size:0.78rem; color:var(--text-dim); font-style:italic;">Ningún jugador seleccionado todavía.</span>
@@ -170,7 +193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="tabla-valores">
-      <strong>📊 Tabla de Valores (Categorías):</strong>
+      <strong>📊 Puntuación y Tiers (Basado en rendimiento histórico):</strong>
       <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:6px; font-size:0.78rem;">
         <span style="color:var(--win);"><strong>S+ Leitis:</strong> 5 Pts</span>
         <span style="color:#2ecc71;"><strong>S Boyardo:</strong> 4 Pts</span>
@@ -181,7 +204,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     
     <div id="lista-checkboxes-jugadores" class="lista-jugadores-grid">
-      <div class="empty-state">Cargando jugadores...</div>
+      <div class="empty-state">Cargando jugadores y calculando niveles...</div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: CUADRO DE CLASIFICACIÓN POR TIERS -->
+  <div class="panel" style="margin-top:20px;">
+    <h3 style="color:var(--gold); font-size:0.95rem; margin-bottom:4px;">📜 Clasificación de Jugadores por Tiers (Historial)</h3>
+    <p class="hint" style="margin-bottom:12px;">Niveles calculados en base al puntaje total y porcentaje de victorias en el torneo.</p>
+    <div id="grid-cuadro-tiers" class="grid-tiers">
+      <div class="empty-state">Calculando categorías...</div>
     </div>
   </div>
 
@@ -201,38 +233,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 let DATOS_GLOBALES = {};
 let jugadoresDisponibles = [];
+let cacheEstadisticasJugadores = {};
 const jugadoresSeleccionadosSet = new Set();
 
-function obtenerPuntajeJugador(nombre) {
-  const info = DATOS_GLOBALES.jugadoresInfo?.[nombre] || {};
-  const cat = info.categoria || 1;
-  if (cat === 2) return 4;
-  if (cat === 3) return 3;
-  return 3;
-}
+// Algoritmo para asignar Tier y Puntos basado en estadísticas históricas reales
+function calcularTierYPuntaje(nombre, statsMap) {
+  const stats = statsMap[nombre];
+  if (!stats || stats.partidas === 0) {
+    return { tier: "B+ Campeón", puntos: 1, etiqueta: "B+ Campeón (1 Pts)" };
+  }
 
-function obtenerEtiquetaCategoria(nombre) {
-  const info = DATOS_GLOBALES.jugadoresInfo?.[nombre] || {};
-  const cat = info.categoria || 1;
-  if (cat === 2) return "(S Boyardo)";
-  if (cat === 3) return "(A+ Paladín)";
-  return "(A Centurión)";
+  const puntos = stats.puntos || 0;
+  const victorias = stats.victorias || 0;
+  const wr = stats.partidas > 0 ? (victorias / stats.partidas) * 100 : 0;
+
+  // Criterios dinámicos de clasificación
+  if (puntos >= 35 || (puntos >= 25 && wr >= 65)) {
+    return { tier: "S+ Leitis", puntos: 5, etiqueta: "S+ Leitis (5 Pts)" };
+  } else if (puntos >= 20 || (puntos >= 15 && wr >= 55)) {
+    return { tier: "S Boyardo", puntos: 4, etiqueta: "S Boyardo (4 Pts)" };
+  } else if (puntos >= 10 || (puntos >= 7 && wr >= 45)) {
+    return { tier: "A+ Paladín", puntos: 3, etiqueta: "A+ Paladín (3 Pts)" };
+  } else if (puntos >= 5) {
+    return { tier: "A Centurión", puntos: 2, etiqueta: "A Centurión (2 Pts)" };
+  } else {
+    return { tier: "B+ Campeón", puntos: 1, etiqueta: "B+ Campeón (1 Pts)" };
+  }
 }
 
 async function inicializarBalanceador() {
   try {
     DATOS_GLOBALES = await cargarDatos();
-    const nombresSet = new Set();
+    const partidas = DATOS_GLOBALES.partidas || [];
+    const equivalencias = DATOS_GLOBALES.equivalencias || [];
     
-    (DATOS_GLOBALES.partidas || []).forEach(p => {
+    // Calcular estadísticas globales de todos los jugadores a partir del historial
+    cacheEstadisticasJugadores = calcularEstadisticasJugadores(partidas, equivalencias);
+
+    const nombresSet = new Set();
+    partidas.forEach(p => {
       (p.jugadores || []).forEach(j => {
-        if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, DATOS_GLOBALES.equivalencias || []));
+        if (j.nombre) nombresSet.add(resolverNombreOficial(j.nombre, equivalencias));
       });
     });
     Object.keys(DATOS_GLOBALES.jugadoresInfo || {}).forEach(n => nombresSet.add(n));
+    Object.keys(cacheEstadisticasJugadores).forEach(n => nombresSet.add(n));
 
     jugadoresDisponibles = [...nombresSet].sort();
+    
     renderizarListaJugadores(jugadoresDisponibles);
+    renderizarCuadroTiers(jugadoresDisponibles);
   } catch (e) {
     console.error("Error cargando datos para el balanceador:", e);
   }
@@ -246,17 +296,51 @@ function renderizarListaJugadores(nombres) {
   }
 
   cont.innerHTML = nombres.map(nombre => {
-    const rangoLabel = obtenerEtiquetaCategoria(nombre);
+    const infoTier = calcularTierYPuntaje(nombre, cacheEstadisticasJugadores);
     const estaCheck = jugadoresSeleccionadosSet.has(nombre) ? 'checked' : '';
     return `
       <label class="jugador-checkbox">
         <input type="checkbox" value="${nombre}" ${estaCheck} onchange="cambiarSeleccionJugador(this)">
-        <span>${nombre} <span style="font-size:0.75rem; color:var(--text-dim);">${rangoLabel}</span></span>
+        <span>${nombre} <span style="font-size:0.72rem; color:var(--text-dim);">(${infoTier.tier})</span></span>
       </label>
     `;
   }).join("");
   
   actualizarPanelSeleccionados();
+}
+
+function renderizarCuadroTiers(nombres) {
+  const contenedorTiers = document.getElementById("grid-cuadro-tiers");
+  
+  const agrupacion = {
+    "S+ Leitis": [],
+    "S Boyardo": [],
+    "A+ Paladín": [],
+    "A Centurión": [],
+    "B+ Campeón": []
+  };
+
+  nombres.forEach(nombre => {
+    const infoTier = calcularTierYPuntaje(nombre, cacheEstadisticasJugadores);
+    if (agrupacion[infoTier.tier]) {
+      agrupacion[infoTier.tier].push(nombre);
+    }
+  });
+
+  const ordenTiers = ["S+ Leitis", "S Boyardo", "A+ Paladín", "A Centurión", "B+ Campeón"];
+
+  contenedorTiers.innerHTML = ordenTiers.map(tier => {
+    const lista = agrupacion[tier].sort();
+    if (lista.length === 0) return "";
+    return `
+      <div class="tier-card">
+        <h4>👑 ${tier} (${lista.length})</h4>
+        <div class="tier-lista">
+          ${lista.join(" · ")}
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function cambiarSeleccionJugador(checkbox) {
@@ -298,10 +382,14 @@ function filtrarJugadoresLista() {
 }
 
 function obtenerListaSeleccionadosArray() {
-  return Array.from(jugadoresSeleccionadosSet).map(nombre => ({
-    nombre,
-    puntos: obtenerPuntajeJugador(nombre)
-  }));
+  return Array.from(jugadoresSeleccionadosSet).map(nombre => {
+    const infoTier = calcularTierYPuntaje(nombre, cacheEstadisticasJugadores);
+    return {
+      nombre,
+      puntos: infoTier.puntos,
+      tier: infoTier.tier
+    };
+  });
 }
 
 function balancearEquipos() {
@@ -368,13 +456,13 @@ function mostrarResultadoEquipos(eq1, eq2, suma1, suma2) {
     <div class="equipo-card">
       <h4>⚔️ Equipo 1 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma1}</span></h4>
       <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
-        ${eq1.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">${obtenerEtiquetaCategoria(j.nombre)}</span></li>`).join("")}
+        ${eq1.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">(${j.tier})</span></li>`).join("")}
       </ul>
     </div>
     <div class="equipo-card">
       <h4>🛡️ Equipo 2 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma2}</span></h4>
       <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
-        ${eq2.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">${obtenerEtiquetaCategoria(j.nombre)}</span></li>`).join("")}
+        ${eq2.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">(${j.tier})</span></li>`).join("")}
       </ul>
     </div>
   `;
