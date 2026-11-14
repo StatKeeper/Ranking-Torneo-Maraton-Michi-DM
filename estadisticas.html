@@ -239,6 +239,43 @@ function filtrarJugadoresCivsTarjeta() {
   });
 }
 
+// Función auxiliar para descargar elementos completos expandiendo scroll temporalmente
+async function descargarRankingCompleto(elementoId, nombreArchivo) {
+  const el = document.getElementById(elementoId);
+  if (!el) return;
+  const originalMaxHeight = el.style.maxHeight;
+  const originalOverflow = el.style.overflowY;
+  
+  el.style.maxHeight = "none";
+  el.style.overflowY = "visible";
+  
+  await descargarElementoComoImagen(el, nombreArchivo, "#1c2027");
+  
+  el.style.maxHeight = originalMaxHeight;
+  el.style.overflowY = originalOverflow;
+}
+
+// Función auxiliar para descargar la tarjeta de jugador con el detalle abierto por completo
+async function descargarTarjetaJugadorCompleta(cardId, detalleId, nombreArchivo) {
+  const cardEl = document.getElementById(cardId);
+  const detalleEl = document.getElementById(detalleId);
+  if (!cardEl || !detalleEl) return;
+
+  const originalDisplay = detalleEl.style.display;
+  const originalMaxHeight = detalleEl.style.maxHeight;
+  const originalOverflow = detalleEl.style.overflowY;
+
+  detalleEl.style.display = "block";
+  detalleEl.style.maxHeight = "none";
+  detalleEl.style.overflowY = "visible";
+
+  await descargarElementoComoImagen(cardEl, nombreArchivo, "#1c2027");
+
+  detalleEl.style.display = originalDisplay;
+  detalleEl.style.maxHeight = originalMaxHeight;
+  detalleEl.style.overflowY = originalOverflow;
+}
+
 function renderizarCivsGlobalesOYPorJugador() {
   const resultadoDiv = document.getElementById("resultado");
   const filtradas = partidasFiltradas();
@@ -280,12 +317,12 @@ function renderizarCivsGlobalesOYPorJugador() {
     <div id="seccion-ranking-global">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
         <h3 style="margin:0;">🏛️ Ranking General de Civilizaciones Más Usadas</h3>
-        <button class="btn secondary" style="padding:4px 10px; font-size:0.78rem;" onclick="descargarElementoComoImagen(document.getElementById('seccion-ranking-global'), 'ranking-civs-general.png', '#1c2027')">📷 Descargar Ranking</button>
+        <button class="btn secondary" style="padding:4px 10px; font-size:0.78rem;" onclick="descargarRankingCompleto('tabla-ranking-global-container', 'ranking-civs-general.png')">📷 Descargar Ranking</button>
       </div>
       <p class="hint">Frecuencia total de uso de civilizaciones en el período seleccionado (sin distinción de jugador).</p>
       
       ${rankingGlobal.length === 0 ? `<div class="empty-state">No hay registros de civilizaciones para este período.</div>` : `
-        <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 24px; background:var(--panel);">
+        <div id="tabla-ranking-global-container" style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 24px; background:var(--panel);">
           <table class="compare-table" style="margin:0;">
             <thead>
               <tr>
@@ -323,15 +360,16 @@ function renderizarCivsGlobalesOYPorJugador() {
     <div class="civs-stats-grid" id="grid-civs-jugadores">
       ${listaJugadores.map(jugador => {
         const civsJugador = Object.entries(conteoCivsPorJugador[jugador]).sort((a, b) => b[1] - a[1]);
+        const totalUsosJugador = civsJugador.reduce((sum, [, count]) => sum + count, 0);
         const topCiv = civsJugador[0] ? `${civsJugador[0][0]} (${civsJugador[0][1]} usos)` : "Sin registros";
         const cardIdSafe = `card-civ-${btoa(encodeURIComponent(jugador)).replace(/=/g, "")}`;
         const detalleIdSafe = `detalle-civ-${btoa(encodeURIComponent(jugador)).replace(/=/g, "")}`;
         return `
           <div class="civ-card" data-jugador="${jugador.toLowerCase()}" id="${cardIdSafe}">
             <h4>
-              <span>⚔️ ${jugador}</span>
+              <span>⚔️ ${jugador} <span style="font-size:0.8rem; color:var(--gold);">(${totalUsosJugador} usos totales)</span></span>
               <div style="display:flex; gap:6px;">
-                <button class="btn secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="descargarElementoComoImagen(document.getElementById('${cardIdSafe}'), 'civs-${jugador.replace(/[^a-zA-Z0-9]/g, '_')}.png', '#1c2027')">📷 Descargar</button>
+                <button class="btn secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="descargarTarjetaJugadorCompleta('${cardIdSafe}', '${detalleIdSafe}', 'civs-${jugador.replace(/[^a-zA-Z0-9]/g, '_')}.png')">📷 Descargar</button>
                 <button class="btn secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="toggleDetalleCivs('${detalleIdSafe}')">Ver detalle</button>
               </div>
             </h4>
