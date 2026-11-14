@@ -88,7 +88,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="js/datos.js"></script>
 <script>
-const LIMITE_PARTIDAS_DEFAULT = 10;
 let PARTIDAS = [], EQUIVALENCIAS = [];
 
 function poblarFiltros() {
@@ -165,15 +164,12 @@ function render() {
   let filtradas = jornadaFiltro ? delPeriodo.filter(p => p.jornada === jornadaFiltro) : delPeriodo;
   filtradas = [...filtradas].sort((a, b) => claveOrden(b) - claveOrden(a));
 
-  if (!jornadaFiltro && filtradas.length > LIMITE_PARTIDAS_DEFAULT) {
-    nota.textContent = `Mostrando las últimas ${LIMITE_PARTIDAS_DEFAULT} partidas de ${NOMBRES_MES[mes]} ${anio}. Selecciona una Fecha específica para ver el resto.`;
-    filtradas = filtradas.slice(0, LIMITE_PARTIDAS_DEFAULT);
-  } else {
-    nota.textContent = "";
-  }
+  // Se elimina el límite de 10 partidas para mostrar todas las partidas del mes o fecha seleccionada.
+  nota.textContent = `Mostrando todas las partidas registradas de ${NOMBRES_MES[mes]} ${anio} (${filtradas.length} en total).`;
 
   if (filtradas.length === 0) {
     cont.innerHTML = `<div class="empty-state">No hay partidas para este filtro.</div>`;
+    nota.textContent = "";
     return;
   }
 
