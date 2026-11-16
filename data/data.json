@@ -26126,6 +26126,97 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha14-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 14",
+      "numeroPartida": 1,
+      "duracionSeg": 6775,
+      "jugadores": [
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "victoria",
+          "civ": "Hunos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5373,
+          "edificiosArrasados": 189861,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4764,
+          "edificiosArrasados": 157080,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8571,
+          "edificiosArrasados": 312275,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Chinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5407,
+          "edificiosArrasados": 160893,
+          "bonos": []
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5279,
+          "edificiosArrasados": 191239,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Hunos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4681,
+          "edificiosArrasados": 176469,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7612,
+          "edificiosArrasados": 226815,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Chinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6360,
+          "edificiosArrasados": 183833,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -27619,6 +27710,14 @@
       "jornada": "Fecha 13",
       "evaluacion": "imagenes/candidatos_2026-11_fecha13.png",
       "galardon": "imagenes/galardon_2026-11_fecha13.png"
+    },
+    {
+      "id": "2026-11-Fecha14",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 14",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha14.png",
+      "galardon": "imagenes/galardon_2026-11_fecha14.png"
     }
   ],
   "cuadroHonor": [
@@ -29201,6 +29300,14 @@
       "jornada": "Fecha 13",
       "jugador": "Gato :3",
       "civ": "Aztecas"
+    },
+    {
+      "id": "2026-11-Fecha14",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 14",
+      "jugador": "Knar",
+      "civ": "Birmanos"
     }
   ]
 }
