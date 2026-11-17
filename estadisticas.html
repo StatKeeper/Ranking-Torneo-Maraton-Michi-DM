@@ -161,7 +161,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="js/datos.js"></script>
 <script>
-let PARTIDAS = [], EQUIVALENCIAS = [];
+let PARTIDAS = [], EQUIVALENCIAS = [], CIV_EQUIVALENCIAS = [];
 let subtabActual = "tiempos";
 let ordenCivsJugadoresModo = "alfabetico"; // "alfabetico" o "frecuencia"
 
@@ -583,6 +583,7 @@ function descargarImagenStats() {
   const datos = await cargarDatos();
   PARTIDAS = datos.partidas || [];
   EQUIVALENCIAS = datos.equivalencias || [];
+  CIV_EQUIVALENCIAS = datos.civEquivalencias || [];
   poblarFiltrosPeriodo();
   document.getElementById("lista-nombres").innerHTML =
     listaDeNombresOficiales(PARTIDAS, EQUIVALENCIAS).map(n => `<option value="${n}">`).join("");
