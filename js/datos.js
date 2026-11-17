@@ -28,8 +28,19 @@ function resolverNombreOficial(nombre, equivalencias = []) {
 
 function resolverCivOficial(civ, civEquivalencias = []) {
   if (!civ) return "";
-  const match = civEquivalencias.find(e => e.antiguo.toLowerCase() === civ.trim().toLowerCase());
-  return match ? match.oficial : civ.trim();
+  const civTrim = civ.trim();
+  
+  // Función auxiliar para normalizar texto (remueve tildes y pasa a minúsculas para comparar con seguridad)
+  const normalizar = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  // 1. Buscar si existe un mapeo manual en la administración (ej: "indostaníes" -> "Indostanos", o correcciones de tipeo)
+  const match = civEquivalencias.find(e => normalizar(e.antiguo) === normalizar(civTrim));
+  if (match) return match.oficial;
+
+  // 2. Si no está en el panel de administración, aplicar formato estándar automático:
+  // - Elimina tildes para uniformizar ortografía si se desea, o respeta la capitalización con primera letra en mayúscula.
+  // Aquí aseguramos que la primera letra siempre sea mayúscula:
+  return civTrim.charAt(0).toUpperCase() + civTrim.slice(1);
 }
 
 function numeroDeJornada(str) {
