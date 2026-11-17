@@ -266,7 +266,12 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
     listaPrevia.forEach((item, index) => { posPreviaMap[item.nombre] = index + 1; });
 
     Object.keys(mapJugadores).forEach(nombre => {
-      mapJugadores[nombre].ultimoSuceso = "Sin participación";
+      const f = mapJugadores[nombre];
+      if (f.conteoRacha && f.conteoRacha > 0) {
+        f.ultimoSuceso = `Sin participación (Rch <span style="color:#2563eb; font-weight:700;">x${f.conteoRacha}</span>)`;
+      } else {
+        f.ultimoSuceso = "Sin participación";
+      }
     });
 
     const jugadoresEnPartida = (p.jugadores || []).map(j => {
