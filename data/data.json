@@ -149,6 +149,58 @@
     {
       "antiguo": "persas",
       "oficial": "Persas"
+    },
+    {
+      "antiguo": "turcos",
+      "oficial": "Turcos"
+    },
+    {
+      "antiguo": "birmanos",
+      "oficial": "Birmanos"
+    },
+    {
+      "antiguo": "britanicos",
+      "oficial": "Britanicos"
+    },
+    {
+      "antiguo": "aztecas",
+      "oficial": "Aztecas"
+    },
+    {
+      "antiguo": "coreanos",
+      "oficial": "Coreanos"
+    },
+    {
+      "antiguo": "magiars",
+      "oficial": "Magiares"
+    },
+    {
+      "antiguo": "godos",
+      "oficial": "Godos"
+    },
+    {
+      "antiguo": "cumanos",
+      "oficial": "Cumanos"
+    },
+    {
+      "antiguo": "etiopes",
+      "oficial": "Etiopes"
+    },
+    {
+      "antiguo": "malayos",
+      "oficial": "Malayos"
+    },
+    {
+      "antiguo": "celtas",
+      "oficial": "Celtas"
+    },
+    {
+      "antiguo": "bulgaros",
+      "oficial": "Bulgaros"
+    },
+    {
+      "antiguo": "polacos",
+      "oficial": "Polacos"
     }
   ],
   "partidas": [
