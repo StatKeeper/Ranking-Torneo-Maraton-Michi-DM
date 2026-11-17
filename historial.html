@@ -204,7 +204,7 @@ function render() {
                   <a href="jugador.html?nombre=${encodeURIComponent(nombreOf)}">${nombreOf}</a>${esInvalida ? `<span class="tag-invalida">⚠ Inválida (+3 en fecha)</span>` : ''}
                 </td>
                 <td>${j.equipo || "—"}</td>
-                <td>${j.civ || "—"}</td>
+                <td>${resolverCivOficial(j.civ, CIV_EQUIVALENCIAS) || "—"}</td>
                 <td class="${varClass}">${varTexto}</td>
               </tr>
             `;
