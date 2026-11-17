@@ -296,7 +296,7 @@ function renderizarCivsGlobalesOYPorJugador() {
       if (!j.civ) return;
       // UNIFICACIÓN DE NOMBRES USANDO EL NICK OFICIAL
       const nombreOficial = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
-      const civOficial = resolverCivOficial(j.civ, EQUIVALENCIAS);
+      const civOficial = resolverCivOficial(j.civ, CIV_EQUIVALENCIAS);
 
       conteoCivsGlobal[civOficial] = (conteoCivsGlobal[civOficial] || 0) + 1;
 
