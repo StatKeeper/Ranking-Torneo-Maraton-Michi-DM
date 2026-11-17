@@ -225,6 +225,7 @@ function descargarImagenPartida(id) {
   const datos = await cargarDatos();
   PARTIDAS = datos.partidas;
   EQUIVALENCIAS = datos.equivalencias;
+  CIV_EQUIVALENCIAS = datos.civEquivalencias || [];
   poblarFiltros();
   render();
 })();
