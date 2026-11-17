@@ -145,7 +145,12 @@
       "oficial": "TroTamundoS"
     }
   ],
-  "civEquivalencias": [],
+  "civEquivalencias": [
+    {
+      "antiguo": "persas",
+      "oficial": "Persas"
+    }
+  ],
   "partidas": [
     {
       "id": "2026-08-Fecha01-P1",
@@ -26305,7 +26310,7 @@
     "[cLm] Gerard": {
       "pais": "PE",
       "civFavorita": "Teuton",
-      "tierManual": "S+ Leitis"
+      "tierManual": "A Centurión"
     },
     "[cLm] KFICHO": {
       "pais": "PE",
