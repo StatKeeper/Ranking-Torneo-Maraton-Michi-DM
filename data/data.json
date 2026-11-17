@@ -26217,6 +26217,79 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha15-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 15",
+      "numeroPartida": 1,
+      "duracionSeg": 14144,
+      "jugadores": [
+        {
+          "nombre": "Gato :3",
+          "resultado": "victoria",
+          "civ": "Japoneses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9270,
+          "edificiosArrasados": 246928,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11837,
+          "edificiosArrasados": 326222,
+          "bonos": []
+        },
+        {
+          "nombre": "Yaroslav",
+          "resultado": "victoria",
+          "civ": "Turcos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 16137,
+          "edificiosArrasados": 384935,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Japoneses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12319,
+          "edificiosArrasados": 318274,
+          "bonos": []
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 13085,
+          "edificiosArrasados": 331770,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "Astro23",
+          "resultado": "derrota",
+          "civ": "Turcos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 12367,
+          "edificiosArrasados": 329598,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -27718,6 +27791,14 @@
       "jornada": "Fecha 14",
       "evaluacion": "imagenes/candidatos_2026-11_fecha14.png",
       "galardon": "imagenes/galardon_2026-11_fecha14.png"
+    },
+    {
+      "id": "2026-11-Fecha15",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 15",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha15.png",
+      "galardon": "imagenes/galardon_2026-11_fecha15.png"
     }
   ],
   "cuadroHonor": [
@@ -29308,6 +29389,14 @@
       "jornada": "Fecha 14",
       "jugador": "Knar",
       "civ": "Birmanos"
+    },
+    {
+      "id": "2026-11-Fecha15",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 15",
+      "jugador": "Yaroslav",
+      "civ": "Turcos"
     }
   ]
 }
