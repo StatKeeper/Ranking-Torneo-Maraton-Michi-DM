@@ -275,6 +275,7 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
           ultimoSuceso: "Sin participación", vd: "0",
           bonos: { E:0, R:0, M:0, O:0, S:0, Rch:0, MG:0, RLP:0 },
           tb: 0, variacion: 0,
+          conteoRacha: 0, // Seguimiento de cuantas rachas consecutivas lleva
           posicionReferenciaAnterior: totalJugadoresPrevios
         };
       }
@@ -298,7 +299,10 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
       const listaSucesos = [gano ? "Victoria" : "Derrota"];
 
       if (gano) { f.victorias++; f.vd = "1"; puntosEstaPartida += 3; }
-      else { f.vd = "0"; }
+      else { 
+        f.vd = "0"; 
+        f.conteoRacha = 0; // Se rompe la racha si hay derrota
+      }
 
       (j.bonos || []).forEach(b => {
         if (f.bonos[b] !== undefined) {
@@ -307,7 +311,16 @@ function calcularTablaClasificacion(partidas, equivalencias, anio, mes, hastaJor
       });
 
       if (gano && ultimasVictorias[nombre]) {
-        f.bonos.Rch++; f.tb++; puntosEstaPartida += 1; listaSucesos.push("Rch");
+        f.bonos.Rch++; 
+        f.tb++; 
+        puntosEstaPartida += 1; 
+        f.conteoRacha = (f.conteoRacha || 1) + 1; // Incrementa el acumulador de racha
+        
+        // Formato con 'x3' en color azul para el indicador numérico de racha
+        listaSucesos.push(`Rch <span style="color:#2563eb; font-weight:700;">x${f.conteoRacha}</span>`);
+      } else if (gano) {
+        // Primera victoria de la cadena (racha inicial x1 o sin acumulado previo)
+        f.conteoRacha = 1;
       }
 
       if (gano && numJor >= 6 && posPrevia >= 6) {
