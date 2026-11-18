@@ -28345,6 +28345,14 @@
       "jornada": "Fecha 15",
       "evaluacion": "imagenes/candidatos_2026-11_fecha15.png",
       "galardon": "imagenes/galardon_2026-11_fecha15.png"
+    },
+    {
+      "id": "2026-11-Fecha16",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 16",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha16.png",
+      "galardon": "imagenes/galardon_2026-11_fecha16.png"
     }
   ],
   "cuadroHonor": [
@@ -29943,6 +29951,14 @@
       "jornada": "Fecha 15",
       "jugador": "Yaroslav",
       "civ": "Turcos"
+    },
+    {
+      "id": "2026-11-Fecha16",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 16",
+      "jugador": "La_Gloire",
+      "civ": "Bengalies"
     }
   ]
 }
