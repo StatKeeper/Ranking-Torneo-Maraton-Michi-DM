@@ -26763,6 +26763,79 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha16-P4",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 16",
+      "numeroPartida": 4,
+      "duracionSeg": 4487,
+      "jugadores": [
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Magiares",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3002,
+          "edificiosArrasados": 175818,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Persas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5257,
+          "edificiosArrasados": 231303,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "victoria",
+          "civ": "Portugueses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 221,
+          "edificiosArrasados": 121560,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "derrota",
+          "civ": "Magiares",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1003,
+          "edificiosArrasados": 72763,
+          "bonos": []
+        },
+        {
+          "nombre": "La_Gloire",
+          "resultado": "derrota",
+          "civ": "Persas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4700,
+          "edificiosArrasados": 247023,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "derrota",
+          "civ": "Portugueses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 380,
+          "edificiosArrasados": 118647,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
