@@ -26491,6 +26491,278 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha16-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 16",
+      "numeroPartida": 1,
+      "duracionSeg": 3095,
+      "jugadores": [
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "victoria",
+          "civ": "Equipo 1",
+          "equipo": "89640",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 1666,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Equipo 1",
+          "equipo": "90423",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 1695,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Equipo 1",
+          "equipo": "128615",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 3977,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "La_Gloire",
+          "resultado": "victoria",
+          "civ": "Equipo 1",
+          "equipo": "74268",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 1142,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "P@KO",
+          "resultado": "derrota",
+          "civ": "Equipo 2",
+          "equipo": "58186",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 1677,
+          "bonos": []
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "derrota",
+          "civ": "Equipo 2",
+          "equipo": "80514",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 1631,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Equipo 2",
+          "equipo": "50940",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 1014,
+          "bonos": []
+        },
+        {
+          "nombre": "Astro23",
+          "resultado": "derrota",
+          "civ": "Equipo 2",
+          "equipo": "77199",
+          "unidadesAsesinadas": 0,
+          "edificiosArrasados": 2345,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha16-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 16",
+      "numeroPartida": 2,
+      "duracionSeg": 3974,
+      "jugadores": [
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "victoria",
+          "civ": "Bizantinos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1853,
+          "edificiosArrasados": 95334,
+          "bonos": []
+        },
+        {
+          "nombre": "Astro23",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 2871,
+          "edificiosArrasados": 120314,
+          "bonos": []
+        },
+        {
+          "nombre": "La_Gloire",
+          "resultado": "victoria",
+          "civ": "Bengalíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1622,
+          "edificiosArrasados": 113495,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 4070,
+          "edificiosArrasados": 146781,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2862,
+          "edificiosArrasados": 97982,
+          "bonos": []
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "derrota",
+          "civ": "Bizantinos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1653,
+          "edificiosArrasados": 75357,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 591,
+          "edificiosArrasados": 114915,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "Yaroslav",
+          "resultado": "derrota",
+          "civ": "Bengalíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5003,
+          "edificiosArrasados": 203607,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha16-P3",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 16",
+      "numeroPartida": 3,
+      "duracionSeg": 2351,
+      "jugadores": [
+        {
+          "nombre": "GJ Euphory",
+          "resultado": "victoria",
+          "civ": "Españoles",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1604,
+          "edificiosArrasados": 81926,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "victoria",
+          "civ": "Mayas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 359,
+          "edificiosArrasados": 64191,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "La_Gloire",
+          "resultado": "victoria",
+          "civ": "Británicos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1031,
+          "edificiosArrasados": 71797,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Georgianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1605,
+          "edificiosArrasados": 92414,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Españoles",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2559,
+          "edificiosArrasados": 117790,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "derrota",
+          "civ": "Británicos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 227,
+          "edificiosArrasados": 32681,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Georgianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 929,
+          "edificiosArrasados": 54231,
+          "bonos": []
+        },
+        {
+          "nombre": "yo",
+          "resultado": "derrota",
+          "civ": "Mayas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 508,
+          "edificiosArrasados": 68584,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
