@@ -409,11 +409,11 @@ function toggleDetalleCivs(detalleId) {
 function renderizarEquiposGanadores() {
   const resultadoDiv = document.getElementById("resultado");
   const filtradas = partidasFiltradas();
-  const equiposConteo = {};
+  const conteoPorTamano = { 4: {}, 3: {}, 2: {}, 1: {} };
 
   filtradas.forEach(p => {
     if (!p.jugadores || !Array.isArray(p.jugadores)) return;
-    
+
     const equiposGanadores = {};
     p.jugadores.forEach(j => {
       if ((j.resultado || "").toLowerCase() === "victoria") {
@@ -427,64 +427,71 @@ function renderizarEquiposGanadores() {
     });
 
     Object.values(equiposGanadores).forEach(miembros => {
-      if (miembros.length !== 3 && miembros.length !== 4) return;
-      
-      miembros.sort();
-      const equipoKey = JSON.stringify(miembros);
-      
-      if (!equiposConteo[equipoKey]) {
-        equiposConteo[equipoKey] = { miembros, v3: 0, v4: 0, total: 0 };
+      const tam = miembros.length;
+      if (!conteoPorTamano[tam]) return;
+
+      const ordenados = [...miembros].sort();
+      const key = JSON.stringify(ordenados);
+
+      if (!conteoPorTamano[tam][key]) {
+        conteoPorTamano[tam][key] = { miembros: ordenados, victorias: 0 };
       }
-      
-      if (miembros.length === 3) {
-        equiposConteo[equipoKey].v3 += 1;
-      } else if (miembros.length === 4) {
-        equiposConteo[equipoKey].v4 += 1;
-      }
-      equiposConteo[equipoKey].total += 1;
+      conteoPorTamano[tam][key].victorias += 1;
     });
   });
 
-  const rankingEquipos = Object.values(equiposConteo)
-    .filter(datos => datos.total >= 2)
-    .sort((a, b) => b.total - a.total);
+  const construirCuadro = (tam, titulo, idContenedor, nombreArchivo, notaExtra = "") => {
+    const lista = Object.values(conteoPorTamano[tam])
+      .filter(item => item.victorias >= 2)
+      .sort((a, b) => b.victorias - a.victorias);
 
-  if (rankingEquipos.length === 0) {
-    resultadoDiv.innerHTML = `
-      <h3>🤝 Ranking de Equipos Ganadores (3v3 y 4v4)</h3>
-      <div class="empty-state">No hay equipos de 3 o 4 integrantes con 2 o más victorias conjuntas para este período.</div>
+    const etiquetaCol = tam === 1 ? "Jugador" : "Integrantes del Equipo";
+    const etiquetaVic = tam === 1 ? "Victorias 1v1" : `Victorias ${tam}v${tam}`;
+
+    return `
+      <div id="${idContenedor}" style="background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:8px;">
+          <h3 style="margin:0;">${titulo}</h3>
+          <button class="btn secondary" style="padding:4px 10px; font-size:0.78rem;" onclick="descargarElementoComoImagen(document.getElementById('${idContenedor}'), '${nombreArchivo}', '#1c2027')">📷 Descargar</button>
+        </div>
+        ${notaExtra ? `<p class="hint" style="margin-top:0; margin-bottom:10px;">${notaExtra}</p>` : ""}
+        ${lista.length === 0 ? `
+          <div class="empty-state">No hay registros con 2 o más victorias en ${tam}v${tam} para este período.</div>
+        ` : `
+          <div style="overflow-x:auto; margin-top:8px;">
+            <table class="compare-table" style="margin:0;">
+              <thead>
+                <tr>
+                  <th style="width:60px; text-align:center;">#</th>
+                  <th style="text-align:left;">${etiquetaCol}</th>
+                  <th style="width:140px; text-align:center;">${etiquetaVic}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${lista.map((item, idx) => `
+                  <tr>
+                    <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
+                    <td style="text-align:left;">
+                      <div class="equipo-vertical">
+                        ${item.miembros.map(m => `<span>• ${m}</span>`).join("")}
+                      </div>
+                    </td>
+                    <td style="text-align:center; font-weight:700; color:var(--win);">${item.victorias}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `}
+      </div>
     `;
-    return;
-  }
+  };
 
   resultadoDiv.innerHTML = `
-    <h3>🤝 Ranking de Equipos Ganadores (3v3 y 4v4)</h3>
-    <div style="overflow-x:auto; margin-top:12px;">
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th style="width:60px; text-align:center;">#</th>
-            <th style="text-align:left;">Integrantes del Equipo</th>
-            <th style="width:120px; text-align:center;">Victorias 3v3</th>
-            <th style="width:120px; text-align:center;">Victorias 4v4</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rankingEquipos.map((item, idx) => `
-            <tr>
-              <td style="text-align:center; font-weight:700; color:var(--gold);">${idx + 1}°</td>
-              <td style="text-align:left;">
-                <div class="equipo-vertical">
-                  ${item.miembros.map(m => `<span>• ${m}</span>`).join("")}
-                </div>
-              </td>
-              <td style="text-align:center; font-weight:700; color:${item.v3 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${item.v3}</td>
-              <td style="text-align:center; font-weight:700; color:${item.v4 > 0 ? 'var(--win)' : 'var(--text-dim)'};">${item.v4}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    </div>
+    ${construirCuadro(4, "🤝 Ranking de Equipos Ganadores (4 vs 4)", "cuadro-ganadores-4v4", "ganadores-4v4.png")}
+    ${construirCuadro(3, "🤝 Ranking de Equipos Ganadores (3 vs 3)", "cuadro-ganadores-3v3", "ganadores-3v3.png")}
+    ${construirCuadro(2, "🤝 Ganadores 2 vs 2 (Estadística)", "cuadro-ganadores-2v2", "ganadores-2v2.png", "Solo estadística: no suma puntos ni cuenta para el ranking del torneo.")}
+    ${construirCuadro(1, "⚔️ Ganadores 1 vs 1 (Estadística)", "cuadro-ganadores-1v1", "ganadores-1v1.png", "Solo estadística: no suma puntos ni cuenta para el ranking del torneo.")}
   `;
 }
 
