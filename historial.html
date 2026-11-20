@@ -100,7 +100,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="js/datos.js"></script>
 <script>
 let PARTIDAS = [], EQUIVALENCIAS = [], CIV_EQUIVALENCIAS = [];
+let modoHistorialActual = "liga"; // "liga", "2v2" o "1v1"
 
+function modoDePartida(p) {
+  const totalJug = Array.isArray(p.jugadores) ? p.jugadores.length : 0;
+  if (totalJug === 2) return "1v1";
+  if (totalJug === 4) return "2v2";
+  return "liga";
+}
+
+function cambiarModoHistorial(modo) {
+  modoHistorialActual = modo;
+  document.querySelectorAll("#tabs-modo-historial .modo-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.modo === modo);
+  });
+  render();
+}
 function poblarFiltros() {
   const anios = [...new Set(PARTIDAS.map(p => p.anio))].sort((a, b) => b - a);
   const selAnio = document.getElementById("filtro-anio");
