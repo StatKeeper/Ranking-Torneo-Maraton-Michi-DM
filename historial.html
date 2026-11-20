@@ -74,6 +74,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </header>
 
 <main>
+  <div class="modo-tabs" id="tabs-modo-historial">
+    <button type="button" class="modo-btn active" data-modo="liga" onclick="cambiarModoHistorial('liga')">🏆 Liga (Michi DM)</button>
+    <button type="button" class="modo-btn" data-modo="2v2" onclick="cambiarModoHistorial('2v2')">🤝 2v2</button>
+    <button type="button" class="modo-btn" data-modo="1v1" onclick="cambiarModoHistorial('1v1')">⚔️ 1v1</button>
+  </div>
   <div class="filters">
     <select id="filtro-anio"></select>
     <select id="filtro-mes"></select>
