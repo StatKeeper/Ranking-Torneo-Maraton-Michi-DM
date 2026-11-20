@@ -184,24 +184,32 @@ function render() {
   const delPeriodo = PARTIDAS.filter(p => p.anio == anio && String(p.mes).padStart(2, "0") === mes)
     .sort((a, b) => claveOrden(a) - claveOrden(b));
 
-  const mapaInvalidas = obtenerMapaPartidasInvalidas(delPeriodo);
-  const varsPorPartida = calcularVarPorPartida(delPeriodo, EQUIVALENCIAS);
+  const partidasLigaPeriodo = delPeriodo.filter(p => modoDePartida(p) === "liga");
+  const mapaInvalidas = obtenerMapaPartidasInvalidas(partidasLigaPeriodo);
+  const varsPorPartida = calcularVarPorPartida(partidasLigaPeriodo, EQUIVALENCIAS);
 
-  let filtradas = jornadaFiltro ? delPeriodo.filter(p => p.jornada === jornadaFiltro) : delPeriodo;
+  const delModo = delPeriodo.filter(p => modoDePartida(p) === modoHistorialActual);
+  let filtradas = jornadaFiltro ? delModo.filter(p => p.jornada === jornadaFiltro) : delModo;
   filtradas = [...filtradas].sort((a, b) => claveOrden(b) - claveOrden(a));
 
-  // Se elimina el límite de 10 partidas para mostrar todas las partidas del mes o fecha seleccionada.
-  nota.textContent = `Mostrando todas las partidas registradas de ${NOMBRES_MES[mes]} ${anio} (${filtradas.length} en total).`;
+  const etiquetaModo = modoHistorialActual === "liga"
+    ? "Liga (Michi DM)"
+    : modoHistorialActual === "2v2"
+      ? "2v2 (solo historial/estadística)"
+      : "1v1 (solo historial/estadística)";
+
+  nota.textContent = `Mostrando partidas de ${etiquetaModo} en ${NOMBRES_MES[mes]} ${anio} (${filtradas.length} en total).`;
 
   if (filtradas.length === 0) {
-    cont.innerHTML = `<div class="empty-state">No hay partidas para este filtro.</div>`;
-    nota.textContent = "";
+    cont.innerHTML = `<div class="empty-state">No hay partidas de ${etiquetaModo} para este filtro.</div>`;
     return;
   }
 
+  const esLiga = modoHistorialActual === "liga";
+
   cont.innerHTML = filtradas.map(p => {
-    const varsDeEsta = varsPorPartida[p.id] || {};
-    const invalidasEstaPartida = mapaInvalidas[p.id] || {};
+    const varsDeEsta = esLiga ? (varsPorPartida[p.id] || {}) : {};
+    const invalidasEstaPartida = esLiga ? (mapaInvalidas[p.id] || {}) : {};
 
     return `
     <div class="match-card" id="card-${p.id}">
@@ -218,10 +226,10 @@ function render() {
           ${p.jugadores.map(j => {
             const nombreOf = resolverNombreOficial(j.nombre, EQUIVALENCIAS);
             const gano = j.resultado === "victoria";
-            const v = varsDeEsta[nombreOf] ?? 0;
-            const varClass = v > 0 ? "var-up" : v < 0 ? "var-down" : "";
-            const varTexto = v > 0 ? `+${v}` : `${v}`;
-            const esInvalida = invalidasEstaPartida[nombreOf];
+            const v = esLiga ? (varsDeEsta[nombreOf] ?? 0) : null;
+            const varClass = esLiga ? (v > 0 ? "var-up" : v < 0 ? "var-down" : "") : "";
+            const varTexto = esLiga ? (v > 0 ? `+${v}` : `${v}`) : "—";
+            const esInvalida = esLiga ? invalidasEstaPartida[nombreOf] : false;
 
             return `
               <tr>
