@@ -44,6 +44,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   table.tabla-match tr:last-child td { border-bottom: none; }
   .resultado-icono { font-size: 0.95rem; margin-right: 6px; }
   .tag-invalida { display: inline-block; font-size: 0.7rem; color: var(--loss); font-weight: 600; margin-left: 6px; background: rgba(176,85,79,0.15); padding: 2px 6px; border-radius: 4px; }
+.modo-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .modo-btn {
+    background: var(--panel-raised); color: var(--text-dim); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 7px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  }
+  .modo-btn.active { background: var(--gold); color: #17130a; border-color: var(--gold); }
 </style>
 </head>
 <body>
