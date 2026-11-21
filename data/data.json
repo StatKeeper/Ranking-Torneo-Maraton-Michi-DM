@@ -26836,6 +26836,97 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha17-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 17",
+      "numeroPartida": 1,
+      "duracionSeg": 11558,
+      "jugadores": [
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 9960,
+          "edificiosArrasados": 298726,
+          "bonos": []
+        },
+        {
+          "nombre": "Knar",
+          "resultado": "victoria",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 15021,
+          "edificiosArrasados": 408902,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Muiscas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 7498,
+          "edificiosArrasados": 219447,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Bereberes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8501,
+          "edificiosArrasados": 252883,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Muiscas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10914,
+          "edificiosArrasados": 338428,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "derrota",
+          "civ": "Sicilianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7302,
+          "edificiosArrasados": 208667,
+          "bonos": []
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 11865,
+          "edificiosArrasados": 311667,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "derrota",
+          "civ": "Bereberes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 13763,
+          "edificiosArrasados": 368362,
+          "bonos": [
+            "R"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -28354,6 +28445,14 @@
       "jornada": "Fecha 16",
       "evaluacion": "imagenes/candidatos_2026-11_fecha16.png",
       "galardon": "imagenes/galardon_2026-11_fecha16.png"
+    },
+    {
+      "id": "2026-11-Fecha17",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 17",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha17.png",
+      "galardon": "imagenes/galardon_2026-11_fecha17.png"
     }
   ],
   "cuadroHonor": [
@@ -29960,6 +30059,14 @@
       "jornada": "Fecha 16",
       "jugador": "La_Gloire",
       "civ": "Bengalies"
+    },
+    {
+      "id": "2026-11-Fecha17",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 17",
+      "jugador": "Knar",
+      "civ": "Sicilianos"
     }
   ]
 }
