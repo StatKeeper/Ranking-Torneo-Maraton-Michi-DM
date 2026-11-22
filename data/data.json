@@ -26927,6 +26927,79 @@
           ]
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha18-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 18",
+      "numeroPartida": 1,
+      "duracionSeg": 18480,
+      "jugadores": [
+        {
+          "nombre": "Cocardo",
+          "resultado": "victoria",
+          "civ": "Polacos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10418,
+          "edificiosArrasados": 395920,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Borgoñeses",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 22364,
+          "edificiosArrasados": 551773,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 22598,
+          "edificiosArrasados": 518677,
+          "bonos": [
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Borgoñeses",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 20198,
+          "edificiosArrasados": 521645,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "derrota",
+          "civ": "Polacos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 14315,
+          "edificiosArrasados": 338529,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 14759,
+          "edificiosArrasados": 378960,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -28453,6 +28526,14 @@
       "jornada": "Fecha 17",
       "evaluacion": "imagenes/candidatos_2026-11_fecha17.png",
       "galardon": "imagenes/galardon_2026-11_fecha17.png"
+    },
+    {
+      "id": "2026-11-Fecha18",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 18",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha18.png",
+      "galardon": "imagenes/galardon_2026-11_fecha18.png"
     }
   ],
   "cuadroHonor": [
@@ -30067,6 +30148,14 @@
       "jornada": "Fecha 17",
       "jugador": "Knar",
       "civ": "Sicilianos"
+    },
+    {
+      "id": "2026-11-Fecha18",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 18",
+      "jugador": "P@K()",
+      "civ": "Borgoñeses"
     }
   ]
 }
