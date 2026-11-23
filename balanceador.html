@@ -535,6 +535,29 @@ async function descargarImagenEquipos() {
   } finally {
     if (btn) btn.style.visibility = "visible";
   }
+  function limpiarSeleccionYEquipos() {
+  if (typeof jugadoresSeleccionadosSet !== "undefined" && jugadoresSeleccionadosSet) {
+    jugadoresSeleccionadosSet.clear();
+  }
+
+  const buscador = document.getElementById("buscador-jugadores");
+  if (buscador) {
+    buscador.value = "";
+  }
+
+  const checkboxes = document.querySelectorAll('#lista-checkboxes-jugadores input[type="checkbox"]');
+  checkboxes.forEach((chk) => {
+    chk.checked = false;
+  });
+
+  if (typeof actualizarPanelSeleccionados === "function") {
+    actualizarPanelSeleccionados();
+  }
+
+  const resultado = document.getElementById("resultado-equipos");
+  if (resultado) {
+    resultado.innerHTML = "";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
