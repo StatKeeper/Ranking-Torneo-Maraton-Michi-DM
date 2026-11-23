@@ -27090,7 +27090,8 @@
     },
     "BioTiNe": {
       "pais": "MX",
-      "civFavorita": ""
+      "civFavorita": "",
+      "tierManual": "S Boyardo"
     },
     "BlackHorse": {
       "categoria": 3,
@@ -27204,7 +27205,8 @@
     },
     "GJ Euphory": {
       "pais": "PE",
-      "civFavorita": ""
+      "civFavorita": "",
+      "tierManual": "S Boyardo"
     },
     "GoldiGlock": {
       "categoria": 3,
@@ -27328,7 +27330,8 @@
     },
     "P@K()": {
       "pais": "MX",
-      "civFavorita": ""
+      "civFavorita": "",
+      "tierManual": "S Boyardo"
     },
     "Papita Huayro": {
       "pais": "PE",
@@ -27630,6 +27633,9 @@
       "categoria": 1,
       "pais": "PK",
       "civFavorita": ""
+    },
+    "LVA - Gleich": {
+      "tierManual": "S Boyardo"
     }
   },
   "jornadasImagenes": [
