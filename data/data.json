@@ -143,6 +143,14 @@
     {
       "antiguo": "Trotamundos",
       "oficial": "TroTamundoS"
+    },
+    {
+      "antiguo": "LVA - Gleich",
+      "oficial": "LVA - Gleich"
+    },
+    {
+      "antiguo": "LVA-Gleich",
+      "oficial": "LVA - Gleich"
     }
   ],
   "civEquivalencias": [
@@ -27343,7 +27351,8 @@
     },
     "LVA-Gleich": {
       "pais": "AR",
-      "civFavorita": ""
+      "civFavorita": "",
+      "tierManual": "B+ Campeón"
     },
     "MacGyver (RubenS)": {
       "pais": "",
@@ -27906,6 +27915,9 @@
       "tierManual": "B+ Campeón"
     },
     "生不修善果 只爱石油军": {
+      "tierManual": "B+ Campeón"
+    },
+    "Eclipse": {
       "tierManual": "B+ Campeón"
     }
   },
