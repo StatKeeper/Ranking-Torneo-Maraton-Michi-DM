@@ -487,19 +487,53 @@ function rebalancearEquipos() {
 function mostrarResultadoEquipos(eq1, eq2, suma1, suma2) {
   const contenedor = document.getElementById("resultado-equipos");
   contenedor.innerHTML = `
-    <div class="equipo-card">
-      <h4>⚔️ Equipo 1 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma1}</span></h4>
-      <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
-        ${eq1.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">(${j.tier})</span></li>`).join("")}
-      </ul>
-    </div>
-    <div class="equipo-card">
-      <h4>🛡️ Equipo 2 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma2}</span></h4>
-      <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
-        ${eq2.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">(${j.tier})</span></li>`).join("")}
-      </ul>
+    <div id="captura-equipos" class="resultado-wrapper">
+      <div class="resultado-header">
+        <h4>⚔️ Equipos Generados</h4>
+        <button type="button" class="btn-descargar-eq" onclick="descargarImagenEquipos()">📥 Descargar</button>
+      </div>
+      <div class="equipos-resultado" style="margin-top:0;">
+        <div class="equipo-card">
+          <h4>⚔️ Equipo 1 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma1}</span></h4>
+          <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
+            ${eq1.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">(${j.tier})</span></li>`).join("")}
+          </ul>
+        </div>
+        <div class="equipo-card">
+          <h4>🛡️ Equipo 2 <span style="font-size:0.8rem; color:var(--gold);">Puntos: ${suma2}</span></h4>
+          <ul style="padding-left:18px; font-size:0.88rem; line-height:1.6;">
+            ${eq2.map(j => `<li><strong>${j.nombre}</strong> <span style="font-size:0.75rem; color:var(--text-dim);">(${j.tier})</span></li>`).join("")}
+          </ul>
+        </div>
+      </div>
     </div>
   `;
+}
+
+async function descargarImagenEquipos() {
+  const objetivo = document.getElementById("captura-equipos");
+  if (!objetivo || typeof html2canvas !== "function") {
+    alert("No se pudo generar la imagen de los equipos.");
+    return;
+  }
+  const btn = objetivo.querySelector(".btn-descargar-eq");
+  if (btn) btn.style.visibility = "hidden";
+
+  try {
+    const canvas = await html2canvas(objetivo, {
+      backgroundColor: "#14181f",
+      scale: 2
+    });
+    const enlace = document.createElement("a");
+    enlace.download = "equipos-maraton-michi.png";
+    enlace.href = canvas.toDataURL("image/png");
+    enlace.click();
+  } catch (err) {
+    console.error("Error al exportar imagen:", err);
+    alert("Ocurrió un error al descargar la imagen.");
+  } finally {
+    if (btn) btn.style.visibility = "visible";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
