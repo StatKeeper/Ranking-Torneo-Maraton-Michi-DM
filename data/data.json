@@ -27031,7 +27031,8 @@
     },
     "[cLm] Renjifo": {
       "pais": "BO",
-      "civFavorita": "Teuton"
+      "civFavorita": "Teuton",
+      "tierManual": "A+ Paladín"
     },
     "[cLm]diego.leal5": {
       "pais": "MX",
@@ -27166,7 +27167,8 @@
     },
     "Elraf": {
       "pais": "CL",
-      "civFavorita": "Jemer"
+      "civFavorita": "Jemer",
+      "tierManual": "A+ Paladín"
     },
     "Erik Tha Barbaro": {
       "categoria": 1,
@@ -27335,7 +27337,8 @@
     },
     "Papita Huayro": {
       "pais": "PE",
-      "civFavorita": ""
+      "civFavorita": "",
+      "tierManual": "A+ Paladín"
     },
     "Peon": {
       "pais": "",
@@ -27392,7 +27395,8 @@
     },
     "Saul Goodman": {
       "pais": "CL",
-      "civFavorita": "Teuton"
+      "civFavorita": "Teuton",
+      "tierManual": "A+ Paladín"
     },
     "Shop kepper": {
       "pais": "",
@@ -27636,6 +27640,9 @@
     },
     "LVA - Gleich": {
       "tierManual": "S Boyardo"
+    },
+    "ErikThaBarbaro": {
+      "tierManual": "A+ Paladín"
     }
   },
   "jornadasImagenes": [
