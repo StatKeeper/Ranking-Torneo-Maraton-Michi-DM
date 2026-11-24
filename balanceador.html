@@ -535,7 +535,9 @@ async function descargarImagenEquipos() {
   } finally {
     if (btn) btn.style.visibility = "visible";
   }
-  function limpiarSeleccionYEquipos() {
+}
+
+function limpiarSeleccionYEquipos() {
   if (typeof jugadoresSeleccionadosSet !== "undefined" && jugadoresSeleccionadosSet) {
     jugadoresSeleccionadosSet.clear();
   }
