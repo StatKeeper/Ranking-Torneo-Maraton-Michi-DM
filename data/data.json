@@ -27113,6 +27113,168 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha20-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 20",
+      "numeroPartida": 1,
+      "duracionSeg": 2956,
+      "jugadores": [
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "victoria",
+          "civ": "Vietnamitas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1157,
+          "edificiosArrasados": 81465,
+          "bonos": []
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Malíes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3487,
+          "edificiosArrasados": 119936,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1890,
+          "edificiosArrasados": 76817,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Vietnamitas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1544,
+          "edificiosArrasados": 89736,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "derrota",
+          "civ": "Malíes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2622,
+          "edificiosArrasados": 111398,
+          "bonos": [
+            "R",
+            "O"
+          ]
+        },
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 1532,
+          "edificiosArrasados": 61475,
+          "bonos": []
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha20-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 20",
+      "numeroPartida": 2,
+      "duracionSeg": 7679,
+      "jugadores": [
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Coreanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5529,
+          "edificiosArrasados": 170369,
+          "bonos": []
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "victoria",
+          "civ": "Celtas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6073,
+          "edificiosArrasados": 199911,
+          "bonos": [
+            "O",
+            "S"
+          ]
+        },
+        {
+          "nombre": "LVA - Gleich",
+          "resultado": "victoria",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 10991,
+          "edificiosArrasados": 262159,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "truc.itsm",
+          "resultado": "victoria",
+          "civ": "Teutones",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 8115,
+          "edificiosArrasados": 280220,
+          "bonos": []
+        },
+        {
+          "nombre": "Saul Goodman",
+          "resultado": "derrota",
+          "civ": "Teutones",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6728,
+          "edificiosArrasados": 212863,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Coreanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5374,
+          "edificiosArrasados": 172422,
+          "bonos": []
+        },
+        {
+          "nombre": "Elraf",
+          "resultado": "derrota",
+          "civ": "Celtas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 8669,
+          "edificiosArrasados": 247004,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "derrota",
+          "civ": "Gurjaras",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 6228,
+          "edificiosArrasados": 160009,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -28939,6 +29101,14 @@
       "jornada": "Fecha 19",
       "evaluacion": "imagenes/candidatos_2026-11_fecha19.png",
       "galardon": "imagenes/galardon_2026-11_fecha19.png"
+    },
+    {
+      "id": "2026-11-Fecha20",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 20",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha20.png",
+      "galardon": "imagenes/galardon_2026-11_fecha20.png"
     }
   ],
   "cuadroHonor": [
@@ -30569,6 +30739,14 @@
       "jornada": "Fecha 19",
       "jugador": "Knar",
       "civ": "Etiopes"
+    },
+    {
+      "id": "2026-11-Fecha20",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 20",
+      "jugador": "Papita Huayro",
+      "civ": "Malies"
     }
   ]
 }
