@@ -27275,6 +27275,169 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha21-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 21",
+      "numeroPartida": 1,
+      "duracionSeg": 5087,
+      "jugadores": [
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "victoria",
+          "civ": "Vietnamitas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3792,
+          "edificiosArrasados": 154822,
+          "bonos": []
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 5436,
+          "edificiosArrasados": 180127,
+          "bonos": [
+            "E"
+          ]
+        },
+        {
+          "nombre": "Dirty_rat",
+          "resultado": "victoria",
+          "civ": "Aztecas",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 3445,
+          "edificiosArrasados": 140757,
+          "bonos": []
+        },
+        {
+          "nombre": "The_Fighter",
+          "resultado": "victoria",
+          "civ": "Tártaros",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 6855,
+          "edificiosArrasados": 167039,
+          "bonos": [
+            "M",
+            "S"
+          ]
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 3339,
+          "edificiosArrasados": 138119,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Vietnamitas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 5675,
+          "edificiosArrasados": 133978,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "derrota",
+          "civ": "Yurchen",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 2961,
+          "edificiosArrasados": 100508,
+          "bonos": []
+        },
+        {
+          "nombre": "robincule",
+          "resultado": "derrota",
+          "civ": "Aztecas",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 4438,
+          "edificiosArrasados": 129780,
+          "bonos": [
+            "O"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-Fecha21-P2",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 21",
+      "numeroPartida": 2,
+      "duracionSeg": 11483,
+      "jugadores": [
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "victoria",
+          "civ": "Cumanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11649,
+          "edificiosArrasados": 330570,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "victoria",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 12374,
+          "edificiosArrasados": 352519,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "BlackHorse",
+          "resultado": "victoria",
+          "civ": "Coreanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11300,
+          "edificiosArrasados": 312206,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] KFICHO",
+          "resultado": "derrota",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 14631,
+          "edificiosArrasados": 332081,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Cumanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 11025,
+          "edificiosArrasados": 255503,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Coreanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 9825,
+          "edificiosArrasados": 233543,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -29109,6 +29272,14 @@
       "jornada": "Fecha 20",
       "evaluacion": "imagenes/candidatos_2026-11_fecha20.png",
       "galardon": "imagenes/galardon_2026-11_fecha20.png"
+    },
+    {
+      "id": "2026-11-Fecha21",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 21",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha21.png",
+      "galardon": "imagenes/galardon_2026-11_fecha21.png"
     }
   ],
   "cuadroHonor": [
@@ -30747,6 +30918,14 @@
       "jornada": "Fecha 20",
       "jugador": "Papita Huayro",
       "civ": "Malies"
+    },
+    {
+      "id": "2026-11-Fecha21",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 21",
+      "jugador": "P@K()",
+      "civ": "Sarracenos"
     }
   ]
 }
