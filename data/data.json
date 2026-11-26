@@ -27438,6 +27438,97 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha22-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 22",
+      "numeroPartida": 1,
+      "duracionSeg": 2035,
+      "jugadores": [
+        {
+          "nombre": "LeAsH",
+          "resultado": "victoria",
+          "civ": "Indostanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 1920,
+          "edificiosArrasados": 95953,
+          "bonos": [
+            "E",
+            "M"
+          ]
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "victoria",
+          "civ": "Bohemios",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 582,
+          "edificiosArrasados": 52424,
+          "bonos": []
+        },
+        {
+          "nombre": "BioTiNe",
+          "resultado": "victoria",
+          "civ": "Vikingos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 472,
+          "edificiosArrasados": 61480,
+          "bonos": [
+            "S"
+          ]
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "victoria",
+          "civ": "Etíopes",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 677,
+          "edificiosArrasados": 36722,
+          "bonos": []
+        },
+        {
+          "nombre": "Cocardo",
+          "resultado": "derrota",
+          "civ": "Indostanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 624,
+          "edificiosArrasados": 42071,
+          "bonos": []
+        },
+        {
+          "nombre": "Tailfeather28",
+          "resultado": "derrota",
+          "civ": "Etíopes",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 544,
+          "edificiosArrasados": 51050,
+          "bonos": [
+            "O"
+          ]
+        },
+        {
+          "nombre": "GGINDU",
+          "resultado": "derrota",
+          "civ": "Bohemios",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 865,
+          "edificiosArrasados": 54488,
+          "bonos": [
+            "R"
+          ]
+        },
+        {
+          "nombre": "P@K()",
+          "resultado": "derrota",
+          "civ": "Vikingos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 591,
+          "edificiosArrasados": 51087,
+          "bonos": []
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -29280,6 +29371,14 @@
       "jornada": "Fecha 21",
       "evaluacion": "imagenes/candidatos_2026-11_fecha21.png",
       "galardon": "imagenes/galardon_2026-11_fecha21.png"
+    },
+    {
+      "id": "2026-11-Fecha22",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 22",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha22.png",
+      "galardon": "imagenes/galardon_2026-11_fecha22.png"
     }
   ],
   "cuadroHonor": [
@@ -30926,6 +31025,14 @@
       "jornada": "Fecha 21",
       "jugador": "P@K()",
       "civ": "Sarracenos"
+    },
+    {
+      "id": "2026-11-Fecha22",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 22",
+      "jugador": "LeAsH__",
+      "civ": "Indostanos"
     }
   ]
 }
