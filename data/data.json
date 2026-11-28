@@ -27529,6 +27529,78 @@
           "bonos": []
         }
       ]
+    },
+    {
+      "id": "2026-11-Fecha23-P1",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 23",
+      "numeroPartida": 1,
+      "duracionSeg": 14455,
+      "jugadores": [
+        {
+          "nombre": "Cocardo",
+          "resultado": "victoria",
+          "civ": "Georgianos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 12207,
+          "edificiosArrasados": 437103,
+          "bonos": [
+            "E",
+            "O"
+          ]
+        },
+        {
+          "nombre": "Gato :3",
+          "resultado": "victoria",
+          "civ": "Birmanos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 11034,
+          "edificiosArrasados": 335264,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] diego.leal5",
+          "resultado": "victoria",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 1",
+          "unidadesAsesinadas": 14662,
+          "edificiosArrasados": 412592,
+          "bonos": []
+        },
+        {
+          "nombre": "ErikThaBarbaro",
+          "resultado": "derrota",
+          "civ": "Sarracenos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 15145,
+          "edificiosArrasados": 451287,
+          "bonos": [
+            "R",
+            "M"
+          ]
+        },
+        {
+          "nombre": "Papita Huayro",
+          "resultado": "derrota",
+          "civ": "Birmanos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 10595,
+          "edificiosArrasados": 283180,
+          "bonos": []
+        },
+        {
+          "nombre": "[cLm] Gerard",
+          "resultado": "derrota",
+          "civ": "Georgianos",
+          "equipo": "Equipo 2",
+          "unidadesAsesinadas": 7955,
+          "edificiosArrasados": 272633,
+          "bonos": [
+            "S"
+          ]
+        }
+      ]
     }
   ],
   "jugadoresInfo": {
@@ -29379,6 +29451,14 @@
       "jornada": "Fecha 22",
       "evaluacion": "imagenes/candidatos_2026-11_fecha22.png",
       "galardon": "imagenes/galardon_2026-11_fecha22.png"
+    },
+    {
+      "id": "2026-11-Fecha23",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 23",
+      "evaluacion": "imagenes/candidatos_2026-11_fecha23.png",
+      "galardon": "imagenes/galardon_2026-11_fecha23.png"
     }
   ],
   "cuadroHonor": [
@@ -31033,6 +31113,14 @@
       "jornada": "Fecha 22",
       "jugador": "LeAsH__",
       "civ": "Indostanos"
+    },
+    {
+      "id": "2026-11-Fecha23",
+      "anio": 2026,
+      "mes": "11",
+      "jornada": "Fecha 23",
+      "jugador": "[cLm] Renjifo",
+      "civ": "Georgianos"
     }
   ]
 }
